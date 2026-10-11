@@ -522,11 +522,11 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                 {selectionType === "range" && (
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-sm font-bold text-gray-700">
+                      <Label className="text-sm font-bold text-gray-700 dark:text-slate-300">
                         {t("for_business.step1.start_day")}
                       </Label>
                       <Select value={startDay} onValueChange={setStartDay}>
-                        <SelectTrigger className="bg-gray-50 border-gray-200">
+                        <SelectTrigger className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -539,11 +539,11 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-sm font-bold text-gray-700">
+                      <Label className="text-sm font-bold text-gray-700 dark:text-slate-300">
                         {t("for_business.step1.end_day")}
                       </Label>
                       <Select value={endDay} onValueChange={setEndDay}>
-                        <SelectTrigger className="bg-gray-50 border-gray-200">
+                        <SelectTrigger className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -589,7 +589,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                                   : [...prev, d],
                               );
                             }}
-                            className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-colors ${isSelected ? "bg-yellow-100 border-yellow-400 text-yellow-700" : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"}`}
+                            className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-colors ${isSelected ? "bg-yellow-100 dark:bg-yellow-950/60 border-yellow-400 text-yellow-800 dark:text-yellow-300" : "bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-700"}`}
                           >
                             {t(`for_business.step1.days.${d}`).substring(0, 3)}
                           </button>
@@ -602,7 +602,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                 {selectionType !== "always-open" && (
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-sm font-bold text-gray-700">
+                      <Label className="text-sm font-bold text-gray-700 dark:text-slate-300">
                         {t("for_business.step1.start_time")}
                       </Label>
                       <div className="relative">
@@ -610,13 +610,13 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                           type="time"
                           value={startTime}
                           onChange={(e) => setStartTime(e.target.value)}
-                          className="bg-gray-50 border-gray-200 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-8 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                          className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-8 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                         />
-                        <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                        <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-slate-400 pointer-events-none" />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-sm font-bold text-gray-700">
+                      <Label className="text-sm font-bold text-gray-700 dark:text-slate-300">
                         {t("for_business.step1.end_time")}
                       </Label>
                       <div className="relative">
@@ -624,9 +624,9 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                           type="time"
                           value={endTime}
                           onChange={(e) => setEndTime(e.target.value)}
-                          className="bg-gray-50 border-gray-200 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-8 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                          className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-8 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                         />
-                        <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                        <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-slate-400 pointer-events-none" />
                       </div>
                     </div>
                   </div>

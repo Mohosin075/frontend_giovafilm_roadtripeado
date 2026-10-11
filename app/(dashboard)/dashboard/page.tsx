@@ -51,7 +51,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold font-arial pb-6">{t("dashboard.overview")}</h1>
+      <h1 className="text-3xl font-bold font-arial pb-6 text-gray-900 dark:text-slate-100">{t("dashboard.overview")}</h1>
 
       <StatCard data={statsData} />
 

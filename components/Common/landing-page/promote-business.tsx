@@ -42,7 +42,7 @@ export default function PromoteBusiness() {
   ];
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-gray-50 dark:bg-zinc-950 overflow-hidden font-inter transition-colors">
+    <section className="py-16 sm:py-20 lg:py-24 bg-gray-50 dark:bg-[#0b0f19] overflow-hidden font-inter transition-colors">
       <div className="max-w-360 mx-auto px-4 md:px-6">
         {/* Brand Yellow Container */}
         <motion.div

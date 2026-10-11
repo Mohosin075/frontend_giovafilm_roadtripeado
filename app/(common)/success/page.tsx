@@ -52,7 +52,7 @@ function SuccessContent() {
   // Prevent showing success screen to direct visitors without session_id
   if (!sessionId) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
+      <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19]">
         <Loader2 className="w-10 h-10 text-yellow-500 animate-spin" />
       </main>
     );
@@ -61,37 +61,37 @@ function SuccessContent() {
   const waiting = !verified && (isLoading || Boolean(accessToken));
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-20">
-      <div className="max-w-md w-full bg-white rounded-3xl p-10 shadow-xl text-center space-y-8 animate-in fade-in zoom-in duration-500">
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19] px-6 py-20 font-public-sans">
+      <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-3xl p-10 shadow-xl border border-gray-100 dark:border-slate-800 text-center space-y-8 animate-in fade-in zoom-in duration-500">
         <div className="flex justify-center">
           <div
             className={`w-24 h-24 rounded-full flex items-center justify-center ${
               waiting
-                ? "bg-yellow-50"
+                ? "bg-yellow-50 dark:bg-yellow-950/40"
                 : failed
-                  ? "bg-amber-50"
-                  : "bg-green-50"
+                  ? "bg-amber-50 dark:bg-amber-950/40"
+                  : "bg-green-50 dark:bg-green-950/40"
             }`}
           >
             {waiting ? (
               <Loader2 className="w-16 h-16 text-yellow-500 animate-spin" />
             ) : failed ? (
-              <AlertCircle className="w-16 h-16 text-amber-500" />
+              <AlertCircle className="w-16 h-16 text-amber-500 dark:text-amber-400" />
             ) : (
-              <CheckCircle2 className="w-16 h-16 text-green-500" />
+              <CheckCircle2 className="w-16 h-16 text-green-500 dark:text-green-400" />
             )}
           </div>
         </div>
 
         <div className="space-y-3">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
             {waiting
               ? t("common.confirming") || "Confirming your subscription..."
               : failed
                 ? t("common.verification_pending") || "Verification Pending"
                 : t("common.payment_successful") || "Payment Successful!"}
           </h1>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-slate-400 leading-relaxed">
             {waiting
               ? "Please wait while we activate your business listing."
               : failed
@@ -104,13 +104,13 @@ function SuccessContent() {
           <Link href="/profile/my-business" className="block w-full">
             <Button
               disabled={waiting}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold h-14 rounded-2xl shadow-lg shadow-yellow-100 transition-all active:scale-95"
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold h-14 rounded-2xl shadow-lg shadow-yellow-500/20 transition-all active:scale-95 cursor-pointer"
             >
               {t("common.go_to_my_businesses")}
             </Button>
           </Link>
           <Link href="/" className="block w-full">
-            <Button variant="ghost" className="w-full text-gray-500 font-semibold h-12 hover:bg-gray-50">
+            <Button variant="ghost" className="w-full text-gray-500 dark:text-slate-400 font-semibold h-12 hover:bg-gray-50 dark:hover:bg-slate-800 cursor-pointer">
               {t("common.return_home")}
             </Button>
           </Link>
@@ -124,7 +124,7 @@ export default function SuccessPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen flex items-center justify-center bg-gray-50">
+        <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19]">
           <Loader2 className="w-10 h-10 text-green-500 animate-spin" />
         </main>
       }

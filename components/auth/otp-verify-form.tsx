@@ -302,10 +302,10 @@ export default function OtpVerify() {
   return (
     <div className="flex flex-col justify-center">
       <div className="mb-8 text-left">
-        <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">{title}</h2>
-        <p className="text-sm text-[#757575]">
+        <h2 className="text-2xl font-bold text-[#1A1A1A] dark:text-slate-100 mb-2">{title}</h2>
+        <p className="text-sm text-[#757575] dark:text-slate-400">
           {t("auth.otp_sent_to")}{" "}
-          <span className="font-semibold text-[#1A1A1A] break-all">
+          <span className="font-semibold text-[#1A1A1A] dark:text-slate-200 break-all">
             {email || "your email"}
           </span>
           .
@@ -318,12 +318,12 @@ export default function OtpVerify() {
           <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFC107] text-black">
             1
           </span>
-          <span className="text-[#1A1A1A]">{t("auth.verify_code_step")}</span>
-          <span className="text-[#BDBDBD] mx-1">—</span>
-          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-[#757575]">
+          <span className="text-[#1A1A1A] dark:text-slate-200">{t("auth.verify_code_step")}</span>
+          <span className="text-[#BDBDBD] dark:text-slate-600 mx-1">—</span>
+          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 dark:bg-slate-800 text-[#757575] dark:text-slate-400">
             2
           </span>
-          <span className="text-[#9E9E9E]">{t("auth.set_password_step")}</span>
+          <span className="text-[#9E9E9E] dark:text-slate-500">{t("auth.set_password_step")}</span>
         </div>
       )}
 
@@ -332,16 +332,16 @@ export default function OtpVerify() {
           <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFC107] text-black">
             1
           </span>
-          <span className="text-[#1A1A1A]">
+          <span className="text-[#1A1A1A] dark:text-slate-200">
             {authFlow === "resetPassword" ? t("auth.verify_code_step") : t("auth.verify_email_step")}
           </span>
           {authFlow === "resetPassword" && (
             <>
-              <span className="text-[#BDBDBD] mx-1">—</span>
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-[#757575]">
+              <span className="text-[#BDBDBD] dark:text-slate-600 mx-1">—</span>
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 dark:bg-slate-800 text-[#757575] dark:text-slate-400">
                 2
               </span>
-              <span className="text-[#9E9E9E]">{t("auth.new_password_step")}</span>
+              <span className="text-[#9E9E9E] dark:text-slate-500">{t("auth.new_password_step")}</span>
             </>
           )}
         </div>
@@ -361,7 +361,7 @@ export default function OtpVerify() {
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             onPaste={(e) => handlePaste(i, e)}
-            className="w-full h-14 text-center text-lg font-semibold bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all"
+            className="w-full h-14 text-center text-lg font-semibold bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all"
             aria-label={`Digit ${i + 1}`}
           />
         ))}
@@ -376,12 +376,12 @@ export default function OtpVerify() {
       </Button>
 
       {countdown > 0 ? (
-        <p className="text-sm text-[#757575] text-center">
+        <p className="text-sm text-[#757575] dark:text-slate-400 text-center">
           {t("auth.resend_code_in")} {countdown}s
         </p>
       ) : (
         <div className="text-center">
-          <p className="text-sm text-[#757575] mb-2">{t("auth.didnt_receive_code")}</p>
+          <p className="text-sm text-[#757575] dark:text-slate-400 mb-2">{t("auth.didnt_receive_code")}</p>
           <button
             onClick={handleResend}
             disabled={isResending}

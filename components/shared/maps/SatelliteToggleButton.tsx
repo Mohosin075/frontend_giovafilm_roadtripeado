@@ -59,7 +59,7 @@ export const SatelliteToggleButton = ({
           title={title}
           aria-label={title}
         >
-          <Layers size={20} className={isSatellite ? "text-white" : "text-gray-700"} />
+          <Layers size={20} className={isSatellite ? "text-slate-950" : "text-gray-700 dark:text-slate-200"} />
         </button>
       </div>
     </MapControl>

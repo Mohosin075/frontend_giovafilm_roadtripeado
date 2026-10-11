@@ -116,22 +116,22 @@ export function ReviewModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         showCloseButton={false}
-        className="w-[94vw] max-w-lg sm:max-w-xl max-h-[92dvh] sm:max-h-[88vh] rounded-3xl p-0 border-none shadow-2xl bg-white flex flex-col overflow-hidden gap-0"
+        className="w-[94vw] max-w-lg sm:max-w-xl max-h-[92dvh] sm:max-h-[88vh] rounded-3xl p-0 border border-transparent dark:border-slate-800 shadow-2xl bg-white dark:bg-[#131b2e] flex flex-col overflow-hidden gap-0"
       >
         {/* Pinned Header with Close Button */}
-        <div className="relative px-5 pt-5 pb-3 sm:px-7 sm:pt-6 sm:pb-4 border-b border-gray-100 flex-shrink-0">
+        <div className="relative px-5 pt-5 pb-3 sm:px-7 sm:pt-6 sm:pb-4 border-b border-gray-100 dark:border-slate-800/80 flex-shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-black flex items-center justify-center transition-colors cursor-pointer"
+            className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-500 dark:text-slate-400 hover:text-black dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X size={17} />
           </button>
-          <DialogTitle className="text-xl sm:text-2xl font-black text-center text-gray-900 uppercase tracking-tight">
+          <DialogTitle className="text-xl sm:text-2xl font-black text-center text-gray-900 dark:text-slate-100 uppercase tracking-tight">
             {initialData ? t("reviews.edit_your_review") : t("reviews.write_review")}
           </DialogTitle>
-          <p className="text-center text-[11px] sm:text-xs text-gray-500 font-medium mt-1 px-4">
+          <p className="text-center text-[11px] sm:text-xs text-gray-500 dark:text-slate-400 font-medium mt-1 px-4">
             {t("reviews.share_authentic_exp")}
           </p>
         </div>
@@ -139,8 +139,8 @@ export function ReviewModal({
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-3.5 sm:px-7 sm:py-5 space-y-3.5 sm:space-y-4">
           {/* Star Rating Section */}
-          <div className="flex flex-col items-center gap-1.5 sm:gap-2 p-3 sm:p-4 bg-amber-50/60 rounded-2xl border border-amber-100/80">
-            <p className="font-bold text-gray-700 uppercase text-[11px] sm:text-xs tracking-wider">
+          <div className="flex flex-col items-center gap-1.5 sm:gap-2 p-3 sm:p-4 bg-amber-50/60 dark:bg-[#0e1424] rounded-2xl border border-amber-100/80 dark:border-slate-800">
+            <p className="font-bold text-gray-700 dark:text-slate-300 uppercase text-[11px] sm:text-xs tracking-wider">
               {t("reviews.rate_experience")}
             </p>
             <div className="flex gap-1 sm:gap-2">
@@ -158,7 +158,7 @@ export function ReviewModal({
                     className={`size-7 sm:size-9 ${
                       currentRating >= star
                         ? "fill-yellow-400 text-yellow-400 scale-105"
-                        : "text-gray-300 hover:text-gray-400"
+                        : "text-gray-300 dark:text-slate-700 hover:text-gray-400 dark:hover:text-slate-500"
                     } transition-all duration-150`}
                   />
                 </button>
@@ -167,8 +167,8 @@ export function ReviewModal({
             <span
               className={`text-[11px] sm:text-xs font-bold transition-opacity ${
                 currentRating > 0
-                  ? "text-amber-700 opacity-100"
-                  : "text-gray-400 opacity-60"
+                  ? "text-amber-700 dark:text-amber-400 opacity-100"
+                  : "text-gray-400 dark:text-slate-500 opacity-60"
               }`}
             >
               {currentRating > 0
@@ -180,14 +180,14 @@ export function ReviewModal({
           {/* Review Details Textarea */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <p className="font-bold text-gray-700 uppercase text-[11px] sm:text-xs tracking-wider">
+              <p className="font-bold text-gray-700 dark:text-slate-300 uppercase text-[11px] sm:text-xs tracking-wider">
                 {t("reviews.review_details")}
               </p>
               <span
                 className={`text-[10px] sm:text-xs font-medium ${
                   review.trim().length >= 200
-                    ? "text-green-600 font-bold"
-                    : "text-gray-400"
+                    ? "text-green-600 dark:text-emerald-400 font-bold"
+                    : "text-gray-400 dark:text-slate-500"
                 }`}
               >
                 {review.trim().length >= 200
@@ -199,16 +199,16 @@ export function ReviewModal({
               placeholder={t("reviews.share_experience_placeholder")}
               value={review}
               onChange={(e) => setReview(e.target.value)}
-              className="resize-none h-28 sm:h-36 rounded-2xl border-gray-200 bg-gray-50/70 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:bg-white transition-all p-3 sm:p-4 text-xs sm:text-sm leading-relaxed"
+              className="resize-none h-28 sm:h-36 rounded-2xl border-gray-200 dark:border-slate-700/80 bg-gray-50/70 dark:bg-[#0e1424] text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:bg-white dark:focus-visible:bg-slate-900 transition-all p-3 sm:p-4 text-xs sm:text-sm leading-relaxed"
             />
           </div>
 
           {/* Verification Process Notice */}
-          <div className="bg-blue-50/70 border border-blue-100 rounded-xl p-2.5 sm:p-3 flex items-start gap-2.5 text-left">
+          <div className="bg-blue-50/70 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 rounded-xl p-2.5 sm:p-3 flex items-start gap-2.5 text-left">
             <span className="text-sm shrink-0 mt-0.5">🛡️</span>
-            <div className="text-[11px] sm:text-xs text-blue-900 leading-relaxed">
+            <div className="text-[11px] sm:text-xs text-blue-900 dark:text-blue-300 leading-relaxed">
               <p className="font-bold">{t("reviews.moderation_notice_title")}</p>
-              <p className="text-blue-700 mt-0.5">
+              <p className="text-blue-700 dark:text-blue-400/80 mt-0.5">
                 {t("reviews.moderation_notice_desc")}
               </p>
             </div>
@@ -216,13 +216,13 @@ export function ReviewModal({
         </div>
 
         {/* Pinned Action Buttons Footer */}
-        <div className="px-4 py-3 sm:px-7 sm:py-4 border-t border-gray-100 bg-gray-50/60 flex-shrink-0">
+        <div className="px-4 py-3 sm:px-7 sm:py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-[#0e1424] flex-shrink-0">
           <div className="flex gap-2.5 sm:gap-3">
             <Button
               variant="outline"
               type="button"
               onClick={onClose}
-              className="flex-1 font-bold text-gray-600 hover:text-gray-900 border-gray-200 rounded-xl h-11 sm:h-12 text-xs sm:text-sm uppercase tracking-wider bg-white"
+              className="flex-1 font-bold text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white border-gray-200 dark:border-slate-700 rounded-xl h-11 sm:h-12 text-xs sm:text-sm uppercase tracking-wider bg-white dark:bg-slate-800 dark:hover:bg-slate-700 cursor-pointer"
             >
               {t("common.cancel")}
             </Button>
@@ -230,7 +230,7 @@ export function ReviewModal({
               type="button"
               onClick={handleSubmit}
               disabled={isLoading}
-              className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black font-black rounded-xl h-11 sm:h-12 text-xs sm:text-sm uppercase tracking-wider shadow-md hover:shadow-lg transition-all active:translate-y-0.5 disabled:opacity-50 border-none"
+              className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black font-black rounded-xl h-11 sm:h-12 text-xs sm:text-sm uppercase tracking-wider shadow-md hover:shadow-lg transition-all active:translate-y-0.5 disabled:opacity-50 border-none cursor-pointer"
             >
               {isLoading
                 ? t("profile.saving")

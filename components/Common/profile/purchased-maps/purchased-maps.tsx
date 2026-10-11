@@ -31,13 +31,13 @@ export default function PurchasedMapsPage() {
     title: map.name,
     badge: map.isActive ? "ACTIVE" : "INACTIVE",
     badgeColor: map.isActive
-      ? "bg-green-100 text-green-700"
-      : "bg-gray-100 text-gray-500",
+      ? "bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400 border border-transparent dark:border-green-800/40"
+      : "bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400",
     info: `${t("common.save")} ${new Date(map.createdAt).toLocaleDateString()}`,
     image: getImageUrl(map.images?.[0]),
     status: map.isActive ? "Active" : "Inactive",
     icon: map.isActive ? ShieldCheck : Compass,
-    iconColor: map.isActive ? "text-green-500" : "text-gray-400",
+    iconColor: map.isActive ? "text-green-500 dark:text-green-400" : "text-gray-400 dark:text-slate-500",
     isActive: !!map.isActive,
   }));
 
@@ -55,20 +55,20 @@ export default function PurchasedMapsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0b0f19] flex flex-col">
       <main className="flex-1 max-w-[1440px] mx-auto w-full px-6 py-12">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b pb-4 mb-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b dark:border-slate-800 pb-4 mb-4">
           <div>
-            <h1 className="text-4xl font-black font-public-sans text-gray-900 mb-2">
+            <h1 className="text-4xl font-black font-public-sans text-gray-900 dark:text-slate-100 mb-2">
               {t("purchased_maps_page.title")}
             </h1>
-            <p className="text-gray-500/80 text-lg font-public-sans">
+            <p className="text-gray-500/80 dark:text-slate-400 text-lg font-public-sans">
               {t("purchased_maps_page.subtitle")}
             </p>
           </div>
           <Link href={"/catalog"}>
-            <Button className="bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg px-10 h-12 text-base shadow-lg shadow-yellow-500/20">
+            <Button className="bg-[#FFC107] hover:bg-[#FFB300] text-black font-extrabold rounded-lg px-10 h-12 text-base shadow-lg shadow-yellow-500/20">
               <Compass size={20} />
               {t("purchased_maps_page.browse_more")}
             </Button>
@@ -76,7 +76,7 @@ export default function PurchasedMapsPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-8 border-b border-gray-200 mb-8">
+        <div className="flex items-center gap-8 border-b border-gray-200 dark:border-slate-800 mb-8">
           {["All Maps", "Active", "Inactive"].map((tab) => (
             <button
               key={tab}
@@ -84,7 +84,7 @@ export default function PurchasedMapsPage() {
               className={`pb-4  font-public-sans transition-all relative ${
                 activeTab === tab
                   ? "text-yellow-500 font-bold"
-                  : "text-gray-400 hover:text-gray-600 font-medium"
+                  : "text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200 font-medium"
               }`}
             >
               {getTabLabel(tab)}{" "}
@@ -105,14 +105,14 @@ export default function PurchasedMapsPage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center gap-3 py-10">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
-              <p className="text-sm text-gray-500">{t("purchased_maps_page.loading")}</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400">{t("purchased_maps_page.loading")}</p>
             </div>
           ) : filteredMaps.length > 0 ? (
             filteredMaps.map((map: PurchasedMap) => (
               <PurchasedMapsCard key={map.id} map={map} />
             ))
           ) : (
-            <div className="text-center py-10 text-gray-500">
+            <div className="text-center py-10 text-gray-500 dark:text-slate-400">
               {t("purchased_maps_page.no_maps")}
             </div>
           )}

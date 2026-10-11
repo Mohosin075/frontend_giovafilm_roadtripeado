@@ -69,8 +69,8 @@ export function BusinessFormStep3({
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold text-gray-900">{t("for_business.step3.title")}</h2>
-        <p className="text-gray-600">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{t("for_business.step3.title")}</h2>
+        <p className="text-gray-600 dark:text-slate-300">
           {t("for_business.step3.subtitle")}
         </p>
       </div>
@@ -100,18 +100,18 @@ export function BusinessFormStep3({
             </div>
           ) : (
             <div
-              className="bg-gray-100 rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-150 transition-colors"
+              className="bg-gray-100 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-200/60 dark:hover:bg-slate-800/60 transition-colors"
               onClick={() => photosInputRef.current?.click()}
             >
               <div className="text-center">
-                <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">{t("for_business.step3.tap_to_preview")}</p>
+                <Camera className="w-12 h-12 text-gray-400 dark:text-slate-500 mx-auto mb-2" />
+                <p className="text-sm text-gray-500 dark:text-slate-400">{t("for_business.step3.tap_to_preview")}</p>
               </div>
             </div>
           )}
           <div className="space-y-2">
-            <h3 className="font-semibold text-gray-900">{t("for_business.step3.business_photos")} <span className="text-red-500">*</span></h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">{t("for_business.step3.business_photos")} <span className="text-red-500">*</span></h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               {t("for_business.step3.business_photos_desc")}
             </p>
             <Button
@@ -137,13 +137,13 @@ export function BusinessFormStep3({
         <div className="space-y-4">
           {menuPreview ? (
             <div className="relative group">
-              <div className="bg-gray-100 rounded-lg aspect-square flex items-center justify-center p-4">
+              <div className="bg-gray-100 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 rounded-lg aspect-square flex items-center justify-center p-4">
                 {menuFileName.toLowerCase().endsWith(".pdf") ? (
                   <div className="text-center">
-                    <div className="bg-red-100 text-red-600 w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-2 font-bold text-xl">
+                    <div className="bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-2 font-bold text-xl">
                       PDF
                     </div>
-                    <p className="text-sm text-gray-600 wrap-break-word">
+                    <p className="text-sm text-gray-600 dark:text-slate-300 wrap-break-word">
                       {menuFileName}
                     </p>
                   </div>
@@ -168,23 +168,23 @@ export function BusinessFormStep3({
               className="relative"
               onClick={() => menuInputRef.current?.click()}
             >
-              <div className="bg-gray-100 rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-150 transition-colors">
+              <div className="bg-gray-100 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-200/60 dark:hover:bg-slate-800/60 transition-colors">
                 <div className="text-center">
-                  <Utensils className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">{t("for_business.step3.tap_to_preview")}</p>
+                  <Utensils className="w-12 h-12 text-gray-400 dark:text-slate-500 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500 dark:text-slate-400">{t("for_business.step3.tap_to_preview")}</p>
                 </div>
               </div>
             </div>
           )}
           <div className="space-y-2">
-            <h3 className="font-semibold text-gray-900">{t("for_business.step3.menu_price_list")} <span className="text-red-500">*</span></h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">{t("for_business.step3.menu_price_list")} <span className="text-red-500">*</span></h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               {t("for_business.step3.menu_desc")}
             </p>
             <Button
               type="button"
               onClick={() => menuInputRef.current?.click()}
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold"
+              className="w-full bg-gray-900 dark:bg-slate-800 hover:bg-gray-800 dark:hover:bg-slate-700 text-white font-semibold"
             >
               <Utensils className="w-4 h-4 mr-2" />
               {t("for_business.step3.upload_menu")}

@@ -89,10 +89,10 @@ export const ResetPasswordForm = () => {
   return (
     <div className="flex flex-col justify-center">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">
+        <h2 className="text-2xl font-bold text-[#1A1A1A] dark:text-slate-100 mb-2">
           {isInvite ? t("auth.set_password_heading") : t("auth.reset_password_heading")}
         </h2>
-        <p className="text-sm text-[#757575]">
+        <p className="text-sm text-[#757575] dark:text-slate-400">
           {isInvite
             ? t("auth.set_password_subtitle")
             : t("auth.reset_password_subtitle")}
@@ -101,51 +101,51 @@ export const ResetPasswordForm = () => {
 
       {isInvite && (
         <div className="flex items-center gap-2 mb-6 text-xs font-semibold">
-          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-[#757575]">
+          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 dark:bg-slate-800 text-[#757575] dark:text-slate-400">
             1
           </span>
-          <span className="text-[#9E9E9E]">{t("auth.verify_code_step")}</span>
-          <span className="text-[#BDBDBD] mx-1">—</span>
+          <span className="text-[#9E9E9E] dark:text-slate-500">{t("auth.verify_code_step")}</span>
+          <span className="text-[#BDBDBD] dark:text-slate-600 mx-1">—</span>
           <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFC107] text-black">
             2
           </span>
-          <span className="text-[#1A1A1A]">{t("auth.set_password_step")}</span>
+          <span className="text-[#1A1A1A] dark:text-slate-200">{t("auth.set_password_step")}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-5">
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {isInvite ? t("auth.password") : t("auth.new_password")}
           </Label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               type="password"
               placeholder="••••••••"
               autoComplete="new-password"
               {...register("password")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
-          <p className="text-xs text-[#9E9E9E] ml-1">{t("auth.at_least_8_chars")}</p>
+          <p className="text-xs text-[#9E9E9E] dark:text-slate-500 ml-1">{t("auth.at_least_8_chars")}</p>
           {errors.password && (
             <p className="text-xs text-red-500 ml-1">{errors.password.message}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {t("auth.confirm_password")}
           </Label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               type="password"
               placeholder="••••••••"
               autoComplete="new-password"
               {...register("confirmPassword")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
           {errors.confirmPassword && (

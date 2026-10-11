@@ -131,20 +131,20 @@ export default function ProfileUpdateModal({
         showCloseButton={false}
         className="gap-0 overflow-hidden p-0 sm:max-w-md max-sm:top-auto max-sm:bottom-0 max-sm:left-0 max-sm:right-0 max-sm:w-full max-sm:max-w-none max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-t-3xl max-sm:rounded-b-none max-h-[92vh] sm:max-h-[90vh] flex flex-col"
       >
-        <div className="mx-auto mt-2 h-1.5 w-12 shrink-0 rounded-full bg-gray-200 sm:hidden" />
+        <div className="mx-auto mt-2 h-1.5 w-12 shrink-0 rounded-full bg-gray-200 dark:bg-slate-700 sm:hidden" />
 
         <DialogHeader className="relative shrink-0 px-5 pt-3 pb-2 sm:px-6 sm:pt-5 text-left">
-          <DialogTitle className="text-lg font-bold pr-10">
+          <DialogTitle className="text-lg font-bold pr-10 text-gray-900 dark:text-slate-100">
             {t("profile.edit_profile")}
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-500">
+          <DialogDescription className="text-sm text-gray-500 dark:text-slate-400">
             {t("profile.edit_desc") || "Tap the photo to change it, then save your details."}
           </DialogDescription>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
-            className="absolute right-4 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
+            className="absolute right-4 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
             aria-label={t("common.close")}
           >
             <X size={18} />
@@ -163,7 +163,7 @@ export default function ProfileUpdateModal({
                 className="relative h-28 w-28 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
                 aria-label="Change profile photo"
               >
-                <div className="h-full w-full overflow-hidden rounded-full border-4 border-yellow-100 bg-gray-100 shadow-sm">
+                <div className="h-full w-full overflow-hidden rounded-full border-4 border-yellow-100 dark:border-yellow-950/40 bg-gray-100 dark:bg-slate-800 shadow-sm">
                   {currentImage ? (
                     <Image
                       src={currentImage}
@@ -177,7 +177,7 @@ export default function ProfileUpdateModal({
                     <NoImage />
                   )}
                 </div>
-                <span className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-yellow-400 text-black shadow-md border-2 border-white">
+                <span className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-yellow-400 text-black shadow-md border-2 border-white dark:border-slate-900">
                   <Camera size={16} />
                 </span>
               </button>
@@ -203,7 +203,7 @@ export default function ProfileUpdateModal({
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="profile-name" className="text-sm font-semibold text-gray-700">
+              <label htmlFor="profile-name" className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                 {t("contact_form.name") || "Name"}
               </label>
               <Input
@@ -214,12 +214,12 @@ export default function ProfileUpdateModal({
                 onChange={(e) => setName(e.target.value)}
                 required
                 maxLength={80}
-                className="h-12 rounded-xl"
+                className="h-12 rounded-xl bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="profile-phone" className="text-sm font-semibold text-gray-700">
+              <label htmlFor="profile-phone" className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                 {t("places_admin.phone_number") || "Phone"}
               </label>
               <Input
@@ -229,12 +229,12 @@ export default function ProfileUpdateModal({
                 onChange={(e) => setPhone(e.target.value)}
                 type="tel"
                 inputMode="tel"
-                className="h-12 rounded-xl"
+                className="h-12 rounded-xl bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="profile-website" className="text-sm font-semibold text-gray-700">
+              <label htmlFor="profile-website" className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                 {t("places_admin.website_url") || "Website"}
               </label>
               <Input
@@ -244,16 +244,16 @@ export default function ProfileUpdateModal({
                 onChange={(e) => setWebsite(e.target.value)}
                 type="url"
                 inputMode="url"
-                className="h-12 rounded-xl"
+                className="h-12 rounded-xl bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="profile-instagram" className="text-sm font-semibold text-gray-700">
+              <label htmlFor="profile-instagram" className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                 {t("places_admin.instagram_username") || "Instagram"}
               </label>
               <div className="relative">
-                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400">
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400 dark:text-slate-500">
                   @
                 </span>
                 <Input
@@ -261,18 +261,18 @@ export default function ProfileUpdateModal({
                   placeholder="username"
                   value={instagram}
                   onChange={(e) => setInstagram(e.target.value.replace(/^@/, ""))}
-                  className="h-12 rounded-xl pl-8"
+                  className="h-12 rounded-xl pl-8 bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 />
               </div>
             </div>
           </div>
 
-          <div className="shrink-0 border-t bg-white px-5 py-3 sm:px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          <div className="shrink-0 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-[#131b2e] px-5 py-3 sm:px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-colors">
             <div className="flex gap-2">
               <Button
                 type="button"
                 variant="outline"
-                className="h-12 flex-1 rounded-xl"
+                className="h-12 flex-1 rounded-xl border-gray-200 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200 dark:hover:bg-slate-800"
                 onClick={() => onOpenChange(false)}
                 disabled={isLoading}
               >

@@ -251,16 +251,16 @@ export function BusinessOfferDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#131b2e] border dark:border-slate-800 text-slate-900 dark:text-slate-100">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-slate-900 dark:text-slate-100">
             {isEdit ? "Edit Offer" : "Add Offer"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label className="text-sm font-medium text-gray-700 mb-2 block">
+            <Label className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2 block">
               Offer Photo
             </Label>
             <div
@@ -293,10 +293,10 @@ export function BusinessOfferDialog({
                   }
                 }
               }}
-              className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors cursor-pointer bg-gray-50 ${
+              className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors cursor-pointer bg-gray-50 dark:bg-slate-900/60 ${
                 isDragging
-                  ? "border-yellow-500 bg-yellow-50/60 ring-2 ring-yellow-400/30 scale-[1.01]"
-                  : "border-gray-300 hover:border-yellow-400"
+                  ? "border-yellow-500 bg-yellow-50/60 dark:bg-yellow-950/30 ring-2 ring-yellow-400/30 scale-[1.01]"
+                  : "border-gray-300 dark:border-slate-700 hover:border-yellow-400 dark:hover:border-yellow-500"
               }`}
             >
               {preview ? (
@@ -312,7 +312,7 @@ export function BusinessOfferDialog({
                       e.stopPropagation();
                       handlePhotoChange(null);
                     }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow"
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow cursor-pointer"
                     aria-label="Remove offer photo"
                   >
                     <X size={14} />
@@ -320,11 +320,11 @@ export function BusinessOfferDialog({
                 </div>
               ) : (
                 <>
-                  <Upload className="mx-auto mb-2 text-gray-400" size={28} />
-                  <p className="text-sm font-medium text-gray-700">
+                  <Upload className="mx-auto mb-2 text-gray-400 dark:text-slate-500" size={28} />
+                  <p className="text-sm font-medium text-gray-700 dark:text-slate-300">
                     Upload offer photo
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">
                     PNG or JPG, up to 10MB
                   </p>
                 </>
@@ -340,30 +340,30 @@ export function BusinessOfferDialog({
           </div>
 
           <div>
-            <Label htmlFor="offer-title">{t("offers_admin.title_label") || "Offer Title"}</Label>
+            <Label htmlFor="offer-title" className="text-gray-700 dark:text-slate-300">{t("offers_admin.title_label") || "Offer Title"}</Label>
             <Input
               id="offer-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., 20% off Coffee"
-              className="mt-1"
+              className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
             />
           </div>
 
           <div>
-            <Label htmlFor="offer-description">{t("offers_admin.description_label") || "Description"}</Label>
+            <Label htmlFor="offer-description" className="text-gray-700 dark:text-slate-300">{t("offers_admin.description_label") || "Description"}</Label>
             <textarea
               id="offer-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder={t("offers.describe_offer_placeholder")}
               rows={4}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
           </div>
 
           <div>
-            <Label htmlFor="offer-discount-type">{t("offers_admin.discount_type_label") || "Discount Type"}</Label>
+            <Label htmlFor="offer-discount-type" className="text-gray-700 dark:text-slate-300">{t("offers_admin.discount_type_label") || "Discount Type"}</Label>
             <select
               id="offer-discount-type"
               value={discountType}
@@ -374,7 +374,7 @@ export function BusinessOfferDialog({
                   setDiscountValue("");
                 }
               }}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md bg-white"
+              className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             >
               <option value="">{t("offers_admin.select_type") || "Select type"}</option>
               <option value="Percentage">Percentage</option>
@@ -385,14 +385,14 @@ export function BusinessOfferDialog({
           </div>
 
           {discountType === "BOGO" && (
-            <div className="space-y-3 rounded-xl border border-yellow-200 bg-yellow-50/70 p-4">
+            <div className="space-y-3 rounded-xl border border-yellow-200 dark:border-yellow-900/40 bg-yellow-50/70 dark:bg-yellow-950/20 p-4">
               <div>
-                <Label htmlFor="offer-bogo-type">Second item</Label>
+                <Label htmlFor="offer-bogo-type" className="text-gray-700 dark:text-slate-300">Second item</Label>
                 <select
                   id="offer-bogo-type"
                   value={bogoSecondType}
                   onChange={(e) => setBogoSecondType(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md bg-white"
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
                 >
                   <option value="">{t("offers.choose_second_item_type")}</option>
                   <option value="free">{t("offers.second_item_free")}</option>
@@ -401,7 +401,7 @@ export function BusinessOfferDialog({
               </div>
               {bogoSecondType === "percentage" && (
                 <div>
-                  <Label htmlFor="offer-discount-value">% off second item</Label>
+                  <Label htmlFor="offer-discount-value" className="text-gray-700 dark:text-slate-300">% off second item</Label>
                   <Input
                     id="offer-discount-value"
                     type="number"
@@ -410,7 +410,7 @@ export function BusinessOfferDialog({
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
                     placeholder="e.g., 50"
-                    className="mt-1 bg-white"
+                    className="mt-1 bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
                   />
                 </div>
               )}
@@ -419,7 +419,7 @@ export function BusinessOfferDialog({
 
           {discountType !== "BOGO" && discountType !== "Free item" && discountType && (
             <div>
-              <Label htmlFor="offer-discount-value">{t("offers_admin.discount_value_label") || "Discount Value"}</Label>
+              <Label htmlFor="offer-discount-value" className="text-gray-700 dark:text-slate-300">{t("offers_admin.discount_value_label") || "Discount Value"}</Label>
               <Input
                 id="offer-discount-value"
                 type="number"
@@ -427,14 +427,14 @@ export function BusinessOfferDialog({
                 value={discountValue}
                 onChange={(e) => setDiscountValue(e.target.value)}
                 placeholder="e.g., 10"
-                className="mt-1"
+                className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
               />
             </div>
           )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="offer-max">{t("offers_admin.redemptions_per_user") || "Redemptions Per User"}</Label>
+              <Label htmlFor="offer-max" className="text-gray-700 dark:text-slate-300">{t("offers_admin.redemptions_per_user") || "Redemptions Per User"}</Label>
               <Input
                 id="offer-max"
                 type="number"
@@ -442,17 +442,17 @@ export function BusinessOfferDialog({
                 value={maxRedemptions}
                 onChange={(e) => setMaxRedemptions(e.target.value)}
                 placeholder="e.g., 1"
-                className="mt-1"
+                className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
                 How many times one customer can use this offer
               </p>
             </div>
             <div>
-              <Label htmlFor="offer-frequency" className="text-sm font-medium text-gray-700">Redemption Frequency</Label>
+              <Label htmlFor="offer-frequency" className="text-sm font-medium text-gray-700 dark:text-slate-300">Redemption Frequency</Label>
               <select
                 id="offer-frequency"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
                 value={redemptionFrequency}
                 onChange={(e) => {
                   const val = e.target.value;
@@ -471,29 +471,29 @@ export function BusinessOfferDialog({
               </select>
 
               {redemptionFrequency === "daily" && (
-                <p className="mt-1.5 text-xs text-blue-600 font-medium">
+                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
                   Customers can redeem this offer once every 24 hours
                 </p>
               )}
               {redemptionFrequency === "weekly" && (
-                <p className="mt-1.5 text-xs text-blue-600 font-medium">
+                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
                   Customers can redeem this offer once every 7 days
                 </p>
               )}
               {redemptionFrequency === "monthly" && (
-                <p className="mt-1.5 text-xs text-blue-600 font-medium">
+                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
                   Customers can redeem this offer once every 30 days
                 </p>
               )}
               {redemptionFrequency === "once" && (
-                <p className="mt-1.5 text-xs text-amber-600 font-medium">
+                <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium">
                   Each customer can only redeem this offer once
                 </p>
               )}
 
               {redemptionFrequency === "custom" && (
                 <div className="mt-2">
-                  <Label htmlFor="offer-duration" className="text-xs text-gray-600">
+                  <Label htmlFor="offer-duration" className="text-xs text-gray-600 dark:text-slate-400">
                     Duration in minutes
                   </Label>
                   <Input
@@ -503,7 +503,7 @@ export function BusinessOfferDialog({
                     value={redemptionDuration}
                     onChange={(e) => setRedemptionDuration(e.target.value)}
                     placeholder="e.g., 1440 for 24 hours"
-                    className="mt-1 text-xs"
+                    className="mt-1 text-xs dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
                   />
                 </div>
               )}
@@ -512,29 +512,29 @@ export function BusinessOfferDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="offer-from">Valid From</Label>
+              <Label htmlFor="offer-from" className="text-gray-700 dark:text-slate-300">Valid From</Label>
               <Input
                 id="offer-from"
                 type="date"
                 value={validFrom}
                 onChange={(e) => setValidFrom(e.target.value)}
-                className="mt-1"
+                className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
               />
             </div>
             <div className="space-y-2">
               {!noExpiration && (
                 <div>
-                  <Label htmlFor="offer-until">Valid Until</Label>
+                  <Label htmlFor="offer-until" className="text-gray-700 dark:text-slate-300">Valid Until</Label>
                   <Input
                     id="offer-until"
                     type="date"
                     value={validUntil}
                     onChange={(e) => setValidUntil(e.target.value)}
-                    className="mt-1"
+                    className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
                   />
                 </div>
               )}
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-slate-300 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={noExpiration}
@@ -546,14 +546,14 @@ export function BusinessOfferDialog({
           </div>
 
           <div>
-            <Label htmlFor="offer-rules">Redemption Rules</Label>
+            <Label htmlFor="offer-rules" className="text-gray-700 dark:text-slate-300">Redemption Rules</Label>
             <textarea
               id="offer-rules"
               value={redemptionRules}
               onChange={(e) => setRedemptionRules(e.target.value)}
               placeholder="One rule per line"
               rows={3}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
           </div>
 
@@ -562,10 +562,11 @@ export function BusinessOfferDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              className="dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading} className="min-w-32">
+            <Button type="submit" disabled={isLoading} className="min-w-32 bg-[#fabf13] hover:bg-[#e0ac10] text-slate-950 font-bold">
               {isLoading ? "Saving..." : isEdit ? "Update Offer" : "Save Offer"}
             </Button>
           </div>

@@ -26,11 +26,11 @@ export default function HowItWorks() {
   const { t } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-neutral-50/50 pb-20">
+    <main className="min-h-screen bg-neutral-50/50 dark:bg-[#0b0f19] pb-20">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-16 pb-16 md:pt-20 md:pb-20 border-b border-gray-100 bg-white">
+      <section className="relative overflow-hidden pt-16 pb-16 md:pt-20 md:pb-20 border-b border-gray-100 dark:border-slate-800/80 bg-white dark:bg-[#0b0f19]">
         {/* Subtle Background Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-72 bg-gradient-to-b from-amber-100/40 via-yellow-50/20 to-transparent blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-72 bg-gradient-to-b from-amber-100/40 dark:from-amber-500/10 via-yellow-50/20 dark:via-blue-500/5 to-transparent blur-3xl pointer-events-none" />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10 space-y-5">
           {/* Badge */}
@@ -38,9 +38,9 @@ export default function HowItWorks() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-950 text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-2xs"
+            className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-950 dark:text-amber-300 text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-2xs"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             <span>{t("how_it_works_page.badge")}</span>
           </motion.div>
 
@@ -49,7 +49,7 @@ export default function HowItWorks() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-950 tracking-tight leading-[1.15]"
+            className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-950 dark:text-slate-100 tracking-tight leading-[1.15]"
           >
             {t("how_it_works_page.title")}
           </motion.h1>
@@ -59,7 +59,7 @@ export default function HowItWorks() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed"
           >
             {t("how_it_works_page.subtitle")}
           </motion.p>

@@ -25,10 +25,10 @@ export function UnlockedAwardCard({
   return (
     <Card
       onClick={onClick}
-      className="w-full overflow-hidden rounded-2xl border-2 border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 py-0 flex flex-col justify-between h-full bg-white group cursor-pointer"
+      className="w-full overflow-hidden rounded-2xl border-2 border-amber-400 dark:border-amber-500/70 shadow-md hover:shadow-xl transition-all duration-300 py-0 flex flex-col justify-between h-full bg-white dark:bg-[#131b2e] group cursor-pointer"
     >
       {/* Image */}
-      <div className="relative h-36 sm:h-44 md:h-48 overflow-hidden shrink-0 bg-slate-100">
+      <div className="relative h-36 sm:h-44 md:h-48 overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-900">
         <img
           src={typeof image === "string" ? image : image?.src}
           alt={title}
@@ -44,19 +44,19 @@ export function UnlockedAwardCard({
       {/* Footer */}
       <div className="p-3.5 sm:p-4 md:p-5 flex-1 flex flex-col justify-between font-public-sans gap-2">
         <div>
-          <h3 className="font-extrabold text-xs sm:text-sm md:text-base text-slate-900 leading-snug group-hover:text-amber-600 transition-colors line-clamp-2">
+          <h3 className="font-extrabold text-xs sm:text-sm md:text-base text-slate-900 dark:text-slate-100 leading-snug group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-2">
             {title}
           </h3>
         </div>
 
         <div className="pt-1.5 mt-auto space-y-2">
           <div className="space-y-1">
-            <div className="flex justify-between text-[10px] sm:text-[11px] text-amber-700 font-extrabold tracking-wider">
+            <div className="flex justify-between text-[10px] sm:text-[11px] text-amber-700 dark:text-amber-400 font-extrabold tracking-wider">
               <span>{language === "es" ? "DESBLOQUEADO" : "UNLOCKED"}</span>
               <span>100%</span>
             </div>
 
-            <div className="w-full h-1.5 bg-amber-100 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-amber-100 dark:bg-amber-950/50 rounded-full overflow-hidden">
               <div className="h-full w-full bg-amber-500 rounded-full" />
             </div>
           </div>
@@ -70,7 +70,7 @@ export function UnlockedAwardCard({
                   e.stopPropagation();
                   onClick?.();
                 }}
-                className="w-full text-center text-[10px] sm:text-[11px] font-bold text-amber-700 hover:text-amber-800 hover:underline cursor-pointer py-0.5"
+                className="w-full text-center text-[10px] sm:text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 hover:underline cursor-pointer py-0.5"
               >
                 {language === "es" ? "Ver más detalles" : "View more details"}
               </button>
@@ -80,7 +80,7 @@ export function UnlockedAwardCard({
               <Button
                 type="button"
                 onClick={onClick}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-amber-200/50 cursor-pointer"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-amber-500/20 cursor-pointer"
               >
                 {language === "es" ? "Ver más detalles" : "View more details"}
               </Button>

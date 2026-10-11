@@ -47,12 +47,12 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
     <div className="space-y-6">
       {/* Header with View All Link */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
           {t("reviews.my_reviews")} ({reviews?.length || 0})
         </h2>
         <Link
           href="/profile/contributions-reviews"
-          className="text-green-600 font-semibold text-sm hover:text-green-700 transition-colors"
+          className="text-green-600 dark:text-green-400 font-semibold text-sm hover:text-green-700 dark:hover:text-green-300 transition-colors"
         >
           {t("reviews.view_all")}
         </Link>
@@ -60,7 +60,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
 
       {/* Reviews List */}
       {!reviews?.length ? (
-        <div className="py-16 text-center text-gray-500 text-sm bg-white rounded-2xl border border-gray-200">
+        <div className="py-16 text-center text-gray-500 dark:text-slate-400 text-sm bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-200 dark:border-slate-800">
           {t("reviews.no_reviews_yet")}
         </div>
       ) : (
@@ -79,7 +79,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
           return (
           <div
             key={review._id}
-            className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row"
+            className="bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-200 dark:border-slate-800/80 overflow-hidden hover:shadow-lg transition-all flex flex-col md:flex-row"
           >
             {/* Image Section */}
             <div className="relative w-full md:w-56 h-56 shrink-0">
@@ -99,7 +99,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
               )}
 
               {/* Location Badge */}
-              <div className="absolute bottom-3 left-1 bg-white px-2 py-1 rounded-md text-xs font-semibold text-gray-900 shadow-md flex items-center gap-1">
+              <div className="absolute bottom-3 left-1 bg-white/95 dark:bg-[#0b0f19]/95 px-2 py-1 rounded-md text-xs font-semibold text-gray-900 dark:text-slate-100 border border-transparent dark:border-slate-800 shadow-md flex items-center gap-1">
                 <MapPin size={14} /> {targetName}
               </div>
             </div>
@@ -109,7 +109,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
               {/* Title and Rating */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">
                     {targetName}
                   </h3>
                   {/* Star Rating */}
@@ -123,7 +123,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
                             ? "fill-yellow-400 text-yellow-400"
                             : i < review.rating
                               ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
+                              : "text-gray-300 dark:text-slate-700"
                         }`}
                       />
                     ))}
@@ -132,7 +132,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
 
                 {/* Review Date */}
                 <div className="flex items-center gap-3 mb-3">
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-slate-400">
                     {t("reviews.reviewed_on")}{" "}
                     {review.createdAt
                       ? new Date(review.createdAt).toLocaleDateString("en-US", {
@@ -145,10 +145,10 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
                   {review.status && (
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
                       review.status === 'Approved'
-                        ? 'bg-green-50 text-green-700 border border-green-200'
+                        ? 'bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800/60'
                         : review.status === 'Rejected'
-                        ? 'bg-red-50 text-red-700 border border-red-200'
-                        : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                        ? 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800/60'
+                        : 'bg-yellow-50 dark:bg-yellow-950/40 text-yellow-700 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800/60'
                     }`}>
                       {review.status}
                     </span>
@@ -156,7 +156,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-gray-600 line-clamp-2">
+                <p className="text-sm text-gray-600 dark:text-slate-300 line-clamp-2">
                   {getLocalized(review.review, language)}
                 </p>
               </div>
@@ -172,7 +172,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
                 <Link href={detailsHref}>
                   <Button
                     variant="outline"
-                    className="text-gray-900 font-semibold text-sm rounded-lg px-6 border-gray-200 cursor-pointer"
+                    className="text-gray-900 dark:text-slate-200 font-semibold text-sm rounded-lg px-6 border-gray-200 dark:border-slate-700 dark:bg-slate-800/50 dark:hover:bg-slate-800 cursor-pointer"
                   >
                     {t("place.view_details")}
                   </Button>

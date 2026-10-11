@@ -441,38 +441,38 @@ export function BusinessFormStep2({ form }: BusinessFormStep2Props) {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">{t("for_business.step2.title")}</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">{t("for_business.step2.title")}</h2>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
             {t("for_business.step2.subtitle_prefix")}{" "}
-            <span className="font-semibold text-gray-800">
+            <span className="font-semibold text-gray-800 dark:text-slate-200">
               {selectedMapName || t("for_business.step2.selected_map_fallback")}
             </span>
             {t("for_business.step2.subtitle_suffix")}
           </p>
         </div>
         {markerPosition && (
-          <Button type="button" variant="outline" onClick={clearLocation}>
+          <Button type="button" variant="outline" onClick={clearLocation} className="border-gray-300 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200">
             {t("for_business.step2.clear_location")}
           </Button>
         )}
       </div>
 
       {selectedMapName && (
-        <div className="rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+        <div className="rounded-xl border border-yellow-200 dark:border-yellow-900/60 bg-yellow-50 dark:bg-yellow-950/40 px-4 py-3 text-sm text-yellow-800 dark:text-yellow-300">
           {t("for_business.step2.selected_map")} <strong>{selectedMapName}</strong>
           {t("for_business.step2.map_note")}
         </div>
       )}
 
       <div className="space-y-2">
-        <Label className="text-base font-semibold text-gray-500 uppercase tracking-wide">
+        <Label className="text-base font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
           {t("for_business.step2.google_maps_url_label")}
         </Label>
         <div className="flex gap-2">
           <Input
             placeholder={t("for_business.step2.google_maps_url_placeholder")}
             {...form.register("mapUrl")}
-            className="bg-gray-50 border-gray-200"
+            className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
           />
           <Button
             type="button"
@@ -485,18 +485,18 @@ export function BusinessFormStep2({ form }: BusinessFormStep2Props) {
         </div>
       </div>
 
-      <p className="text-sm text-yellow-700 font-medium">
+      <p className="text-sm text-yellow-700 dark:text-yellow-400 font-medium">
         {t("for_business.step2.instructions")}
       </p>
 
       {markerPosition && (
-        <p className="text-sm text-green-700 font-medium">
+        <p className="text-sm text-green-700 dark:text-green-400 font-medium">
           {t("for_business.step2.location_set")} {locationLabel || `${markerPosition.lat.toFixed(5)}, ${markerPosition.lng.toFixed(5)}`}
         </p>
       )}
 
       {!apiKey ? (
-        <div className="flex h-[320px] items-center justify-center rounded-xl border border-red-200 bg-red-50 px-4 text-center text-sm font-medium text-red-700 sm:h-[500px]">
+        <div className="flex h-[320px] items-center justify-center rounded-xl border border-red-200 dark:border-red-900/60 bg-red-50 dark:bg-red-950/40 px-4 text-center text-sm font-medium text-red-700 dark:text-red-300 sm:h-[500px]">
           {t("for_business.step2.maps_api_missing")}
         </div>
       ) : (
@@ -509,10 +509,10 @@ export function BusinessFormStep2({ form }: BusinessFormStep2Props) {
                 void proposeLocation(lat, lng);
               }}
             />
-            <div className="relative h-[320px] overflow-hidden rounded-xl border border-gray-200 sm:h-[500px]">
+            <div className="relative h-[320px] overflow-hidden rounded-xl border border-gray-200 dark:border-slate-800 sm:h-[500px]">
               {!mapCenter ? (
-                <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                  <p className="text-sm text-gray-500">
+                <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-slate-900/60">
+                  <p className="text-sm text-gray-500 dark:text-slate-400">
                     {t("for_business.step2.opening")} {selectedMapName || t("for_business.step2.map")}...
                   </p>
                 </div>
@@ -531,7 +531,7 @@ export function BusinessFormStep2({ form }: BusinessFormStep2Props) {
                 />
               )}
               {isCheckingPin && (
-                <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-gray-700 shadow-lg">
+                <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/95 dark:bg-[#131b2e]/95 border border-transparent dark:border-slate-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 shadow-lg">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-yellow-400 border-t-transparent" />
                   {t("for_business.step2.checking_location")}
                 </div>

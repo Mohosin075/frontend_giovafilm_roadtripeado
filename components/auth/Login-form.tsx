@@ -142,8 +142,8 @@ export const LoginForm = () => {
     <div className="flex flex-col justify-center">
       {/* Welcome Text */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">{t("auth.login_title")}</h2>
-        <p className="text-sm text-[#757575]">
+        <h2 className="text-2xl font-bold text-[#1A1A1A] dark:text-slate-100 mb-2">{t("auth.login_title")}</h2>
+        <p className="text-sm text-[#757575] dark:text-slate-400">
           {t("auth.login_subtitle")}
         </p>
       </div>
@@ -152,16 +152,16 @@ export const LoginForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-5">
         {/* Email */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {t("auth.email")}
           </Label>
           <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               type="email"
               placeholder={t("auth.email_placeholder") || "your@email.com"}
               {...register("email")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
           {errors.email && (
@@ -171,16 +171,16 @@ export const LoginForm = () => {
 
         {/* Password */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {t("auth.password")}
           </Label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               type="password"
               placeholder="••••••••"
               {...register("password")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
           {errors.password && (
@@ -196,7 +196,7 @@ export const LoginForm = () => {
               {...register("rememberMe")}
               className="w-4 h-4 accent-[#FFC107] rounded"
             />
-            <span className="text-sm text-[#757575]">{t("auth.remember_me")}</span>
+            <span className="text-sm text-[#757575] dark:text-slate-400">{t("auth.remember_me")}</span>
           </label>
           <Link
             href="/forgot-password"
@@ -225,7 +225,7 @@ export const LoginForm = () => {
 
       {/* Footer */}
       <div className="text-sm text-center mt-6">
-        <span className="text-[#0A0A0A]">{t("auth.don_t_have_account")} </span>
+        <span className="text-[#0A0A0A] dark:text-slate-300">{t("auth.don_t_have_account")} </span>
         <Link
           href={
             `/register?` +

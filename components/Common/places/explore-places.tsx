@@ -234,7 +234,7 @@ export default function ExplorePlaces() {
   }, [enterSearching, isFetching]);
 
   return (
-    <section className="bg-gray-50 py-16">
+    <section className="bg-gray-50 dark:bg-[#0b0f19] py-16 min-h-screen transition-colors">
       <div className="max-w-360 mx-auto px-4 md:px-6">
         {/* Title */}
         <div className="mb-6">
@@ -525,16 +525,16 @@ export default function ExplorePlaces() {
                   size="icon"
                   disabled={page === 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="rounded-xl border-gray-200 h-10 w-10 hover:bg-gray-50 disabled:opacity-50 transition-all"
+                  className="rounded-xl border-gray-200 dark:border-slate-800 dark:bg-[#131b2e] h-10 w-10 hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-all cursor-pointer"
                 >
-                  <ChevronLeft size={16} className="text-gray-500" />
+                  <ChevronLeft size={16} className="text-gray-500 dark:text-slate-400" />
                 </Button>
 
                 {pages.map((p, idx) =>
                   p === "dots" ? (
                     <span
                       key={`dots-${idx}`}
-                      className="flex items-center justify-center w-10 h-10 text-gray-400 font-medium select-none"
+                      className="flex items-center justify-center w-10 h-10 text-gray-400 dark:text-slate-600 font-medium select-none"
                     >
                       ...
                     </span>
@@ -542,10 +542,10 @@ export default function ExplorePlaces() {
                     <Button
                       key={p}
                       onClick={() => setPage(p as number)}
-                      className={`h-10 min-w-[40px] rounded-xl font-medium transition-all text-sm ${
+                      className={`h-10 min-w-[40px] rounded-xl font-medium transition-all text-sm cursor-pointer ${
                         page === p
                           ? "bg-[#3B82F6] text-white hover:bg-blue-600 shadow-sm border-[#3B82F6]"
-                          : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                          : "bg-white dark:bg-[#131b2e] text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 border border-gray-200 dark:border-slate-800"
                       }`}
                     >
                       {p}
@@ -558,16 +558,16 @@ export default function ExplorePlaces() {
                   size="icon"
                   disabled={page === total}
                   onClick={() => setPage((p) => Math.min(total, p + 1))}
-                  className="rounded-xl border-gray-200 h-10 w-10 hover:bg-gray-50 disabled:opacity-50 transition-all"
+                  className="rounded-xl border-gray-200 dark:border-slate-800 dark:bg-[#131b2e] h-10 w-10 hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-all cursor-pointer"
                 >
-                  <ChevronRight size={16} className="text-gray-500" />
+                  <ChevronRight size={16} className="text-gray-500 dark:text-slate-400" />
                 </Button>
               </div>
 
               {/* Status and dropdown limit selector */}
-              <div className="w-full max-w-[500px] flex items-center justify-between mt-2 px-2 text-sm text-gray-700">
+              <div className="w-full max-w-[500px] flex items-center justify-between mt-2 px-2 text-sm text-gray-700 dark:text-slate-300">
                 {/* Result Info */}
-                <div className="font-semibold text-gray-700 text-base">
+                <div className="font-semibold text-gray-700 dark:text-slate-300 text-base">
                   {(page - 1) * limit + 1} - {Math.min(page * limit, meta.total || 0)} / {meta.total || 0}
                 </div>
 
@@ -579,7 +579,7 @@ export default function ExplorePlaces() {
                       setLimit(Number(e.target.value));
                       setPage(1);
                     }}
-                    className="bg-[#eef2f6] text-gray-700 font-semibold px-4 py-2 rounded-xl border-none focus:ring-2 focus:ring-blue-500 text-sm cursor-pointer appearance-none pr-8 relative bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234B5563%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.65rem_auto] bg-[right_0.75rem_center] bg-no-repeat"
+                    className="bg-[#eef2f6] dark:bg-[#131b2e] text-gray-700 dark:text-slate-200 font-semibold px-4 py-2 rounded-xl border border-transparent dark:border-slate-800 focus:ring-2 focus:ring-blue-500 text-sm cursor-pointer appearance-none pr-8 relative bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234B5563%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.65rem_auto] bg-[right_0.75rem_center] bg-no-repeat"
                   >
                     <option value={45}>45</option>
                     <option value={9}>9</option>

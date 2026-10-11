@@ -28,7 +28,7 @@ export function BusinessFormStep6({ form }: BusinessFormStep6Props) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
         <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-gray-500 font-medium font-public-sans text-xl">
+        <p className="text-gray-500 dark:text-slate-400 font-medium font-public-sans text-xl">
           {t("for_business.step6.loading_plans")}
         </p>
       </div>
@@ -37,14 +37,14 @@ export function BusinessFormStep6({ form }: BusinessFormStep6Props) {
 
   if (error) {
     return (
-      <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300 space-y-4">
+      <div className="text-center py-20 bg-white dark:bg-[#131b2e] rounded-3xl border border-dashed border-gray-300 dark:border-slate-800 space-y-4">
         <p className="text-red-500 font-medium text-lg">
           {t("for_business.step6.failed_load_plans")}
         </p>
         <Button
           onClick={() => window.location.reload()}
           variant="outline"
-          className="rounded-xl"
+          className="rounded-xl border-gray-300 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200"
         >
           {t("for_business.step6.try_again")}
         </Button>
@@ -56,13 +56,13 @@ export function BusinessFormStep6({ form }: BusinessFormStep6Props) {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <p className="text-sm md:text-base text-gray-500/80 uppercase tracking-wider font-bold">
+        <p className="text-sm md:text-base text-gray-500/80 dark:text-slate-400 uppercase tracking-wider font-bold">
           {t("for_business.step6.current_step")}
         </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-slate-100">
           {t("for_business.step6.title")}
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <p className="text-gray-600 dark:text-slate-300 max-w-2xl mx-auto">
           {t("for_business.step6.subtitle")}
         </p>
       </div>
@@ -75,11 +75,11 @@ export function BusinessFormStep6({ form }: BusinessFormStep6Props) {
           <FormItem>
             <FormControl>
               {plans.length === 0 ? (
-                <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-300">
-                  <p className="text-gray-500 font-medium text-lg">
+                <div className="text-center py-16 bg-white dark:bg-[#131b2e] rounded-3xl border border-dashed border-gray-300 dark:border-slate-800">
+                  <p className="text-gray-500 dark:text-slate-400 font-medium text-lg">
                     {t("for_business.step6.no_plans")}
                   </p>
-                  <p className="mt-2 text-sm text-gray-400">
+                  <p className="mt-2 text-sm text-gray-400 dark:text-slate-500">
                     {t("for_business.step6.check_back_later")}
                   </p>
                 </div>

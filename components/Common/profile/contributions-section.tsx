@@ -37,13 +37,13 @@ export function ContributionsSection() {
   const progressToNextLevel = nextLevelPoints > 0 ? Math.min(100, Math.round((currentPoints / nextLevelPoints) * 100)) : 100;
 
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-8 border border-gray-200 space-y-4 sm:space-y-8">
+    <div className="bg-white dark:bg-[#131b2e] rounded-2xl p-4 sm:p-8 border border-gray-200 dark:border-slate-800 space-y-4 sm:space-y-8 transition-colors">
       {/* Header */}
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-0.5">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-0.5">
           {t("contributions.your_contributions")}
         </h2>
-        <p className="text-gray-500 text-xs sm:text-sm">
+        <p className="text-gray-500 dark:text-slate-400 text-xs sm:text-sm">
           {t("contributions.track_impact")}
         </p>
       </div>
@@ -54,31 +54,31 @@ export function ContributionsSection() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-gray-50 rounded-xl p-3 sm:p-6 border border-gray-100 h-20 sm:h-28 animate-pulse"
+              className="bg-gray-50 dark:bg-slate-900/60 rounded-xl p-3 sm:p-6 border border-gray-100 dark:border-slate-800 h-20 sm:h-28 animate-pulse"
             />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-2 sm:gap-4">
           {/* Total Points */}
-          <div className="bg-gray-50 rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 flex flex-col justify-center">
-            <p className="text-gray-500 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
+          <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
+            <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
               {t("contributions.total_points")}
             </p>
             <p className="text-lg sm:text-4xl font-extrabold text-amber-500">{currentPoints}</p>
           </div>
 
           {/* Reviews */}
-          <div className="bg-gray-50 rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 flex flex-col justify-center">
-            <p className="text-gray-500 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
+          <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
+            <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
               {t("contributions.approved_reviews")}
             </p>
             <p className="text-lg sm:text-4xl font-extrabold text-amber-500">{user?.totalReviewsApproved || 0}</p>
           </div>
 
           {/* Level */}
-          <div className="bg-gray-50 rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 flex flex-col justify-center">
-            <p className="text-gray-500 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
+          <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
+            <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
               {t("contributions.current_level")}
             </p>
             <p className="text-lg sm:text-4xl font-extrabold text-amber-500">Lv {currentLevel}</p>
@@ -87,18 +87,18 @@ export function ContributionsSection() {
       )}
 
       {/* Progress Section */}
-      <div className="space-y-2 pt-3 border-t border-gray-200">
+      <div className="space-y-2 pt-3 border-t border-gray-200 dark:border-slate-800">
         <div>
-          <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1">
-            {t("contributions.progress_to_level")} {nextLevelIndex}: <span className="text-amber-600 font-bold">{nextLevel.name}</span>
+          <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1">
+            {t("contributions.progress_to_level")} {nextLevelIndex}: <span className="text-amber-600 dark:text-amber-400 font-bold">{nextLevel.name}</span>
           </h3>
-          <p className="text-[11px] sm:text-xs text-gray-500 mb-2">
+          <p className="text-[11px] sm:text-xs text-gray-500 dark:text-slate-400 mb-2">
             {pointsUntilNextLevel} {t("contributions.pts")} {t("contributions.and")} {Math.max(0, nextLevel.reviews - (user?.totalReviewsApproved || 0))} {t("contributions.reviews_until_next")}
           </p>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
           <div
             className="bg-green-600 h-full rounded-full transition-all duration-300"
             style={{ width: `${progressToNextLevel}%` }}
@@ -106,12 +106,12 @@ export function ContributionsSection() {
         </div>
 
         {/* Progress Percentage */}
-        <p className="text-[11px] sm:text-xs text-right text-gray-600 font-medium">
+        <p className="text-[11px] sm:text-xs text-right text-gray-600 dark:text-slate-400 font-medium">
           {progressToNextLevel}%
         </p>
 
         {/* Help Text */}
-        <p className="text-[11px] sm:text-xs text-gray-400 pt-1">
+        <p className="text-[11px] sm:text-xs text-gray-400 dark:text-slate-500 pt-1">
           {t("contributions.earn_points_help")}
         </p>
       </div>

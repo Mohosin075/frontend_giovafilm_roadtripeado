@@ -43,13 +43,13 @@ export default function PersonalizedExperience() {
   return (
     <section className="relative py-24 overflow-hidden font-inter">
       {/* Background Shape */}
-      <div className="absolute inset-0 bg-primary/20 rounded-tr-[200px] z-0" />
+      <div className="absolute inset-0 bg-primary/20 dark:bg-amber-500/5 rounded-tr-[200px] z-0" />
 
       <div className="relative max-w-360 mx-auto px-4 md:px-6 flex flex-col lg:flex-row items-center justify-between gap-10">
         {/* LEFT SIDE */}
         <div className="space-y-8 w-full lg:w-1/2">
           <motion.h2
-            className="text-4xl font-bold"
+            className="text-4xl font-bold text-gray-900 dark:text-slate-100"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -72,16 +72,16 @@ export default function PersonalizedExperience() {
                 whileHover={{ x: 6, scale: 1.01 }}
                 className="w-full"
               >
-                <Card className="rounded-xl shadow-xs bg-white py-0 cursor-pointer border border-gray-100/50 hover:shadow-md transition-shadow">
+                <Card className="rounded-xl shadow-xs bg-white dark:bg-[#131b2e]/90 py-0 cursor-pointer border border-gray-100/50 dark:border-slate-800/80 hover:shadow-md transition-all">
                   <CardContent className="flex items-start gap-4 p-6">
-                    <div className="w-9 h-9 rounded-md flex items-center justify-center bg-yellow-50">
+                    <div className="w-9 h-9 rounded-md flex items-center justify-center bg-yellow-50 dark:bg-slate-900 border border-transparent dark:border-slate-800">
                       {feature.icon}
                     </div>
 
                     <div>
-                      <h3 className="font-semibold text-lg">{feature.title}</h3>
+                      <h3 className="font-semibold text-lg text-gray-900 dark:text-slate-100">{feature.title}</h3>
 
-                      <p className="text-muted-foreground text-sm">
+                      <p className="text-muted-foreground dark:text-slate-400 text-sm">
                         {feature.description}
                       </p>
                     </div>
@@ -101,7 +101,7 @@ export default function PersonalizedExperience() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           whileHover={{ y: -5 }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl w-full md:w-lg p-6 border border-gray-100">
+          <div className="bg-white dark:bg-[#131b2e] rounded-2xl shadow-2xl w-full md:w-lg p-6 border border-gray-100 dark:border-slate-800">
             {/* Fake Browser Top */}
             <div className="flex gap-2 mb-6">
               <div className="w-3 h-3 bg-red-400 rounded-full" />
@@ -120,9 +120,9 @@ export default function PersonalizedExperience() {
               </motion.div>
 
               <div>
-                <p className="font-semibold">{t("landing.welcome_back")}</p>
+                <p className="font-semibold text-gray-900 dark:text-slate-100">{t("landing.welcome_back")}</p>
 
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground dark:text-slate-400">
                   {t("landing.active_maps")}
                 </p>
               </div>
@@ -130,17 +130,17 @@ export default function PersonalizedExperience() {
 
             {/* Fake Content */}
             <div className="space-y-4">
-              <div className="h-6 bg-gray-200 rounded w-1/2 animate-pulse" />
+              <div className="h-6 bg-gray-200 dark:bg-slate-800 rounded w-1/2 animate-pulse" />
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="h-32 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center bg-gray-50/50">
-                  <div className="w-6 h-6 bg-gray-300 rounded-full" />
+                <div className="h-32 border-2 border-dashed border-gray-200 dark:border-slate-800 rounded-lg flex items-center justify-center bg-gray-50/50 dark:bg-[#0e1424]">
+                  <div className="w-6 h-6 bg-gray-300 dark:bg-slate-700 rounded-full" />
                 </div>
 
                 <div className="space-y-3">
-                  <div className="h-10 bg-yellow-100/50 rounded-md" />
-                  <div className="h-10 bg-gray-100 rounded-md" />
-                  <div className="h-10 bg-gray-100 rounded-md" />
+                  <div className="h-10 bg-yellow-100/50 dark:bg-amber-950/40 rounded-md" />
+                  <div className="h-10 bg-gray-100 dark:bg-slate-800 rounded-md" />
+                  <div className="h-10 bg-gray-100 dark:bg-slate-800 rounded-md" />
                 </div>
               </div>
             </div>

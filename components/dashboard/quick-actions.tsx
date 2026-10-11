@@ -12,14 +12,14 @@ export function QuickActions() {
   ];
 
   return (
-    <Card className="bg-white gap-3 p-6 rounded-xl border-0 shadow-sm">
-      <h3 className="text-lg font-bold text-gray-900">{t("dashboard.quick_actions")}</h3>
+    <Card className="bg-white dark:bg-[#131b2e] dark:border dark:border-slate-800/80 gap-3 p-6 rounded-xl border-0 shadow-sm transition-all">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">{t("dashboard.quick_actions")}</h3>
       <div className="space-y-2">
         {actions.map((action, idx) => (
           <a
             key={idx}
             href={action.href}
-            className="text-blue-600 hover:text-blue-800 font-medium text-sm block transition-colors"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium text-sm block transition-colors"
           >
             {action.label}
           </a>

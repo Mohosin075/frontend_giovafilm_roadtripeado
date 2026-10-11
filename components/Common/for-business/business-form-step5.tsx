@@ -18,9 +18,9 @@ export function BusinessFormStep5({ form }: BusinessFormStep5Props) {
       {/* Header */}
       <div className="text-center space-y-4">
         <Lock className="w-12 h-12 text-yellow-400 mx-auto" />
-        <h2 className="text-3xl font-bold text-gray-900">{t("for_business.step5.title")}</h2>
-        <p className="text-xs font-semibold text-orange-600 uppercase tracking-wider">{t("for_business.step5.admin_only")}</p>
-        <p className="text-gray-600">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{t("for_business.step5.title")}</h2>
+        <p className="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wider">{t("for_business.step5.admin_only")}</p>
+        <p className="text-gray-600 dark:text-slate-300">
           {t("for_business.step5.subtitle")}
         </p>
       </div>
@@ -40,16 +40,16 @@ export function BusinessFormStep5({ form }: BusinessFormStep5Props) {
           }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-900 font-semibold">{t("for_business.step5.owner_phone")} <span className="text-red-500">*</span></FormLabel>
+              <FormLabel className="text-gray-900 dark:text-slate-200 font-semibold">{t("for_business.step5.owner_phone")} <span className="text-red-500">*</span></FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("for_business.step5.owner_phone_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200"
+                  className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   type="tel"
                 />
               </FormControl>
-              <p className="text-xs text-gray-500 mt-1">{t("for_business.step5.owner_phone_note")}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{t("for_business.step5.owner_phone_note")}</p>
               <FormMessage />
             </FormItem>
           )}
@@ -68,16 +68,16 @@ export function BusinessFormStep5({ form }: BusinessFormStep5Props) {
           }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-900 font-semibold">{t("for_business.step5.invoicing_email")} <span className="text-red-500">*</span></FormLabel>
+              <FormLabel className="text-gray-900 dark:text-slate-200 font-semibold">{t("for_business.step5.invoicing_email")} <span className="text-red-500">*</span></FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("for_business.step5.invoicing_email_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200"
+                  className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   type="email"
                 />
               </FormControl>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                 {t("for_business.step5.invoicing_email_note")}
               </p>
               <FormMessage />

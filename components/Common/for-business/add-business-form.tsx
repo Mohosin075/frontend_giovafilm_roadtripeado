@@ -426,10 +426,10 @@ export function AddBusinessForm() {
 
   if (!hydrated) {
     return (
-      <div className="min-h-screen bg-gray-50 px-4 py-16 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-[#0b0f19] px-4 py-16 flex items-center justify-center transition-colors">
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-medium text-gray-500">
+          <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
             {t("for_business.restoring_progress")}
           </p>
         </div>
@@ -438,15 +438,15 @@ export function AddBusinessForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-10 pb-16">
-      <div ref={formTopRef} className="max-w-5xl mx-auto p-4 md:p-6 bg-white rounded-lg">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4 md:mb-8 text-center md:text-left">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0b0f19] px-4 py-10 pb-16 transition-colors">
+      <div ref={formTopRef} className="max-w-5xl mx-auto p-4 md:p-6 bg-white dark:bg-[#131b2e] rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800/80 transition-colors">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4 md:mb-8 text-center md:text-left">
           {t("for_business.title")}
         </h1>
 
         {draftRestored && (
-          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-            <p className="text-sm font-medium text-amber-800">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/40 px-4 py-3">
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
               {t("for_business.draft_restored")}
             </p>
             <Button
@@ -460,16 +460,16 @@ export function AddBusinessForm() {
           </div>
         )}
 
-        <div className="mb-4 md:mb-8 space-y-4 border p-4 md:p-6 rounded-lg border-gray-200/50">
+        <div className="mb-4 md:mb-8 space-y-4 border p-4 md:p-6 rounded-xl border-gray-200/50 dark:border-slate-800/80 bg-gray-50/50 dark:bg-[#0e1424]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm md:text-base text-gray-500/80 uppercase tracking-wider font-bold">
+            <p className="text-sm md:text-base text-gray-500/80 dark:text-slate-400 uppercase tracking-wider font-bold">
               {t("for_business.business_progress")}
             </p>
             <p className="text-sm font-semibold text-primary">
               {t("for_business.step_progress").replace("{step}", String(currentStep))} ({progressPercentage.toFixed(0)}%)
             </p>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-2">
             <div
               className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressPercentage}%` }}
@@ -488,12 +488,12 @@ export function AddBusinessForm() {
                   disabled={!reachable}
                   className={`rounded-lg px-2 py-2 text-xs font-semibold transition-colors ${
                     active
-                      ? "bg-yellow-400 text-black"
+                      ? "bg-yellow-400 text-black shadow-sm"
                       : done
-                        ? "bg-yellow-50 text-yellow-800 hover:bg-yellow-100"
+                        ? "bg-yellow-50 dark:bg-yellow-950/40 text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/50"
                         : reachable
-                          ? "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                          : "bg-gray-50 text-gray-300 cursor-not-allowed"
+                          ? "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
+                          : "bg-gray-50 dark:bg-slate-900/40 text-gray-300 dark:text-slate-600 cursor-not-allowed"
                   }`}
                 >
                   {step.id}. {t(`for_business.steps.${step.key}`)}
@@ -506,7 +506,7 @@ export function AddBusinessForm() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onFinalSubmit)}
-            className="bg-white rounded-lg border border-gray-200/50 p-4 md:p-8 space-y-8"
+            className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200/50 dark:border-slate-800/80 p-4 md:p-8 space-y-8 shadow-sm transition-colors"
           >
             {currentStep === 1 && <BusinessFormStep1 form={form} />}
             {currentStep === 2 && <BusinessFormStep2 form={form} />}
@@ -528,13 +528,13 @@ export function AddBusinessForm() {
             {currentStep === 5 && <BusinessFormStep5 form={form} />}
             {currentStep === 6 && <BusinessFormStep6 form={form} />}
 
-            <div className="flex gap-3 pt-8 border-t">
+            <div className="flex gap-3 pt-8 border-t border-gray-200 dark:border-slate-800">
               {currentStep > 1 && (
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setCurrentStep(currentStep - 1)}
-                  className="flex-1 py-6 text-base font-semibold"
+                  className="flex-1 py-6 text-base font-semibold border-gray-300 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200 dark:hover:bg-slate-800"
                   disabled={isLoading}
                 >
                   {t("for_business.back")}

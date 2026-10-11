@@ -6,6 +6,7 @@ import whiteLogo from "@/public/white-logo.png";
 import logo from "@/public/logo.png";
 import Link from "next/link";
 import LanguageSwitcher from "@/components/shared/language-switcher";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface AuthLayoutProps {
@@ -31,9 +32,10 @@ export function AuthLayout({
   const displayDescription = descriptionKey ? t(descriptionKey) : description;
 
   return (
-    <div className="min-h-screen flex relative">
-      {/* Top Floating Language Switcher */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-30">
+    <div className="min-h-screen flex relative bg-white dark:bg-[#0b0f19] transition-colors">
+      {/* Top Floating Language Switcher & Theme Toggle */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-30 flex items-center gap-2">
+        <ThemeToggle />
         <LanguageSwitcher />
       </div>
 
@@ -78,7 +80,14 @@ export function AuthLayout({
                 alt="Dashboard Logo"
                 height={500}
                 width={500}
-                className="w-60 h-auto"
+                className="w-60 h-auto block dark:hidden"
+              />
+              <Image
+                src={whiteLogo}
+                alt="Dashboard Logo"
+                height={500}
+                width={500}
+                className="w-60 h-auto hidden dark:block"
               />
             </Link>
           </div>

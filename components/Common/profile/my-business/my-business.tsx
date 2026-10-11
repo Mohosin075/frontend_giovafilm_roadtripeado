@@ -141,21 +141,21 @@ export default function MyBusinessPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/50 p-6">
+    <div className="min-h-screen bg-slate-50/50 dark:bg-[#0b0f19] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
               My <span className="text-primary">Businesses</span>
             </h1>
-            <p className="text-slate-500 font-medium mt-1">
+            <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">
               Manage and track your business performance across the platform.
             </p>
           </div>
 
           <Link href="/for-business">
-            <Button className="rounded-xl px-6 h-12 bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 gap-2 cursor-pointer">
+            <Button className="rounded-xl px-6 h-12 bg-primary hover:bg-primary/90 text-slate-950 font-extrabold shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 gap-2 cursor-pointer">
               <Plus size={20} strokeWidth={3} />
               Add New Business
             </Button>
@@ -165,8 +165,8 @@ export default function MyBusinessPage() {
         {businesses.length > 0 && (
           <div className="mb-10 space-y-6">
             {/* Filter Bar */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-              <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-[#131b2e] p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+              <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-bold text-sm">
                 <Filter size={18} className="text-primary" />
                 <span>{t("business_details.filter_by_period") || "Filter statistics by time period"}:</span>
               </div>
@@ -187,8 +187,8 @@ export default function MyBusinessPage() {
                       onClick={() => setTimeFilter(tab.id)}
                       className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                         isActive
-                          ? "bg-primary text-white shadow-sm shadow-primary/30"
-                          : "bg-slate-100 hover:bg-slate-200/70 text-slate-600"
+                          ? "bg-primary text-slate-950 shadow-sm shadow-primary/30"
+                          : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/70 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"
                       }`}
                     >
                       {tab.label}
@@ -203,17 +203,17 @@ export default function MyBusinessPage() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between"
+                className="bg-white dark:bg-[#131b2e] p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center justify-between"
               >
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">
                     {t("business_details.total_views") || "Total Views"}
                   </p>
-                  <p className="text-2xl font-black text-slate-900">
+                  <p className="text-2xl font-black text-slate-900 dark:text-slate-100">
                     {stats.totalViews ?? 0}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                   <Eye size={22} />
                 </div>
               </motion.div>
@@ -222,17 +222,17 @@ export default function MyBusinessPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 }}
-                className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between"
+                className="bg-white dark:bg-[#131b2e] p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center justify-between"
               >
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">
                     {t("business_details.discounts_redeemed") || "Discounts Redeemed"}
                   </p>
-                  <p className="text-2xl font-black text-purple-700">
+                  <p className="text-2xl font-black text-purple-700 dark:text-purple-400">
                     {stats.totalDiscountsRedeemed ?? 0}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center">
                   <Tag size={22} />
                 </div>
               </motion.div>
@@ -241,17 +241,17 @@ export default function MyBusinessPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between"
+                className="bg-white dark:bg-[#131b2e] p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center justify-between"
               >
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">
                     {t("business_details.active_businesses") || "Active Businesses"}
                   </p>
-                  <p className="text-2xl font-black text-emerald-600">
+                  <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
                     {stats.activeBusinesses ?? 0} / {businesses.length}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                   <CheckCircle2 size={22} />
                 </div>
               </motion.div>
@@ -263,22 +263,22 @@ export default function MyBusinessPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center py-20 px-6 bg-white rounded-3xl border border-slate-200 shadow-sm text-center"
+            className="flex flex-col items-center justify-center py-20 px-6 bg-white dark:bg-[#131b2e] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm text-center"
           >
-            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-              <Building2 size={40} className="text-slate-300" />
+            <div className="w-20 h-20 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-6">
+              <Building2 size={40} className="text-slate-300 dark:text-slate-600" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
               No Businesses Yet
             </h2>
-            <p className="text-slate-500 max-w-sm mb-8">
+            <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-8">
               Register your first business to start reaching thousands of
               travelers and local explorers.
             </p>
             <Link href="/for-business">
               <Button
                 variant="outline"
-                className="rounded-xl border-slate-200 hover:bg-slate-50 font-bold px-8"
+                className="rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 font-bold px-8 cursor-pointer"
               >
                 Get Started
               </Button>
@@ -292,14 +292,14 @@ export default function MyBusinessPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="group bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300"
+                className="group bg-white dark:bg-[#131b2e] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/20 transition-all duration-300"
               >
                 {/* Image Section */}
                 <Link
                   href={`/profile/my-business/${business._id}`}
-                  className="relative h-56 w-full block overflow-hidden"
+                  className="relative h-56 w-full block overflow-hidden bg-slate-100 dark:bg-slate-900"
                 >
-                  {business.media?.photos.length > 0 ? (
+                  {business.media?.photos?.length > 0 ? (
                     <Image
                       src={getImageUrl(business.media?.photos?.[0])}
                       alt={business.name}
@@ -313,7 +313,7 @@ export default function MyBusinessPage() {
                   )}
 
                   {/* Category Badge */}
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2 shadow-sm border border-white/20">
+                  <div className="absolute top-4 left-4 bg-white/90 dark:bg-[#0b0f19]/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2 shadow-sm border border-white/20 dark:border-slate-700">
                     {business.category?.icon ? (
                       business.category.icon.startsWith("/") ||
                       business.category.icon.startsWith("http") ? (
@@ -328,7 +328,7 @@ export default function MyBusinessPage() {
                     ) : (
                       <span className="text-base">🏢</span>
                     )}
-                    <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
                       {business.category?.name || "General"}
                     </span>
                   </div>
@@ -347,31 +347,28 @@ export default function MyBusinessPage() {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
                     <Link href={`/profile/my-business/${business._id}`}>
-                      <h3 className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors line-clamp-1">
+                      <h3 className="text-xl font-black text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors line-clamp-1">
                         {business.name}
                       </h3>
                     </Link>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="p-1 hover:bg-slate-100 rounded-lg transition-colors text-slate-400">
+                        <button className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-400">
                           <MoreVertical size={20} />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="rounded-xl border-slate-200 shadow-xl p-2 w-48"
+                        className="rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131b2e] shadow-xl p-2 w-48 text-slate-900 dark:text-slate-100"
                       >
                         <DropdownMenuItem
                           asChild
-                          className="rounded-lg gap-2 font-medium focus:bg-slate-50 cursor-pointer"
+                          className="rounded-lg gap-2 font-medium focus:bg-slate-50 dark:focus:bg-slate-850 cursor-pointer"
                         >
                           <Link href={`/profile/my-business/${business._id}`}>
                             <Eye size={16} /> View Details
                           </Link>
                         </DropdownMenuItem>
-                        {/* <DropdownMenuItem className="rounded-lg gap-2 font-medium focus:bg-slate-50 cursor-pointer">
-                            <Settings size={16} /> Edit Details
-                          </DropdownMenuItem>  */}
                         <DropdownMenuItem
                           onClick={() => {
                             const coords =
@@ -387,13 +384,13 @@ export default function MyBusinessPage() {
                               toast.error(t("business.invalid_coords"));
                             }
                           }}
-                          className="rounded-lg gap-2 font-medium focus:bg-slate-50 cursor-pointer"
+                          className="rounded-lg gap-2 font-medium focus:bg-slate-50 dark:focus:bg-slate-850 cursor-pointer"
                         >
                           <ExternalLink size={16} /> View on Map
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDeleteBusiness(business._id, business.name)}
-                          className="rounded-lg gap-2 font-medium text-red-600 focus:text-red-700 focus:bg-red-50 cursor-pointer"
+                          className="rounded-lg gap-2 font-medium text-red-600 focus:text-red-700 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer"
                         >
                           <Trash2 size={16} strokeWidth={2.5} /> Delete Business
                         </DropdownMenuItem>
@@ -401,7 +398,7 @@ export default function MyBusinessPage() {
                     </DropdownMenu>
                   </div>
 
-                  <div className="flex items-center gap-1.5 text-slate-500 mb-2">
+                  <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mb-2">
                     <MapPin size={16} />
                     <span className="text-xs font-medium truncate">
                       {business.location?.city}, {business.location?.country}
@@ -410,12 +407,12 @@ export default function MyBusinessPage() {
 
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-slate-500">Subscription:</span>
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Subscription:</span>
                       <Badge
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                           business.hasActiveSubscription
-                            ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
-                            : "bg-rose-500/10 text-rose-600 border-rose-500/20"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                            : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20"
                         }`}
                         variant="outline"
                       >
@@ -423,31 +420,30 @@ export default function MyBusinessPage() {
                       </Badge>
                     </div>
 
-                    <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
-                      <Eye size={11} className="text-blue-600" />
+                    <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/40 shadow-2xs">
+                      <Eye size={11} className="text-blue-600 dark:text-blue-400" />
                       <span>
                         {business.viewCount ?? 0} {t("business_details.views") || "Views"}
                       </span>
                     </div>
 
-                    <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-50 text-purple-700 border border-purple-200/80 shadow-2xs">
-                      <Tag size={11} className="text-purple-600" />
+                    <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/40 shadow-2xs">
+                      <Tag size={11} className="text-purple-600 dark:text-purple-400" />
                       <span>
                         {business.discountsRedeemed ?? business.offer?.redemptionsCount ?? 0} {t("business_details.redeemed") || "Redeemed"}
                       </span>
                     </div>
                   </div>
 
-
-                  <p className="text-sm text-slate-600 line-clamp-2 mb-4 font-medium leading-relaxed">
+                  <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 mb-4 font-medium leading-relaxed">
                     {business.description}
                   </p>
 
                   {business.hasActiveSubscription === false && (
-                    <div className="flex flex-col gap-3 bg-amber-50/50 rounded-xl p-4 mb-6 border border-amber-200/50">
+                    <div className="flex flex-col gap-3 bg-amber-50/50 dark:bg-amber-950/30 rounded-xl p-4 mb-6 border border-amber-200/50 dark:border-amber-800/40">
                       <div className="flex items-start gap-2">
-                        <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                        <p className="text-xs text-amber-700 font-semibold leading-relaxed">
+                        <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                        <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold leading-relaxed">
                           This business is not visible on the map because it lacks an active subscription.
                         </p>
                       </div>
@@ -456,7 +452,7 @@ export default function MyBusinessPage() {
                           onClick={() => handlePayNow(business.plan, business._id)}
                           size="sm"
                           disabled={isPaymentLoading}
-                          className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg h-9 text-xs"
+                          className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg h-9 text-xs"
                         >
                           {isPaymentLoading && loadingBusinessId === business._id ? "Processing..." : "Activate Listing (Pay Now)"}
                         </Button>
@@ -464,7 +460,7 @@ export default function MyBusinessPage() {
                         <Link href="/pricing">
                           <Button
                             size="sm"
-                            className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg h-9 text-xs"
+                            className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg h-9 text-xs"
                           >
                             Upgrade to Premium
                           </Button>
@@ -474,10 +470,10 @@ export default function MyBusinessPage() {
                   )}
 
                   {/* Stats Bar */}
-                  <div className="flex items-center justify-between border-t pt-5 border-slate-100">
+                  <div className="flex items-center justify-between border-t pt-5 border-slate-100 dark:border-slate-800">
                     <div className="flex items-center gap-1.5 text-slate-400 mt-4">
                       <Clock size={16} />
-                      <span className="text-sm font-bold text-slate-600">
+                      <span className="text-sm font-bold text-slate-600 dark:text-slate-300">
                         {new Date(business.createdAt).toLocaleDateString(
                           "en-US",
                           { month: "short", day: "numeric" },
@@ -490,7 +486,7 @@ export default function MyBusinessPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-amber-600 border-amber-300"
+                          className="text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-500/50 bg-amber-50/50 dark:bg-amber-950/30"
                         >
                           Approval Needed
                         </Button>
@@ -501,7 +497,7 @@ export default function MyBusinessPage() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="text-emerald-600 border-emerald-300"
+                            className="text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-500/50 bg-emerald-50/50 dark:bg-emerald-950/30"
                           >
                             Approved
                           </Button>
@@ -511,7 +507,7 @@ export default function MyBusinessPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-rose-600 border-rose-300"
+                          className="text-rose-600 dark:text-rose-400 border-rose-300 dark:border-rose-500/50 bg-rose-50/50 dark:bg-rose-950/30"
                           disabled
                         >
                           Rejected

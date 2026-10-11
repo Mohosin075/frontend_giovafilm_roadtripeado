@@ -77,13 +77,13 @@ export function BusinessFormStep4({
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold text-gray-900">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
           {t("for_business.step4.title")}
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-slate-300">
           {t("for_business.step4.subtitle")}
         </p>
-        <div className="mx-auto max-w-xl rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div className="mx-auto max-w-xl rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/40 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
           {t("for_business.step4.optional_note")}
         </div>
       </div>
@@ -93,7 +93,7 @@ export function BusinessFormStep4({
           type="button"
           onClick={handleResetOffer}
           variant="outline"
-          className="text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+          className="text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/40 border-red-200 dark:border-red-900/50"
         >
           {t("for_business.step4.reset_offer")}
         </Button>
@@ -161,7 +161,7 @@ export function BusinessFormStep4({
               <img
                 src={photoPreview}
                 alt="Offer preview"
-                className="w-full h-48 object-cover rounded-xl border border-gray-200"
+                className="w-full h-48 object-cover rounded-xl border border-gray-200 dark:border-slate-800"
               />
               <button
                 type="button"
@@ -177,16 +177,16 @@ export function BusinessFormStep4({
             </div>
           ) : (
             <div
-              className="bg-gray-100 rounded-xl h-48 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors border border-dashed border-gray-300"
+              className="bg-gray-100 dark:bg-slate-900/60 rounded-xl h-48 flex items-center justify-center cursor-pointer hover:bg-gray-200/60 dark:hover:bg-slate-800/60 transition-colors border border-dashed border-gray-300 dark:border-slate-800"
               onClick={() => photoInputRef.current?.click()}
             >
               <div className="text-center">
-                <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-500 font-medium">{t("for_business.step4.tap_add_photo")}</p>
+                <Camera className="w-12 h-12 text-gray-400 dark:text-slate-500 mx-auto mb-2" />
+                <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">{t("for_business.step4.tap_add_photo")}</p>
               </div>
             </div>
           )}
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-slate-400">
             {t("for_business.step4.photo_note")}
           </p>
           <Button
@@ -214,14 +214,14 @@ export function BusinessFormStep4({
           name="offerTitle"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base text-gray-900 font-semibold">
+              <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                 {t("for_business.step4.offer_title")}
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("for_business.step4.offer_title_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200"
+                  className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 />
               </FormControl>
               <FormMessage />
@@ -234,14 +234,14 @@ export function BusinessFormStep4({
           name="offerDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base text-gray-900 font-semibold">
+              <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                 {t("for_business.step4.offer_desc")}
               </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder={t("for_business.step4.offer_desc_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200 min-h-24"
+                  className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 min-h-24"
                 />
               </FormControl>
               <FormMessage />
@@ -256,7 +256,7 @@ export function BusinessFormStep4({
             name="offerMaxRedemptions"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base text-gray-900 font-semibold">
+                <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                   {t("for_business.step4.redemptions_per_user")}
                 </FormLabel>
                 <FormControl>
@@ -265,7 +265,7 @@ export function BusinessFormStep4({
                     min={0}
                     placeholder={t("for_business.step4.redemptions_placeholder")}
                     {...field}
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -278,7 +278,7 @@ export function BusinessFormStep4({
             name="offerDuration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base text-gray-900 font-semibold">
+                <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                   {t("for_business.step4.duration_minutes")}
                 </FormLabel>
                 <FormControl>
@@ -287,7 +287,7 @@ export function BusinessFormStep4({
                     min={0}
                     placeholder={t("for_business.step4.duration_placeholder")}
                     {...field}
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -303,7 +303,7 @@ export function BusinessFormStep4({
             name="offerDiscountType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base text-gray-900 font-semibold">
+                <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                   {t("for_business.step4.discount_type")}
                 </FormLabel>
                 <FormControl>
@@ -316,7 +316,7 @@ export function BusinessFormStep4({
                         form.setValue("offerDiscount", "");
                       }
                     }}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="w-full bg-gray-50 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   >
                     <option value="">{t("for_business.step4.select_type")}</option>
                     <option value="Percentage">{t("for_business.step4.percentage")}</option>
@@ -336,7 +336,7 @@ export function BusinessFormStep4({
               name="offerDiscount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base text-gray-900 font-semibold">
+                  <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                     {t("for_business.step4.discount_value")}
                   </FormLabel>
                   <FormControl>
@@ -345,7 +345,7 @@ export function BusinessFormStep4({
                       min={0}
                       placeholder={t("for_business.step4.discount_placeholder")}
                       {...field}
-                      className="bg-gray-50 border-gray-200"
+                      className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                     />
                   </FormControl>
                   <FormMessage />
@@ -356,26 +356,26 @@ export function BusinessFormStep4({
         </div>
 
         {discountType === "BOGO" && (
-          <div className="space-y-3 rounded-xl border border-yellow-200 bg-yellow-50/60 p-4">
+          <div className="space-y-3 rounded-xl border border-yellow-200 dark:border-yellow-900/60 bg-yellow-50/60 dark:bg-yellow-950/30 p-4">
             <FormField
               control={form.control}
               name="offerBogoSecondType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base text-gray-900 font-semibold">
+                  <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                     {t("for_business.step4.second_item")}
                   </FormLabel>
                   <FormControl>
                     <select
                       {...field}
-                      className="w-full bg-white border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="w-full bg-white dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     >
                       <option value="">{t("for_business.step4.choose_second_item_discount")}</option>
                       <option value="free">{t("for_business.step4.second_item_free")}</option>
                       <option value="percentage">{t("for_business.step4.second_item_percentage")}</option>
                     </select>
                   </FormControl>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-slate-400">
                     {t("for_business.step4.bogo_note")}
                   </p>
                   <FormMessage />
@@ -388,7 +388,7 @@ export function BusinessFormStep4({
                 name="offerDiscount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base text-gray-900 font-semibold">
+                    <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                       {t("for_business.step4.pct_off_second")}
                     </FormLabel>
                     <FormControl>
@@ -398,7 +398,7 @@ export function BusinessFormStep4({
                         max={100}
                         placeholder={t("for_business.step4.pct_off_placeholder")}
                         {...field}
-                        className="bg-white border-gray-200"
+                        className="bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                       />
                     </FormControl>
                     <FormMessage />
@@ -416,14 +416,14 @@ export function BusinessFormStep4({
             name="offerValidFrom"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base text-gray-900 font-semibold">
+                <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                   {t("for_business.step4.valid_from")}
                 </FormLabel>
                 <FormControl>
                   <Input
                     type="date"
                     {...field}
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100"
                   />
                 </FormControl>
                 <FormMessage />
@@ -436,7 +436,7 @@ export function BusinessFormStep4({
             name="offerValidUntil"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base text-gray-900 font-semibold">
+                <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                   {t("for_business.step4.valid_until")}
                 </FormLabel>
                 <FormControl>
@@ -444,7 +444,7 @@ export function BusinessFormStep4({
                     type="date"
                     {...field}
                     disabled={form.watch("offerNoExpiration")}
-                    className="bg-gray-50 border-gray-200 disabled:opacity-50"
+                    className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 disabled:opacity-50"
                   />
                 </FormControl>
                 <FormMessage />
@@ -457,7 +457,7 @@ export function BusinessFormStep4({
           control={form.control}
           name="offerNoExpiration"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 bg-gray-50/50">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-xl border border-gray-200 dark:border-slate-800 p-4 bg-gray-50/50 dark:bg-[#0e1424]">
               <FormControl>
                 <Checkbox
                   checked={field.value}
@@ -465,10 +465,10 @@ export function BusinessFormStep4({
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel className="text-sm font-semibold text-gray-900 cursor-pointer">
+                <FormLabel className="text-sm font-semibold text-gray-900 dark:text-slate-200 cursor-pointer">
                   {t("for_business.step4.no_expiration")}
                 </FormLabel>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-slate-400">
                   {t("for_business.step4.no_expiration_note")}
                 </p>
               </div>
@@ -481,14 +481,14 @@ export function BusinessFormStep4({
           name="offerRedemptionRules"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base text-gray-900 font-semibold">
+              <FormLabel className="text-base text-gray-900 dark:text-slate-200 font-semibold">
                 {t("for_business.step4.redemption_rules")}
               </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder={t("for_business.step4.rules_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200 min-h-20"
+                  className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 min-h-20"
                 />
               </FormControl>
               <FormMessage />

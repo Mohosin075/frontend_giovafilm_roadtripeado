@@ -105,7 +105,7 @@ export function AwardDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="w-[calc(100vw-32px)] sm:max-w-[520px] p-0 overflow-hidden rounded-3xl border-0 shadow-2xl bg-white max-h-[88vh] flex flex-col">
+      <DialogContent className="w-[calc(100vw-32px)] sm:max-w-[520px] p-0 overflow-hidden rounded-3xl border-0 dark:border dark:border-slate-800 shadow-2xl bg-white dark:bg-[#131b2e] max-h-[88vh] flex flex-col">
         {/* Header Banner */}
         <div className="relative h-44 sm:h-56 bg-slate-900 shrink-0 overflow-hidden flex items-center justify-center">
           {coverPhoto && !imgFailed ? (
@@ -157,35 +157,35 @@ export function AwardDetailModal({
         <div className="p-5 sm:p-7 space-y-5 overflow-y-auto flex-1 font-public-sans">
           <DialogHeader className="space-y-1.5 text-left">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-800 bg-amber-100/80 px-2.5 py-1 rounded-md">
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-800 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-950/60 px-2.5 py-1 rounded-md">
                 {award.type}
               </span>
             </div>
-            <DialogTitle className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">
+            <DialogTitle className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 leading-tight">
               {title}
             </DialogTitle>
           </DialogHeader>
 
           {/* Description */}
           {description && (
-            <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl">
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line font-medium">
+            <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 p-4 rounded-2xl">
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line font-medium">
                 {description}
               </p>
             </div>
           )}
 
           {/* Progress Tracker */}
-          <div className="space-y-2 bg-slate-50/80 p-4 rounded-2xl border border-slate-100">
+          <div className="space-y-2 bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
             <div className="flex justify-between items-center text-xs font-bold">
-              <span className="text-slate-500 uppercase tracking-wider text-[11px]">
+              <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px]">
                 {language === "es" ? "PROGRESO DE TROFEO" : "TROPHY PROGRESS"}
               </span>
-              <span className="text-amber-800 font-extrabold">
+              <span className="text-amber-800 dark:text-amber-400 font-extrabold">
                 {current.toLocaleString()} / {total.toLocaleString()} ({percent}%)
               </span>
             </div>
-            <Progress value={percent} className="h-2 bg-slate-200" />
+            <Progress value={percent} className="h-2 bg-slate-200 dark:bg-slate-800" />
           </div>
 
           {/* Action Buttons */}
@@ -197,13 +197,13 @@ export function AwardDetailModal({
                   hasRedeemedMap ? (
                     <Button
                       disabled
-                      className="w-full h-12 bg-slate-200 text-slate-500 font-bold text-xs uppercase tracking-wider rounded-xl cursor-not-allowed border-0"
+                      className="w-full h-12 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider rounded-xl cursor-not-allowed border-0"
                     >
                       {language === "es" ? "Mapa Canjeado" : "Map Claimed"}
                     </Button>
                   ) : (
                     <Link href="/catalog?redeemFreeMap=1" className="block w-full" onClick={onClose}>
-                      <Button className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-amber-200 gap-2 border-0 cursor-pointer">
+                      <Button className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-amber-500/20 gap-2 border-0 cursor-pointer">
                         <MapIcon size={16} />
                         {language === "es" ? "ELEGIR MAPA GRATIS" : "CHOOSE FREE MAP"}
                       </Button>
@@ -216,7 +216,7 @@ export function AwardDetailModal({
                   <Button
                     onClick={handleDownloadPdf}
                     disabled={isDownloading}
-                    className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-emerald-200 gap-2 border-0 cursor-pointer"
+                    className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-emerald-500/20 gap-2 border-0 cursor-pointer"
                   >
                     <FileText size={16} />
                     {isDownloading
@@ -228,12 +228,12 @@ export function AwardDetailModal({
                 {/* 3. Use Discount / Coupon Button */}
                 {(discountPercentage || award.type?.includes("Discount") || award.type?.includes("10%")) && (
                   <div className="space-y-3">
-                    <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-3.5 flex items-center justify-between">
+                    <div className="bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl p-3.5 flex items-center justify-between">
                       <div>
-                        <p className="text-[10px] font-bold text-amber-800 uppercase tracking-widest">
+                        <p className="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-widest">
                           {language === "es" ? "Código de Descuento" : "Discount Promo Code"}
                         </p>
-                        <p className="text-base font-black font-mono text-slate-900 tracking-wider">
+                        <p className="text-base font-black font-mono text-slate-900 dark:text-slate-100 tracking-wider">
                           {promoCode}
                         </p>
                       </div>
@@ -241,7 +241,7 @@ export function AwardDetailModal({
                         type="button"
                         onClick={handleCopyDiscount}
                         variant="outline"
-                        className="bg-white border-amber-300 text-amber-800 font-bold text-xs gap-1.5 h-9 px-3 rounded-xl cursor-pointer"
+                        className="bg-white dark:bg-slate-900 border-amber-300 dark:border-amber-500/50 text-amber-800 dark:text-amber-400 font-bold text-xs gap-1.5 h-9 px-3 rounded-xl cursor-pointer"
                       >
                         <Copy size={13} />
                         {copiedCode
@@ -251,7 +251,7 @@ export function AwardDetailModal({
                     </div>
 
                     <Link href="/catalog" className="block w-full" onClick={onClose}>
-                      <Button className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-amber-200/60 gap-2 border-0 cursor-pointer">
+                      <Button className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-amber-500/20 gap-2 border-0 cursor-pointer">
                         <Tag size={16} />
                         {language === "es" ? "USAR DESCUENTO EN CATÁLOGO" : "USE DISCOUNT IN CATALOG"}
                       </Button>
@@ -261,9 +261,9 @@ export function AwardDetailModal({
 
                 {/* Default Claimed status if unlocked but no specific action */}
                 {award.type !== "Free Map" && !fileUrl && !discountPercentage && !award.type?.includes("Discount") && (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 text-center">
-                    <p className="text-xs font-bold text-emerald-800 flex items-center justify-center gap-1.5">
-                      <Sparkles size={15} className="text-emerald-600 shrink-0" />
+                  <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl p-3.5 text-center">
+                    <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center justify-center gap-1.5">
+                      <Sparkles size={15} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
                       {language === "es"
                         ? "¡Recompensa desbloqueada! Tus puntos de experiencia han sido acreditados."
                         : "Reward unlocked! Your XP points have been credited."}
@@ -272,14 +272,14 @@ export function AwardDetailModal({
                 )}
               </>
             ) : (
-              <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 text-center space-y-1">
-                <p className="text-xs font-bold text-amber-900 flex items-center justify-center gap-1.5">
-                  <Lock size={14} className="text-amber-700 shrink-0" />
+              <div className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl p-4 text-center space-y-1">
+                <p className="text-xs font-bold text-amber-900 dark:text-amber-300 flex items-center justify-center gap-1.5">
+                  <Lock size={14} className="text-amber-700 dark:text-amber-400 shrink-0" />
                   {language === "es"
                     ? "Trofeo en Progreso"
                     : "Trophy In Progress"}
                 </p>
-                <p className="text-xs text-amber-800/80 leading-relaxed font-medium">
+                <p className="text-xs text-amber-800/80 dark:text-amber-400/90 leading-relaxed font-medium">
                   {language === "es"
                     ? `Sigue explorando lugares, dejando reseñas y ganando XP para alcanzar los ${total.toLocaleString()} puntos y desbloquear esta recompensa.`
                     : `Keep exploring places, leaving reviews, and earning XP to reach ${total.toLocaleString()} points and unlock this perk.`}

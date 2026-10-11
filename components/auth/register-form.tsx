@@ -85,10 +85,10 @@ export const RegisterForm = () => {
     <div className="flex flex-col justify-center">
       {/* Header Text (same style as login) */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">
+        <h2 className="text-2xl font-bold text-[#1A1A1A] dark:text-slate-100 mb-2">
           {t("auth.register_title")}
         </h2>
-        <p className="text-sm text-[#757575]">
+        <p className="text-sm text-[#757575] dark:text-slate-400">
           {t("auth.register_subtitle")}
         </p>
       </div>
@@ -97,15 +97,15 @@ export const RegisterForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-5">
         {/* Full Name */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {t("auth.name")}
           </Label>
           <div className="relative">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               placeholder={t("auth.name_placeholder") || "John Doe"}
               {...register("fullName")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
           {errors.fullName && (
@@ -115,16 +115,16 @@ export const RegisterForm = () => {
 
         {/* Email */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {t("auth.email")}
           </Label>
           <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               type="email"
               placeholder={t("auth.email_placeholder") || "example@gmail.com"}
               {...register("email")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
           {errors.email && (
@@ -134,16 +134,16 @@ export const RegisterForm = () => {
 
         {/* Password */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {t("auth.password")}
           </Label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               type="password"
               placeholder="••••••••"
               {...register("password")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
           {errors.password && (
@@ -153,16 +153,16 @@ export const RegisterForm = () => {
 
         {/* Confirm Password */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-[#424242] ml-1">
+          <Label className="text-sm font-semibold text-[#424242] dark:text-slate-300 ml-1">
             {t("auth.confirm_password")}
           </Label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E] dark:text-slate-500" />
             <Input
               type="password"
               placeholder="••••••••"
               {...register("confirmPassword")}
-              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 border border-[#E0E0E0] rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
+              className="w-full pl-12 pr-4 py-6 bg-gray-100/80 dark:bg-slate-900/60 border border-[#E0E0E0] dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:border-transparent transition-all shadow-none"
             />
           </div>
           {errors.confirmPassword && (
@@ -177,20 +177,20 @@ export const RegisterForm = () => {
           <div className="flex items-center gap-3">
             <Checkbox
               onCheckedChange={(checked) => setValue("terms", Boolean(checked), { shouldValidate: true })}
-              className="w-5 h-5 border-[#E0E0E0] data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+              className="w-5 h-5 border-[#E0E0E0] dark:border-slate-700 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
             />
-            <p className="text-sm text-[#757575]">
+            <p className="text-sm text-[#757575] dark:text-slate-400">
               {t("auth.i_agree_to")}{" "}
               <Link
                 href={"/terms-of-service"}
-                className="font-semibold text-[#1A1A1A] cursor-pointer hover:underline"
+                className="font-semibold text-[#1A1A1A] dark:text-slate-200 cursor-pointer hover:underline"
               >
                 {t("nav.terms_of_service")}
               </Link>{" "}
               {t("auth.and")}{" "}
               <Link
                 href={"/privacy-policy"}
-                className="font-semibold text-[#1A1A1A] cursor-pointer hover:underline"
+                className="font-semibold text-[#1A1A1A] dark:text-slate-200 cursor-pointer hover:underline"
               >
                 {t("nav.privacy_policy")}
               </Link>
@@ -220,7 +220,7 @@ export const RegisterForm = () => {
 
       {/* Footer */}
       <div className="text-sm text-center mt-6">
-        <span className="text-[#0A0A0A]">{t("auth.already_have_account")}{" "}</span>
+        <span className="text-[#0A0A0A] dark:text-slate-300">{t("auth.already_have_account")}{" "}</span>
         <Link
           href={
             `/login?` +

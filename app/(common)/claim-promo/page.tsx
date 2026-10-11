@@ -296,23 +296,23 @@ function ClaimPromoContent() {
   // Case C1: Free Promo Claimed Successfully
   if (isClaimedSuccess) {
     return (
-      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] text-gray-900">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-gray-100 shadow-xl p-8 text-center space-y-6 relative z-10">
-          <div className="mx-auto w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center">
+      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
+        <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl p-8 text-center space-y-6 relative z-10">
+          <div className="mx-auto w-16 h-16 bg-emerald-50 dark:bg-emerald-950/40 rounded-full flex items-center justify-center">
             <CheckCircle className="w-10 h-10 text-emerald-500" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-gray-900">Invitation Claimed!</h2>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">Invitation Claimed!</h2>
+            <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
               Your free map access has been activated. Redirecting you to your map now...
             </p>
           </div>
-          <div className="bg-emerald-50/70 p-4 rounded-xl border border-emerald-100 text-xs font-bold text-emerald-800 uppercase tracking-wider">
+          <div className="bg-emerald-50/70 dark:bg-emerald-950/40 p-4 rounded-xl border border-emerald-100 dark:border-emerald-800/40 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
             Status: Lifetime Access Granted ✅
           </div>
           <Button
             onClick={handleGoToMap}
-            className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg transition-all shadow-lg shadow-yellow-500/20 text-base"
+            className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-extrabold rounded-lg transition-all shadow-lg shadow-yellow-500/20 text-base cursor-pointer"
           >
             Open Map <ArrowRight size={18} className="ml-1 inline" />
           </Button>
@@ -335,19 +335,19 @@ function ClaimPromoContent() {
         : "Invalid Invitation";
 
     return (
-      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] text-gray-900">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-gray-100 shadow-xl p-8 text-center space-y-6 relative z-10">
-          <div className="mx-auto w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
+      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
+        <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl p-8 text-center space-y-6 relative z-10">
+          <div className="mx-auto w-16 h-16 bg-red-50 dark:bg-red-950/40 rounded-full flex items-center justify-center">
             <AlertCircle className="w-10 h-10 text-red-500" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-gray-900">{errorHeading}</h2>
+            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">{errorHeading}</h2>
             <p className="text-sm text-red-500 font-bold leading-relaxed">{errorMsg}</p>
           </div>
           <Button
             onClick={handleGoToCatalog}
             variant="outline"
-            className="w-full h-14 border-gray-200 text-gray-600 font-bold rounded-lg hover:bg-gray-50 text-base"
+            className="w-full h-14 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-200 font-bold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 text-base cursor-pointer"
           >
             View Public Maps
           </Button>
@@ -383,13 +383,13 @@ function ClaimPromoContent() {
   // Case D: Render User Claim Split Screen Panel
   return (
     <section className={`relative min-h-[80vh] py-16 flex items-center overflow-hidden font-inter transition-colors duration-500 ${
-      isVipTheme ? "bg-[#0B0F19] text-white" : "bg-[#F9FAFB] text-gray-900"
+      isVipTheme ? "bg-[#0B0F19] text-white" : "bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100"
     }`}>
       {/* Background Split Pattern (Aligns with HeroBanner layout style) */}
       <div className="absolute inset-0 flex pointer-events-none">
         <div className={`w-full relative`}>
           <svg
-            className={`absolute inset-0 w-full h-full ${isVipTheme ? "opacity-[0.03] stroke-white" : "opacity-[0.06] stroke-black"}`}
+            className={`absolute inset-0 w-full h-full ${isVipTheme ? "opacity-[0.03] stroke-white" : "opacity-[0.06] dark:opacity-[0.03] stroke-black dark:stroke-white"}`}
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
           >
@@ -417,7 +417,7 @@ function ClaimPromoContent() {
               className={`inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-md ${
                 isVipTheme
                   ? "bg-amber-400/10 text-yellow-400 border border-yellow-400/20"
-                  : "bg-amber-50 text-amber-800 border border-amber-200/50"
+                  : "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/40"
               }`}
             >
               {isVipTheme ? "✨ Premium VIP Access" : "🗺️ Platform Upgrade"}
@@ -428,7 +428,7 @@ function ClaimPromoContent() {
                 Interactive Road Trip Map
               </span>
             </h1>
-            <p className={`text-base leading-relaxed max-w-lg ${isVipTheme ? "text-slate-400" : "text-gray-600"}`}>
+            <p className={`text-base leading-relaxed max-w-lg ${isVipTheme ? "text-slate-400" : "text-gray-600 dark:text-slate-400"}`}>
               Welcome to Roadtripeado! Get ready to explore curated routes, offline navigation pins, and expert local guidelines.
             </p>
           </div>
@@ -443,21 +443,21 @@ function ClaimPromoContent() {
                   className={`flex gap-4 p-5 rounded-xl border transition-all duration-300 group ${
                     isVipTheme
                       ? "bg-slate-900/40 border-slate-800/80 hover:bg-slate-900/60 hover:border-yellow-400/20"
-                      : "bg-white border-gray-100 hover:shadow-lg shadow-black/5 hover:-translate-y-0.5"
+                      : "bg-white dark:bg-[#131b2e] border-gray-100 dark:border-slate-800 hover:shadow-lg shadow-black/5 hover:-translate-y-0.5"
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div
                     className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center ${
-                      isVipTheme ? "bg-slate-850 text-yellow-400" : "bg-amber-50 text-amber-500"
+                      isVipTheme ? "bg-slate-850 text-yellow-400" : "bg-amber-50 dark:bg-amber-950/40 text-amber-500 dark:text-amber-400"
                     }`}
                   >
                     <Icon size={20} />
                   </div>
                   <div className="space-y-0.5">
-                    <h4 className="font-bold text-sm tracking-tight">{feat.title}</h4>
-                    <p className={`text-xs leading-relaxed ${isVipTheme ? "text-slate-400" : "text-gray-500"}`}>
+                    <h4 className="font-bold text-sm tracking-tight text-gray-900 dark:text-slate-100">{feat.title}</h4>
+                    <p className={`text-xs leading-relaxed ${isVipTheme ? "text-slate-400" : "text-gray-500 dark:text-slate-400"}`}>
                       {feat.desc}
                     </p>
                   </div>
@@ -478,7 +478,7 @@ function ClaimPromoContent() {
             className={`w-full max-w-md rounded-2xl border shadow-xl overflow-hidden ${
               isVipTheme
                 ? "bg-[#0E1527] border-slate-800/80 text-white"
-                : "bg-white border-gray-100 text-gray-900"
+                : "bg-white dark:bg-[#131b2e] border-gray-100 dark:border-slate-800 text-gray-900 dark:text-slate-100"
             }`}
           >
             {/* Card Header Banner */}
@@ -486,7 +486,7 @@ function ClaimPromoContent() {
               className={`py-5 px-6 flex items-center gap-4 border-b ${
                 isVipTheme
                   ? "bg-gradient-to-r from-amber-500 to-yellow-400 text-black border-slate-800"
-                  : "bg-amber-50/40 text-gray-900 border-gray-100"
+                  : "bg-amber-50/40 dark:bg-[#0e1424] text-gray-900 dark:text-slate-100 border-gray-100 dark:border-slate-800"
               }`}
             >
               <div
@@ -499,7 +499,7 @@ function ClaimPromoContent() {
               <div>
                 <span
                   className={`text-[9px] uppercase tracking-widest font-bold ${
-                    isVipTheme ? "text-black/60" : "text-amber-800/70"
+                    isVipTheme ? "text-black/60" : "text-amber-800/70 dark:text-amber-300"
                   }`}
                 >
                   {isVipTheme ? "VIP GUEST INVITATION" : "EXCLUSIVE MAP OFFER"}
@@ -514,14 +514,14 @@ function ClaimPromoContent() {
               {/* Map Target Details */}
               <div
                 className={`p-4 rounded-xl border space-y-1 ${
-                  isVipTheme ? "bg-slate-900/60 border-slate-800" : "bg-gray-50 border-gray-100"
+                  isVipTheme ? "bg-slate-900/60 border-slate-800" : "bg-gray-50 dark:bg-[#0e1424] border-gray-100 dark:border-slate-800"
                 }`}
               >
-                <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">{t("common.target_map")}</span>
+                <span className="text-[9px] text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider">{t("common.target_map")}</span>
                 <h3 className="text-lg font-black flex items-center gap-1.5 leading-tight">
                   {mapName} {isVipTheme && <Sparkles size={14} className="text-yellow-400" />}
                 </h3>
-                <p className={`text-xs leading-relaxed ${isVipTheme ? "text-slate-400" : "text-gray-500"}`}>
+                <p className={`text-xs leading-relaxed ${isVipTheme ? "text-slate-400" : "text-gray-500 dark:text-slate-400"}`}>
                   Unlocks full geographic locations, guides, pins, and reviews.
                 </p>
               </div>
@@ -529,12 +529,12 @@ function ClaimPromoContent() {
               {/* Price Row */}
               <div
                 className={`flex items-center justify-between py-3 border-y border-dashed ${
-                  isVipTheme ? "border-slate-800" : "border-gray-200"
+                  isVipTheme ? "border-slate-800" : "border-gray-200 dark:border-slate-800"
                 }`}
               >
-                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Upgrade Cost</span>
+                <span className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Upgrade Cost</span>
                 {isFree ? (
-                  <span className={`text-base font-extrabold uppercase ${isVipTheme ? "text-yellow-400" : "text-green-600"}`}>
+                  <span className={`text-base font-extrabold uppercase ${isVipTheme ? "text-yellow-400" : "text-green-600 dark:text-green-400"}`}>
                     Free VIP Pass
                   </span>
                 ) : (
@@ -548,15 +548,15 @@ function ClaimPromoContent() {
               {alreadyOwnsMap && (
                 <div
                   className={`p-4 rounded-xl border flex gap-3 ${
-                    isVipTheme ? "bg-emerald-950/20 border-emerald-800/30" : "bg-emerald-50 border-emerald-100/50"
+                    isVipTheme ? "bg-emerald-950/20 border-emerald-800/30" : "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100/50 dark:border-emerald-800/40"
                   }`}
                 >
                   <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <h4 className={`text-xs font-bold ${isVipTheme ? "text-emerald-400" : "text-emerald-900"}`}>
+                    <h4 className={`text-xs font-bold ${isVipTheme ? "text-emerald-400" : "text-emerald-900 dark:text-emerald-300"}`}>
                       Already Unlocked
                     </h4>
-                    <p className={`text-[10px] leading-relaxed ${isVipTheme ? "text-slate-400" : "text-emerald-700"}`}>
+                    <p className={`text-[10px] leading-relaxed ${isVipTheme ? "text-slate-400" : "text-emerald-700 dark:text-emerald-300/80"}`}>
                       You already have active access to <strong>{mapName}</strong> in your account. You can open and view it in your dashboard now.
                     </p>
                   </div>
@@ -567,16 +567,16 @@ function ClaimPromoContent() {
               {emailMismatch && !alreadyOwnsMap && (
                 <div
                   className={`p-4 rounded-xl border flex flex-col gap-2.5 ${
-                    isVipTheme ? "bg-amber-950/20 border-amber-800/30" : "bg-amber-50 border-amber-100/50"
+                    isVipTheme ? "bg-amber-950/20 border-amber-800/30" : "bg-amber-50 dark:bg-amber-950/30 border-amber-100/50 dark:border-amber-800/40"
                   }`}
                 >
                   <div className="flex gap-3 items-start">
                     <MailCheck className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                     <div className="space-y-0.5">
-                      <h4 className={`text-xs font-bold ${isVipTheme ? "text-amber-400" : "text-amber-900"}`}>
+                      <h4 className={`text-xs font-bold ${isVipTheme ? "text-amber-400" : "text-amber-900 dark:text-amber-300"}`}>
                         Account Email Note
                       </h4>
-                      <p className={`text-[10px] leading-relaxed ${isVipTheme ? "text-slate-400" : "text-amber-700"}`}>
+                      <p className={`text-[10px] leading-relaxed ${isVipTheme ? "text-slate-400" : "text-amber-700 dark:text-amber-300/80"}`}>
                         This invitation is specifically reserved for <strong>{promoData?.recipientEmail}</strong>. You are logged in as <strong>{userProfile?.email}</strong>.
                       </p>
                     </div>
@@ -591,7 +591,7 @@ function ClaimPromoContent() {
                     className={`text-[11px] font-semibold flex items-center gap-1.5 self-start px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                       isVipTheme
                         ? "text-yellow-400 hover:bg-yellow-400/10"
-                        : "text-amber-800 hover:bg-amber-100/70"
+                        : "text-amber-800 dark:text-amber-300 hover:bg-amber-100/70 dark:hover:bg-amber-900/30"
                     }`}
                   >
                     <MailCheck size={13} />
@@ -604,15 +604,15 @@ function ClaimPromoContent() {
               {!accessToken && (
                 <div
                   className={`p-4 rounded-xl border flex gap-3 ${
-                    isVipTheme ? "bg-slate-900 border-slate-800" : "bg-yellow-50/70 border-yellow-100"
+                    isVipTheme ? "bg-slate-900 border-slate-800" : "bg-yellow-50/70 dark:bg-yellow-950/30 border-yellow-100 dark:border-yellow-800/40"
                   }`}
                 >
-                  <Lock className={`w-5 h-5 shrink-0 mt-0.5 ${isVipTheme ? "text-yellow-400" : "text-yellow-600"}`} />
+                  <Lock className={`w-5 h-5 shrink-0 mt-0.5 ${isVipTheme ? "text-yellow-400" : "text-yellow-600 dark:text-yellow-400"}`} />
                   <div className="space-y-0.5">
-                    <h4 className={`text-xs font-bold ${isVipTheme ? "text-white" : "text-yellow-900"}`}>
+                    <h4 className={`text-xs font-bold ${isVipTheme ? "text-white" : "text-yellow-900 dark:text-yellow-200"}`}>
                       Sign In or Sign Up Required
                     </h4>
-                    <p className={`text-[11px] leading-relaxed ${isVipTheme ? "text-slate-300" : "text-yellow-900"}`}>
+                    <p className={`text-[11px] leading-relaxed ${isVipTheme ? "text-slate-300" : "text-yellow-900 dark:text-yellow-300/90"}`}>
                       {promoData?.recipientEmail ? (
                         <>
                           This invitation was sent to <strong className="font-bold underline">{promoData.recipientEmail}</strong>. Please sign in or create an account with <strong className="font-bold underline">{promoData.recipientEmail}</strong> to claim this map pass.

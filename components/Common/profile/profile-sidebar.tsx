@@ -95,8 +95,8 @@ export function ProfileSidebar({ data }: ProfileProps) {
   return (
     <div className="space-y-6">
       {/* Profile Card */}
-      <div className="bg-white rounded-lg p-3 border border-gray-200/70 text-center space-y-3">
-        <div className="border p-3 rounded-md ">
+      <div className="bg-white dark:bg-[#131b2e] rounded-xl p-3 border border-gray-200/70 dark:border-slate-800 text-center space-y-3 transition-colors">
+        <div className="border border-gray-100 dark:border-slate-800/80 p-3 rounded-lg">
           {/* Avatar with Achievement Badge */}
           <div className="relative w-32 h-32 mx-auto mb-4 overflow-hidden rounded-lg">
             {data?.profile ? (
@@ -112,18 +112,18 @@ export function ProfileSidebar({ data }: ProfileProps) {
               <NoImage />
             )}
 
-            <div className="absolute bottom-0 right-0 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-sm">
+            <div className="absolute bottom-0 right-0 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-sm border-2 border-white dark:border-slate-900 shadow-sm">
               L{data?.level ?? 0}
             </div>
           </div>
 
           {/* User Name */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-0.5">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-0.5">
             {data?.name}
           </h2>
 
           {/* Points / XP display */}
-          <div className="text-xs font-bold text-amber-600 mb-2 flex items-center justify-center gap-1">
+          <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-2 flex items-center justify-center gap-1">
             ✨ {data?.points ?? 0} XP
           </div>
 
@@ -158,13 +158,13 @@ export function ProfileSidebar({ data }: ProfileProps) {
 
           {/* Role Badge */}
           <div className="block mb-2">
-            <span className="text-gray-400 font-semibold text-xs uppercase tracking-wider">
+            <span className="text-gray-400 dark:text-slate-500 font-semibold text-xs uppercase tracking-wider">
               {data?.role}
             </span>
           </div>
 
           {/* Join Date */}
-          <p className="text-gray-500 text-sm flex items-center justify-center gap-1 mb-6">
+          <p className="text-gray-500 dark:text-slate-400 text-sm flex items-center justify-center gap-1 mb-6">
             📅 {t("profile.joined")} {formatDate(data?.createdAt) || 0}
           </p>
 
@@ -184,7 +184,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
               variant="outline"
               onClick={handleShare}
               disabled={isSharing || !data?._id}
-              className="w-full rounded flex items-center justify-center gap-2 border-gray-200 hover:bg-yellow-50"
+              className="w-full rounded flex items-center justify-center gap-2 border-gray-200 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200 hover:bg-yellow-50 dark:hover:bg-slate-800"
             >
               {isSharing ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -206,7 +206,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
               <Link key={index} href={item.href}>
                 <Button
                   variant="outline"
-                  className="w-full rounded flex items-center justify-center gap-2 border-gray-200 hover:bg-primary hover:text-white"
+                  className="w-full rounded flex items-center justify-center gap-2 border-gray-200 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200 hover:bg-primary dark:hover:bg-primary hover:text-black dark:hover:text-black"
                 >
                   <Icon size={18} />
                   {item.label}
@@ -218,8 +218,8 @@ export function ProfileSidebar({ data }: ProfileProps) {
       </div>
 
       {/* Milestones Card */}
-      <div className="bg-gray-900 rounded-lg p-6 text-white overflow-hidden">
-        <h3 className="font-bold text-lg mb-4 tracking-widest text-gray-400">
+      <div className="bg-gray-900 dark:bg-[#0e1424] dark:border dark:border-slate-800 rounded-lg p-6 text-white overflow-hidden">
+        <h3 className="font-bold text-lg mb-4 tracking-widest text-gray-400 dark:text-slate-400">
           {t("levels.progress").toUpperCase()}
         </h3>
 

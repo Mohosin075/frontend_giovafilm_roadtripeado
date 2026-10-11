@@ -42,7 +42,7 @@ export function StepCard({
     >
       <div
         className={cn(
-          "grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-14 items-center bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 lg:p-12 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(255,193,7,0.1)] transition-all duration-300",
+          "grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-14 items-center bg-white dark:bg-[#131b2e]/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 lg:p-12 border border-gray-100 dark:border-slate-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none hover:shadow-[0_16px_40px_rgba(255,193,7,0.1)] dark:hover:border-amber-400/40 transition-all duration-300",
           !isImageRight && "lg:[&>*:first-child]:order-2 lg:[&>*:last-child]:order-1"
         )}
       >
@@ -54,19 +54,19 @@ export function StepCard({
               0{stepNumber}
             </div>
             {tag && (
-              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase bg-amber-50 text-amber-800 border border-amber-200/80 px-3 py-0.5 sm:py-1 rounded-full">
+              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/50 px-3 py-0.5 sm:py-1 rounded-full">
                 {tag}
               </span>
             )}
           </div>
 
           {/* Heading */}
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-950 tracking-tight leading-snug sm:leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-950 dark:text-slate-100 tracking-tight leading-snug sm:leading-tight">
             {title}
           </h2>
 
           {/* Description */}
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+          <p className="text-gray-600 dark:text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
             {description}
           </p>
 
@@ -75,12 +75,12 @@ export function StepCard({
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-start gap-3 p-2 sm:p-2.5 rounded-xl hover:bg-gray-50/80 transition-colors"
+                className="flex items-start gap-3 p-2 sm:p-2.5 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-colors"
               >
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-100/70 text-amber-900 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-100/70 dark:bg-amber-400/15 text-amber-900 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                   {feature.icon}
                 </div>
-                <p className="text-gray-700 font-medium text-xs sm:text-sm md:text-base leading-snug pt-0.5">
+                <p className="text-gray-700 dark:text-slate-300 font-medium text-xs sm:text-sm md:text-base leading-snug pt-0.5">
                   {feature.text}
                 </p>
               </div>
@@ -93,7 +93,7 @@ export function StepCard({
               {badges.map((b, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200 shadow-2xs"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 border border-gray-200 dark:border-slate-700 shadow-2xs"
                 >
                   {b.icon}
                   {b.label}
@@ -105,7 +105,7 @@ export function StepCard({
 
         {/* Image Preview */}
         <div className="lg:col-span-6 w-full">
-          <div className="relative group rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200/70 bg-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+          <div className="relative group rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200/70 dark:border-slate-800 bg-gray-100 dark:bg-slate-800/50 shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:shadow-none">
             <div className="relative overflow-hidden aspect-4/3 sm:aspect-16/10 flex items-center justify-center">
               <div className="w-full h-full transform transition-transform duration-500 ease-out group-hover:scale-102">
                 {image}

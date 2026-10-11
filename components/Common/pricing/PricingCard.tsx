@@ -69,11 +69,11 @@ export function PricingCard({
       onClick={handleClick}
       className={`relative rounded-2xl p-6 cursor-pointer transition-all duration-200 h-full flex flex-col ${
         isSelected
-          ? "border-4 border-yellow-400 bg-white shadow-xl scale-105 z-10"
+          ? "border-4 border-yellow-400 bg-white dark:bg-[#131b2e] shadow-xl scale-105 z-10"
           : isPro && isFormStep
-            ? "border-2 border-yellow-400 bg-white shadow-lg scale-102"
-            : "border-2 border-gray-200 bg-white hover:border-gray-300 "
-      } ${isEnterprise ? "!bg-gray-900 !text-white" : ""} ${
+            ? "border-2 border-yellow-400 bg-white dark:bg-[#131b2e] shadow-lg scale-102"
+            : "border-2 border-gray-200 dark:border-slate-800/80 bg-white dark:bg-[#131b2e]/90 hover:border-gray-300 dark:hover:border-amber-400/40 backdrop-blur-md"
+      } ${isEnterprise ? "!bg-slate-900 dark:!bg-[#0e1424] !text-white" : ""} ${
         isEnterprise && isSelected
           ? "!border-yellow-400 shadow-yellow-400/20"
           : ""
@@ -82,7 +82,7 @@ export function PricingCard({
       {/* Selected Badge */}
       {isSelected && (
         <div className="absolute -top-4 right-4 z-20">
-          <span className="bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1 border-2 border-white">
+          <span className="bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1 border-2 border-white dark:border-slate-900">
             <Check size={14} strokeWidth={3} />{" "}
             {isFormStep ? t("pricing_card.selected") : t("pricing_card.current_plan")}
           </span>
@@ -100,22 +100,22 @@ export function PricingCard({
 
       {/* Plan Header */}
       <div className="space-y-2 mb-4">
-        <h3 className={`text-xl font-bold text-gray-900`}>{plan.name}</h3>
+        <h3 className={`text-xl font-bold text-gray-900 dark:text-slate-100`}>{plan.name}</h3>
         <div className="flex items-baseline gap-1">
           <span
-            className={`text-3xl font-bold ${isEnterprise ? "text-yellow-400" : "text-gray-900"}`}
+            className={`text-3xl font-bold ${isEnterprise ? "text-yellow-400" : "text-gray-900 dark:text-slate-100"}`}
           >
             {/* {formatPrice(plan.price, plan.name)} */}${plan.price}
           </span>
           {plan.interval && plan.name.toLowerCase() !== "enterprise" && (
             <span
-              className={`text-sm ${isEnterprise ? "text-gray-300" : "text-gray-600"}`}
+              className={`text-sm ${isEnterprise ? "text-gray-300" : "text-gray-600 dark:text-slate-400"}`}
             >
               /{plan.interval}
             </span>
           )}
         </div>
-        <p className={`text-sm text-gray-600`}>{plan.description}</p>
+        <p className={`text-sm text-gray-600 dark:text-slate-400`}>{plan.description}</p>
       </div>
 
       {/* Select Button */}
@@ -128,14 +128,14 @@ export function PricingCard({
             handleClick();
           }
         }}
-        className={`w-full py-2 mb-6 font-semibold rounded-lg transition-all border-2 ${
+        className={`w-full py-2 mb-6 font-semibold rounded-lg transition-all border-2 cursor-pointer ${
           isSelected
             ? "bg-green-500 text-white border-green-500 hover:bg-green-600 shadow-md"
             : isEnterprise
-              ? "bg-gray-100 text-black border-transparent hover:bg-gray-200"
+              ? "bg-gray-100 dark:bg-slate-800 text-black dark:text-white border-transparent hover:bg-gray-200 dark:hover:bg-slate-700"
               : isPro
-                ? "bg-yellow-400 text-black border-transparent hover:bg-yellow-500"
-                : "bg-white text-gray-900 border-gray-200 hover:bg-gray-50"
+                ? "bg-yellow-400 text-black border-transparent hover:bg-yellow-500 shadow-md shadow-yellow-500/20"
+                : "bg-white dark:bg-[#0e1424] text-gray-900 dark:text-slate-200 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800"
         }`}
       >
         {isFormStep
@@ -155,11 +155,11 @@ export function PricingCard({
           <div key={idx} className="flex items-start gap-3">
             <Check
               className={`w-5 h-5 shrink-0 mt-0.5 ${
-                isEnterprise ? "text-yellow-400" : "text-green-500"
+                isEnterprise ? "text-yellow-400" : "text-green-500 dark:text-green-400"
               }`}
             />
             <span
-              className={`text-sm text-gray-700`}
+              className={`text-sm text-gray-700 dark:text-slate-300`}
             >
               {feature}
             </span>

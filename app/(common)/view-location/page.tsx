@@ -21,14 +21,14 @@ function MapContent() {
 
   if (!lat || !lng) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="text-gray-500">{t("location.invalid_coordinates")}</p>
+      <div className="h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19]">
+        <p className="text-gray-500 dark:text-slate-400 font-medium">{t("location.invalid_coordinates")}</p>
       </div>
     );
   }
 
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen w-full bg-gray-50 dark:bg-[#0b0f19]">
       <APIProvider
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string}
       >
@@ -61,7 +61,7 @@ export default function ViewLocation() {
   return (
     <Suspense
       fallback={
-        <div className="h-screen flex items-center justify-center">
+        <div className="h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
         </div>
       }

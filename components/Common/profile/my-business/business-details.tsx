@@ -176,15 +176,15 @@ export default function BusinessDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/30 p-4 md:p-8">
+    <div className="min-h-screen bg-slate-50/30 dark:bg-[#0b0f19] p-4 md:p-8 font-public-sans">
       <div className="max-w-7xl mx-auto">
         {/* Top Navigation */}
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors group cursor-pointer"
+            className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 font-bold transition-colors group cursor-pointer"
           >
-            <div className="p-2 rounded-xl bg-white border border-slate-200 group-hover:bg-slate-100 transition-all">
+            <div className="p-2 rounded-xl bg-white dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800 group-hover:bg-slate-100 dark:group-hover:bg-slate-800 transition-all">
               <ArrowLeft size={20} />
             </div>
             {t("business_details.back_to_list")}
@@ -207,7 +207,7 @@ export default function BusinessDetails() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-[2rem] overflow-hidden border border-slate-200 shadow-sm"
+              className="bg-white dark:bg-[#131b2e] rounded-[2rem] overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm"
             >
               <div className="relative h-[350px] md:h-[450px] w-full">
                 {business.media?.photos?.length > 0 ? (
@@ -219,7 +219,7 @@ export default function BusinessDetails() {
                     className="object-cover w-full h-full"
                   />
                 ) : (
-                  <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                  <div className="w-full h-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
                     <NoImage />
                   </div>
                 )}
@@ -227,7 +227,7 @@ export default function BusinessDetails() {
 
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="flex flex-wrap items-center gap-3 mb-4">
-                    <div className="bg-primary px-4 py-1.5 rounded-full flex items-center gap-2 text-white shadow-lg shadow-primary/20">
+                    <div className="bg-primary px-4 py-1.5 rounded-full flex items-center gap-2 text-slate-950 font-black shadow-lg shadow-primary/20">
                       {business.category?.icon ? (
                         business.category.icon.startsWith("/") ||
                         business.category.icon.startsWith("http") ||
@@ -255,11 +255,11 @@ export default function BusinessDetails() {
               </div>
 
               <div className="p-8">
-                <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
                   <Info className="text-primary" size={20} />
                   {t("business_details.about_business")}
                 </h3>
-                <p className="text-slate-600 leading-relaxed text-lg font-medium whitespace-pre-wrap">
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium whitespace-pre-wrap">
                   {business.description}
                 </p>
               </div>
@@ -270,18 +270,18 @@ export default function BusinessDetails() {
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-[2rem] p-8 border border-dashed border-slate-300 text-center"
+                className="bg-white dark:bg-[#131b2e] rounded-[2rem] p-8 border border-dashed border-slate-300 dark:border-slate-700 text-center"
               >
-                <Shield className="mx-auto mb-4 text-slate-300" size={36} />
-                <h2 className="text-xl font-black text-slate-900 mb-2">
+                <Shield className="mx-auto mb-4 text-slate-300 dark:text-slate-600" size={36} />
+                <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 mb-2">
                   {t("business_details.no_offer_yet")}
                 </h2>
-                <p className="text-slate-500 mb-6 max-w-md mx-auto">
+                <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md mx-auto">
                   {t("business_details.no_offer_desc")}
                 </p>
                 <Button
                   onClick={() => setOfferDialogOpen(true)}
-                  className="rounded-xl h-11 px-6 font-bold gap-2 cursor-pointer"
+                  className="rounded-xl h-11 px-6 font-bold gap-2 cursor-pointer bg-primary text-slate-950 hover:bg-primary/90"
                 >
                   <Plus size={18} />
                   {t("business_details.add_offer")}
@@ -432,7 +432,7 @@ export default function BusinessDetails() {
 
             {/* Photo Gallery */}
             <div className="space-y-6">
-              <h3 className="text-xl font-bold text-slate-900 px-2 flex items-center gap-2">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 px-2 flex items-center gap-2">
                 {t("business_details.photo_gallery")}
               </h3>
               {business.media?.photos?.length > 0 ? (
@@ -441,7 +441,7 @@ export default function BusinessDetails() {
                     <motion.div
                       key={index}
                       whileHover={{ scale: 1.02 }}
-                      className="relative aspect-square rounded-[2rem] overflow-hidden border border-slate-200 group"
+                      className="relative aspect-square rounded-[2rem] overflow-hidden border border-slate-200 dark:border-slate-800 group"
                     >
                       <Image
                         src={getImageUrl(photo)}
@@ -457,7 +457,7 @@ export default function BusinessDetails() {
                   ))}
                 </div>
               ) : (
-                <div className="py-12 text-center text-sm text-slate-400 bg-slate-50 rounded-[2rem] border border-dashed border-slate-200">
+                <div className="py-12 text-center text-sm text-slate-400 bg-slate-50 dark:bg-[#131b2e]/60 rounded-[2rem] border border-dashed border-slate-200 dark:border-slate-800">
                   {t("business_details.no_photos")}
                 </div>
               )}
@@ -470,13 +470,13 @@ export default function BusinessDetails() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-200 rounded-[2rem] p-6 space-y-4 shadow-sm"
+                className="bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800/40 rounded-[2rem] p-6 space-y-4 shadow-sm"
               >
-                <div className="flex items-center gap-2 text-amber-800 font-bold text-sm">
-                  <AlertCircle size={18} className="text-amber-600 shrink-0" />
+                <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-bold text-sm">
+                  <AlertCircle size={18} className="text-amber-600 dark:text-amber-400 shrink-0" />
                   {t("business_details.premium_required")}
                 </div>
-                <p className="text-xs text-amber-700 font-semibold leading-relaxed">
+                <p className="text-xs text-amber-700 dark:text-amber-300/80 font-semibold leading-relaxed">
                   {t("business_details.premium_required_desc")}
                 </p>
                 {business.plan ? (
@@ -502,17 +502,17 @@ export default function BusinessDetails() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm"
+              className="bg-white dark:bg-[#131b2e] rounded-[2rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-                <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                <h3 className="text-lg font-black text-slate-900 dark:text-slate-100 uppercase tracking-widest flex items-center gap-2">
                   <Filter size={16} className="text-primary" />
                   {t("business_details.analytics")}
                 </h3>
                 <select
                   value={statsTimeFilter}
                   onChange={(e) => setStatsTimeFilter(e.target.value)}
-                  className="h-9 px-3 border border-slate-200 rounded-xl text-xs font-bold bg-slate-50 hover:bg-slate-100 text-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+                  className="h-9 px-3 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
                 >
                   <option value="all_time">{t("business_details.period_all_time") || "All Time"}</option>
                   <option value="today">{t("business_details.period_today") || "Today"}</option>
@@ -524,24 +524,24 @@ export default function BusinessDetails() {
 
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 text-slate-500 font-bold">
-                    <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+                  <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 font-bold">
+                    <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                       <Eye size={20} />
                     </div>
                     {t("business_details.total_views")}
                   </div>
-                  <span className="text-2xl font-black text-slate-900">
+                  <span className="text-2xl font-black text-slate-900 dark:text-slate-100">
                     {currentViewCount}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 text-slate-500 font-bold">
-                    <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+                  <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 font-bold">
+                    <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400">
                       <Calendar size={20} />
                     </div>
                     {t("business_details.joined_date")}
                   </div>
-                  <span className="text-lg font-black text-slate-900">
+                  <span className="text-lg font-black text-slate-900 dark:text-slate-100">
                     {new Date(business.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -550,8 +550,8 @@ export default function BusinessDetails() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 text-slate-500 font-bold">
-                    <div className="p-2 rounded-xl bg-purple-50 text-purple-600">
+                  <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 font-bold">
+                    <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400">
                       <Tag size={20} />
                     </div>
                     {t("business_details.discounts_redeemed") || "Discounts Redeemed"}
@@ -562,10 +562,10 @@ export default function BusinessDetails() {
                     className="group flex items-center gap-1.5 cursor-pointer"
                     title={t("business_details.view_redemptions") || "View Details"}
                   >
-                    <span className="text-2xl font-black text-purple-700 group-hover:underline">
+                    <span className="text-2xl font-black text-purple-700 dark:text-purple-400 group-hover:underline">
                       {redemptionsTotalCount}
                     </span>
-                    <ExternalLink size={13} className="text-purple-400 group-hover:text-purple-600" />
+                    <ExternalLink size={13} className="text-purple-400 group-hover:text-purple-300" />
                   </button>
                 </div>
               </div>
@@ -577,22 +577,22 @@ export default function BusinessDetails() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm"
+              className="bg-white dark:bg-[#131b2e] rounded-[2rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm"
             >
-              <h3 className="text-lg font-black text-slate-900 mb-6 uppercase tracking-widest">
+              <h3 className="text-lg font-black text-slate-900 dark:text-slate-100 mb-6 uppercase tracking-widest">
                 {t("business_details.contact_info")}
               </h3>
               <div className="space-y-5">
                 {business.location?.address && (
                   <div className="flex items-start gap-4 group">
-                    <div className="p-3 rounded-2xl bg-slate-50 text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-all">
                       <MapPin size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("business_details.address")}
                       </p>
-                      <p className="text-sm font-bold text-slate-700">
+                      <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
                         {business.location.address}, {business.location.city}
                       </p>
                     </div>
@@ -600,14 +600,14 @@ export default function BusinessDetails() {
                 )}
                 {business.contact?.phone && (
                   <div className="flex items-start gap-4 group">
-                    <div className="p-3 rounded-2xl bg-slate-50 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-950/40 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-all">
                       <Phone size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("business_details.phone")}
                       </p>
-                      <p className="text-sm font-bold text-slate-700">
+                      <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
                         {business.contact.phone}
                       </p>
                     </div>
@@ -615,17 +615,17 @@ export default function BusinessDetails() {
                 )}
                 {business.contact?.website && (
                   <div className="flex items-start gap-4 group">
-                    <div className="p-3 rounded-2xl bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-all">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:bg-blue-50 dark:group-hover:bg-blue-950/40 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-all">
                       <Globe size={20} />
                     </div>
                     <div className="overflow-hidden">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("business_details.website")}
                       </p>
                       <a
                         href={business.contact.website}
                         target="_blank"
-                        className="text-sm font-bold text-blue-600 hover:underline truncate block"
+                        className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline truncate block"
                       >
                         {business.contact.website}
                       </a>
@@ -634,14 +634,14 @@ export default function BusinessDetails() {
                 )}
                 {business.contact?.instagram && (
                   <div className="flex items-start gap-4 group">
-                    <div className="p-3 rounded-2xl bg-slate-50 text-slate-400 group-hover:bg-rose-50 group-hover:text-rose-600 transition-all">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:bg-rose-50 dark:group-hover:bg-rose-950/40 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-all">
                       <Instagram size={20} />
                     </div>
                     <div className="overflow-hidden min-w-0">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("business_details.instagram")}
                       </p>
-                      <p className="text-sm font-bold text-slate-700 truncate max-w-full">
+                      <p className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate max-w-full">
                         @{business.contact.instagram}
                       </p>
                     </div>
@@ -655,9 +655,9 @@ export default function BusinessDetails() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm"
+              className="bg-white dark:bg-[#131b2e] rounded-[2rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm"
             >
-              <h3 className="text-lg font-black text-slate-900 mb-6 uppercase tracking-widest">
+              <h3 className="text-lg font-black text-slate-900 dark:text-slate-100 mb-6 uppercase tracking-widest">
                 {t("business_details.business_hours")}
               </h3>
               <div className="space-y-4">
@@ -665,12 +665,12 @@ export default function BusinessDetails() {
                   business.hours.schedule.map((h: any, i: number) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0"
+                      className="flex items-center justify-between py-2 border-b border-slate-50 dark:border-slate-800 last:border-0"
                     >
-                      <span className="font-black text-slate-900 text-sm uppercase tracking-wide">
+                      <span className="font-black text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wide">
                         {h.days || h.day}
                       </span>
-                      <span className="text-sm font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">
+                      <span className="text-sm font-bold text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">
                         {convertTo12Hour(h.openTime)} - {convertTo12Hour(h.closeTime)}
                       </span>
                     </div>
@@ -685,7 +685,7 @@ export default function BusinessDetails() {
 
             <Button
               asChild
-              className="w-full h-16 rounded-2xl bg-slate-900 hover:bg-black text-white font-black text-lg gap-3 shadow-xl shadow-slate-200 cursor-pointer"
+              className="w-full h-16 rounded-2xl bg-slate-900 dark:bg-[#fabf13] hover:bg-black dark:hover:bg-[#e0ac10] text-white dark:text-slate-950 font-black text-lg gap-3 shadow-xl shadow-slate-200/50 dark:shadow-yellow-500/10 cursor-pointer"
             >
               <Link href={`/places/${business._id}?type=business`}>
                 <ExternalLink size={24} />
@@ -705,34 +705,34 @@ export default function BusinessDetails() {
 
       {/* Redemption History Dialog */}
       <Dialog open={redemptionHistoryOpen} onOpenChange={setRedemptionHistoryOpen}>
-        <DialogContent className="max-w-md rounded-3xl p-6 bg-white">
-          <DialogHeader className="pb-3 border-b border-gray-100">
-            <DialogTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
-              <Tag size={18} className="text-purple-600" />
+        <DialogContent className="max-w-md rounded-3xl p-6 bg-white dark:bg-[#131b2e] dark:border dark:border-slate-800 text-slate-900 dark:text-slate-100">
+          <DialogHeader className="pb-3 border-b border-gray-100 dark:border-slate-800">
+            <DialogTitle className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+              <Tag size={18} className="text-purple-600 dark:text-purple-400" />
               {t("business_details.redemption_history") || "Discount Redemption History"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="py-2">
-            <div className="p-4 rounded-2xl bg-purple-50 border border-purple-100 mb-4 flex items-center justify-between">
+            <div className="p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/40 mb-4 flex items-center justify-between">
               <div>
-                <p className="text-[11px] font-bold text-purple-800 uppercase tracking-wider">
+                <p className="text-[11px] font-bold text-purple-800 dark:text-purple-300 uppercase tracking-wider">
                   {t("business_details.discounts_redeemed") || "Total Discounts Redeemed"}
                 </p>
-                <p className="text-2xl font-black text-purple-950 mt-0.5">
+                <p className="text-2xl font-black text-purple-950 dark:text-purple-100 mt-0.5">
                   {redemptionsTotalCount}
                   {offer?.totalRedemptionLimit ? ` / ${offer.totalRedemptionLimit}` : ""}
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-700 dark:text-purple-300">
                 <CheckCircle2 size={20} />
               </div>
             </div>
 
             {isLoadingRedemptions ? (
-              <div className="py-8 text-center text-xs text-gray-400">Loading redemptions...</div>
+              <div className="py-8 text-center text-xs text-gray-400 dark:text-slate-500">Loading redemptions...</div>
             ) : !redemptionsList || redemptionsList.length === 0 ? (
-              <div className="py-8 text-center text-xs text-gray-500 font-semibold">
+              <div className="py-8 text-center text-xs text-gray-500 dark:text-slate-400 font-semibold">
                 {t("business_details.no_redemptions_yet") || "No discounts have been redeemed yet."}
               </div>
             ) : (
@@ -743,18 +743,18 @@ export default function BusinessDetails() {
                   return (
                     <div
                       key={item._id || idx}
-                      className="p-3 rounded-xl border border-gray-100 bg-gray-50/70 flex items-center justify-between text-xs"
+                      className="p-3 rounded-xl border border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-900/60 flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-[11px]">
+                        <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-700 dark:text-slate-200 text-[11px]">
                           {userName.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-bold text-gray-900">{userName}</p>
-                          <p className="text-[10px] text-gray-500">{dateStr}</p>
+                          <p className="font-bold text-gray-900 dark:text-slate-100">{userName}</p>
+                          <p className="text-[10px] text-gray-500 dark:text-slate-400">{dateStr}</p>
                         </div>
                       </div>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">
                         {t("business_details.redeemed") || "Redeemed"}
                       </span>
                     </div>

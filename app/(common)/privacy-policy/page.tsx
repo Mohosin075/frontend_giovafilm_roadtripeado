@@ -5,23 +5,23 @@ import privacyData from "@/lib/privacy-policy.json";
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="bg-linear-to-b from-gray-50/50 via-white to-gray-50/50 min-h-screen py-16 md:py-24 font-inter">
+    <main className="bg-linear-to-b from-gray-50/50 via-white to-gray-50/50 dark:from-[#0b0f19] dark:via-[#0e1424] dark:to-[#0b0f19] min-h-screen py-16 md:py-24 font-inter">
       <div className="max-w-4xl mx-auto px-4 md:px-6">
         {/* Header section */}
         <div className="text-center mb-16 space-y-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-slate-100 tracking-tight leading-tight">
             {privacyData.title}
           </h1>
-          <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-600 dark:text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
             {privacyData.description}
           </p>
-          <p className="text-xs md:text-sm text-gray-400 font-medium">
-            Last Updated: <span className="text-gray-700">{privacyData.lastUpdated}</span>
+          <p className="text-xs md:text-sm text-gray-400 dark:text-slate-500 font-medium">
+            Last Updated: <span className="text-gray-700 dark:text-slate-300">{privacyData.lastUpdated}</span>
           </p>
         </div>
 
         {/* White card container */}
-        <div className="bg-white rounded-3xl p-8 md:p-14 shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100/80">
+        <div className="bg-white dark:bg-[#131b2e]/90 backdrop-blur-md rounded-3xl p-8 md:p-14 shadow-[0_20px_50px_rgba(0,0,0,0.03)] dark:shadow-none border border-gray-100/80 dark:border-slate-800/80">
           {/* Sections list */}
           <div className="space-y-10">
             {privacyData.sections.map((section) => (
@@ -35,14 +35,14 @@ export default function PrivacyPolicyPage() {
           </div>
 
           {/* Footer note */}
-          <div className="mt-14 pt-8 border-t border-gray-100">
-            <p className="text-sm text-gray-500 text-center leading-relaxed">
+          <div className="mt-14 pt-8 border-t border-gray-100 dark:border-slate-800">
+            <p className="text-sm text-gray-500 dark:text-slate-400 text-center leading-relaxed">
               We take your privacy seriously. If you have any questions about
               our privacy practices or how we handle your personal information,
               please don&apos;t hesitate to contact us at{" "}
               <a
                 href="mailto:privacy@roadtripeado.com"
-                className="text-yellow-600 hover:text-yellow-700 font-bold transition-colors cursor-pointer"
+                className="text-yellow-600 dark:text-[#fabf13] hover:text-yellow-700 font-bold transition-colors cursor-pointer"
               >
                 privacy@roadtripeado.com
               </a>
