@@ -203,11 +203,11 @@ function GooglePoiPreviewCard({
   const photos = poi.photos || [];
 
   return (
-    <div className="min-w-[280px] max-w-[340px] text-gray-800 font-sans p-0.5">
+    <div className="min-w-[280px] max-w-[340px] text-gray-800 dark:text-slate-200 font-sans p-0.5">
       {/* Photos Carousel / Banner */}
       {photos.length > 0 && (
         <div className="mb-2.5 space-y-1.5">
-          <div className="relative w-full h-36 rounded-xl overflow-hidden bg-gray-100 shadow-xs border border-gray-100">
+          <div className="relative w-full h-36 rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800 shadow-xs border border-gray-100 dark:border-slate-800">
             <img
               src={photos[selectedPhotoIdx]}
               alt={poi.name}
@@ -261,7 +261,7 @@ function GooglePoiPreviewCard({
 
       {/* Header: Title + Link (if no photos) */}
       <div className="flex items-start justify-between gap-2 pr-2">
-        <h3 className="text-sm font-black text-gray-900 leading-snug tracking-tight">
+        <h3 className="text-sm font-black text-gray-900 dark:text-slate-100 leading-snug tracking-tight">
           {poi.name}
         </h3>
         {photos.length === 0 && poi.googleUrl && (
@@ -269,7 +269,7 @@ function GooglePoiPreviewCard({
             href={poi.googleUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1.5 rounded-full bg-sky-50 text-sky-600 hover:bg-sky-100 transition-colors shrink-0"
+            className="p-1.5 rounded-full bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/60 transition-colors shrink-0"
             title="View on Google Maps"
           >
             <ExternalLink size={13} />
@@ -279,8 +279,8 @@ function GooglePoiPreviewCard({
 
       {/* Address */}
       {poi.address && (
-        <div className="flex items-start gap-1.5 mt-1 text-gray-500">
-          <MapPin size={13} className="shrink-0 mt-0.5 text-gray-400" />
+        <div className="flex items-start gap-1.5 mt-1 text-gray-500 dark:text-slate-400">
+          <MapPin size={13} className="shrink-0 mt-0.5 text-gray-400 dark:text-slate-500" />
           <p className="text-xs leading-relaxed line-clamp-2">
             {poi.address}
           </p>
@@ -291,16 +291,16 @@ function GooglePoiPreviewCard({
       {(poi.rating || poi.category) && (
         <div className="flex flex-wrap items-center gap-1.5 mt-2">
           {poi.rating && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 border border-amber-200/80 dark:border-amber-500/20 px-2 py-0.5 rounded-md">
               <Star size={11} className="fill-amber-500 text-amber-500" />
               <span>{poi.rating}</span>
               {poi.userRatingsTotal && (
-                <span className="text-amber-600/80 font-medium">({poi.userRatingsTotal})</span>
+                <span className="text-amber-600/80 dark:text-amber-400/80 font-medium">({poi.userRatingsTotal})</span>
               )}
             </span>
           )}
           {poi.category && (
-            <span className="text-[11px] font-medium text-gray-600 bg-gray-100 border border-gray-200/60 px-2 py-0.5 rounded-md capitalize">
+            <span className="text-[11px] font-medium text-gray-600 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 border border-gray-200/60 dark:border-slate-700 px-2 py-0.5 rounded-md capitalize">
               {poi.category}
             </span>
           )}
@@ -1299,30 +1299,30 @@ export default function AddPlacePage() {
       apiKey={(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || "").trim()}
       libraries={GOOGLE_MAP_LIBRARIES}
     >
-      <div className="flex h-[85vh] w-full bg-white overflow-hidden font-sans rounded-2xl">
+      <div className="flex h-[85vh] w-full bg-white dark:bg-[#131b2e] overflow-hidden font-sans rounded-2xl border dark:border-slate-800">
         {/* Sidebar */}
-        <div className="w-80 flex flex-col border-r border-gray-200 bg-white z-20 shadow-sm">
+        <div className="w-80 flex flex-col border-r border-gray-200 dark:border-slate-800 bg-white dark:bg-[#0e1424] z-20 shadow-sm">
           <div className="p-6 space-y-4">
             <div className="space-y-3">
               <div className="space-y-1">
-                <h1 className="text-xl font-black tracking-tight text-gray-900 uppercase truncate">
+                <h1 className="text-xl font-black tracking-tight text-gray-900 dark:text-slate-100 uppercase truncate">
                   {getSafeString(selectedMap?.name, language) || selectedMap?.country || "Select a Map"}
                 </h1>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
                   <span>Roadtripeado Maps 9.0</span>
                 </div>
               </div>
 
               {/* Map Selector */}
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+                <Label className="text-[10px] font-bold text-gray-400 dark:text-slate-400 uppercase tracking-widest ml-1">
                   {t("places_admin.active_map")}
                 </Label>
                 <Select
                   value={selectedMapId || ""}
                   onValueChange={setSelectedMapId}
                 >
-                  <SelectTrigger className="w-full bg-gray-50 border-gray-200">
+                  <SelectTrigger className="w-full bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 dark:text-slate-100">
                     <SelectValue placeholder={t("places_admin.choose_map_placeholder")} />
                   </SelectTrigger>
                   <SelectContent position="popper" style={{ zIndex: 99999 }}>
@@ -1351,7 +1351,7 @@ export default function AddPlacePage() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-2.5 border rounded-lg text-sm font-medium transition-colors ${isAddingMarker
                     ? "bg-blue-600 text-white border-blue-600 shadow-md"
-                    : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                    : "border-gray-200 dark:border-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-850"
                     }`}
                 >
                   <Plus size={16} />
@@ -1361,12 +1361,12 @@ export default function AddPlacePage() {
                 </button>
 
                 {isAddingMarker && (
-                  <div className="p-3 border border-gray-200 rounded-lg bg-gray-50 space-y-3 shadow-inner">
-                    <p className="text-xs text-blue-600 font-medium">
+                  <div className="p-3 border border-gray-200 dark:border-slate-800 rounded-lg bg-gray-50 dark:bg-slate-900/60 space-y-3 shadow-inner">
+                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
                       {t("places_admin.pin_instruction")}
                     </p>
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">
+                      <Label className="text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
                         {t("places_admin.google_maps_url_placeholder")}
                       </Label>
                       <div className="flex gap-2">
@@ -1375,7 +1375,7 @@ export default function AddPlacePage() {
                           placeholder="https://maps.app.goo.gl/..."
                           value={mapUrl}
                           onChange={(e) => setMapUrl(e.target.value)}
-                          className="flex-1 bg-white border-gray-200 text-xs h-8 px-2"
+                          className="flex-1 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-xs h-8 px-2 dark:text-slate-100"
                         />
                         <Button
                           type="button"
@@ -1392,7 +1392,7 @@ export default function AddPlacePage() {
               </div>
               <button
                 onClick={() => setIsDialogOpen(true)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-2.5 border border-gray-200 dark:border-slate-800 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-850 transition-colors"
               >
                 <Plus size={16} /> {t("places_admin.add_category")}
               </button>
@@ -1401,7 +1401,7 @@ export default function AddPlacePage() {
             {/* Search Places Input */}
             <div className="relative">
               <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500"
                 size={14}
               />
               <Input
@@ -1409,12 +1409,12 @@ export default function AddPlacePage() {
                 placeholder={t("places_admin.search_places") || (language === "es" ? "Buscar lugares..." : "Search places...")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-1.5 bg-gray-50 border-gray-200 rounded-lg text-xs focus:bg-white transition-colors"
+                className="w-full pl-9 pr-8 py-1.5 bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 rounded-lg text-xs focus:bg-white dark:focus:bg-slate-900 dark:text-slate-100 transition-colors"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300"
                 >
                   <X size={12} />
                 </button>
@@ -1422,14 +1422,14 @@ export default function AddPlacePage() {
             </div>
 
             {/* Status Filter Toggle */}
-            <div className="flex bg-gray-100 p-0.5 rounded-lg text-xs font-semibold">
+            <div className="flex bg-gray-100 dark:bg-slate-900/80 p-0.5 rounded-lg text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => setStatusFilter("ALL")}
                 className={`flex-1 py-1 rounded-md transition-all text-[11px] ${
                   statusFilter === "ALL"
-                    ? "bg-white text-gray-900 shadow-sm font-bold"
-                    : "text-gray-500 hover:text-gray-900"
+                    ? "bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 shadow-sm font-bold"
+                    : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
                 }`}
               >
                 {t("places_admin.all_status") || "All"}
@@ -1439,8 +1439,8 @@ export default function AddPlacePage() {
                 onClick={() => setStatusFilter("Published")}
                 className={`flex-1 py-1 rounded-md transition-all text-[11px] flex items-center justify-center gap-1 ${
                   statusFilter === "Published"
-                    ? "bg-white text-emerald-700 shadow-sm font-bold"
-                    : "text-gray-500 hover:text-gray-900"
+                    ? "bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-sm font-bold"
+                    : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -1451,8 +1451,8 @@ export default function AddPlacePage() {
                 onClick={() => setStatusFilter("Draft")}
                 className={`flex-1 py-1 rounded-md transition-all text-[11px] flex items-center justify-center gap-1 ${
                   statusFilter === "Draft"
-                    ? "bg-white text-amber-700 shadow-sm font-bold"
-                    : "text-gray-500 hover:text-gray-900"
+                    ? "bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 shadow-sm font-bold"
+                    : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
@@ -1463,7 +1463,7 @@ export default function AddPlacePage() {
 
           {/* Categories List */}
           <div className="flex-1 overflow-y-auto px-2">
-            <div className="px-4 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            <div className="px-4 py-2 text-[10px] font-bold text-gray-400 dark:text-slate-400 uppercase tracking-widest">
               {t("common.categories") || (language === "es" ? "Categorías" : "Categories")}
             </div>
 
@@ -1475,8 +1475,8 @@ export default function AddPlacePage() {
                   setExpandedCategoryId(null);
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${filterCategoryId === null
-                  ? "bg-gray-100 text-blue-600"
-                  : "text-gray-400 hover:bg-gray-50"
+                  ? "bg-gray-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400"
+                  : "text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800/40"
                   }`}
               >
                 <MapIcon size={14} />
@@ -1489,7 +1489,7 @@ export default function AddPlacePage() {
 
                   return (
                     <div key={cat._id} className="flex flex-col">
-                      <div className="flex items-center hover:bg-gray-50 rounded-lg transition-colors w-full min-w-0">
+                      <div className="flex items-center hover:bg-gray-50 dark:hover:bg-slate-800/40 rounded-lg transition-colors w-full min-w-0">
                         <button
                           onClick={() => {
                             setFilterCategoryId(cat._id);
@@ -1497,8 +1497,8 @@ export default function AddPlacePage() {
                             setExpandedCategoryId(isExpanded ? null : cat._id);
                           }}
                           className={`flex-1 flex items-center justify-between px-4 py-2.5 text-sm transition-colors min-w-0 text-left ${isFilterActive
-                            ? "bg-blue-50/50 text-blue-700 font-semibold rounded-l-lg"
-                            : "text-gray-600"
+                            ? "bg-blue-50/50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-semibold rounded-l-lg"
+                            : "text-gray-600 dark:text-slate-300"
                             }`}
                         >
                           <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -1506,7 +1506,7 @@ export default function AddPlacePage() {
                               size={14}
                               className={`flex-shrink-0 transition-transform duration-200 ${isExpanded
                                 ? "rotate-90 text-blue-500"
-                                : "text-gray-300"
+                                : "text-gray-300 dark:text-slate-600"
                                 }`}
                             />
                             <CategoryIcon
@@ -1516,7 +1516,7 @@ export default function AddPlacePage() {
                             />
                             <span className="truncate pr-2">{cat.name}</span>
                           </div>
-                          <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full flex-shrink-0 ml-1">
+                          <span className="text-[10px] font-bold text-gray-400 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded-full flex-shrink-0 ml-1">
                             {placesInCat.length}
                           </span>
                         </button>
@@ -1525,10 +1525,10 @@ export default function AddPlacePage() {
                         <button
                           onClick={(e) => toggleCategoryVisibility(cat._id, e)}
                           title={disabledCategories.has(cat._id) ? "Show category on map" : "Hide category from map"}
-                          className="px-3 py-2.5 text-gray-400 hover:text-blue-600 transition-colors flex-shrink-0 border-l border-gray-100/50"
+                          className="px-3 py-2.5 text-gray-400 hover:text-blue-600 transition-colors flex-shrink-0 border-l border-gray-100/50 dark:border-slate-800/60"
                         >
                           {disabledCategories.has(cat._id) ? (
-                            <EyeOff size={16} className="text-gray-400" />
+                            <EyeOff size={16} className="text-gray-400 dark:text-slate-500" />
                           ) : (
                             <Eye size={16} className="text-blue-500" />
                           )}
@@ -1537,7 +1537,7 @@ export default function AddPlacePage() {
 
                       {/* Expandable Place List */}
                       {isExpanded && (
-                        <div className="ml-9 mt-1 mb-2 pl-4 border-l-2 border-blue-100 space-y-1 animate-in slide-in-from-top-1 duration-200">
+                        <div className="ml-9 mt-1 mb-2 pl-4 border-l-2 border-blue-100 dark:border-blue-900/50 space-y-1 animate-in slide-in-from-top-1 duration-200">
                           {placesInCat.map((place: any) => {
                             const isDisabled = disabledPlaces.has(place._id);
                             return (
@@ -1545,7 +1545,7 @@ export default function AddPlacePage() {
                                 key={place._id}
                                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-all ${selectedPlace?._id === place._id
                                   ? "bg-blue-600 text-white font-bold shadow-sm"
-                                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100"
                                   } ${isDisabled ? "opacity-50" : ""}`}
                               >
                                 {/* Visibility checkbox */}
@@ -1553,7 +1553,7 @@ export default function AddPlacePage() {
                                   onClick={(e) => togglePlaceVisibility(place._id, e)}
                                   title={isDisabled ? "Show on map" : "Hide from map"}
                                   className={`flex-shrink-0 w-4 h-4 rounded border transition-colors ${isDisabled
-                                    ? "border-gray-300 bg-white"
+                                    ? "border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900"
                                     : selectedPlace?._id === place._id
                                       ? "border-blue-200 bg-blue-500"
                                       : "border-gray-400 bg-blue-500"
@@ -1578,7 +1578,7 @@ export default function AddPlacePage() {
                                           className={`text-[8.5px] font-black px-1.5 py-0.2 rounded uppercase tracking-wider flex-shrink-0 ${
                                             selectedPlace?._id === place._id
                                               ? "bg-amber-300 text-amber-950"
-                                              : "bg-amber-100 text-amber-800 border border-amber-300"
+                                              : "bg-amber-100 dark:bg-amber-500/10 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-500/20"
                                           }`}
                                         >
                                           {t("places_admin.draft") || "Draft"}
@@ -1588,7 +1588,7 @@ export default function AddPlacePage() {
                                           className={`text-[8.5px] font-bold px-1.5 py-0.2 rounded uppercase tracking-wider flex-shrink-0 ${
                                             selectedPlace?._id === place._id
                                               ? "bg-emerald-300 text-emerald-950"
-                                              : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                              : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
                                           }`}
                                         >
                                           {t("places_admin.published") || "Published"}
@@ -1596,7 +1596,7 @@ export default function AddPlacePage() {
                                       )}
                                     </div>
                                     <span
-                                      className={`text-[9px] ${selectedPlace?._id === place._id ? "text-blue-100" : "text-gray-400"}`}
+                                      className={`text-[9px] ${selectedPlace?._id === place._id ? "text-blue-100" : "text-gray-400 dark:text-slate-500"}`}
                                     >
                                       {place.address
                                         ? place.address.split(",")[0]
@@ -1608,7 +1608,7 @@ export default function AddPlacePage() {
                             );
                           })}
                           {placesInCat.length === 0 && (
-                            <p className="text-[10px] text-gray-400 italic py-2 pl-3">
+                            <p className="text-[10px] text-gray-400 dark:text-slate-500 italic py-2 pl-3">
                               No places in this category yet.
                             </p>
                           )}
@@ -1772,13 +1772,13 @@ export default function AddPlacePage() {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200"
           >
             <div
-              className="relative w-full max-w-5xl h-[85vh] max-h-[780px] min-h-[580px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+              className="relative w-full max-w-5xl h-[85vh] max-h-[780px] min-h-[580px] bg-white dark:bg-[#131b2e] rounded-2xl shadow-2xl overflow-hidden flex flex-col border dark:border-slate-800"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b bg-white shrink-0 z-20">
+              <div className="flex items-center justify-between px-6 py-4 border-b dark:border-slate-800 bg-white dark:bg-[#131b2e] shrink-0 z-20">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-xl font-black uppercase tracking-tight text-gray-900">
+                  <h2 className="text-xl font-black uppercase tracking-tight text-gray-900 dark:text-slate-100">
                     {selectedPlace.isNew
                       ? (t("places_admin.add_place") || "Add Place")
                       : (t("places_admin.update_place") || "Update Place")}
@@ -1786,8 +1786,8 @@ export default function AddPlacePage() {
                   <span
                     className={`text-xs font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border ${
                       selectedPlace.isNew || selectedPlace.status === "Draft"
-                        ? "bg-amber-50 text-amber-800 border-amber-300"
-                        : "bg-emerald-50 text-emerald-800 border-emerald-300"
+                        ? "bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-300 dark:border-amber-500/20"
+                        : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border-emerald-300 dark:border-emerald-500/20"
                     }`}
                   >
                     {selectedPlace.isNew || selectedPlace.status === "Draft"
@@ -1807,7 +1807,7 @@ export default function AddPlacePage() {
                     }
                     setSelectedPlace(null);
                   }}
-                  className="rounded-full p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none"
+                  className="rounded-full p-1 text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors focus:outline-none"
                 >
                   <X className="h-5 w-5" />
                 </button>

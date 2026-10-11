@@ -26,10 +26,10 @@ export default function Page() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen ">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">{t("nav.map")}</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-slate-100">{t("nav.map")}</h1>
 
         {user?.role !== "map_editor" && (
           <Button

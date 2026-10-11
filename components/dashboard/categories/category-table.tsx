@@ -65,8 +65,8 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
 
   const getStatusColor = (status: string) => {
     return status === "Active"
-      ? "bg-green-100 text-green-800"
-      : "bg-gray-100 text-gray-800";
+      ? "bg-green-100 text-green-800 dark:bg-green-950/50 dark:text-green-300"
+      : "bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-300";
   };
 
   const categoryTableHeaders = [
@@ -78,16 +78,16 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
   ];
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col">
+    <div className="bg-white dark:bg-[#131b2e] rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col shadow-xs">
       <div className="overflow-x-auto">
         <table className="w-full">
           {/* Table Header */}
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
+            <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/60">
               {categoryTableHeaders.map((header) => (
                 <th
                   key={header}
-                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900"
+                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200"
                 >
                   {header}
                 </th>
@@ -96,16 +96,16 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
           </thead>
 
           {/* Table Body */}
-          <tbody>
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-800/60">
             {isLoading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={5} className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
                   {t("categories_admin.loading")}
                 </td>
               </tr>
             ) : categories.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={5} className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
                   {t("categories_admin.no_categories")}
                 </td>
               </tr>
@@ -113,11 +113,7 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
               categories.map((category, index) => (
                 <tr
                   key={category._id}
-                  className={`${
-                    index !== categories.length - 1
-                      ? "border-b border-gray-100"
-                      : ""
-                  } hover:bg-gray-50 transition-colors`}
+                  className="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors"
                 >
                   {/* Icon */}
                   <td className="px-6 py-4">
@@ -130,7 +126,7 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
                           category.icon?.includes(".");
                         return (
                           <div
-                            className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-sm overflow-hidden border border-gray-100"
+                            className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-sm overflow-hidden border border-gray-100 dark:border-slate-700"
                             style={{
                               backgroundColor: isCustomImage
                                 ? "transparent"
@@ -149,15 +145,15 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
                   </td>
 
                   {/* Category Name */}
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-slate-100">
                     {getLocalized(category.name, language)}
                   </td>
 
                   {/* Color */}
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400">
                     <div className="flex items-center gap-2">
                       <span
-                        className="h-4 w-4 rounded-full"
+                        className="h-4 w-4 rounded-full border border-black/10 dark:border-white/10"
                         style={{ backgroundColor: category.color }}
                       />
 
@@ -213,16 +209,16 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
 
       {/* Pagination */}
       {!isLoading && meta && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-[#131b2e] mt-auto">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">{t("dashboard.table.rows_per_page")}</span>
+            <span className="text-sm text-gray-600 dark:text-slate-400">{t("dashboard.table.rows_per_page")}</span>
             <select
               value={limit}
               onChange={(e) => {
                 setLimit(Number(e.target.value));
                 setPage(1); // Reset to first page when limit changes
               }}
-              className="border border-gray-300 rounded p-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 dark:border-slate-700 rounded p-1 text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -232,7 +228,7 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 border-none">
+            <span className="text-sm text-gray-600 dark:text-slate-400 border-none">
               {t("common.page")} {meta.page} of {meta.totalPage || 1}
             </span>
             <div className="flex items-center gap-2">
@@ -241,6 +237,7 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
                 size="sm"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {t("dashboard.table.previous")}
               </Button>
@@ -249,6 +246,7 @@ export function CategoryTable({ onEdit, onView }: CategoryTableProps) {
                 size="sm"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= (meta.totalPage || 1)}
+                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {t("dashboard.table.next")}
               </Button>

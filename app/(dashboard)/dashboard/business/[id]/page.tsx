@@ -125,10 +125,10 @@ export default function BusinessDetailPage() {
   return (
     <div className="pb-12">
       {/* breadcrumbs */}
-      <div className="mb-6 flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+      <div className="mb-6 flex items-center justify-between bg-white dark:bg-[#131b2e] p-4 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
         <Link
           href="/dashboard/business"
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-all font-medium"
+          className="flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all font-medium"
         >
           <ArrowLeft size={16} />
           {t("business_details.back_to_list")}
@@ -189,9 +189,9 @@ export default function BusinessDetailPage() {
           <HoursOfOperation schedule={business.hours?.schedule} />
 
           {/* Photos & Media Review */}
-          <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm">
+          <div className="bg-white dark:bg-[#131b2e] rounded-lg border border-gray-200 dark:border-slate-800 p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">
                 {t("business_details.photo_gallery")}
               </h2>
             </div>
@@ -218,7 +218,7 @@ export default function BusinessDetailPage() {
                   </div>
                 ))
               ) : (
-                <div className="col-span-full py-12 text-center text-sm text-gray-400 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <div className="col-span-full py-12 text-center text-sm text-gray-400 dark:text-slate-500 bg-gray-50 dark:bg-slate-900/40 rounded-xl border border-dashed border-gray-200 dark:border-slate-800">
                   {t("business_details.no_photos")}
                 </div>
               )}

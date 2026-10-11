@@ -49,16 +49,16 @@ export default function LocationVerification({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white dark:bg-[#131b2e] rounded-lg border border-gray-200 dark:border-slate-800 p-6">
       <div className="flex items-center gap-2 mb-6">
-        <MapPin size={20} className="text-blue-600" />
-        <h2 className="text-lg font-bold text-gray-900">
+        <MapPin size={20} className="text-blue-600 dark:text-blue-400" />
+        <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">
           {t("location_verification.title")}
         </h2>
       </div>
 
       {/* Map replaces the placeholder — same h-48 + rounded-lg + mb-4 classes */}
-      <div className="bg-gray-200 rounded-lg h-48 mb-4 overflow-hidden">
+      <div className="bg-gray-200 dark:bg-slate-900 rounded-lg h-48 mb-4 overflow-hidden">
         <APIProvider
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string}
         >
@@ -80,23 +80,23 @@ export default function LocationVerification({
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
           {t("location_verification.physical_address")}
         </p>
 
-        <p className="text-gray-700 mt-2">
+        <p className="text-gray-700 dark:text-slate-300 mt-2">
           {[location?.address, location?.city, location?.country]
             .filter(Boolean)
             .join(", ") || "No address provided"}
         </p>
       </div>
 
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
+      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-slate-800">
         <div>
-          <p className="text-sm font-medium text-gray-700">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200">
             {t("location_verification.verify_pin_accuracy")}
           </p>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
             {isLoading
               ? t("admin_review.saving")
               : verified

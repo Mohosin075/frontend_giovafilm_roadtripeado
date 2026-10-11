@@ -53,8 +53,8 @@ export default function ReviewsVerificationPage() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-3xl font-bold">{t("reviews_admin.title")}</h1>
-        <p className="text-muted-foreground mt-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{t("reviews_admin.title")}</h1>
+        <p className="text-muted-foreground dark:text-slate-400 mt-2">
           {t("reviews_admin.subtitle")}
         </p>
       </div>
@@ -62,13 +62,13 @@ export default function ReviewsVerificationPage() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[1, 2].map((i) => (
-            <div key={i} className="h-64 bg-gray-200 animate-pulse rounded-2xl" />
+            <div key={i} className="h-64 bg-gray-200 dark:bg-slate-800 animate-pulse rounded-2xl" />
           ))}
         </div>
       ) : reviewList.length === 0 ? (
-        <Card className="rounded-2xl border-dashed">
+        <Card className="rounded-2xl border-dashed bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-lg font-medium text-muted-foreground">{t("reviews_admin.no_pending_reviews")}</p>
+            <p className="text-lg font-medium text-muted-foreground dark:text-slate-400">{t("reviews_admin.no_pending_reviews")}</p>
           </CardContent>
         </Card>
       ) : (
@@ -89,25 +89,25 @@ export default function ReviewsVerificationPage() {
             const reviewContent = getSafeString(review.review, language);
 
             return (
-              <Card key={review._id} className="rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col justify-between">
+              <Card key={review._id} className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-150 dark:border-slate-800 overflow-hidden flex flex-col justify-between">
                 <CardHeader className="pb-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-xl font-semibold mb-1 line-clamp-1">
+                      <CardTitle className="text-xl font-semibold mb-1 line-clamp-1 text-gray-900 dark:text-slate-100">
                         {targetType}: {targetName}
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {safeByLabel}: <span className="font-medium text-foreground">{reviewerName}</span>
+                      <p className="text-sm text-muted-foreground dark:text-slate-400">
+                        {safeByLabel}: <span className="font-medium text-foreground dark:text-slate-200">{reviewerName}</span>
                       </p>
                     </div>
-                    <div className="flex items-center gap-1 bg-yellow-50 text-yellow-600 px-2.5 py-1 rounded-full text-sm font-semibold">
+                    <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-950/40 text-yellow-700 dark:text-yellow-300 border border-yellow-200/60 dark:border-yellow-900/40 px-2.5 py-1 rounded-full text-sm font-semibold">
                       <Star className="w-4 h-4 fill-yellow-500 stroke-yellow-500" />
                       <span>{review.rating || 0}.0</span>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4 flex-1 flex flex-col justify-between">
-                  <p className="text-gray-700 italic border-l-4 border-primary pl-3 py-1">
+                  <p className="text-gray-700 dark:text-slate-300 italic border-l-4 border-primary pl-3 py-1">
                     "{reviewContent || "No review content provided (Star rating only)"}"
                   </p>
 
@@ -118,25 +118,25 @@ export default function ReviewsVerificationPage() {
                           key={idx}
                           src={getImageUrl(img)}
                           alt="Review upload"
-                          className="w-16 h-16 object-cover rounded-lg border"
+                          className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-slate-800"
                         />
                       ))}
                     </div>
                   )}
 
-                  <div className="flex justify-end gap-3 pt-4 border-t mt-auto">
+                  <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-slate-800 mt-auto">
                     <Button
                       variant="outline"
                       onClick={() => handleReject(review._id)}
                       disabled={isApproving || isRejecting}
-                      className="flex items-center gap-1.5 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-full"
+                      className="flex items-center gap-1.5 border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-700 rounded-full"
                     >
                       <X className="w-4 h-4" /> {t("business_admin.reject") || "Reject"}
                     </Button>
                     <Button
                       onClick={() => handleApprove(review._id)}
                       disabled={isApproving || isRejecting}
-                      className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white rounded-full border-none"
+                      className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white rounded-full border-none shadow-sm"
                     >
                       <Check className="w-4 h-4" /> {t("business_admin.approve") || "Approve"}
                     </Button>

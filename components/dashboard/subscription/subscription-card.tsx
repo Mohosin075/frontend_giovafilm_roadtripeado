@@ -16,22 +16,22 @@ type Props = {
 export function SubscriptionCard({ plan, onEdit, onDelete, isLoading }: Props) {
   const { language } = useLanguage();
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition-all p-8 flex flex-col relative overflow-hidden group">
+    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm hover:shadow-xl dark:hover:border-amber-400/30 transition-all p-8 flex flex-col relative overflow-hidden group">
       {plan.isPopular && (
-        <div className="absolute top-0 right-0 bg-primary text-black text-[10px] font-black uppercase px-4 py-1 rounded-bl-xl tracking-widest">
+        <div className="absolute top-0 right-0 bg-primary text-black text-[10px] font-black uppercase px-4 py-1 rounded-bl-xl tracking-widest shadow-xs">
           Popular
         </div>
       )}
 
       <div className="mb-8">
-        <h3 className="text-xl font-black uppercase tracking-tight text-gray-900 mb-2">
+        <h3 className="text-xl font-black uppercase tracking-tight text-gray-900 dark:text-slate-100 mb-2">
           {getLocalized(plan.name, language)}
         </h3>
         <div className="flex items-baseline gap-1">
-          <span className="text-4xl font-black text-gray-900">
+          <span className="text-4xl font-black text-gray-900 dark:text-slate-100">
             ${plan.price}
           </span>
-          <span className="text-gray-500 font-medium lowercase">
+          <span className="text-gray-500 dark:text-slate-400 font-medium lowercase">
             /{plan.interval}
           </span>
         </div>
@@ -40,10 +40,10 @@ export function SubscriptionCard({ plan, onEdit, onDelete, isLoading }: Props) {
       <div className="space-y-4 mb-10 flex-1">
         {plan.features?.map((feature: any, idx: number) => (
           <div key={idx} className="flex items-start gap-3">
-            <div className="mt-1 bg-green-100 p-0.5 rounded-full">
-              <Check className="w-3.5 h-3.5 text-green-600 stroke-[3]" />
+            <div className="mt-1 bg-green-100 dark:bg-green-950/50 p-0.5 rounded-full shrink-0">
+              <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400 stroke-[3]" />
             </div>
-            <p className="text-sm text-gray-600 font-medium">{getLocalized(feature, language)}</p>
+            <p className="text-sm text-gray-600 dark:text-slate-300 font-medium">{getLocalized(feature, language)}</p>
           </div>
         ))}
       </div>

@@ -153,7 +153,7 @@ export function BusinessFormStep4({
       {/* Form Fields */}
       <div className="space-y-4 text-left">
         <div className="space-y-3">
-          <h3 className="text-base text-gray-900 font-semibold">
+          <h3 className="text-base text-gray-900 dark:text-slate-100 font-semibold">
             {t("for_business.step4.offer_photo")} <span className="text-red-500">*</span>
           </h3>
           {photoPreview ? (

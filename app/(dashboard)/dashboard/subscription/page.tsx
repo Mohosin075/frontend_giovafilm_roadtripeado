@@ -90,13 +90,13 @@ export default function SubscriptionPage() {
   return (
     <div className="p-6 space-y-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-black uppercase">{t("nav.subscription")}</h1>
+        <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-slate-100">{t("nav.subscription")}</h1>
         <Button
           onClick={() => {
             setEditingPlan(null);
             setIsAddModalOpen(true);
           }}
-          className="bg-primary hover:bg-primary/90 text-black font-black uppercase tracking-widest py-6 px-6 rounded-xl"
+          className="bg-primary hover:bg-primary/90 text-black font-black uppercase tracking-widest py-6 px-6 rounded-xl shadow-md"
         >
           + {t("subscriptions_admin.add_new_plan")}
         </Button>
@@ -109,11 +109,11 @@ export default function SubscriptionPage() {
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
           </div>
         ) : plans.length === 0 ? (
-          <div className="col-span-full text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
-            <p className="text-gray-500 font-medium text-lg">
+          <div className="col-span-full text-center py-20 bg-white dark:bg-[#131b2e] rounded-2xl border border-dashed border-gray-300 dark:border-slate-800">
+            <p className="text-gray-500 dark:text-slate-400 font-medium text-lg">
               {t("for_business.step6.no_plans")}
             </p>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-gray-400 dark:text-slate-500">
               {t("subscriptions_admin.add_new_plan")}
             </p>
           </div>

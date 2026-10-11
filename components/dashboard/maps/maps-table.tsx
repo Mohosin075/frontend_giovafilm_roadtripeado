@@ -109,8 +109,8 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
 
   const getStatusColor = (status: string) => {
     return status === "Published"
-      ? "bg-emerald-100 text-emerald-800 border-emerald-300/60 hover:bg-emerald-200"
-      : "bg-amber-100 text-amber-800 border-amber-300/60 hover:bg-amber-200";
+      ? "bg-emerald-100 text-emerald-800 border-emerald-300/60 hover:bg-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"
+      : "bg-amber-100 text-amber-800 border-amber-300/60 hover:bg-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20";
   };
 
   const tableHeaders = [
@@ -123,15 +123,15 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
   ];
 
   return (
-    <div className="bg-white rounded-lg border overflow-hidden border-gray-200 flex flex-col">
+    <div className="bg-white dark:bg-[#131b2e] rounded-lg border overflow-hidden border-gray-200 dark:border-slate-800 flex flex-col">
       {/* Table Toolbar */}
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white">
+      <div className="p-4 border-b border-gray-200 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-transparent">
         <div className="relative w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
             type="text"
             placeholder={t("maps_admin.search_maps")}
-            className="pl-9 h-9"
+            className="pl-9 h-9 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -144,11 +144,11 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
+            <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/60">
               {tableHeaders.map((header) => (
                 <th
                   key={header}
-                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900"
+                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200"
                 >
                   {header}
                 </th>
@@ -159,13 +159,13 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
                   {t("maps_admin.loading_maps")}
                 </td>
               </tr>
             ) : displayedMaps.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
                   {t("maps_admin.no_maps")}
                 </td>
               </tr>
@@ -175,15 +175,15 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
                   key={map._id}
                   className={`${
                     index !== displayedMaps.length - 1
-                      ? "border-b border-gray-100"
+                      ? "border-b border-gray-100 dark:border-slate-800/60"
                       : ""
-                  } hover:bg-gray-50 transition-colors`}
+                  } hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors`}
                 >
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-slate-100">
                     {getLocalized(map.name, language)}
                   </td>
 
-                  <td className="px-6 py-4 text-sm text-gray-600 truncate max-w-xs">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300 truncate max-w-xs">
                     {getLocalized(map.description, language) || "-"}
                   </td>
 
@@ -198,11 +198,11 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
                     </button>
                   </td>
 
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                     ${map.price}
                   </td>
 
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400">
                     {new Date(map.updatedAt).toLocaleDateString()}
                   </td>
 
@@ -249,16 +249,16 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
 
       {/* Pagination */}
       {!isLoading && meta && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white mt-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-transparent mt-auto">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">{t("dashboard.table.rows_per_page")}</span>
+            <span className="text-sm text-gray-600 dark:text-slate-400">{t("dashboard.table.rows_per_page")}</span>
             <select
               value={limit}
               onChange={(e) => {
                 setLimit(Number(e.target.value));
                 setPage(1);
               }}
-              className="border border-gray-300 rounded p-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 dark:border-slate-800 rounded p-1 text-sm bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -268,7 +268,7 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 border-none">
+            <span className="text-sm text-gray-600 dark:text-slate-400 border-none">
               {t("common.page")} {meta.page} of {meta.totalPage || 1}
             </span>
             <div className="flex items-center gap-2">
@@ -277,6 +277,7 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
                 size="sm"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {t("dashboard.table.previous")}
               </Button>
@@ -285,6 +286,7 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
                 size="sm"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= (meta.totalPage || 1)}
+                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {t("dashboard.table.next")}
               </Button>

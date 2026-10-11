@@ -619,9 +619,9 @@ export function AddCategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md overflow-visible max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md overflow-visible max-h-[90vh] overflow-y-auto bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
+          <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-slate-100">
             {getDialogTitle()}
           </DialogTitle>
         </DialogHeader>
@@ -629,12 +629,12 @@ export function AddCategoryDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 py-4">
           {/* Category Name */}
           <div>
-            <Label className="text-sm font-medium text-gray-700">
+            <Label className="text-sm font-medium text-gray-700 dark:text-slate-300">
               {t("categories_admin.category_name")}
             </Label>
             <Input
               placeholder={t("categories_admin.category_name_placeholder")}
-              className="mt-1 disabled:opacity-80 disabled:cursor-not-allowed"
+              className="mt-1 bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 disabled:opacity-80 disabled:cursor-not-allowed"
               disabled={isView}
               {...register("categoryName", { required: true })}
             />
@@ -642,14 +642,14 @@ export function AddCategoryDialog({
 
           {/* Color Palette */}
           <div>
-            <Label className="text-sm font-medium text-gray-700">{t("categories_admin.color")}</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-slate-300">{t("categories_admin.color")}</Label>
             <div className="grid grid-cols-12 gap-1 mt-2">
               {colorPalette.map((color) => (
                 <div
                   key={color}
                   onClick={() => !isView && setValue("color", color)}
                   className={`w-6 h-6 cursor-pointer border transition-all
-                    ${selectedColor === color ? "border-black ring-2 ring-gray-400 scale-110" : "border-gray-200 hover:scale-105"}
+                    ${selectedColor === color ? "border-black dark:border-white ring-2 ring-gray-400 dark:ring-slate-500 scale-110" : "border-gray-200 dark:border-slate-700 hover:scale-105"}
                     ${isView ? "cursor-not-allowed" : ""}
                   `}
                   style={{ backgroundColor: color }}
@@ -660,20 +660,20 @@ export function AddCategoryDialog({
 
           {/* Icon Section */}
           <div>
-            <Label className="text-sm font-medium text-gray-700 block mb-2">
+            <Label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-2">
               {t("categories_admin.icon")}
             </Label>
 
             {/* Tab switcher */}
             {!isView && (
-              <div className="flex gap-1 mb-4 bg-gray-100 rounded-lg p-1 w-fit">
+              <div className="flex gap-1 mb-4 bg-gray-100 dark:bg-slate-900/70 rounded-lg p-1 w-fit border border-transparent dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setActiveTab("iconify")}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                     activeTab === "iconify"
-                      ? "bg-white text-gray-800 shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? "bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 shadow-sm"
+                      : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200"
                   }`}
                 >
                   🔍 {t("categories_admin.browse_icons")}
@@ -683,8 +683,8 @@ export function AddCategoryDialog({
                   onClick={() => setActiveTab("custom")}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                     activeTab === "custom"
-                      ? "bg-white text-gray-800 shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? "bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 shadow-sm"
+                      : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200"
                   }`}
                 >
                   📁 {t("categories_admin.upload_custom")}
@@ -697,7 +697,7 @@ export function AddCategoryDialog({
               <div className="space-y-4">
                 {/* Popular Icons */}
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                  <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">
                     {t("categories_admin.popular_icons")}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -709,7 +709,7 @@ export function AddCategoryDialog({
 
                 {/* Other Icons */}
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                  <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">
                     {t("categories_admin.other_icons")}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -725,23 +725,23 @@ export function AddCategoryDialog({
                     <Button
                       type="button"
                       variant="outline"
-                      className="text-sm border-gray-300 text-gray-600"
+                      className="text-sm border-gray-300 dark:border-slate-700 dark:bg-slate-900/60 text-gray-600 dark:text-slate-300 dark:hover:bg-slate-800"
                       onClick={() => setShowMoreIcons((prev) => !prev)}
                     >
                       {showMoreIcons ? t("categories_admin.less_icons") : t("categories_admin.more_icons")}
                     </Button>
 
                     {showMoreIcons && (
-                      <div className="border border-gray-200 rounded-lg p-3 bg-gray-50 space-y-2">
+                      <div className="border border-gray-200 dark:border-slate-800 rounded-lg p-3 bg-gray-50 dark:bg-slate-900/60 space-y-2">
                         <Input
                           autoFocus
                           placeholder={t("categories_admin.search_icons_placeholder")}
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="text-sm bg-white"
+                          className="text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-900 dark:text-slate-100"
                         />
                         {isSearching && (
-                          <p className="text-xs text-gray-400 text-center py-2">
+                          <p className="text-xs text-gray-400 dark:text-slate-500 text-center py-2">
                             {t("categories_admin.searching")}
                           </p>
                         )}
@@ -755,12 +755,12 @@ export function AddCategoryDialog({
                         {!isSearching &&
                           searchQuery &&
                           searchResults.length === 0 && (
-                            <p className="text-xs text-gray-400 text-center py-2">
+                            <p className="text-xs text-gray-400 dark:text-slate-500 text-center py-2">
                               {t("categories_admin.no_icons_found")}
                             </p>
                           )}
                         {!searchQuery && (
-                          <p className="text-xs text-gray-400 text-center py-1">
+                          <p className="text-xs text-gray-400 dark:text-slate-500 text-center py-1">
                             {t("categories_admin.type_to_search_icons")}
                           </p>
                         )}
@@ -778,28 +778,28 @@ export function AddCategoryDialog({
                 {!customIconPreview ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-purple-400 hover:bg-purple-50 transition-all group"
+                    className="border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-purple-400 dark:hover:border-purple-500/50 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all group"
                   >
-                    <div className="w-12 h-12 rounded-full bg-gray-100 group-hover:bg-purple-100 flex items-center justify-center transition-all">
+                    <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-800 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/40 flex items-center justify-center transition-all">
                       <Icon
                         icon="mdi:cloud-upload-outline"
                         width={24}
                         height={24}
-                        className="text-gray-400 group-hover:text-purple-500"
+                        className="text-gray-400 group-hover:text-purple-500 dark:text-slate-400 dark:group-hover:text-purple-300"
                       />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-medium text-gray-700 group-hover:text-purple-700">
+                      <p className="text-sm font-medium text-gray-700 dark:text-slate-300 group-hover:text-purple-700 dark:group-hover:text-purple-300">
                         {t("categories_admin.click_to_upload_icon")}
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">
                         {t("categories_admin.custom_icon_format_hint")}
                       </p>
                     </div>
                   </div>
                 ) : (
                   /* Preview of uploaded icon */
-                  <div className="border border-gray-200 rounded-xl p-4 flex items-center gap-4 bg-gray-50">
+                  <div className="border border-gray-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-4 bg-gray-50 dark:bg-slate-900/40">
                     {/* Icon preview on colored circle */}
                     <div
                       className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-sm"
@@ -813,10 +813,10 @@ export function AddCategoryDialog({
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 truncate">
+                      <p className="text-sm font-medium text-gray-800 dark:text-slate-200 truncate">
                         {customIconName}
                       </p>
-                      <p className="text-xs text-green-600 mt-0.5 flex items-center gap-1">
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
                         <Icon icon="mdi:check-circle" width={12} />
                         {t("categories_admin.custom_icon_ready")}
                       </p>
@@ -827,7 +827,7 @@ export function AddCategoryDialog({
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="text-xs px-2 py-1 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 transition-all flex items-center gap-1"
+                        className="text-xs px-2 py-1 rounded-md border border-gray-300 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all flex items-center gap-1"
                       >
                         <Icon icon="mdi:pencil" width={12} />
                         {t("categories_admin.replace")}
@@ -836,7 +836,7 @@ export function AddCategoryDialog({
                       <button
                         type="button"
                         onClick={handleRemoveCustomIcon}
-                        className="text-xs px-2 py-1 rounded-md border border-red-200 text-red-500 hover:bg-red-50 transition-all flex items-center gap-1"
+                        className="text-xs px-2 py-1 rounded-md border border-red-200 dark:border-red-900/50 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-all flex items-center gap-1"
                       >
                         <Icon icon="mdi:trash-can-outline" width={12} />
                         {t("categories_admin.remove")}
@@ -858,7 +858,7 @@ export function AddCategoryDialog({
                   {["SVG", "PNG", "JPG", "WEBP", "GIF"].map((fmt) => (
                     <span
                       key={fmt}
-                      className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 font-mono"
+                      className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 font-mono border border-transparent dark:border-slate-700"
                     >
                       .{fmt.toLowerCase()}
                     </span>
@@ -878,7 +878,7 @@ export function AddCategoryDialog({
           </div>
 
           {/* Selected icon preview bar */}
-          <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-100">
+          <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-slate-900/40 rounded-lg border border-gray-100 dark:border-slate-800">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
               style={{ backgroundColor: selectedColor }}
@@ -886,8 +886,8 @@ export function AddCategoryDialog({
               {renderIconPreview(18)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500">{t("categories_admin.selected_icon")}</p>
-              <p className="text-xs font-mono text-gray-700 truncate">
+              <p className="text-xs text-gray-500 dark:text-slate-400">{t("categories_admin.selected_icon")}</p>
+              <p className="text-xs font-mono text-gray-700 dark:text-slate-200 truncate">
                 {iconType === "custom"
                   ? customIconName || "custom-icon"
                   : selectedIcon}
@@ -896,8 +896,8 @@ export function AddCategoryDialog({
             <span
               className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                 iconType === "custom"
-                  ? "bg-blue-100 text-blue-600"
-                  : "bg-gray-200 text-gray-600"
+                  ? "bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400"
+                  : "bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-slate-300"
               }`}
             >
               {iconType === "custom" ? t("categories_admin.custom") : "Iconify"}
@@ -910,7 +910,7 @@ export function AddCategoryDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-gray-300"
+              className="border-gray-300 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               {isView ? t("common.close") : t("common.cancel")}
             </Button>
@@ -918,7 +918,7 @@ export function AddCategoryDialog({
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold"
               >
                 {isLoading
                   ? t("common.loading")

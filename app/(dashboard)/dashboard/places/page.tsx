@@ -13,10 +13,10 @@ export default function Page() {
       {/* Header Section */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{t("nav.places")}</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{t("nav.places")}</h1>
         </div>
         <Link href={"/dashboard/places/add-place"}>
-          <button className="flex items-center gap-2 bg-primary/80 px-4 py-2 rounded-lg hover:bg-primary transition-colors font-medium">
+          <button className="flex items-center gap-2 bg-primary/80 px-4 py-2 rounded-lg hover:bg-primary transition-colors text-black font-semibold">
             <Plus size={20} />
             {t("places_admin.add_place")}
           </button>

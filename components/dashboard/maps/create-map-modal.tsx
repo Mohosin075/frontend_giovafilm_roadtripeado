@@ -127,9 +127,9 @@ export default function CreateMapModal({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="min-w-3xl w-full max-h-[90vh] overflow-y-auto overflow-x-hidden rounded-xl">
+      <DialogContent className="min-w-3xl w-full max-h-[90vh] overflow-y-auto overflow-x-hidden rounded-xl bg-white dark:bg-[#131b2e] dark:border-slate-800">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
+          <DialogTitle className="text-xl font-bold dark:text-slate-100">
             {isEditing ? t("places_admin.update_place") : t("maps_admin.map_name")}
           </DialogTitle>
         </DialogHeader>
@@ -137,33 +137,33 @@ export default function CreateMapModal({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 mt-4">
           {/* Name */}
           <div className="space-y-2">
-            <Label className="ml-1">{t("maps_admin.map_name")}</Label>
+            <Label className="ml-1 dark:text-slate-200">{t("maps_admin.map_name")}</Label>
             <div className="relative">
               <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
               <Input
                 placeholder={t("maps_admin.placeholder_name")}
                 {...register("name", { required: true })}
-                className="pl-12 py-6 bg-gray-100/80"
+                className="pl-12 py-6 bg-gray-100/80 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
             </div>
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label className="ml-1">{t("maps_admin.description")}</Label>
+            <Label className="ml-1 dark:text-slate-200">{t("maps_admin.description")}</Label>
             <div className="relative">
               <FileText className="absolute left-4 top-4 w-5 h-5 text-[#9E9E9E]" />
               <Textarea
                 placeholder={t("places_admin.description_placeholder")}
                 {...register("description")}
-                className="pl-12 bg-gray-100/80"
+                className="pl-12 bg-gray-100/80 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
             </div>
           </div>
 
           {/* Price */}
           <div className="space-y-2">
-            <Label className="ml-1">{t("maps_admin.price")}</Label>
+            <Label className="ml-1 dark:text-slate-200">{t("maps_admin.price")}</Label>
             <div className="relative">
               <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9E9E9E]" />
               <Input
@@ -171,28 +171,28 @@ export default function CreateMapModal({
                 step="0.01"
                 min={0}
                 {...register("price", { min: 0 })}
-                className="pl-12 py-6 bg-gray-100/80"
+                className="pl-12 py-6 bg-gray-100/80 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
             </div>
           </div>
 
           {/* Features */}
           <div className="space-y-2">
-            <Label className="ml-1">{t("maps_admin.features")}</Label>
+            <Label className="ml-1 dark:text-slate-200">{t("maps_admin.features")}</Label>
             <Input
               placeholder={t("places_admin.features_placeholder")}
               {...register("features")}
-              className="py-6 bg-gray-100/80"
+              className="py-6 bg-gray-100/80 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
           </div>
 
           {/* Status (Draft / Published) */}
           <div className="space-y-2">
-            <Label className="ml-1">{t("offers_admin.status") || "Status"}</Label>
+            <Label className="ml-1 dark:text-slate-200">{t("offers_admin.status") || "Status"}</Label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as "Draft" | "Published")}
-              className="w-full h-12 px-4 bg-gray-100/80 border border-gray-200 rounded-xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
+              className="w-full h-12 px-4 bg-gray-100/80 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
             >
               <option value="Draft">{t("places_admin.draft") || "Draft"}</option>
               <option value="Published">{t("places_admin.published") || "Published"}</option>
@@ -201,23 +201,23 @@ export default function CreateMapModal({
 
           {/* Tips */}
           <div className="space-y-2">
-            <Label className="ml-1">{t("maps_admin.tips")}</Label>
+            <Label className="ml-1 dark:text-slate-200">{t("maps_admin.tips")}</Label>
             <Textarea
               placeholder={t("places_admin.tips_placeholder_map")}
               {...register("tips")}
-              className="pl-12 bg-gray-100/80"
+              className="pl-12 bg-gray-100/80 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
           </div>
 
           {/* Image upload - updated field */}
           <div className="space-y-2">
-            <Label className="ml-1">
+            <Label className="ml-1 dark:text-slate-200">
               {t("offers_admin.offer_photo")} {!isEditing && <span className="text-red-500">*</span>}
             </Label>
 
             <div
               onClick={() => fileRef.current?.click()}
-              className="cursor-pointer border-2 border-dashed border-gray-300 rounded-xl bg-gray-100/60 hover:bg-gray-100 transition flex flex-col items-center justify-center text-center p-8"
+              className="cursor-pointer border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl bg-gray-100/60 dark:bg-slate-900/40 hover:bg-gray-100 dark:hover:bg-slate-900/80 transition flex flex-col items-center justify-center text-center p-8"
             >
               {preview ? (
                 <img
@@ -227,11 +227,11 @@ export default function CreateMapModal({
                 />
               ) : (
                 <>
-                  <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-600">
+                  <UploadCloud className="w-8 h-8 text-gray-400 dark:text-slate-500 mb-2" />
+                  <p className="text-sm text-gray-600 dark:text-slate-300">
                     {t("maps_admin.upload_hint")}
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">
                     {t("maps_admin.upload_format")}
                   </p>
                 </>

@@ -34,27 +34,27 @@ export function GeneralSettings() {
   };
 
   return (
-    <Card className="bg-white">
+    <Card className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800">
       <CardHeader>
-        <CardTitle>{t("settings_admin.general_title")}</CardTitle>
+        <CardTitle className="text-gray-900 dark:text-slate-100">{t("settings_admin.general_title")}</CardTitle>
       </CardHeader>
 
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t("settings_admin.workspace_name")}</Label>
-            <Input className="text-base! py-5" {...register("workspaceName")} />
+            <Label className="text-gray-700 dark:text-slate-300">{t("settings_admin.workspace_name")}</Label>
+            <Input className="text-base! py-5 bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100" {...register("workspaceName")} />
           </div>
 
           <div className="space-y-2">
-            <Label>{t("settings_admin.company_name")}</Label>
-            <Input className="text-base! py-5" {...register("companyName")} />
+            <Label className="text-gray-700 dark:text-slate-300">{t("settings_admin.company_name")}</Label>
+            <Input className="text-base! py-5 bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100" {...register("companyName")} />
           </div>
 
           <div className="space-y-2">
-            <Label>{t("settings_admin.email_address")}</Label>
+            <Label className="text-gray-700 dark:text-slate-300">{t("settings_admin.email_address")}</Label>
             <Input
-              className="text-base! py-5"
+              className="text-base! py-5 bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100"
               type="email"
               {...register("email")}
             />
@@ -62,25 +62,25 @@ export function GeneralSettings() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t("settings_admin.timezone")}</Label>
+              <Label className="text-gray-700 dark:text-slate-300">{t("settings_admin.timezone")}</Label>
               <Input
-                className="text-base! py-5"
+                className="text-base! py-5 bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 placeholder={t("settings_admin.select_timezone")}
                 {...register("timezone")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>{t("settings_admin.language")}</Label>
+              <Label className="text-gray-700 dark:text-slate-300">{t("settings_admin.language")}</Label>
               <Input
-                className="text-base! py-5"
+                className="text-base! py-5 bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 placeholder={t("settings_admin.select_language")}
                 {...register("language")}
               />
             </div>
           </div>
 
-          <Button type="submit" className="mt-2">
+          <Button type="submit" className="mt-2 bg-primary hover:bg-primary/90 text-black font-bold">
             {t("settings_admin.save_settings")}
           </Button>
         </form>

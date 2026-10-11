@@ -139,8 +139,8 @@ export function PlacesTable() {
 
   const getStatusColor = (status: string) => {
     return status === "Active" || status === "Published"
-      ? "bg-green-100 text-green-800"
-      : "bg-gray-100 text-gray-800";
+      ? "bg-green-100 text-green-800 dark:bg-emerald-500/10 dark:text-emerald-400"
+      : "bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-300";
   };
 
   const tableHeaders = [
@@ -153,12 +153,12 @@ export function PlacesTable() {
   ];
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col">
+    <div className="bg-white dark:bg-[#131b2e] rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col">
       {/* Table Toolbar */}
-      <div className="p-4 border-b border-gray-200 flex flex-wrap justify-between items-center gap-4 bg-white">
+      <div className="p-4 border-b border-gray-200 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4 bg-white dark:bg-transparent">
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
             <Input
               placeholder={t("search.search_places")}
               value={searchTerm}
@@ -166,7 +166,7 @@ export function PlacesTable() {
                 setSearchTerm(e.target.value);
                 setPage(1);
               }}
-              className="pl-10 h-10 w-full"
+              className="pl-10 h-10 w-full dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
           </div>
 
@@ -176,7 +176,7 @@ export function PlacesTable() {
               setStatus(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white min-w-[140px]"
+            className="h-10 px-3 border border-gray-300 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white dark:bg-slate-900 dark:text-slate-200 min-w-[140px]"
           >
             <option value="">{t("places_admin.all_status")}</option>
             <option value="Published">{t("places_admin.published")}</option>
@@ -189,7 +189,7 @@ export function PlacesTable() {
               setCategory(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white min-w-[140px]"
+            className="h-10 px-3 border border-gray-300 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white dark:bg-slate-900 dark:text-slate-200 min-w-[140px]"
           >
             <option value="">{t("places_admin.all_categories")}</option>
             {categoriesResponse?.data?.map((cat: any) => (
@@ -205,7 +205,7 @@ export function PlacesTable() {
               setCountry(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white min-w-[140px]"
+            className="h-10 px-3 border border-gray-300 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white dark:bg-slate-900 dark:text-slate-200 min-w-[140px]"
           >
             <option value="">{t("places_admin.all_countries")}</option>
             {countries?.map((c: any) => {
@@ -224,7 +224,7 @@ export function PlacesTable() {
               setType(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white min-w-[140px]"
+            className="h-10 px-3 border border-gray-300 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white dark:bg-slate-900 dark:text-slate-200 min-w-[140px]"
           >
             <option value="">{t("places_admin.all_types")}</option>
             <option value="Regular">{t("places_admin.regular_admin")}</option>
@@ -236,27 +236,27 @@ export function PlacesTable() {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
+            <tr className="bg-gray-50 dark:bg-slate-900/60 border-b border-gray-200 dark:border-slate-800">
               {tableHeaders.map((header) => (
                 <th
                   key={header}
-                  className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider"
                 >
                   {header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-200 dark:divide-slate-800/60">
             {isLoading ? (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
                   {t("places_admin.loading_places")}
                 </td>
               </tr>
             ) : displayedPlaces.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-slate-400">
                   {t("places_admin.no_places")}
                 </td>
               </tr>
@@ -265,22 +265,22 @@ export function PlacesTable() {
                 <tr
                   key={place._id}
                   className={`${index !== displayedPlaces.length - 1
-                      ? "border-b border-gray-100"
+                      ? "border-b border-gray-100 dark:border-slate-800/60"
                       : ""
-                    } hover:bg-gray-50 transition-colors`}
+                    } hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors`}
                 >
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-slate-100">
                     <div className="flex flex-col">
                       <span>{getSafeString(place.name, language)}</span>
-                      <span className="text-xs text-gray-400 truncate max-w-[200px]">
+                      <span className="text-xs text-gray-400 dark:text-slate-500 truncate max-w-[200px]">
                         {place.address}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                     {getSafeString(place.category?.name, language) || "N/A"}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                     {getSafeString(place.map?.name, language) || "N/A"}
                   </td>
                   <td className="px-6 py-4 text-sm">
@@ -296,10 +296,10 @@ export function PlacesTable() {
                         : place.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                     <div className="flex items-center gap-1">
                       <span>⭐ {place.rating || 0}</span>
-                      <span className="text-gray-400">
+                      <span className="text-gray-400 dark:text-slate-500">
                         ({place.totalReview || 0})
                       </span>
                     </div>
@@ -350,7 +350,7 @@ export function PlacesTable() {
                           setSelectedPlaceId(place._id);
                           setIsReviewModalOpen(true);
                         }}
-                        className="text-yellow-500 hover:text-yellow-700 transition-colors flex items-center gap-2 border rounded-full px-2"
+                        className="text-yellow-500 hover:text-yellow-700 transition-colors flex items-center gap-2 border dark:border-slate-700 dark:hover:bg-slate-800 rounded-full px-2"
                         aria-label={t("place.reviews")}
                       >
                         {t("place.reviews")}
@@ -377,16 +377,16 @@ export function PlacesTable() {
 
       {/* Pagination */}
       {!isLoading && meta && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white mt-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-transparent mt-auto">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">{t("dashboard.table.rows_per_page")}</span>
+            <span className="text-sm text-gray-600 dark:text-slate-400">{t("dashboard.table.rows_per_page")}</span>
             <select
               value={limit}
               onChange={(e) => {
                 setLimit(Number(e.target.value));
                 setPage(1);
               }}
-              className="border border-gray-300 rounded p-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 dark:border-slate-800 rounded p-1 text-sm bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -396,7 +396,7 @@ export function PlacesTable() {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 border-none">
+            <span className="text-sm text-gray-600 dark:text-slate-400 border-none">
               {t("common.page")} {meta.page} / {meta.totalPage || 1}
             </span>
             <div className="flex items-center gap-2">
@@ -405,6 +405,7 @@ export function PlacesTable() {
                 size="sm"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {t("common.previous")}
               </Button>
@@ -413,6 +414,7 @@ export function PlacesTable() {
                 size="sm"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= (meta.totalPage || 1)}
+                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {t("common.next")}
               </Button>
