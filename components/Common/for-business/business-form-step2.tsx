@@ -478,7 +478,7 @@ export function BusinessFormStep2({ form }: BusinessFormStep2Props) {
             type="button"
             onClick={handleExtractLocation}
             disabled={isExtracting || isCheckingPin}
-            className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold px-6"
+            className="bg-yellow-400 hover:bg-yellow-500 text-black dark:text-slate-950 font-bold px-6"
           >
             {isExtracting ? "..." : markerPosition ? t("for_business.step2.update") : t("for_business.step2.add")}
           </Button>

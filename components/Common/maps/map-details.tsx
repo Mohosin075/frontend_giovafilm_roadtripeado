@@ -1106,7 +1106,7 @@ export default function MapDetails() {
               <button
                 type="button"
                 onClick={handleViewOnMap}
-                className="w-full inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-amber-500 text-black hover:text-white font-semibold h-11 px-2 text-xs sm:text-sm rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer"
+                className="w-full inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black dark:text-slate-950 font-bold h-11 px-2 text-xs sm:text-sm rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer"
               >
                 <Map size={16} className="shrink-0" />
                 {t("place.view_on_map")}
@@ -1114,7 +1114,7 @@ export default function MapDetails() {
                 <button
                   type="button"
                   onClick={handleDirections}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-amber-500 text-black hover:text-white font-semibold h-11 px-2 text-xs sm:text-sm rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black dark:text-slate-950 font-bold h-11 px-2 text-xs sm:text-sm rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer"
                 >
                   <Send size={16} className="shrink-0" />
                   {t("place.directions")}
@@ -1126,7 +1126,7 @@ export default function MapDetails() {
                   {hasText(placeData?.phone) && (
                     <div>
                       <a href={`tel:${placeData.phone}`} className="w-full block">
-                        <button type="button" className="w-full inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-amber-500 text-black hover:text-white font-semibold h-11 text-sm rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer">
+                        <button type="button" className="w-full inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black dark:text-slate-950 font-bold h-11 text-sm rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer">
                           <Phone size={16} />
                           {t("place.call")}
                         </button>

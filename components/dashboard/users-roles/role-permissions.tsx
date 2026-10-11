@@ -31,10 +31,11 @@ export function RolePermissions(): React.ReactElement {
             key={permission.role}
             className="border-b border-gray-200 dark:border-slate-800/80 pb-2 last:border-b-0 last:pb-0"
           >
-            <p className="font-semibold text-gray-900 dark:text-slate-100 mb-2">
-              {permission.role}:
+            <p className="font-semibold mb-1 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+              <span className="text-gray-900 dark:text-amber-400 font-bold">{permission.role}:</span>
             </p>
-            <p className="text-gray-600 dark:text-slate-300 text-sm">{permission.description}</p>
+            <p className="text-gray-600 dark:text-slate-300 text-sm pl-3.5">{permission.description}</p>
           </div>
         ))}
       </div>

@@ -422,7 +422,7 @@ export default function Header() {
           )}
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-6 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-2 whitespace-nowrap">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href;
 
@@ -430,8 +430,10 @@ export default function Header() {
                 <AuthLink
                   key={index}
                   href={link.href}
-                  className={`font-semibold text-black dark:text-slate-200 font-inter transition-colors py-1 rounded-lg ${
-                    isActive ? "bg-primary text-black px-3 shadow-[0_2px_12px_rgba(250,191,19,0.3)]" : "hover:text-primary dark:hover:text-primary"
+                  className={`font-semibold font-inter transition-all text-sm rounded-xl py-1.5 px-3.5 ${
+                    isActive
+                      ? "bg-primary text-black dark:text-slate-950 font-bold shadow-[0_2px_12px_rgba(250,191,19,0.35)]"
+                      : "text-gray-700 dark:text-slate-300 hover:text-black dark:hover:text-primary hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
                 >
                   {link.name}
@@ -1071,8 +1073,10 @@ export default function Header() {
                         key={index}
                         href={link.href}
                         onClick={closeMenus}
-                        className={`block px-4 py-2.5 font-semibold text-black dark:text-slate-200 font-inter transition-colors rounded-xl ${
-                          isActive ? "bg-primary text-black font-bold" : "hover:bg-gray-100 dark:hover:bg-slate-800/60"
+                        className={`block px-4 py-2.5 font-semibold font-inter transition-colors rounded-xl ${
+                          isActive
+                            ? "bg-primary text-black dark:text-slate-950 font-bold shadow-sm"
+                            : "text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800/60 hover:text-gray-900 dark:hover:text-white"
                         }`}
                       >
                         {link.name}
