@@ -39,9 +39,9 @@ function DealCard({ deal }: { deal: DealItem }) {
 
   return (
     <AuthLink href={deal.href} className="block h-full">
-      <Card className="bg-white border border-gray-100/90 rounded-2xl shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col group cursor-pointer p-0">
+      <Card className="bg-white dark:bg-[#131b2e]/90 border border-gray-100/90 dark:border-slate-800/80 hover:dark:border-amber-400/40 rounded-2xl shadow-xs dark:shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex flex-col group cursor-pointer p-0 backdrop-blur-md">
         {/* Business Image Container */}
-        <div className="relative w-full h-44 sm:h-48 overflow-hidden bg-gray-100">
+        <div className="relative w-full h-44 sm:h-48 overflow-hidden bg-gray-100 dark:bg-slate-800">
           <Image
             src={imgSrc}
             alt={deal.name}
@@ -55,7 +55,7 @@ function DealCard({ deal }: { deal: DealItem }) {
             }}
           />
           {/* Discount Badge */}
-          <div className="absolute top-3 right-3 bg-[#FFC107] text-black font-extrabold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-md flex items-center gap-1.5 uppercase tracking-wide">
+          <div className="absolute top-3 right-3 bg-[#fabf13] text-black font-extrabold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-[0_2px_10px_rgba(250,191,19,0.35)] flex items-center gap-1.5 uppercase tracking-wide">
             <Tag className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
             <span>{deal.badge}</span>
           </div>
@@ -64,10 +64,10 @@ function DealCard({ deal }: { deal: DealItem }) {
         {/* Card Content */}
         <CardContent className="p-4 sm:p-5 text-left flex-1 flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-1 mb-1 sm:mb-1.5">
+            <h3 className="text-base font-bold text-gray-900 dark:text-slate-100 group-hover:text-[#fabf13] transition-colors line-clamp-1 mb-1 sm:mb-1.5">
               {deal.name}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
               {deal.description}
             </p>
           </div>
@@ -145,7 +145,7 @@ export default function DealsSection() {
   });
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-gray-50/70 overflow-hidden font-inter">
+    <section className="py-16 sm:py-20 lg:py-24 bg-gray-50/70 dark:bg-[#0b0f19] overflow-hidden font-inter transition-colors">
       <div className="max-w-360 mx-auto px-4 md:px-6 text-center space-y-8 sm:space-y-12">
         {/* Heading */}
         <motion.div
@@ -155,11 +155,11 @@ export default function DealsSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-4.5xl font-bold text-gray-900 tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-4.5xl font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-tight">
             {t("landing.deals_title")}
           </h2>
 
-          <p className="text-gray-500 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+          <p className="text-gray-500 dark:text-slate-400 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
             {t("landing.deals_subtitle")}
           </p>
         </motion.div>

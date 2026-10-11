@@ -26,6 +26,7 @@ import { baseApi } from "@/redux/api/baseApi";
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSwitcher from "@/components/shared/language-switcher";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export default function DashTopHeader() {
   const { t } = useLanguage();
@@ -51,14 +52,15 @@ export default function DashTopHeader() {
   };
 
   return (
-    <div className="p-4 md:px-8 border-b border-gray-300/50">
+    <div className="p-4 md:px-8 border-b border-gray-300/50 dark:border-slate-800 bg-white dark:bg-[#0b0f19] transition-colors">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <SidebarTrigger className="lg:hidden" />
-          <h1 className="text-xl font-bold font-arial">{t("dashboard.admin_panel")}</h1>
+          <SidebarTrigger className="lg:hidden text-gray-700 dark:text-slate-200" />
+          <h1 className="text-xl font-bold font-arial text-gray-900 dark:text-slate-100">{t("dashboard.admin_panel")}</h1>
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <LanguageSwitcher />
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none">

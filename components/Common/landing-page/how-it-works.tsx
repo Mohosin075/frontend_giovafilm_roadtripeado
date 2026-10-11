@@ -49,11 +49,14 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-white overflow-hidden font-inter">
-      <div className="max-w-360 mx-auto px-4 md:px-6">
+    <section className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0e1424] overflow-hidden font-inter transition-colors relative">
+      {/* Subtle Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-amber-500/5 blur-3xl pointer-events-none rounded-full hidden dark:block" />
+
+      <div className="max-w-360 mx-auto px-4 md:px-6 relative z-10">
         {/* Section Title */}
         <motion.h2
-          className="text-3xl sm:text-4xl lg:text-4.5xl font-bold text-center text-gray-900 mb-8 sm:mb-12 tracking-tight leading-tight"
+          className="text-3xl sm:text-4xl lg:text-4.5xl font-bold text-center text-gray-900 dark:text-slate-100 mb-8 sm:mb-12 tracking-tight leading-tight"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -77,20 +80,20 @@ export default function HowItWorks() {
               whileHover={{ y: -6 }}
               className="h-full"
             >
-              <Card className="border-gray-100/90 shadow-none hover:shadow-lg transition-all duration-300 rounded-2xl py-1 sm:py-2 h-full">
+              <Card className="border-gray-100/90 dark:border-slate-800/80 bg-white dark:bg-[#131b2e]/90 hover:dark:border-amber-400/40 shadow-xs dark:shadow-xl hover:shadow-xl transition-all duration-300 rounded-2xl py-1 sm:py-2 h-full backdrop-blur-md">
                 <CardContent className="flex flex-col items-center text-center p-6 sm:p-8 md:p-10 space-y-3.5 sm:space-y-4">
                   {/* Icon */}
-                  <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-yellow-100/80 shrink-0">
+                  <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-yellow-100/80 dark:bg-amber-950/40 dark:border dark:border-amber-500/20 shrink-0">
                     {step.icon}
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-slate-100">
                     {step.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-500 text-sm leading-relaxed">
+                  <p className="text-gray-500 dark:text-slate-400 text-sm leading-relaxed">
                     {step.description}
                   </p>
                 </CardContent>

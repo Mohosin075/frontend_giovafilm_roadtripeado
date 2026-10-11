@@ -39,6 +39,7 @@ import { persistor } from "@/redux/store";
 import { baseApi } from "@/redux/api/baseApi";
 import Image from "next/image";
 import logo from "@/public/logo.png";
+import whiteLogo from "@/public/white-logo.png";
 import Link from "next/link";
 import { AuthLink } from "@/components/shared/auth-link";
 import { usePathname, useRouter } from "next/navigation";
@@ -50,6 +51,7 @@ import ProfileUpdateModal from "@/components/Common/profile/profile-update-modal
 import { shareProfile } from "@/lib/share-profile";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSwitcher from "@/components/shared/language-switcher";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 function getPlaceSearchHref(place: any, onMapsPage: boolean) {
   if (!onMapsPage) return `/places/${place._id || place.id}`;
@@ -291,15 +293,17 @@ export default function Header() {
         ref={headerRef}
         className={`isolate border-b ${
           scrolled
-            ? "fixed top-0 inset-x-0 z-40 border-gray-200/60 shadow-sm animate-in slide-in-from-top duration-300"
-            : "relative z-30 border-gray-100"
+            ? "fixed top-0 inset-x-0 z-40 border-gray-200/60 dark:border-slate-800/80 shadow-md animate-in slide-in-from-top duration-300"
+            : "relative z-30 border-gray-100 dark:border-slate-800/60"
         }`}
       >
         {/* Background layer (separate so backdrop-filter doesn't trap fixed children) */}
         <div
           aria-hidden="true"
           className={`absolute inset-0 -z-10 transition-all duration-300 ${
-            scrolled ? "bg-white/70 backdrop-blur-md" : "bg-white"
+            scrolled
+              ? "bg-white/85 dark:bg-[#0b0f19]/85 backdrop-blur-xl border-b border-transparent dark:border-slate-800/80"
+              : "bg-white dark:bg-[#0b0f19]"
           }`}
         />
         <nav className="flex items-center justify-between px-3 sm:px-6 py-3.5 sm:py-4 max-w-360 mx-auto gap-2 sm:gap-4">
@@ -311,7 +315,16 @@ export default function Header() {
                 alt="Dashboard Logo"
                 height={200}
                 width={200}
-                className="w-32 sm:w-40 md:w-48 h-auto"
+                className="w-32 sm:w-40 md:w-48 h-auto block dark:hidden"
+                priority
+              />
+              <Image
+                src={whiteLogo}
+                alt="Dashboard Logo"
+                height={200}
+                width={200}
+                className="w-32 sm:w-40 md:w-48 h-auto hidden dark:block"
+                priority
               />
             </Link>
           </div>
@@ -339,14 +352,14 @@ export default function Header() {
                     }
                   }}
                   placeholder={t("search.placeholder_full")}
-                  className="w-full bg-[#F5F5F5] border-none rounded-full py-3.5 pl-12 pr-6 text-sm focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                  className="w-full bg-[#F5F5F5] dark:bg-[#131b2e] border border-transparent dark:border-slate-800 rounded-full py-3.5 pl-12 pr-6 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-[#fabf13]/50 outline-none transition-all"
                 />
 
                 {/* Search Results Dropdown */}
                 {searchTerm && (
-                  <div className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50">
+                  <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#131b2e]/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50">
                     {isSearchPending ? (
-                      <div className="p-4 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
+                      <div className="p-4 text-center text-sm text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2">
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
                         {t("search.searching")}
                       </div>
@@ -362,7 +375,7 @@ export default function Header() {
                                   (typeof place.map === "object" &&
                                     (place.map?.name || place.map?.country)) ||
                                   place.country;
-                                if (mapName) {
+                              if (mapName) {
                                   localStorage.setItem(
                                     "selectedCountryFilter",
                                     String(mapName),
@@ -371,7 +384,7 @@ export default function Header() {
                               }
                               setSearchTerm("");
                             }}
-                            className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+                            className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors border-b border-gray-50 dark:border-slate-800/60 last:border-0"
                           >
                             <div className="size-10 rounded-lg overflow-hidden shrink-0">
                               {place.media?.[0] ? (
@@ -381,16 +394,16 @@ export default function Header() {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <div className="w-full h-full bg-gray-200 dark:bg-slate-800 flex items-center justify-center">
                                   <Map className="size-4 text-gray-400" />
                                 </div>
                               )}
                             </div>
                             <div>
-                              <h4 className="text-sm font-semibold text-gray-900">
+                              <h4 className="text-sm font-semibold text-gray-900 dark:text-slate-100">
                                 {getLocalized(place.name, language)}
                               </h4>
-                              <p className="text-xs text-gray-500 truncate">
+                              <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
                                 {place.address}
                               </p>
                             </div>
@@ -398,7 +411,7 @@ export default function Header() {
                         ))}
                       </div>
                     ) : (
-                      <div className="p-4 text-center text-sm text-gray-500">
+                      <div className="p-4 text-center text-sm text-gray-500 dark:text-slate-400">
                         {t("search.no_results")}
                       </div>
                     )}
@@ -417,18 +430,20 @@ export default function Header() {
                 <AuthLink
                   key={index}
                   href={link.href}
-                  className={`font-semibold text-black font-inter transition-colors py-1 rounded-lg ${isActive ? "bg-primary px-3 " : ""
-                    }`}
+                  className={`font-semibold text-black dark:text-slate-200 font-inter transition-colors py-1 rounded-lg ${
+                    isActive ? "bg-primary text-black px-3 shadow-[0_2px_12px_rgba(250,191,19,0.3)]" : "hover:text-primary dark:hover:text-primary"
+                  }`}
                 >
                   {link.name}
                 </AuthLink>
               );
             })}
 
-            <div className="h-8 w-px bg-gray-200 mx-2"></div>
+            <div className="h-8 w-px bg-gray-200 dark:bg-slate-800 mx-2"></div>
 
             {/* Auth Section - Desktop */}
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <LanguageSwitcher />
               {isAuthenticated ? (
                 <DropdownMenu
@@ -581,10 +596,11 @@ export default function Header() {
 
           {/* Mobile & Tablet Icons */}
           <div className="flex lg:hidden items-center gap-1.5 sm:gap-2">
+            <ThemeToggle size="sm" />
             {!hideHeaderSearch && (
               <button
                 onClick={toggleSearch}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-700 dark:text-zinc-200 rounded-full transition-colors"
                 aria-label="Toggle search"
               >
                 <Search className="size-5" />
@@ -753,7 +769,7 @@ export default function Header() {
             {/* Hamburger Menu Button */}
             <button
               onClick={toggleMenu}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-700 dark:text-zinc-200 rounded-full transition-colors"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
@@ -782,7 +798,7 @@ export default function Header() {
 
             {/* Mobile & Tablet Search Header Drawer */}
             <div
-              className={`fixed top-0 inset-x-0 bg-white/95 backdrop-blur-md shadow-2xl transition-all duration-300 ease-out z-[95] lg:hidden border-b border-gray-200/80 ${
+              className={`fixed top-0 inset-x-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-2xl transition-all duration-300 ease-out z-[95] lg:hidden border-b border-gray-200/80 dark:border-zinc-800 ${
                 isSearchOpen
                   ? "opacity-100 translate-y-0 pointer-events-auto"
                   : "opacity-0 -translate-y-8 pointer-events-none"
@@ -790,13 +806,13 @@ export default function Header() {
             >
               <div className="p-4 sm:p-5 max-w-2xl mx-auto">
                 <div className="flex justify-between items-center mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
                     {t("nav.map")}
                   </span>
                   <button
                     type="button"
                     onClick={closeMenus}
-                    className="p-1.5 hover:bg-gray-100 rounded-full text-gray-600 transition-colors"
+                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full text-gray-600 dark:text-zinc-300 transition-colors"
                     aria-label="Close search"
                   >
                     <X className="size-5" />
@@ -806,7 +822,7 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={submitHeaderSearch}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black dark:hover:text-white transition-colors"
                     aria-label="Search"
                   >
                     <Search className="size-5" />
@@ -822,14 +838,14 @@ export default function Header() {
                       }
                     }}
                     placeholder={t("search.placeholder_full")}
-                    className="w-full bg-[#F5F5F5] border border-gray-200/70 rounded-full py-3 pl-12 pr-10 text-sm focus:bg-white focus:ring-2 focus:ring-primary/50 outline-none transition-all shadow-inner"
+                    className="w-full bg-[#F5F5F5] dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500 border border-gray-200/70 dark:border-zinc-700 rounded-full py-3 pl-12 pr-10 text-sm focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-primary/50 outline-none transition-all shadow-inner"
                     autoFocus
                   />
                   {searchTerm && (
                     <button
                       type="button"
                       onClick={() => setSearchTerm("")}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 p-1"
                     >
                       <X className="size-4" />
                     </button>
@@ -837,18 +853,18 @@ export default function Header() {
 
                   {/* Search Results Dropdown Mobile */}
                   {searchTerm && (
-                    <div className="mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden max-h-[60vh] overflow-y-auto">
+                    <div className="mt-2 w-full bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden max-h-[60vh] overflow-y-auto">
                       <button
                         type="button"
                         onClick={submitHeaderSearch}
-                        className="w-full flex items-center gap-3 p-3.5 text-left text-sm font-bold text-amber-700 bg-amber-50/80 hover:bg-amber-100/80 border-b border-amber-100 transition-colors"
+                        className="w-full flex items-center gap-3 p-3.5 text-left text-sm font-bold text-amber-700 dark:text-amber-400 bg-amber-50/80 dark:bg-amber-950/40 hover:bg-amber-100/80 dark:hover:bg-amber-950/60 border-b border-amber-100 dark:border-amber-900/50 transition-colors"
                       >
-                        <Search className="size-4 shrink-0 text-amber-600" />
+                        <Search className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
                         <span>Search &ldquo;{searchTerm}&rdquo; on map</span>
                       </button>
 
                       {isSearchPending ? (
-                        <div className="p-4 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
+                        <div className="p-4 text-center text-sm text-gray-500 dark:text-zinc-400 flex items-center justify-center gap-2">
                           <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
                           {t("search.searching")}
                         </div>
@@ -874,7 +890,7 @@ export default function Header() {
                                 setSearchTerm("");
                                 closeMenus();
                               }}
-                              className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+                              className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors border-b border-gray-50 dark:border-zinc-800/60 last:border-0"
                             >
                               <div className="size-10 rounded-lg overflow-hidden shrink-0">
                                 {place.media?.[0] ? (
@@ -922,7 +938,7 @@ export default function Header() {
 
             {/* Mobile & Tablet Menu Slide-in */}
             <div
-              className={`fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-[100] lg:hidden ${
+              className={`fixed inset-y-0 right-0 w-full md:w-96 bg-white dark:bg-zinc-900 border-l border-transparent dark:border-zinc-800 shadow-2xl transform transition-transform duration-300 ease-in-out z-[100] lg:hidden ${
                 isMenuOpen
                   ? "translate-x-0 pointer-events-auto"
                   : "translate-x-full pointer-events-none"
@@ -930,13 +946,14 @@ export default function Header() {
             >
               <div className="p-6 h-full flex flex-col overflow-y-auto">
                 <div className="flex justify-between items-center mb-5 shrink-0">
-                  <h2 className="text-lg font-bold text-gray-900">{t("nav.menu")}</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-zinc-100">{t("nav.menu")}</h2>
                   <div className="flex items-center gap-2">
+                    <ThemeToggle size="sm" />
                     <LanguageSwitcher />
                     <button
                       type="button"
                       onClick={closeMenus}
-                      className="p-2 hover:bg-gray-100 rounded-full text-gray-600 transition-colors"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full text-gray-600 dark:text-zinc-300 transition-colors"
                       aria-label="Close menu"
                     >
                       <X className="size-5" />
@@ -954,8 +971,8 @@ export default function Header() {
                         key={index}
                         href={link.href}
                         onClick={closeMenus}
-                        className={`block px-4 py-2.5 font-semibold text-black font-inter transition-colors rounded-xl ${
-                          isActive ? "bg-primary" : "hover:bg-gray-100"
+                        className={`block px-4 py-2.5 font-semibold text-black dark:text-zinc-200 font-inter transition-colors rounded-xl ${
+                          isActive ? "bg-primary text-black" : "hover:bg-gray-100 dark:hover:bg-zinc-800"
                         }`}
                       >
                         {link.name}
@@ -966,8 +983,8 @@ export default function Header() {
 
                 {/* User Menu Items in Hamburger (Mobile) */}
                 {isAuthenticated ? (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <h3 className="text-sm font-medium text-gray-500 mb-3 px-4">
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-zinc-800">
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-zinc-400 mb-3 px-4">
                       {t("nav.profile")}
                     </h3>
 
@@ -976,7 +993,7 @@ export default function Header() {
                         <Link
                           href={"/dashboard"}
                           onClick={closeMenus}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors font-semibold"
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-900 dark:text-zinc-100 rounded-lg transition-colors font-semibold"
                         >
                           <Grid2x2 className="size-5" />
                           Dashboard
@@ -991,7 +1008,7 @@ export default function Header() {
                               key={index}
                               href={item.href}
                               onClick={closeMenus}
-                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors"
+                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-900 dark:text-zinc-100 rounded-lg transition-colors"
                             >
                               <Icon className="size-5" />
                               <span>{item.label}</span>
@@ -1012,7 +1029,7 @@ export default function Header() {
                     </div>
                   </div>
                 ) : (
-                  <div className="mt-auto pt-6 border-t border-gray-200">
+                  <div className="mt-auto pt-6 border-t border-gray-200 dark:border-zinc-800">
                     <Link
                       href="/login"
                       onClick={closeMenus}

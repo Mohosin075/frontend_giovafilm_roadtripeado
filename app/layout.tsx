@@ -6,6 +6,7 @@ import { ReduxProvider } from "@/redux/ReduxProvider";
 import { SocketProvider } from "@/components/shared/socket-provider";
 import { LoginRequiredProvider } from "@/components/shared/login-required-modal";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const poppins = localFont({
   src: [
@@ -95,19 +96,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${poppins.variable} ${inter.variable} ${arial.variable} ${publicSans.variable} antialiased`}
       >
-        <ReduxProvider>
-          <LanguageProvider>
-            <Suspense fallback={null}>
-              <LoginRequiredProvider>
-                <SocketProvider>{children}</SocketProvider>
-              </LoginRequiredProvider>
-            </Suspense>
-          </LanguageProvider>
-        </ReduxProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ReduxProvider>
+            <LanguageProvider>
+              <Suspense fallback={null}>
+                <LoginRequiredProvider>
+                  <SocketProvider>{children}</SocketProvider>
+                </LoginRequiredProvider>
+              </Suspense>
+            </LanguageProvider>
+          </ReduxProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

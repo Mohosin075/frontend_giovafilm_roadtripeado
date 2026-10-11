@@ -53,8 +53,8 @@ export const SatelliteToggleButton = ({
           onClick={toggleMapType}
           className={`flex h-10 w-10 items-center justify-center rounded-xl border shadow-lg transition-all duration-200 active:scale-95 ${
             isSatellite
-              ? "bg-amber-500 border-amber-600 text-white shadow-amber-500/25 ring-2 ring-amber-400/50"
-              : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+              ? "bg-[#fabf13] border-amber-500 text-black shadow-amber-500/25 ring-2 ring-amber-400/50"
+              : "bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
           }`}
           title={title}
           aria-label={title}

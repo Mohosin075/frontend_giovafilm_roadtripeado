@@ -202,7 +202,7 @@ export default function RestaurantDetail() {
 
   if (!offer) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
         <p className="text-xl font-bold">{t("offer.offer_not_found")}</p>
       </div>
     );
@@ -319,7 +319,7 @@ export default function RestaurantDetail() {
         ];
 
   return (
-    <div className="bg-gray-50 py-4 sm:py-6 md:py-8 pb-10 sm:pb-12 md:pb-14">
+    <div className="bg-gray-50 dark:bg-[#0b0f19] py-4 sm:py-6 md:py-8 pb-10 sm:pb-12 md:pb-14 min-h-screen">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         {/* Breadcrumb */}
         {!isFromMaps && (
@@ -327,12 +327,12 @@ export default function RestaurantDetail() {
             <div className="flex items-center gap-2 text-xs sm:text-sm">
               <Link
                 href="/offer"
-                className="text-blue-600 hover:underline font-medium"
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
               >
                 {t("nav.offer")}
               </Link>
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-700 font-medium line-clamp-1">
+              <span className="text-gray-400 dark:text-slate-600">/</span>
+              <span className="text-gray-700 dark:text-slate-200 font-medium line-clamp-1">
                 {offer?.title}
               </span>
             </div>
@@ -344,9 +344,9 @@ export default function RestaurantDetail() {
           {/* Desktop View */}
           <div className="hidden md:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {/* Left Section - Image and Details */}
-            <div className="bg-white lg:col-span-2 space-y-4 sm:space-y-5 md:space-y-6 rounded-xl sm:rounded-2xl overflow-hidden">
+            <div className="bg-white dark:bg-[#131b2e]/90 border border-transparent dark:border-slate-800/80 backdrop-blur-md lg:col-span-2 space-y-4 sm:space-y-5 md:space-y-6 rounded-xl sm:rounded-2xl overflow-hidden shadow-sm">
               {/* Hero Image with Rating */}
-              <div className="relative rounded-t-xl sm:rounded-t-2xl overflow-hidden h-48 sm:h-64 md:h-80 lg:h-96 bg-gray-200">
+              <div className="relative rounded-t-xl sm:rounded-t-2xl overflow-hidden h-48 sm:h-64 md:h-80 lg:h-96 bg-gray-200 dark:bg-slate-800">
                 <Image
                   src={getImageUrl(offer.photo)}
                   alt={offer?.title}
@@ -358,9 +358,9 @@ export default function RestaurantDetail() {
                 />
 
                 {/* Rating Badge */}
-                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white rounded-full px-2 py-1.5 sm:px-3 sm:py-2 flex items-center gap-1 shadow-md">
+                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/95 dark:bg-[#0b0f19]/90 backdrop-blur-md rounded-full px-2 py-1.5 sm:px-3 sm:py-2 flex items-center gap-1 shadow-md border border-white/20 dark:border-slate-800">
                   <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
-                  <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                  <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-slate-100">
                     {offer?.place?.rating || 0} (
                     {offer?.place?.totalReview || 0} {t("place.reviews")})
                   </span>
@@ -372,15 +372,15 @@ export default function RestaurantDetail() {
                 <div className="space-y-2 sm:space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                     <div className="space-y-1 sm:space-y-2">
-                      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 wrap-break-word">
+                      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-slate-100 wrap-break-word">
                         {offer?.title}
                       </h1>
-                      <p className="text-sm sm:text-base text-gray-600 flex items-center gap-2 wrap-break-word">
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-slate-400 flex items-center gap-2 wrap-break-word">
                         <span>📍</span>{" "}
                         {offer.place?.address || t("offer.location_not_specified")}
                       </p>
                     </div>
-                    <div className="bg-yellow-100 text-gray-900 font-bold px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full text-base sm:text-lg md:text-xl inline-block w-fit">
+                    <div className="bg-[#fabf13] text-black font-bold px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full text-base sm:text-lg md:text-xl inline-block w-fit shadow-md shadow-amber-500/20">
                       {formatOfferDiscountLabel(offer)}
                     </div>
                   </div>
@@ -388,19 +388,19 @@ export default function RestaurantDetail() {
 
                 {/* Description */}
                 <div className="">
-                  <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-700 dark:text-slate-300 leading-relaxed">
                     {offer.description}
                   </p>
                   {/* Collapsible Information Section */}
-                  <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm mt-6">
+                  <div className="border border-gray-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-[#0e1424] shadow-sm mt-6">
                     <button
                       type="button"
                       onClick={() => setIsInfoExpanded(!isInfoExpanded)}
-                      className="w-full flex items-center justify-between p-4 sm:p-5 bg-gray-50 hover:bg-gray-100 transition-colors font-bold text-gray-900 border-none cursor-pointer outline-none"
+                      className="w-full flex items-center justify-between p-4 sm:p-5 bg-gray-50 hover:bg-gray-100 dark:bg-[#131b2e] dark:hover:bg-slate-800/60 transition-colors font-bold text-gray-900 dark:text-slate-100 border-none cursor-pointer outline-none"
                     >
                       <span>{t("offer.information")}</span>
                       <span
-                        className="text-gray-500 transition-transform duration-200"
+                        className="text-gray-500 dark:text-slate-400 transition-transform duration-200"
                         style={{ transform: isInfoExpanded ? "rotate(90deg)" : "rotate(0deg)" }}
                       >
                         ▶
@@ -413,20 +413,20 @@ export default function RestaurantDetail() {
                         borderTop: isInfoExpanded ? "1px solid #e5e7eb" : "none",
                       }}
                     >
-                      <div className="grid sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-gray-50/50">
+                      <div className="grid sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-gray-50/50 dark:bg-[#0e1424]/60">
                         {/* Validity Period */}
                         <div className="space-y-3 sm:space-y-4">
-                          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                          <h3 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-widest">
                             {t("offer.validity_period")}
                           </h3>
                           <div className="space-y-2 sm:space-y-3">
                             <div className="flex items-center gap-2 sm:gap-3">
                               <div className="text-xl sm:text-2xl">📅</div>
                               <div>
-                                <p className="text-[10px] sm:text-xs text-gray-500 uppercase">
+                                <p className="text-[10px] sm:text-xs text-gray-500 dark:text-slate-400 uppercase">
                                   {t("offer.from")}
                                 </p>
-                                <p className="text-sm sm:text-base font-semibold text-gray-900 wrap-break-word">
+                                <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-slate-100 wrap-break-word">
                                   {formatDate(offer.createdAt)}
                                 </p>
                               </div>
@@ -434,10 +434,10 @@ export default function RestaurantDetail() {
                             <div className="flex items-center gap-2 sm:gap-3">
                               <div className="text-xl sm:text-2xl">📅</div>
                               <div>
-                                <p className="text-[10px] sm:text-xs text-gray-500 uppercase">
+                                <p className="text-[10px] sm:text-xs text-gray-500 dark:text-slate-400 uppercase">
                                   {t("offer.until")}
                                 </p>
-                                <p className="text-sm sm:text-base font-semibold text-gray-900 wrap-break-word">
+                                <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-slate-100 wrap-break-word">
                                   {offer.noExpiration || !offer.validUntil
                                     ? t("offer.no_expiration")
                                     : new Date(offer.validUntil).toLocaleDateString()}
@@ -448,7 +448,7 @@ export default function RestaurantDetail() {
                         </div>
                         {/* Redemption Rules */}
                         <div className="mt-3 sm:mt-0">
-                          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 sm:mb-4">
+                          <h3 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-widest mb-3 sm:mb-4">
                             {t("offer.redemption_rules")}
                           </h3>
                           <div className="space-y-2 sm:space-y-3">
@@ -458,7 +458,7 @@ export default function RestaurantDetail() {
                                 className="flex items-center gap-2 sm:gap-3"
                               >
                                 <CheckCircle2 className="size-5 text-yellow-500" />
-                                <p className="text-sm sm:text-base text-gray-700">
+                                <p className="text-sm sm:text-base text-gray-700 dark:text-slate-300">
                                   {rule}
                                 </p>
                               </div>
@@ -474,34 +474,34 @@ export default function RestaurantDetail() {
 
             {/* Right Section - Redemption Status */}
             <div className="lg:col-span-1 space-y-4 sm:space-y-5 md:space-y-6">
-              <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200/50 shadow-md p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5 md:space-y-6">
+              <div className="bg-white dark:bg-[#131b2e]/90 rounded-xl sm:rounded-2xl border border-gray-200/50 dark:border-slate-800/80 shadow-md backdrop-blur-md p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5 md:space-y-6">
                 {/* Redemption Status Header */}
                 <div>
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-4 sm:mb-5 md:mb-6">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4 sm:mb-5 md:mb-6">
                     {t("offer.redemption_status")}
                   </h2>
 
                   {/* Timer Circle */}
                   <div className="flex justify-center mb-4 sm:mb-5 md:mb-6">
                     <div
-                      className={`w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full border-4 sm:border-6 md:border-8 flex items-center justify-center bg-gray-50 ${
-                        unavailable ? "border-gray-300" : "border-yellow-400"
+                      className={`w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full border-4 sm:border-6 md:border-8 flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19] ${
+                        unavailable ? "border-gray-300 dark:border-slate-700" : "border-yellow-400"
                       }`}
                     >
                       <div className="text-center px-2">
                         {unavailable ? (
                           <>
                             <Lock className="w-6 h-6 sm:w-7 sm:h-7 text-gray-400 mx-auto mb-1" />
-                            <div className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wide">
+                            <div className="text-[10px] sm:text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
                               {unavailable.label}
                             </div>
                           </>
                         ) : (
                           <>
-                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-slate-100">
                               {isTimerActive ? timeLeft : offerBadge.value}
                             </div>
-                            <div className="text-[10px] sm:text-xs md:text-sm text-gray-500 uppercase tracking-wide">
+                            <div className="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-slate-400 uppercase tracking-wide">
                               {isTimerActive ? t("offer.time_left") : offerBadge.label}
                             </div>
                           </>
@@ -512,7 +512,7 @@ export default function RestaurantDetail() {
 
                   {/* Frequency Badge */}
                   <div className="flex justify-center -mt-1 mb-2">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 shadow-xs">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50 shadow-xs">
                       🔄 {getFrequencyLabel(offer)}
                     </span>
                   </div>
@@ -520,16 +520,16 @@ export default function RestaurantDetail() {
                   {/* Instructions */}
                   <div
                     className={`p-3 sm:p-4 rounded-lg text-center ${
-                      unavailable ? "bg-gray-100" : "bg-gray-50"
+                      unavailable ? "bg-gray-100 dark:bg-slate-800/60" : "bg-gray-50 dark:bg-[#0e1424] dark:border dark:border-slate-800/60"
                     }`}
                   >
-                    <p className="text-xs sm:text-sm text-gray-600">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-300">
                       {unavailable ? (
                         unavailable.message
                       ) : offer.place?.name ? (
                         <>
                           {t("offer.present_instruction_prefix")}{" "}
-                          <span className="font-semibold wrap-break-word">
+                          <span className="font-semibold wrap-break-word text-gray-900 dark:text-slate-100">
                             {offer.place?.name}
                           </span>{" "}
                           {t("offer.present_instruction_suffix")}
@@ -541,7 +541,7 @@ export default function RestaurantDetail() {
                   </div>
 
                   {redemptionsLeft !== null && !unavailable && (
-                    <p className="mt-2 text-center text-[10px] sm:text-xs text-gray-500">
+                    <p className="mt-2 text-center text-[10px] sm:text-xs text-gray-500 dark:text-slate-400">
                       {redemptionsLeft} / {offer.maxRedemptions} {t("offer.redemptions_left")}
                     </p>
                   )}
@@ -551,7 +551,7 @@ export default function RestaurantDetail() {
                 <Button
                   onClick={handleRedeem}
                   disabled={isRedeeming || isTimerActive || Boolean(unavailable)}
-                  className="w-full bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg px-6 sm:px-8 md:px-10 h-11 sm:h-12 md:h-14 text-sm sm:text-base shadow-lg shadow-yellow-500/20 disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none cursor-pointer"
+                  className="w-full bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg px-6 sm:px-8 md:px-10 h-11 sm:h-12 md:h-14 text-sm sm:text-base shadow-lg shadow-yellow-500/20 disabled:bg-gray-200 dark:disabled:bg-slate-800 disabled:text-gray-500 dark:disabled:text-slate-500 disabled:shadow-none cursor-pointer"
                 >
                   {isRedeeming
                     ? t("offer.redeeming")
@@ -564,28 +564,28 @@ export default function RestaurantDetail() {
 
                 {/* Offer Code */}
                 <div className="flex items-center justify-center gap-2 flex-wrap">
-                  <code className="text-xs sm:text-sm break-all text-center">
+                  <code className="text-xs sm:text-sm break-all text-center text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-[#0e1424] px-2 py-1 rounded">
                     {offer.offerCode}
                   </code>
                 </div>
 
                 {/* Help Section */}
                 <Link href="/contact" className="block">
-                  <div className="border rounded-lg bg-gray-100/50 hover:bg-gray-100 border-gray-200 p-3 sm:p-4 transition-colors cursor-pointer">
+                  <div className="border rounded-lg bg-gray-100/50 hover:bg-gray-100 dark:bg-[#0e1424] dark:hover:bg-slate-800/50 border-gray-200 dark:border-slate-800 p-3 sm:p-4 transition-colors cursor-pointer">
                     <div className="flex items-center justify-between">
                       <div className="">
                         <div className="flex items-center gap-2">
-                          <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-                          <span className="text-sm sm:text-base font-medium text-gray-900">
+                          <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-slate-400" />
+                          <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-slate-100">
                             {t("offer.need_help")}
                           </span>
                         </div>
-                        <p className="text-[10px] sm:text-xs text-gray-500 px-6 sm:px-7">
+                        <p className="text-[10px] sm:text-xs text-gray-500 dark:text-slate-400 px-6 sm:px-7">
                           {t("offer.contact_support")}
                         </p>
                       </div>
                       <div className="">
-                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-slate-500" />
                       </div>
                     </div>
                   </div>
@@ -596,16 +596,16 @@ export default function RestaurantDetail() {
 
           {/* Mobile View */}
           <div className="block md:hidden space-y-4 px-1 pb-4">
-            <div className="bg-white rounded-3xl p-4 sm:p-5 border border-gray-100 shadow-xl shadow-gray-200/40 space-y-4">
+            <div className="bg-white dark:bg-[#131b2e]/90 rounded-3xl p-4 sm:p-5 border border-gray-100 dark:border-slate-800/80 shadow-xl shadow-gray-200/40 dark:shadow-black/40 space-y-4 backdrop-blur-md">
               {/* Restaurant/Business Header */}
               <div className="text-center">
-                <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest">
+                <span className="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
                   {offer.place?.name || "Premium Spot"}
                 </span>
               </div>
 
               {/* Offer Photo with Discount Badge Overlay */}
-              <div className="relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden bg-gray-200 shadow-md">
+              <div className="relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden bg-gray-200 dark:bg-slate-800 shadow-md">
                 <Image
                   src={getImageUrl(offer.photo)}
                   alt={offer?.title}
@@ -623,9 +623,9 @@ export default function RestaurantDetail() {
                   {formatOfferDiscountLabel(offer)}
                 </div>
                 {/* Rating Badge top right */}
-                <div className="absolute top-3 right-3 bg-white/80 backdrop-blur-md rounded-xl px-2.5 py-1.5 flex items-center gap-1 shadow-md border border-white/40">
+                <div className="absolute top-3 right-3 bg-white/80 dark:bg-[#0b0f19]/80 backdrop-blur-md rounded-xl px-2.5 py-1.5 flex items-center gap-1 shadow-md border border-white/40 dark:border-slate-800">
                   <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                  <span className="text-xs font-bold text-gray-900">
+                  <span className="text-xs font-bold text-gray-900 dark:text-slate-100">
                     {offer?.place?.rating || 0}
                   </span>
                 </div>
@@ -633,24 +633,24 @@ export default function RestaurantDetail() {
 
               {/* Location Name or Title */}
               <div className="text-center px-2 space-y-1">
-                <h1 className="text-lg sm:text-xl font-extrabold text-gray-900 leading-snug tracking-tight">
+                <h1 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-snug tracking-tight">
                   {offer?.title}
                 </h1>
-                <p className="text-xs text-gray-500 font-medium flex items-center justify-center gap-1">
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium flex items-center justify-center gap-1">
                   <span>📍</span> {offer.place?.address || t("offer.location_not_specified")}
                 </p>
               </div>
 
               {/* Expandable Offer Info */}
-              <div className="border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+              <div className="border border-gray-100 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-[#0e1424] shadow-sm">
                 <button
                   type="button"
                   onClick={() => setIsInfoExpanded(!isInfoExpanded)}
-                  className="w-full flex items-center justify-between p-3.5 bg-gray-50/50 hover:bg-gray-50 active:scale-[0.99] transition-all font-bold text-xs text-gray-700 border-none cursor-pointer outline-none uppercase tracking-wider"
+                  className="w-full flex items-center justify-between p-3.5 bg-gray-50/50 hover:bg-gray-50 dark:bg-[#131b2e] dark:hover:bg-slate-800/60 active:scale-[0.99] transition-all font-bold text-xs text-gray-700 dark:text-slate-200 border-none cursor-pointer outline-none uppercase tracking-wider"
                 >
                   <span>{t("offer.offer_information")}</span>
                   <ChevronRight
-                    className="w-4 h-4 text-gray-400 transition-transform duration-200"
+                    className="w-4 h-4 text-gray-400 dark:text-slate-500 transition-transform duration-200"
                     style={{ transform: isInfoExpanded ? "rotate(90deg)" : "rotate(0deg)" }}
                   />
                 </button>
@@ -661,34 +661,34 @@ export default function RestaurantDetail() {
                     borderTop: isInfoExpanded ? "1px solid #f3f4f6" : "none",
                   }}
                 >
-                  <div className="p-4 space-y-4 bg-gray-50/30 text-sm">
+                  <div className="p-4 space-y-4 bg-gray-50/30 dark:bg-[#0e1424]/60 text-sm">
                     {/* Description */}
                     <div className="space-y-1">
-                      <h4 className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">
+                      <h4 className="text-[10px] font-extrabold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("place.description")}
                       </h4>
-                      <p className="text-gray-700 leading-relaxed text-xs">
+                      <p className="text-gray-700 dark:text-slate-300 leading-relaxed text-xs">
                         {offer.description}
                       </p>
                     </div>
 
                     {/* Validity Period */}
-                    <div className="space-y-2 border-t pt-3 border-gray-200/60">
-                      <h4 className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">
+                    <div className="space-y-2 border-t pt-3 border-gray-200/60 dark:border-slate-800">
+                      <h4 className="text-[10px] font-extrabold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("offer.validity_period")}
                       </h4>
-                      <div className="flex justify-between text-xs text-gray-600">
+                      <div className="flex justify-between text-xs text-gray-600 dark:text-slate-400">
                         <div>
-                          <span className="font-semibold block text-[9px] text-gray-400 uppercase tracking-wider">
+                          <span className="font-semibold block text-[9px] text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                             {t("offer.from")}
                           </span>
-                          <span className="font-medium">{formatDate(offer.createdAt)}</span>
+                          <span className="font-medium text-gray-900 dark:text-slate-200">{formatDate(offer.createdAt)}</span>
                         </div>
                         <div className="text-right">
-                          <span className="font-semibold block text-[9px] text-gray-400 uppercase tracking-wider">
+                          <span className="font-semibold block text-[9px] text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                             {t("offer.until")}
                           </span>
-                          <span className="font-medium">
+                          <span className="font-medium text-gray-900 dark:text-slate-200">
                             {offer.noExpiration || !offer.validUntil
                               ? t("offer.no_expiration")
                               : new Date(offer.validUntil).toLocaleDateString()}
@@ -698,15 +698,15 @@ export default function RestaurantDetail() {
                     </div>
 
                     {/* Rules */}
-                    <div className="space-y-2 border-t pt-3 border-gray-200/60">
-                      <h4 className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">
+                    <div className="space-y-2 border-t pt-3 border-gray-200/60 dark:border-slate-800">
+                      <h4 className="text-[10px] font-extrabold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("offer.redemption_rules")}
                       </h4>
                       <div className="space-y-1.5">
                         {redemptionRules.map((rule: string, idx: number) => (
                           <div key={idx} className="flex items-start gap-2">
                             <CheckCircle2 className="size-4 text-yellow-500 shrink-0 mt-0.5" />
-                            <span className="text-xs text-gray-600">{rule}</span>
+                            <span className="text-xs text-gray-600 dark:text-slate-300">{rule}</span>
                           </div>
                         ))}
                       </div>
@@ -716,27 +716,27 @@ export default function RestaurantDetail() {
               </div>
 
               {/* Timer and Redeem Button Block */}
-              <div className="bg-gray-50/50 rounded-2xl border border-gray-100 p-4 flex flex-col items-center space-y-4">
+              <div className="bg-gray-50/50 dark:bg-[#0e1424] rounded-2xl border border-gray-100 dark:border-slate-800/80 p-4 flex flex-col items-center space-y-4">
                 {/* Timer Circle */}
                 <div
-                  className={`w-24 h-24 rounded-full border-4 flex items-center justify-center bg-white shadow-sm transition-all duration-300 ${
-                    unavailable ? "border-gray-200" : "border-yellow-400 animate-pulse-subtle"
+                  className={`w-24 h-24 rounded-full border-4 flex items-center justify-center bg-white dark:bg-[#0b0f19] shadow-sm transition-all duration-300 ${
+                    unavailable ? "border-gray-200 dark:border-slate-700" : "border-yellow-400 animate-pulse-subtle"
                   }`}
                 >
                   <div className="text-center px-1">
                     {unavailable ? (
                       <>
                         <Lock className="w-5 h-5 text-gray-400 mx-auto mb-0.5" />
-                        <div className="text-[9px] font-extrabold text-gray-400 uppercase tracking-wide">
+                        <div className="text-[9px] font-extrabold text-gray-400 dark:text-slate-500 uppercase tracking-wide">
                           {unavailable.label}
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="text-xl font-black text-gray-900 leading-none tracking-tight">
+                        <div className="text-xl font-black text-gray-900 dark:text-slate-100 leading-none tracking-tight">
                           {isTimerActive ? timeLeft : offerBadge.value}
                         </div>
-                        <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                        <div className="text-[8px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-1">
                           {isTimerActive ? t("offer.time_left") : offerBadge.label}
                         </div>
                       </>
@@ -746,19 +746,19 @@ export default function RestaurantDetail() {
 
                 {/* Frequency Badge */}
                 <div className="flex justify-center -mt-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50">
                     🔄 {getFrequencyLabel(offer)}
                   </span>
                 </div>
 
                 {/* Message / Instruction */}
-                <p className="text-xs text-gray-500 text-center px-2 leading-relaxed">
+                <p className="text-xs text-gray-500 dark:text-slate-400 text-center px-2 leading-relaxed">
                   {unavailable ? (
                     unavailable.message
                   ) : offer.place?.name ? (
                     <>
                       {t("offer.present_instruction_prefix")}{" "}
-                      <span className="font-bold text-gray-700">{offer.place?.name}</span> {t("offer.present_instruction_suffix")}
+                      <span className="font-bold text-gray-700 dark:text-slate-200">{offer.place?.name}</span> {t("offer.present_instruction_suffix")}
                     </>
                   ) : (
                     t("offer.present_instruction")
@@ -766,7 +766,7 @@ export default function RestaurantDetail() {
                 </p>
 
                 {redemptionsLeft !== null && !unavailable && (
-                  <p className="text-[10px] font-medium text-gray-400 -mt-2">
+                  <p className="text-[10px] font-medium text-gray-400 dark:text-slate-500 -mt-2">
                     {redemptionsLeft} / {offer.maxRedemptions} {t("offer.redemptions_left")}
                   </p>
                 )}
@@ -775,7 +775,7 @@ export default function RestaurantDetail() {
                 <Button
                   onClick={handleRedeem}
                   disabled={isRedeeming || isTimerActive || Boolean(unavailable)}
-                  className="w-full bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-500 hover:to-yellow-500 text-black font-extrabold rounded-2xl h-13 text-xs uppercase tracking-widest shadow-lg shadow-yellow-400/20 active:scale-[0.98] transition-all duration-150 disabled:bg-gray-200 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 disabled:shadow-none cursor-pointer"
+                  className="w-full bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-500 hover:to-yellow-500 text-black font-extrabold rounded-2xl h-13 text-xs uppercase tracking-widest shadow-lg shadow-yellow-400/20 active:scale-[0.98] transition-all duration-150 disabled:bg-gray-200 dark:disabled:bg-slate-800 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 dark:disabled:text-slate-500 disabled:shadow-none cursor-pointer"
                 >
                   {isRedeeming
                     ? t("offer.redeeming")

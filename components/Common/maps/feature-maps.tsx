@@ -33,15 +33,15 @@ function FeaturedMapsInner() {
   const featuredMaps = maps.filter((map) => map.isActive);
 
   return (
-    <div className="bg-gray-50 py-10 font-inter">
+    <div className="bg-gray-50 dark:bg-[#0b0f19] py-10 font-inter min-h-screen">
       <div className="mx-auto px-4 md:px-6" style={{ maxWidth: "1300px" }}>
         <div className="px- 4 md:px-6">
           <div className="flex justify-between items-center mb-5 mt-2">
             <div className="">
-              <h2 className="text-3xl font-bold leading-normal">
+              <h2 className="text-3xl font-bold leading-normal text-gray-900 dark:text-slate-100">
                 {language === "es" ? "Mapas Destacados" : "Featured Maps"}
               </h2>
-              <p className="text-gray-500/80">
+              <p className="text-gray-500/80 dark:text-slate-400">
                 {language === "es"
                   ? "Explora los mejores recorridos guiados por profesionales."
                   : "Explore the best walking tours curated by professionals."}
@@ -56,11 +56,11 @@ function FeaturedMapsInner() {
               [1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="h-96 bg-gray-200 animate-pulse rounded-2xl"
+                  className="h-96 bg-gray-200 dark:bg-slate-800 animate-pulse rounded-2xl"
                 />
               ))
             ) : featuredMaps.length === 0 ? (
-              <p className="col-span-full text-center text-gray-500 py-10">
+              <p className="col-span-full text-center text-gray-500 dark:text-slate-400 py-10">
                 {language === "es" ? "No se encontraron mapas destacados." : "No featured maps found."}
               </p>
             ) : (
@@ -72,7 +72,7 @@ function FeaturedMapsInner() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
                     onClick={() => router.push(mapHref(map._id))}
-                    className="bg-white rounded-xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col cursor-pointer pb-2"
+                    className="bg-white dark:bg-[#131b2e]/90 backdrop-blur-md rounded-xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-slate-800/80 hover:dark:border-amber-400/40 transition-colors flex flex-col cursor-pointer pb-2"
                   >
                     {/* Image Container */}
                     <div className="relative aspect-square mb-2 overflow-hidden">
@@ -90,28 +90,28 @@ function FeaturedMapsInner() {
                         <FavouriteButton
                           placeId={map._id}
                           type="Map"
-                          Style="w-8 h-8 p-0 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm transition-transform hover:scale-110 border-none"
+                          Style="w-8 h-8 p-0 bg-white/90 dark:bg-[#0b0f19]/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm transition-transform hover:scale-110 border border-transparent dark:border-slate-700"
                         />
                       </div>
                     </div>
 
                     {/* Card Details */}
                     <div className="p-2 sm:p-3 flex flex-col flex-1">
-                      <h3 className="text-sm sm:text-base md:text-lg font-bold text-[#1A1A1A] leading-tight mb-1 line-clamp-2">
+                      <h3 className="text-sm sm:text-base md:text-lg font-bold text-[#1A1A1A] dark:text-slate-100 leading-tight mb-1 line-clamp-2">
                         {getLocalized(map.name, language)}
                       </h3>
-                      <p className="text-xs sm:text-sm text-[#9E9E9E] mb-2 line-clamp-2">
+                      <p className="text-xs sm:text-sm text-[#9E9E9E] dark:text-slate-400 mb-2 line-clamp-2">
                         {getLocalized(map.description, language) ||
                           (language === "es"
                             ? "Explora lo mejor de la ciudad con esta guía seleccionada."
                             : "Explore the best of the city with this curated guide.")}
                       </p>
                       <div className="mt-auto">
-                        <span className="text-base sm:text-lg md:text-xl font-bold text-[#1A1A1A] block mb-2">
+                        <span className="text-base sm:text-lg md:text-xl font-bold text-[#1A1A1A] dark:text-slate-100 block mb-2">
                           ${map.price || "0.00"}
                         </span>
                         <Link href={mapHref(map._id)} onClick={(e) => e.stopPropagation()}>
-                          <Button className="w-full text-black py-2.5 md:py-4 text-xs md:text-base bg-primary/80 hover:bg-primary font-bold rounded-lg transition-colors shadow-sm cursor-pointer border-none">
+                          <Button className="w-full text-black py-2.5 md:py-4 text-xs md:text-base bg-primary hover:bg-[#fabf13]/90 font-bold rounded-lg transition-colors shadow-sm cursor-pointer border-none">
                             {redeemFreeMap
                               ? (language === "es" ? "Reclamar este mapa" : "Claim this map")
                               : (language === "es" ? "Ver detalles" : "View details")}
@@ -134,7 +134,7 @@ export default function FeaturedMaps() {
   return (
     <Suspense
       fallback={
-        <div className="bg-gray-50 py-20 flex justify-center">
+        <div className="bg-gray-50 dark:bg-[#0b0f19] py-20 flex justify-center">
           <div className="h-10 w-10 animate-spin rounded-full border-2 border-yellow-400 border-t-transparent" />
         </div>
       }

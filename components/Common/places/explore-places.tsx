@@ -238,7 +238,7 @@ export default function ExplorePlaces() {
       <div className="max-w-360 mx-auto px-4 md:px-6">
         {/* Title */}
         <div className="mb-6">
-          <h1 className="text-4xl font-bold text-gray-900 leading-14">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100 leading-14">
             {t("place.title")}
           </h1>
         </div>
@@ -246,12 +246,12 @@ export default function ExplorePlaces() {
         {/* Search */}
         <div className="mb-6">
           <div className="relative w-full">
-            <div className="flex items-center gap-3 bg-white border rounded-lg px-2 shadow-sm">
+            <div className="flex items-center gap-3 bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 rounded-xl px-2 shadow-sm">
               <Search className="text-gray-400 ml-2" size={20} />
 
               <Input
                 placeholder={t("search.search_places")}
-                className="border-none h-12 focus-visible:ring-0 shadow-none text-base"
+                className="border-none h-12 focus-visible:ring-0 shadow-none text-base text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
@@ -266,9 +266,9 @@ export default function ExplorePlaces() {
               />
             </div>
             {searchFocused && searchInput.trim().length >= 2 && (
-              <div className="absolute top-full z-40 mt-2 w-full overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+              <div className="absolute top-full z-40 mt-2 w-full overflow-hidden rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-[#131b2e]/95 backdrop-blur-xl shadow-2xl">
                 {isFetching || searchInput !== searchTerm ? (
-                  <div className="flex items-center justify-center gap-2 p-4 text-sm text-gray-500">
+                  <div className="flex items-center justify-center gap-2 p-4 text-sm text-gray-500 dark:text-slate-400">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
                     {t("common.loading")}
                   </div>
@@ -278,7 +278,7 @@ export default function ExplorePlaces() {
                       <button
                         key={place._id}
                         type="button"
-                        className="flex w-full flex-col items-start gap-0.5 border-b border-gray-50 px-4 py-3 text-left last:border-0 hover:bg-gray-50"
+                        className="flex w-full flex-col items-start gap-0.5 border-b border-gray-50 dark:border-slate-800/60 px-4 py-3 text-left last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800/60"
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => {
                           setSearchInput(place.name);
@@ -288,11 +288,11 @@ export default function ExplorePlaces() {
                           setPage(1);
                         }}
                       >
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-slate-100">
                           {place.name}
                         </span>
                         {place.address && (
-                          <span className="truncate text-xs text-gray-500">
+                          <span className="truncate text-xs text-gray-500 dark:text-slate-400">
                             {place.address}
                           </span>
                         )}
@@ -300,7 +300,7 @@ export default function ExplorePlaces() {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-4 text-center text-sm text-gray-500">
+                  <div className="p-4 text-center text-sm text-gray-500 dark:text-slate-400">
                     {t("search.no_results")}
                   </div>
                 )}
@@ -320,7 +320,7 @@ export default function ExplorePlaces() {
               localStorage.setItem("selectedCountryFilter", val);
               setPage(1);
             }}
-            className="h-10 px-3 sm:px-4 max-w-[130px] sm:max-w-[180px] truncate border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm bg-white font-semibold text-gray-700 cursor-pointer shadow-sm hover:bg-gray-100 transition-colors shrink-0"
+            className="h-10 px-3 sm:px-4 max-w-[130px] sm:max-w-[180px] truncate border border-gray-200 dark:border-slate-800 rounded-full focus:outline-none focus:ring-2 focus:ring-[#fabf13] text-sm bg-white dark:bg-[#131b2e] font-semibold text-gray-700 dark:text-slate-200 cursor-pointer shadow-sm hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors shrink-0"
           >
             <option value="">{t("filters.all_countries") || "All Countries"}</option>
             {mapsResponse?.data?.map((map: any) => {
@@ -340,7 +340,7 @@ export default function ExplorePlaces() {
               setSelectedCategory(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 sm:px-4 max-w-[130px] sm:max-w-[180px] truncate border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm bg-white font-semibold text-gray-700 cursor-pointer shadow-sm hover:bg-gray-100 transition-colors shrink-0"
+            className="h-10 px-3 sm:px-4 max-w-[130px] sm:max-w-[180px] truncate border border-gray-200 dark:border-slate-800 rounded-full focus:outline-none focus:ring-2 focus:ring-[#fabf13] text-sm bg-white dark:bg-[#131b2e] font-semibold text-gray-700 dark:text-slate-200 cursor-pointer shadow-sm hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors shrink-0"
           >
             <option value="">{t("filters.all_categories")}</option>
             {categoriesResponse?.data?.map((cat: any) => (
@@ -393,8 +393,8 @@ export default function ExplorePlaces() {
                 }}
                 className={`rounded-full flex items-center gap-2 transition-all shrink-0 whitespace-nowrap ${
                   isActive
-                    ? "bg-yellow-400 text-black hover:bg-yellow-500 border-yellow-500 shadow-md"
-                    : "hover:bg-gray-100"
+                    ? "bg-[#fabf13] text-black hover:bg-[#e0ac10] border-transparent shadow-[0_2px_12px_rgba(250,191,19,0.35)] font-bold"
+                    : "dark:bg-[#131b2e] dark:border-slate-800 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800"
                 }`}
               >
                 <Icon size={16} />
@@ -406,14 +406,14 @@ export default function ExplorePlaces() {
 
         {/* Premium Upgrade Banner for Free Users / Guests */}
         {!isPremium && (
-          <div className="mb-8 p-4 bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-200/50 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm animate-in fade-in duration-300">
+          <div className="mb-8 p-4 bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10 border border-amber-500/20 dark:border-amber-500/30 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm backdrop-blur-md animate-in fade-in duration-300">
             <div className="flex items-center gap-3 text-left">
               <span className="text-2xl">✨</span>
               <div>
-                <p className="font-extrabold text-gray-900 text-sm md:text-base">
+                <p className="font-extrabold text-gray-900 dark:text-slate-100 text-sm md:text-base">
                   {t("place.unlock_banner_title")}
                 </p>
-                <p className="text-xs text-gray-500 font-medium">
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
                   {profile 
                     ? t("place.unlock_banner_auth_desc")
                     : t("place.unlock_banner_guest_desc")}
@@ -421,7 +421,7 @@ export default function ExplorePlaces() {
               </div>
             </div>
             <Link href={profile ? "/catalog" : "/login"}>
-              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-md transition-all whitespace-nowrap">
+              <Button className="bg-[#fabf13] hover:bg-[#e0ac10] text-black font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-md transition-all whitespace-nowrap">
                 {profile ? t("place.browse_maps") : t("place.login_to_unlock")}
               </Button>
             </Link>
@@ -429,7 +429,7 @@ export default function ExplorePlaces() {
         )}
 
         {(isFetching || enterSearching) && (
-          <p className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-500">
+          <p className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-slate-400">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
             {t("common.loading")}
           </p>
@@ -441,17 +441,17 @@ export default function ExplorePlaces() {
             [1, 2, 3, 4, 5, 6].map((i) => (
               <div
                 key={i}
-                className="h-80 bg-gray-200 animate-pulse rounded-xl"
+                className="h-80 bg-gray-200 dark:bg-slate-800 animate-pulse rounded-2xl"
               />
             ))
           ) : places.length === 0 ? (
-            <div className="col-span-full text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
-              <p className="text-xl font-semibold text-gray-400">
+            <div className="col-span-full text-center py-20 bg-white dark:bg-[#131b2e]/60 rounded-2xl border border-dashed border-gray-300 dark:border-slate-800">
+              <p className="text-xl font-semibold text-gray-400 dark:text-slate-400">
                 {t("search.no_results")}
               </p>
               <Button
                 variant="link"
-                className="text-yellow-600 font-bold"
+                className="text-[#fabf13] font-bold"
                 onClick={() => {
                   setSearchInput("");
                   setSearchTerm("");

@@ -106,17 +106,17 @@ export default function OfferSection() {
 
   if (isLoading) {
     return (
-      <section className="bg-gray-50 min-h-screen py-12">
+      <section className="bg-gray-50 dark:bg-[#0b0f19] min-h-screen py-12">
         <div className="max-w-360 mx-auto px-4 md:px-6">
           <div className="flex gap-4 mb-8">
-            <Skeleton className="h-10 w-24 rounded-md" />
-            <Skeleton className="h-10 w-24 rounded-full" />
-            <Skeleton className="h-10 w-24 rounded-full" />
-            <Skeleton className="h-10 w-24 rounded-full" />
+            <Skeleton className="h-10 w-24 rounded-md dark:bg-slate-800" />
+            <Skeleton className="h-10 w-24 rounded-full dark:bg-slate-800" />
+            <Skeleton className="h-10 w-24 rounded-full dark:bg-slate-800" />
+            <Skeleton className="h-10 w-24 rounded-full dark:bg-slate-800" />
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Skeleton key={i} className="h-[400px] w-full rounded-xl" />
+              <Skeleton key={i} className="h-[400px] w-full rounded-xl dark:bg-slate-800" />
             ))}
           </div>
         </div>
@@ -125,22 +125,22 @@ export default function OfferSection() {
   }
 
   return (
-    <section className="bg-gray-50">
+    <section className="bg-gray-50 dark:bg-[#0b0f19] min-h-screen">
       <div className="max-w-360 mx-auto px-4 md:px-6 py-12">
         <div className="mb-6">
-          <h1 className="text-4xl font-bold text-gray-900 leading-14">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100 leading-14">
             {t("offer.title")}
           </h1>
         </div>
         {/* Search */}
         <div className="mb-6">
           <div className="relative w-full">
-            <div className="flex items-center gap-3 bg-white border rounded-lg px-2 shadow-sm">
-              <Search className="text-gray-400 ml-2" size={20} />
+            <div className="flex items-center gap-3 bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 rounded-lg px-2 shadow-sm">
+              <Search className="text-gray-400 dark:text-slate-400 ml-2" size={20} />
 
               <Input
                 placeholder={t("search.search_offers")}
-                className="border-none h-12 focus-visible:ring-0 shadow-none text-base"
+                className="border-none h-12 focus-visible:ring-0 shadow-none text-base dark:text-slate-100 dark:placeholder:text-slate-500"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
@@ -148,7 +148,7 @@ export default function OfferSection() {
               />
             </div>
             {searchFocused && searchTerm.trim().length >= 2 && (
-              <div className="absolute top-full z-40 mt-2 w-full overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+              <div className="absolute top-full z-40 mt-2 w-full overflow-hidden rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-[#131b2e] shadow-xl">
                 {offerSuggestions.length > 0 ? (
                   <div className="max-h-64 overflow-y-auto">
                     {offerSuggestions.map((offer: any) => {
@@ -158,18 +158,18 @@ export default function OfferSection() {
                         <button
                           key={offer._id}
                           type="button"
-                          className="flex w-full flex-col items-start gap-0.5 border-b border-gray-50 px-4 py-3 text-left last:border-0 hover:bg-gray-50"
+                          className="flex w-full flex-col items-start gap-0.5 border-b border-gray-50 dark:border-slate-800/80 px-4 py-3 text-left last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800/60"
                           onMouseDown={(e) => e.preventDefault()}
                           onClick={() => {
                             setSearchTerm(offer.title);
                             setSearchFocused(false);
                           }}
                         >
-                          <span className="text-sm font-semibold text-gray-900">
+                          <span className="text-sm font-semibold text-gray-900 dark:text-slate-100">
                             {offer.title}
                           </span>
                           {placeName && (
-                            <span className="truncate text-xs text-gray-500">
+                            <span className="truncate text-xs text-gray-500 dark:text-slate-400">
                               {placeName}
                             </span>
                           )}
@@ -178,7 +178,7 @@ export default function OfferSection() {
                     })}
                   </div>
                 ) : (
-                  <div className="p-4 text-center text-sm text-gray-500">
+                  <div className="p-4 text-center text-sm text-gray-500 dark:text-slate-400">
                     {t("search.no_results")}
                   </div>
                 )}
@@ -196,7 +196,7 @@ export default function OfferSection() {
               className={`rounded-full transition-all ${
                 activeFilter === filter.id
                   ? "bg-yellow-400 text-black hover:bg-yellow-500 border-yellow-500 shadow-md"
-                  : "hover:bg-gray-100"
+                  : "hover:bg-gray-100 dark:bg-[#131b2e] dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-800"
               }`}
               onClick={() => setActiveFilter(filter.id)}
             >
@@ -207,11 +207,11 @@ export default function OfferSection() {
 
         {/* Offer Grid */}
         {filteredOffers.length === 0 ? (
-          <div className="py-20 text-center bg-white rounded-xl border border-dashed border-gray-300">
-            <p className="text-xl font-semibold text-gray-400">
+          <div className="py-20 text-center bg-white dark:bg-[#131b2e] rounded-xl border border-dashed border-gray-300 dark:border-slate-700">
+            <p className="text-xl font-semibold text-gray-400 dark:text-slate-500">
               {t("search.no_results")}
             </p>
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-gray-500 dark:text-slate-400">
               {searchTerm
                 ? t("common.loading")
                 : t("offer.subtitle")}
@@ -281,7 +281,7 @@ export default function OfferSection() {
                 href={offerHref}
                 onClick={handleOfferClick}
               >
-                <div className="group rounded-xl overflow-hidden border bg-white hover:shadow-md transition">
+                <div className="group rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800/80 bg-white dark:bg-[#131b2e]/90 hover:shadow-md hover:dark:border-amber-400/40 backdrop-blur-md transition">
                   {/* Image */}
                   <div className="relative h-36 sm:h-48 md:h-72 w-full">
                     <Image
@@ -318,10 +318,10 @@ export default function OfferSection() {
 
                   {/* Text */}
                   <div className="p-2.5 md:p-4">
-                    <h3 className="font-semibold text-sm md:text-lg line-clamp-2">
+                    <h3 className="font-semibold text-sm md:text-lg line-clamp-2 text-gray-900 dark:text-slate-100">
                       {offer.title}
                     </h3>
-                    <p className="text-xs md:text-sm text-gray-500 line-clamp-1">
+                    <p className="text-xs md:text-sm text-gray-500 dark:text-slate-400 line-clamp-1">
                       {offer.business?.name || offer.place?.name || "Multiple Locations"}
                     </p>
                   </div>

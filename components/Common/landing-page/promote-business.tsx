@@ -42,18 +42,18 @@ export default function PromoteBusiness() {
   ];
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-gray-50 overflow-hidden font-inter">
+    <section className="py-16 sm:py-20 lg:py-24 bg-gray-50 dark:bg-zinc-950 overflow-hidden font-inter transition-colors">
       <div className="max-w-360 mx-auto px-4 md:px-6">
         {/* Brand Yellow Container */}
         <motion.div
-          className="relative bg-[#FFC107] rounded-3xl sm:rounded-[44px] p-6 sm:p-12 md:py-16 text-center shadow-xl overflow-hidden"
+          className="relative bg-[#FFC107] dark:bg-amber-500/95 rounded-3xl sm:rounded-[44px] p-6 sm:p-12 md:py-16 text-center shadow-xl overflow-hidden"
           initial={{ opacity: 0, scale: 0.96 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           {/* Subtle Ambient Background Highlight */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/20 dark:bg-black/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
           {/* Heading */}
           <motion.h2
@@ -93,7 +93,7 @@ export default function PromoteBusiness() {
                   whileHover={{ y: -5, scale: 1.02 }}
                   className="h-full"
                 >
-                  <div className="bg-white/85 backdrop-blur-sm border border-white/60 rounded-2xl sm:rounded-3xl p-6 sm:p-7 shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 text-center flex flex-col items-center group h-full">
+                  <div className="bg-white/90 backdrop-blur-sm border border-white/60 rounded-2xl sm:rounded-3xl p-6 sm:p-7 shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 text-center flex flex-col items-center group h-full">
                     <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-amber-100/90 border border-amber-200/80 flex items-center justify-center mb-4 text-gray-950 group-hover:bg-[#FFC107] transition-all duration-300 shadow-sm">
                       <Icon className="w-6 h-6 stroke-[2.2]" />
                     </div>

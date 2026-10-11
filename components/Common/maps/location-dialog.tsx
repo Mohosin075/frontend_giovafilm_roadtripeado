@@ -220,20 +220,20 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
         onClick={onClose}
         aria-hidden="true"
       />
-      <div className="bg-white rounded-t-[28px] rounded-b-[20px] sm:rounded-[32px] shadow-2xl w-full max-w-md relative z-10 flex flex-col overflow-hidden max-h-[80dvh] sm:max-h-[85vh] min-h-0 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-6 sm:slide-in-from-bottom-4">
+      <div className="bg-white dark:bg-[#131b2e]/95 backdrop-blur-xl border border-transparent dark:border-slate-800 text-gray-900 dark:text-slate-100 rounded-t-[28px] rounded-b-[20px] sm:rounded-[32px] shadow-2xl w-full max-w-md relative z-10 flex flex-col overflow-hidden max-h-[80dvh] sm:max-h-[85vh] min-h-0 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-6 sm:slide-in-from-bottom-4">
         {/* Close — always tappable above image + description */}
         <button
           type="button"
           onClick={onClose}
           aria-label="Close location"
-          className="absolute top-3 right-3 z-[60] w-9 h-9 sm:w-11 sm:h-11 bg-white/95 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-transform active:scale-95"
+          className="absolute top-3 right-3 z-[60] w-9 h-9 sm:w-11 sm:h-11 bg-white/95 dark:bg-[#0b0f19]/90 text-gray-900 dark:text-slate-100 rounded-full flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 transition-transform active:scale-95"
         >
           <X size={20} className="sm:hidden" />
           <X size={22} className="hidden sm:block" />
         </button>
 
         {/* Image stays visible; long copy only scrolls below */}
-        <div className="relative h-36 sm:h-52 shrink-0 grow-0 overflow-hidden rounded-t-[28px] sm:rounded-t-[32px] bg-gray-100">
+        <div className="relative h-36 sm:h-52 shrink-0 grow-0 overflow-hidden rounded-t-[28px] sm:rounded-t-[32px] bg-gray-100 dark:bg-slate-800">
           {coverImage ? (
             <SafeImage
               src={coverImage}
@@ -253,12 +253,12 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
           <h2 className="text-xl sm:text-2xl font-black mb-1.5 pr-8 leading-tight">{getSafeString(location?.name, language)}</h2>
 
           <div className="flex items-center gap-2 mb-3">
-            <div className="flex items-center text-xs sm:text-sm font-bold">
-              <Star size={14} className="fill-black mr-1" />
+            <div className="flex items-center text-xs sm:text-sm font-bold text-gray-900 dark:text-slate-100">
+              <Star size={14} className="fill-black dark:fill-[#fabf13] mr-1 text-black dark:text-[#fabf13]" />
               {location?.rating ?? "—"}
             </div>
 
-            <span className="text-gray-400 text-xs sm:text-sm truncate">
+            <span className="text-gray-400 dark:text-slate-400 text-xs sm:text-sm truncate">
               ({location?.totalReview ?? 0} {t("place.reviews")}){" "}
               {getSafeString(location?.map?.name, language) || location?.location?.country || ""}
             </span>
@@ -267,7 +267,7 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
           {location?.description ? (
             <div className="mb-4">
               <p
-                className={`text-xs sm:text-sm text-gray-600 leading-relaxed ${
+                className={`text-xs sm:text-sm text-gray-600 dark:text-slate-300 leading-relaxed ${
                   !isDescriptionExpanded ? "line-clamp-3" : ""
                 }`}
               >

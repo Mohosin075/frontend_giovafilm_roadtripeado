@@ -771,10 +771,10 @@ export default function MapDetails() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19]">
         <div className="animate-pulse flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-500 font-medium">{t("place.loading_details")}</p>
+          <p className="text-gray-500 dark:text-slate-400 font-medium">{t("place.loading_details")}</p>
         </div>
       </div>
     );
@@ -782,18 +782,18 @@ export default function MapDetails() {
 
   if (isLockedForUser || (error && ((error as any).status === 403 || (error as any).originalStatus === 403))) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <div className="text-center space-y-6 max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-yellow-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19] p-4">
+        <div className="text-center space-y-6 max-w-md bg-white dark:bg-[#131b2e] p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800">
+          <div className="w-16 h-16 bg-yellow-100 dark:bg-amber-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">{t("place.unlock_location_title")}</h2>
-          <p className="text-gray-600 leading-relaxed">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{t("place.unlock_location_title")}</h2>
+          <p className="text-gray-600 dark:text-slate-400 leading-relaxed">
             {t("place.unlock_location_desc")}
           </p>
           <div className="pt-4">
             <Link href="/catalog">
-              <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-6 rounded-xl shadow-lg shadow-yellow-200 transition-all text-lg cursor-pointer">
+              <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-6 rounded-xl shadow-lg shadow-yellow-200 dark:shadow-none transition-all text-lg cursor-pointer">
                 <Ticket className="w-5 h-5 mr-2" />
                 {t("offer.purchase_map")}
               </Button>
@@ -801,7 +801,7 @@ export default function MapDetails() {
           </div>
           <div className="pt-2">
             <Link href="/maps">
-              <Button variant="ghost" className="text-gray-500 w-full cursor-pointer">{t("place.back_to_maps")}</Button>
+              <Button variant="ghost" className="text-gray-500 dark:text-slate-400 dark:hover:bg-slate-800 w-full cursor-pointer">{t("place.back_to_maps")}</Button>
             </Link>
           </div>
         </div>
@@ -811,11 +811,11 @@ export default function MapDetails() {
 
   if (!placeData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19]">
         <div className="text-center space-y-4">
-          <p className="text-xl font-bold text-gray-800">{t("place.place_not_found")}</p>
+          <p className="text-xl font-bold text-gray-800 dark:text-slate-100">{t("place.place_not_found")}</p>
           <Link href="/maps">
-            <Button variant="outline" className="cursor-pointer">{t("place.back_to_map")}</Button>
+            <Button variant="outline" className="dark:bg-[#131b2e] dark:border-slate-800 dark:text-slate-200 cursor-pointer">{t("place.back_to_map")}</Button>
           </Link>
         </div>
       </div>
@@ -823,7 +823,7 @@ export default function MapDetails() {
   }
 
   return (
-    <section className="bg-gray-100 py-10">
+    <section className="bg-gray-100 dark:bg-[#0b0f19] py-10 min-h-screen">
       <div className="max-w-[1400px] mx-auto px-4 md:px-6  ">
         {/* TOP GRID */}
         <div className="grid lg:grid-cols-3 gap-6">
@@ -1043,7 +1043,7 @@ export default function MapDetails() {
             </div>
 
             {/* Mobile-Only Title Card (Below the image) */}
-            <div className="md:hidden mt-3 rounded-2xl border border-gray-200 bg-white px-4 py-4 shadow-sm">
+            <div className="md:hidden mt-3 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-[#131b2e] px-4 py-4 shadow-sm">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 {placeData?.category?.name && (
                   <span className="inline-flex items-center rounded-full bg-yellow-400 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-black">
@@ -1051,11 +1051,11 @@ export default function MapDetails() {
                   </span>
                 )}
                 {typeof placeData?.rating === "number" && placeData.rating > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-semibold text-gray-800 border border-gray-200">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 dark:bg-slate-800 px-2.5 py-0.5 text-[11px] font-semibold text-gray-800 dark:text-slate-200 border border-gray-200 dark:border-slate-700">
                     <Star size={12} className="fill-yellow-400 text-yellow-400" />
                     {placeData.rating.toFixed(1)}
                     {placeData?.totalReview > 0 && (
-                      <span className="font-normal text-gray-500">
+                      <span className="font-normal text-gray-500 dark:text-slate-400">
                         ({placeData.totalReview})
                       </span>
                     )}
@@ -1063,11 +1063,11 @@ export default function MapDetails() {
                 )}
               </div>
 
-              <h1 className="text-2xl font-bold font-public-sans text-gray-900 leading-tight tracking-tight" style={{userSelect:'text'}}>
+              <h1 className="text-2xl font-bold font-public-sans text-gray-900 dark:text-slate-100 leading-tight tracking-tight" style={{userSelect:'text'}}>
                 {getLocalized(placeData?.name, language) || "Untitled location"}
               </h1>
 
-              <div className="mt-2 flex items-start gap-2 text-sm text-gray-600">
+              <div className="mt-2 flex items-start gap-2 text-sm text-gray-600 dark:text-slate-400">
                 <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EC5B13]/10">
                   <MapPin size={13} className="text-[#FF8A4C]" />
                 </span>
@@ -1159,30 +1159,30 @@ export default function MapDetails() {
             {(descriptionText || accessText) && (
               <AccordionItem
                 value="access"
-                className="border rounded-xl bg-white"
+                className="border border-gray-200 dark:border-slate-800 rounded-xl bg-white dark:bg-[#131b2e]"
               >
-                <AccordionTrigger className="font-semibold px-6 hover:no-underline">
+                <AccordionTrigger className="font-semibold px-6 hover:no-underline dark:text-slate-100">
                   {isBusiness ? t("place.description_and_access") : t("place.about_this_place")}
                 </AccordionTrigger>
 
                 <AccordionContent className="text-muted-foreground space-y-4 px-6 pb-6">
                   {descriptionText && (
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+                      <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 mb-2">
                         {t("place.description")}
                       </p>
-                      <p className="leading-relaxed text-gray-700 whitespace-pre-wrap">
+                      <p className="leading-relaxed text-gray-700 dark:text-slate-300 whitespace-pre-wrap">
                         {descriptionText}
                       </p>
                     </div>
                   )}
 
                   {accessText && (
-                    <div className={descriptionText ? "pt-3 border-t border-gray-100" : ""}>
-                      <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+                    <div className={descriptionText ? "pt-3 border-t border-gray-100 dark:border-slate-800" : ""}>
+                      <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 mb-2">
                         {t("place.access_and_getting_here")}
                       </p>
-                      <p className="leading-relaxed text-gray-700 whitespace-pre-wrap">
+                      <p className="leading-relaxed text-gray-700 dark:text-slate-300 whitespace-pre-wrap">
                         {accessText}
                       </p>
                     </div>
@@ -1199,15 +1199,15 @@ export default function MapDetails() {
                 hasText(placeData?.accessibility?.notes)) && (
                 <AccordionItem
                   value="recommendations"
-                  className="border rounded-xl bg-white"
+                  className="border border-gray-200 dark:border-slate-800 rounded-xl bg-white dark:bg-[#131b2e]"
                 >
-                  <AccordionTrigger className="font-semibold px-6 hover:no-underline">
+                  <AccordionTrigger className="font-semibold px-6 hover:no-underline dark:text-slate-100">
                     {t("place.recommendations")}
                   </AccordionTrigger>
 
                   <AccordionContent className="px-6 pb-6 space-y-5">
                     {(hasText(placeData?.recommendations?.tips) || hasText(placeData?.details?.recommendations)) && (
-                      <p className="leading-relaxed text-gray-700">
+                      <p className="leading-relaxed text-gray-700 dark:text-slate-300">
                         {getLocalized(placeData?.recommendations?.tips, language) ||
                           getLocalized(placeData?.details?.recommendations, language)}
                       </p>
@@ -1216,7 +1216,7 @@ export default function MapDetails() {
                     {((placeData?.accessibility?.features && placeData.accessibility.features.length > 0) ||
                       hasText(placeData?.accessibility?.notes)) && (
                       <div className="space-y-3">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                        <p className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
                           {t("place.accessibility_features")}
                         </p>
                         {placeData?.accessibility?.features?.length > 0 && (
@@ -1224,7 +1224,7 @@ export default function MapDetails() {
                             {placeData.accessibility.features.map((feature: string) => (
                               <span
                                 key={feature}
-                                className="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100 capitalize"
+                                className="text-xs bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300 px-3 py-1 rounded-full border border-blue-100 dark:border-blue-900/50 capitalize"
                               >
                                 {feature}
                               </span>
@@ -1232,7 +1232,7 @@ export default function MapDetails() {
                           </div>
                         )}
                         {hasText(placeData?.accessibility?.notes) && (
-                          <p className="text-sm italic text-gray-500">
+                          <p className="text-sm italic text-gray-500 dark:text-slate-400">
                             {getLocalized(placeData.accessibility.notes, language)}
                           </p>
                         )}
@@ -1246,9 +1246,9 @@ export default function MapDetails() {
             {!isBusiness && placeData?.services?.length > 0 && (
               <AccordionItem
                 value="services"
-                className="border rounded-xl bg-white"
+                className="border border-gray-200 dark:border-slate-800 rounded-xl bg-white dark:bg-[#131b2e]"
               >
-                <AccordionTrigger className="font-semibold px-6 hover:no-underline">
+                <AccordionTrigger className="font-semibold px-6 hover:no-underline dark:text-slate-100">
                   {t("place.services_available")}
                 </AccordionTrigger>
 
@@ -1264,10 +1264,10 @@ export default function MapDetails() {
                           key={idx}
                           className="flex flex-col items-center gap-2 group"
                         >
-                          <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100 group-hover:bg-amber-50 transition-colors">
-                            <Icon size={22} className="text-gray-600 group-hover:text-amber-600" />
+                          <div className="bg-gray-50 dark:bg-[#0e1424] p-4 rounded-2xl border border-gray-100 dark:border-slate-800 group-hover:bg-amber-50 dark:group-hover:bg-amber-950/20 transition-colors">
+                            <Icon size={22} className="text-gray-600 dark:text-slate-300 group-hover:text-amber-600 dark:group-hover:text-amber-400" />
                           </div>
-                          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">
+                          <p className="text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-tight">
                             {serviceInfo.label}
                           </p>
                         </div>
@@ -1282,9 +1282,9 @@ export default function MapDetails() {
             {placeData?.menuImages && placeData.menuImages.length > 0 && (
               <AccordionItem
                 value="menu"
-                className="border rounded-xl bg-white"
+                className="border border-gray-200 dark:border-slate-800 rounded-xl bg-white dark:bg-[#131b2e]"
               >
-                <AccordionTrigger className="font-semibold px-6 hover:no-underline">
+                <AccordionTrigger className="font-semibold px-6 hover:no-underline dark:text-slate-100">
                   {t("place.menu_and_prices")}
                 </AccordionTrigger>
 
@@ -1293,7 +1293,7 @@ export default function MapDetails() {
                     {placeData.menuImages.map((image: string, index: number) => (
                       <div
                         key={index}
-                        className="relative aspect-square rounded-lg overflow-hidden border border-gray-100 cursor-zoom-in group"
+                        className="relative aspect-square rounded-lg overflow-hidden border border-gray-100 dark:border-slate-800 cursor-zoom-in group"
                         onClick={() => {
                           setSelectedMenuIndex(index);
                           setMenuLightboxOpen(true);
@@ -1315,9 +1315,9 @@ export default function MapDetails() {
             {offersList.length > 0 && (
               <AccordionItem
                 value="offers"
-                className="border rounded-xl bg-white"
+                className="border border-gray-200 dark:border-slate-800 rounded-xl bg-white dark:bg-[#131b2e]"
               >
-                <AccordionTrigger className="font-semibold px-6 hover:no-underline text-blue-600">
+                <AccordionTrigger className="font-semibold px-6 hover:no-underline text-blue-600 dark:text-blue-400">
                   <div className="flex items-center gap-2">
                     <Ticket size={20} />
                     {t("place.offers_and_discounts")} ({offersList.length})
@@ -1329,22 +1329,22 @@ export default function MapDetails() {
                     {offersList.map((offer: any) => (
                       <div
                         key={offer._id}
-                        className="p-4 border border-blue-100 bg-blue-50/30 rounded-xl relative overflow-hidden group hover:bg-blue-50 transition-colors"
+                        className="p-4 border border-blue-100 dark:border-blue-900/40 bg-blue-50/30 dark:bg-blue-950/20 rounded-xl relative overflow-hidden group hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors"
                       >
                         <div className="flex justify-between items-start gap-4">
                           <div className="flex-1 space-y-1">
-                            <h4 className="font-bold text-lg text-gray-900 leading-tight">
+                            <h4 className="font-bold text-lg text-gray-900 dark:text-slate-100 leading-tight">
                               {offer.title}
                             </h4>
-                            <p className="text-sm text-gray-600 line-clamp-2">
+                            <p className="text-sm text-gray-600 dark:text-slate-300 line-clamp-2">
                               {offer.description}
                             </p>
                             <div className="flex flex-wrap gap-2 mt-2">
-                              <span className="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded uppercase">
+                              <span className="text-[10px] font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded uppercase">
                                 {formatOfferDiscountLabel(offer)}
                               </span>
                               {offer.validUntil && (
-                                <span className="text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded uppercase">
+                                <span className="text-[10px] font-bold bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 px-2 py-0.5 rounded uppercase">
                                   {t("offer.valid_until")}:{" "}
                                   {new Date(
                                     offer.validUntil,
@@ -1367,8 +1367,8 @@ export default function MapDetails() {
             )}
           </Accordion>
           {!isBusiness && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
-              <p className="text-xs text-amber-800 leading-relaxed font-medium">
+            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-xl p-4 mt-6">
+              <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-medium">
                 {t("place.notice_disclaimer")}
               </p>
             </div>
@@ -1378,17 +1378,17 @@ export default function MapDetails() {
         {/* Dedicated Operating Hours Card */}
         {hoursObj && Object.keys(hoursObj).length > 0 && (
           <div className="px-2 mt-10">
-            <div className="mb-8 bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+            <div className="mb-8 bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100 dark:border-slate-800">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
                     <Clock size={20} />
                   </div>
                   <div>
-                    <h3 className="font-black text-lg sm:text-xl uppercase tracking-tight text-gray-900">
+                    <h3 className="font-black text-lg sm:text-xl uppercase tracking-tight text-gray-900 dark:text-slate-100">
                       {t("places_admin.operating_hours") || "Operating Hours"}
                     </h3>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-slate-400">
                       {t("place.weekly_schedule") || "Weekly business hours"}
                     </p>
                   </div>
@@ -1410,15 +1410,15 @@ export default function MapDetails() {
                   return (
                     <div
                       key={day}
-                      className="flex items-center justify-between py-2 px-3 rounded-xl bg-gray-50/60 hover:bg-gray-100/70 transition-colors"
+                      className="flex items-center justify-between py-2 px-3 rounded-xl bg-gray-50/60 dark:bg-[#0e1424] hover:bg-gray-100/70 dark:hover:bg-slate-800/60 transition-colors"
                     >
-                      <span className="text-xs sm:text-sm font-semibold text-gray-700">{displayDay}</span>
+                      <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-slate-300">{displayDay}</span>
                       {hours?.closed ? (
-                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-red-50 text-red-500 border border-red-100">
+                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 border border-red-100 dark:border-red-900/40">
                           {t("place.closed") || "Closed"}
                         </span>
                       ) : (
-                        <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                        <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-slate-100">
                           {hours?.open ? convertTo12Hour(hours.open) : "—"} – {hours?.close ? convertTo12Hour(hours.close) : "—"}
                         </span>
                       )}
@@ -1432,23 +1432,23 @@ export default function MapDetails() {
 
         {(hasText(placeData?.website) || hasText(placeData?.instagram)) && (
           <div className="px-2 mt-6">
-            <h3 className="font-black text-xl uppercase tracking-tight text-gray-900 mb-2">
+            <h3 className="font-black text-xl uppercase tracking-tight text-gray-900 dark:text-slate-100 mb-2">
               {t("place.online_presence")}
             </h3>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-gray-500 dark:text-slate-400 mb-6">
               {t("place.online_presence_desc")}
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               {/* WEBSITE */}
               {hasText(placeData?.website) && (
-                <div className="flex items-center justify-between p-3.5 sm:p-5 gap-2 sm:gap-4 border rounded-2xl bg-white shadow-sm transition-shadow hover:shadow-md">
+                <div className="flex items-center justify-between p-3.5 sm:p-5 gap-2 sm:gap-4 border border-gray-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-[#131b2e] shadow-sm transition-shadow hover:shadow-md">
                   <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                    <div className="bg-blue-50 p-2.5 sm:p-3 rounded-xl shrink-0">🌐</div>
+                    <div className="bg-blue-50 dark:bg-blue-950/40 p-2.5 sm:p-3 rounded-xl shrink-0">🌐</div>
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("business_details.website")}
                       </p>
-                      <p className="font-bold text-gray-900 truncate text-xs sm:text-base">
+                      <p className="font-bold text-gray-900 dark:text-slate-100 truncate text-xs sm:text-base">
                         {t("place.official_website")}
                       </p>
                     </div>
@@ -1469,16 +1469,16 @@ export default function MapDetails() {
 
               {/* INSTAGRAM */}
               {hasText(placeData?.instagram) && (
-                <div className="flex items-center justify-between p-3.5 sm:p-5 gap-2 sm:gap-4 border rounded-2xl bg-white shadow-sm transition-shadow hover:shadow-md">
+                <div className="flex items-center justify-between p-3.5 sm:p-5 gap-2 sm:gap-4 border border-gray-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-[#131b2e] shadow-sm transition-shadow hover:shadow-md">
                   <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                    <div className="bg-pink-50 p-2.5 sm:p-3 rounded-xl shrink-0 text-pink-600 flex items-center justify-center">
-                      <Instagram size={22} className="text-pink-600" />
+                    <div className="bg-pink-50 dark:bg-pink-950/40 p-2.5 sm:p-3 rounded-xl shrink-0 text-pink-600 dark:text-pink-400 flex items-center justify-center">
+                      <Instagram size={22} className="text-pink-600 dark:text-pink-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
                         {t("business_details.instagram")}
                       </p>
-                      <p className="font-bold text-gray-900 truncate text-xs sm:text-base">
+                      <p className="font-bold text-gray-900 dark:text-slate-100 truncate text-xs sm:text-base">
                         {`@${placeData.instagram.replace("@", "")}`}
                       </p>
                     </div>
@@ -1503,19 +1503,19 @@ export default function MapDetails() {
           </div>
         )}
         {/* REVIEWS & EXPERIENCES SECTION */}
-        <div className="mt-12 bg-white rounded-3xl border border-gray-100 shadow-xs p-6 md:p-8 space-y-6">
+        <div className="mt-12 bg-white dark:bg-[#131b2e] rounded-3xl border border-gray-100 dark:border-slate-800 shadow-xs p-6 md:p-8 space-y-6">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 dark:border-slate-800 pb-6">
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-black text-xl sm:text-2xl uppercase tracking-tight text-gray-900">
+                <h3 className="font-black text-xl sm:text-2xl uppercase tracking-tight text-gray-900 dark:text-slate-100">
                   {t("reviews.reviews_and_experiences")}
                 </h3>
-                <span className="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">
+                <span className="text-xs font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/40">
                   {approvedReviews.length}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
                 {t("reviews.community_feedback_desc")}
               </p>
             </div>
@@ -1537,11 +1537,11 @@ export default function MapDetails() {
           </div>
 
           {/* Rating Summary Highlight */}
-          <div className="bg-gradient-to-r from-amber-50/70 via-orange-50/40 to-transparent p-5 rounded-2xl border border-amber-100/80 flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-gradient-to-r from-amber-50/70 via-orange-50/40 to-transparent dark:from-amber-950/20 dark:via-slate-900/50 dark:to-transparent p-5 rounded-2xl border border-amber-100/80 dark:border-amber-500/20 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight flex items-baseline gap-1">
+              <div className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-slate-100 tracking-tight flex items-baseline gap-1">
                 <span>{averageRating || "0.0"}</span>
-                <span className="text-lg text-gray-400 font-semibold">/ 5</span>
+                <span className="text-lg text-gray-400 dark:text-slate-500 font-semibold">/ 5</span>
               </div>
               <div className="space-y-1">
                 <div className="flex gap-1">
@@ -1552,12 +1552,12 @@ export default function MapDetails() {
                       className={
                         star <= Math.round(Number(averageRating) || 0)
                           ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-200"
+                          : "text-gray-200 dark:text-slate-700"
                       }
                     />
                   ))}
                 </div>
-                <p className="text-xs font-medium text-gray-500">
+                <p className="text-xs font-medium text-gray-500 dark:text-slate-400">
                   {approvedReviews.length > 0
                     ? `${t("reviews.based_on_reviews")} ${approvedReviews.length} ${t("reviews.verified_reviews")}`
                     : t("reviews.no_reviews_yet")}
@@ -1565,7 +1565,7 @@ export default function MapDetails() {
               </div>
             </div>
 
-            <div className="hidden md:flex items-center gap-2 bg-white/80 backdrop-blur-xs border border-amber-200/60 px-3.5 py-2 rounded-xl text-xs text-amber-900 font-bold">
+            <div className="hidden md:flex items-center gap-2 bg-white/80 dark:bg-[#0e1424] backdrop-blur-xs border border-amber-200/60 dark:border-amber-500/30 px-3.5 py-2 rounded-xl text-xs text-amber-900 dark:text-amber-300 font-bold">
               <Sparkles size={16} className="text-amber-500" />
               <span>{t("reviews.earn_points_banner")}</span>
             </div>
@@ -1576,8 +1576,8 @@ export default function MapDetails() {
             <div
               className={`p-5 rounded-2xl border-2 transition-all ${
                 myReview.status === "Pending"
-                  ? "bg-amber-50/90 border-amber-300 shadow-sm"
-                  : "bg-red-50/90 border-red-200"
+                  ? "bg-amber-50/90 dark:bg-amber-950/20 border-amber-300 dark:border-amber-800/60 shadow-sm"
+                  : "bg-red-50/90 dark:bg-red-950/20 border-red-200 dark:border-red-900/40"
               }`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -1585,8 +1585,8 @@ export default function MapDetails() {
                   <span
                     className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 ${
                       myReview.status === "Pending"
-                        ? "bg-amber-200 text-amber-950"
-                        : "bg-red-200 text-red-950"
+                        ? "bg-amber-200 dark:bg-amber-900/50 text-amber-950 dark:text-amber-200"
+                        : "bg-red-200 dark:bg-red-900/50 text-red-950 dark:text-red-200"
                     }`}
                   >
                     {myReview.status === "Pending" ? (
@@ -1601,7 +1601,7 @@ export default function MapDetails() {
                       </>
                     )}
                   </span>
-                  <span className="text-xs text-gray-500 font-medium">
+                  <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">
                     {t("reviews.visible_only_to_you")}
                   </span>
                 </div>
@@ -1610,21 +1610,21 @@ export default function MapDetails() {
                   onClick={handleOpenReviewModal}
                   variant="outline"
                   size="sm"
-                  className="rounded-xl font-bold text-xs border-amber-300 hover:bg-amber-100 text-amber-900 flex items-center gap-1.5 h-8 px-3 cursor-pointer"
+                  className="rounded-xl font-bold text-xs border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-950/40 text-amber-900 dark:text-amber-300 flex items-center gap-1.5 h-8 px-3 cursor-pointer"
                 >
                   <Edit3 size={13} />
                   {myReview.status === "Pending" ? t("reviews.edit_review") : t("reviews.edit_and_resubmit")}
                 </Button>
               </div>
 
-              <p className="text-xs text-amber-900 font-medium mb-3 leading-relaxed">
+              <p className="text-xs text-amber-900 dark:text-amber-300 font-medium mb-3 leading-relaxed">
                 {myReview.status === "Pending"
                   ? t("reviews.thank_you_pending")
                   : t("reviews.rejected_desc")}
               </p>
 
               {/* Card preview of the user's pending review */}
-              <div className="bg-white/90 rounded-xl p-4 border border-amber-200 space-y-2">
+              <div className="bg-white/90 dark:bg-[#0e1424] rounded-xl p-4 border border-amber-200 dark:border-slate-800 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((i) => (
@@ -1634,15 +1634,15 @@ export default function MapDetails() {
                         className={
                           i <= myReview.rating
                             ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-200"
+                            : "text-gray-200 dark:text-slate-700"
                         }
                       />
                     ))}
-                    <span className="text-xs font-bold text-gray-700 ml-1.5">
+                    <span className="text-xs font-bold text-gray-700 dark:text-slate-300 ml-1.5">
                       {myReview.rating}.0
                     </span>
                   </div>
-                  <span className="text-[11px] text-gray-400">
+                  <span className="text-[11px] text-gray-400 dark:text-slate-500">
                     {t("reviews.submitted_on")}{" "}
                     {new Date(myReview.createdAt).toLocaleDateString("en-US", {
                       month: "short",
@@ -1651,7 +1651,7 @@ export default function MapDetails() {
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-gray-700 italic">
+                <p className="text-sm text-gray-700 dark:text-slate-300 italic">
                   "{getLocalized(myReview.review, language) || t("reviews.star_only")}"
                 </p>
               </div>
@@ -1660,14 +1660,14 @@ export default function MapDetails() {
 
           {/* User's own review if already Approved */}
           {myReview && myReview.status === "Approved" && (
-            <div className="p-5 rounded-2xl bg-green-50/60 border border-green-200/80 space-y-3">
+            <div className="p-5 rounded-2xl bg-green-50/60 dark:bg-green-950/20 border border-green-200/80 dark:border-green-900/40 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-green-100 text-green-900 flex items-center gap-1.5">
-                    <CheckCircle2 size={13} className="text-green-600" />
+                  <span className="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/50 text-green-900 dark:text-green-300 flex items-center gap-1.5">
+                    <CheckCircle2 size={13} className="text-green-600 dark:text-green-400" />
                     {t("reviews.your_published_review")}
                   </span>
-                  <span className="text-xs font-bold text-green-700">
+                  <span className="text-xs font-bold text-green-700 dark:text-green-400">
                     +{myReview.pointsEarned || 0} {t("reviews.points_earned")}
                   </span>
                 </div>
@@ -1675,13 +1675,13 @@ export default function MapDetails() {
                   onClick={handleOpenReviewModal}
                   variant="outline"
                   size="sm"
-                  className="rounded-xl font-bold text-xs border-green-300 hover:bg-green-100 text-green-900 flex items-center gap-1.5 h-8 px-3 cursor-pointer"
+                  className="rounded-xl font-bold text-xs border-green-300 dark:border-green-700 hover:bg-green-100 dark:hover:bg-green-950/40 text-green-900 dark:text-green-300 flex items-center gap-1.5 h-8 px-3 cursor-pointer"
                 >
                   <Edit3 size={13} /> {t("common.edit")}
                 </Button>
               </div>
 
-              <div className="bg-white rounded-xl p-4 border border-green-100 space-y-2">
+              <div className="bg-white dark:bg-[#0e1424] rounded-xl p-4 border border-green-100 dark:border-slate-800 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((i) => (
@@ -1691,15 +1691,15 @@ export default function MapDetails() {
                         className={
                           i <= myReview.rating
                             ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-200"
+                            : "text-gray-200 dark:text-slate-700"
                         }
                       />
                     ))}
-                    <span className="text-xs font-bold text-gray-700 ml-1.5">
+                    <span className="text-xs font-bold text-gray-700 dark:text-slate-300 ml-1.5">
                       {myReview.rating}.0
                     </span>
                   </div>
-                  <span className="text-[11px] text-gray-400">
+                  <span className="text-[11px] text-gray-400 dark:text-slate-500">
                     {new Date(myReview.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -1707,8 +1707,8 @@ export default function MapDetails() {
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-gray-800 leading-relaxed">
-                  {getLocalized(myReview.review, language) || <span className="italic text-gray-400">{t("reviews.rated_stars_only").replace("{rating}", String(myReview.rating))}</span>}
+                <p className="text-sm text-gray-800 dark:text-slate-200 leading-relaxed">
+                  {getLocalized(myReview.review, language) || <span className="italic text-gray-400 dark:text-slate-500">{t("reviews.rated_stars_only").replace("{rating}", String(myReview.rating))}</span>}
                 </p>
               </div>
             </div>
@@ -1716,14 +1716,14 @@ export default function MapDetails() {
 
           {/* Community Reviews List */}
           {isReviewsLoading ? (
-            <div className="py-12 text-center text-gray-400 space-y-2">
+            <div className="py-12 text-center text-gray-400 dark:text-slate-500 space-y-2">
               <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs font-medium">{t("reviews.loading_reviews")}</p>
             </div>
           ) : otherReviews.length === 0 && (!myReview || myReview.status !== "Approved") ? (
-            <div className="py-12 text-center text-gray-500 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200 space-y-2">
-              <p className="text-base font-bold text-gray-700">{t("reviews.no_public_reviews")}</p>
-              <p className="text-xs text-gray-400 max-w-sm mx-auto">
+            <div className="py-12 text-center text-gray-500 dark:text-slate-400 bg-gray-50/50 dark:bg-[#0e1424] rounded-2xl border border-dashed border-gray-200 dark:border-slate-800 space-y-2">
+              <p className="text-base font-bold text-gray-700 dark:text-slate-200">{t("reviews.no_public_reviews")}</p>
+              <p className="text-xs text-gray-400 dark:text-slate-500 max-w-sm mx-auto">
                 {t("reviews.first_to_share")}
               </p>
             </div>
@@ -1732,7 +1732,7 @@ export default function MapDetails() {
               {otherReviews.map((rev: any) => (
                 <div
                   key={rev._id}
-                  className="bg-gray-50/70 hover:bg-gray-50 border border-gray-100 rounded-2xl p-5 transition-all space-y-3"
+                  className="bg-gray-50/70 hover:bg-gray-50 dark:bg-[#0e1424] dark:hover:bg-slate-800/60 border border-gray-100 dark:border-slate-800/80 rounded-2xl p-5 transition-all space-y-3"
                 >
                   <div className="flex items-start justify-between gap-4">
                     {rev.reviewer?._id || rev.reviewer?.id ? (
@@ -1740,7 +1740,7 @@ export default function MapDetails() {
                         href={`/explorer/${rev.reviewer._id || rev.reviewer.id}`}
                         className="flex items-center gap-3 group/user"
                       >
-                        <Avatar className="w-11 h-11 border-2 border-white shadow-xs shrink-0 group-hover/user:scale-105 transition-transform">
+                        <Avatar className="w-11 h-11 border-2 border-white dark:border-slate-800 shadow-xs shrink-0 group-hover/user:scale-105 transition-transform">
                           <AvatarImage
                             src={getImageUrl(rev.reviewer?.profile)}
                             alt={rev.reviewer?.name}
@@ -1751,14 +1751,14 @@ export default function MapDetails() {
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-gray-900 text-sm group-hover/user:text-amber-600 transition-colors">
+                            <span className="font-bold text-gray-900 dark:text-slate-100 text-sm group-hover/user:text-amber-600 dark:group-hover/user:text-amber-400 transition-colors">
                               {rev.reviewer?.name || t("reviews.explorer")}
                             </span>
-                            <span className="text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-200/80 px-2 py-0.5 rounded-full uppercase tracking-tight">
+                            <span className="text-[10px] font-black bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/50 px-2 py-0.5 rounded-full uppercase tracking-tight">
                               {t("reviews.level")} {rev.reviewer?.level || 0}
                             </span>
                           </div>
-                          <span className="text-[11px] text-gray-400">
+                          <span className="text-[11px] text-gray-400 dark:text-slate-500">
                             {new Date(rev.createdAt).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
@@ -1769,7 +1769,7 @@ export default function MapDetails() {
                       </Link>
                     ) : (
                       <div className="flex items-center gap-3">
-                        <Avatar className="w-11 h-11 border-2 border-white shadow-xs shrink-0">
+                        <Avatar className="w-11 h-11 border-2 border-white dark:border-slate-800 shadow-xs shrink-0">
                           <AvatarImage
                             src={getImageUrl(rev.reviewer?.profile)}
                             alt={rev.reviewer?.name}
@@ -1780,14 +1780,14 @@ export default function MapDetails() {
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-gray-900 text-sm">
+                            <span className="font-bold text-gray-900 dark:text-slate-100 text-sm">
                               {rev.reviewer?.name || t("reviews.explorer")}
                             </span>
-                            <span className="text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-200/80 px-2 py-0.5 rounded-full uppercase tracking-tight">
+                            <span className="text-[10px] font-black bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/50 px-2 py-0.5 rounded-full uppercase tracking-tight">
                               {t("reviews.level")} {rev.reviewer?.level || 0}
                             </span>
                           </div>
-                          <span className="text-[11px] text-gray-400">
+                          <span className="text-[11px] text-gray-400 dark:text-slate-500">
                             {new Date(rev.createdAt).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
@@ -1798,17 +1798,17 @@ export default function MapDetails() {
                       </div>
                     )}
 
-                    <div className="flex items-center gap-1.5 bg-white border border-gray-100 px-2.5 py-1 rounded-xl shadow-2xs">
+                    <div className="flex items-center gap-1.5 bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-700 px-2.5 py-1 rounded-xl shadow-2xs">
                       <Star size={13} className="fill-yellow-400 text-yellow-400" />
-                      <span className="text-xs font-bold text-gray-900">
+                      <span className="text-xs font-bold text-gray-900 dark:text-slate-100">
                         {rev.rating}.0
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-700 leading-relaxed">
+                  <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">
                     {getLocalized(rev.review, language) || (
-                      <span className="italic text-gray-400">
+                      <span className="italic text-gray-400 dark:text-slate-500">
                         {t("reviews.rated_stars_only").replace("{rating}", String(rev.rating))}
                       </span>
                     )}

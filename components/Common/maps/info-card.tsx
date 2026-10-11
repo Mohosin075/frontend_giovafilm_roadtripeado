@@ -14,7 +14,7 @@ export default function InfoCard({
   empty,
 }: InfoProps) {
   return (
-    <div className="border rounded-xl p-2.5 md:p-3 bg-white">
+    <div className="border border-gray-200 dark:border-slate-800 rounded-xl p-2.5 md:p-3 bg-white dark:bg-[#131b2e]">
       <div className="flex flex-nowrap items-center gap-1.5 text-orange-500 mb-1">
         <span className="shrink-0">{icon}</span>
         <p className="min-w-0 text-[11px] md:text-xs text-muted-foreground font-bold font-public-sans tracking-wide leading-none">
@@ -25,10 +25,10 @@ export default function InfoCard({
       <div
         className={`font-public-sans mt-0.5 text-sm leading-snug ${
           empty
-            ? "text-gray-400 font-medium italic"
+            ? "text-gray-400 dark:text-slate-500 font-medium italic"
             : highlight
               ? "text-orange-500 font-bold"
-              : "text-gray-900 font-bold"
+              : "text-gray-900 dark:text-slate-100 font-bold"
         }`}
       >
         {value}

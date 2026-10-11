@@ -40,8 +40,8 @@ export function PlaceCard({ data }: { data: TPlace }) {
   };
 
   return (
-    <Link href={`/places/${data?._id || data?.id}`} onClick={handleClick}>
-      <div className="rounded-xl overflow-hidden bg-white border hover:shadow-lg transition">
+    <Link href={`/places/${data?._id || data?.id}`} onClick={handleClick} className="group block">
+      <div className="rounded-2xl overflow-hidden bg-white dark:bg-[#131b2e]/90 border border-gray-100 dark:border-slate-800/80 hover:dark:border-amber-400/40 hover:shadow-2xl dark:shadow-xl transition-all duration-300 backdrop-blur-md">
         {/* Image Section */}
         <div className="relative h-36 sm:h-48 md:h-64 w-full">
           {coverImage ? (
@@ -49,15 +49,15 @@ export function PlaceCard({ data }: { data: TPlace }) {
               src={coverImage}
               alt={data?.isLocked ? "Premium Location" : getLocalized(data?.name, language)}
               fill
-              className="hover:scale-105 transition-all"
+              className="hover:scale-105 transition-all duration-500"
             />
           ) : (
             <NoImage />
           )}
  
           {/* Rating Badge */}
-          <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full flex items-center gap-1 text-sm font-medium shadow">
-            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+          <div className="absolute top-3 right-3 bg-white/95 dark:bg-[#0b0f19]/90 text-gray-900 dark:text-slate-100 border border-gray-100/50 dark:border-slate-800/80 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-bold shadow-md backdrop-blur-md">
+            <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
             {data?.isLocked ? "—" : parseFloat(data?.rating?.toFixed(1))}
           </div>
  
@@ -71,19 +71,19 @@ export function PlaceCard({ data }: { data: TPlace }) {
         </div>
  
         {/* Content */}
-        <div className="p-2.5 md:p-4 font-inter">
-          <h3 className="font-semibold text-sm md:text-lg line-clamp-2">
+        <div className="p-3 md:p-4 font-inter">
+          <h3 className="font-bold text-sm md:text-lg text-gray-900 dark:text-slate-100 group-hover:text-[#fabf13] transition-colors line-clamp-2">
             {data?.isLocked ? `🔒 ${t("map.unlock_full_map")}` : getLocalized(data?.name, language)}
           </h3>
  
-          <div className="flex items-start text-gray-500 text-xs md:text-sm mt-1 gap-1">
-            <MapPin size={14} className="shrink-0 mt-0.5" />
+          <div className="flex items-start text-gray-500 dark:text-slate-400 text-xs md:text-sm mt-1.5 gap-1.5">
+            <MapPin size={14} className="shrink-0 mt-0.5 text-amber-500" />
             <span className="line-clamp-2">
               {data?.isLocked ? t("map.unlock_full_map") : getLocalized(data?.address, language)}
             </span>
           </div>
  
-          <p className="text-gray-400 text-xs md:text-sm mt-1 line-clamp-1">
+          <p className="text-gray-400 dark:text-slate-500 text-xs md:text-sm mt-1.5 line-clamp-1">
             {data?.isLocked
               ? t("map.unlock_full_map")
               : `${data?.totalReview} ${t("place.reviews")} • ${getLocalized(data?.category?.name, language)}`}

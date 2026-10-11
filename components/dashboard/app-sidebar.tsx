@@ -12,6 +12,7 @@ import {
 
 import Image from "next/image";
 import logo from "@/public/logo.png";
+import whiteLogo from "@/public/white-logo.png";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -79,16 +80,25 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="h-screen bg-[#f5f5f5] border-r border-gray-300/50">
+    <Sidebar className="h-screen bg-[#f5f5f5] dark:bg-[#0e1526] border-r border-gray-300/50 dark:border-slate-800">
       {/* Logo */}
-      <div className="py-3 flex justify-center border-b border-gray-300/50">
+      <div className="py-3 flex justify-center border-b border-gray-300/50 dark:border-slate-800">
         <Link href="/maps">
           <Image
             src={logo}
             alt="Dashboard Logo"
             height={200}
             width={200}
-            className="w-48 h-auto"
+            className="w-48 h-auto block dark:hidden"
+            priority
+          />
+          <Image
+            src={whiteLogo}
+            alt="Dashboard Logo"
+            height={200}
+            width={200}
+            className="w-48 h-auto hidden dark:block"
+            priority
           />
         </Link>
       </div>
@@ -113,7 +123,7 @@ export function AppSidebar() {
                     ${
                       isActive
                         ? "bg-primary text-black shadow-md"
-                        : "text-black hover:bg-primary!"
+                        : "text-black dark:text-zinc-200 hover:text-black hover:bg-primary!"
                     }                        
           `}
                       >
@@ -136,7 +146,7 @@ export function AppSidebar() {
             <SidebarMenuButton asChild>
               <button
                 onClick={handleLogout}
-                className="relative w-full flex items-center gap-2.5 px-4 py-6! text-lg! rounded-2xl font-medium transition-all text-black hover:bg-primary!"
+                className="relative w-full flex items-center gap-2.5 px-4 py-6! text-lg! rounded-2xl font-medium transition-all text-black dark:text-zinc-200 hover:text-black hover:bg-primary!"
               >
                 <LogOut className="size-6!" />
                 <span>{t("nav.logout")}</span>

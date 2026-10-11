@@ -93,17 +93,17 @@ export default function LanguageSwitcher({
           setIsOpen((prev) => !prev);
         }}
         className={cn(
-          "group inline-flex items-center gap-1.5 rounded-full bg-gray-100/90 hover:bg-gray-200/80 active:bg-gray-300/80 border border-gray-200 text-gray-900 font-semibold cursor-pointer transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#FFC107] select-none shrink-0 shadow-2xs touch-manipulation",
+          "group inline-flex items-center gap-1.5 rounded-full bg-gray-100/90 dark:bg-[#131b2e] hover:bg-gray-200/80 dark:hover:bg-slate-800 active:bg-gray-300/80 dark:active:bg-slate-700 border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 font-semibold cursor-pointer transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#fabf13] select-none shrink-0 shadow-sm touch-manipulation",
           isSmall ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-xs sm:text-sm",
           className
         )}
       >
-        {showIcon && <Globe className="w-3.5 h-3.5 text-gray-500" />}
+        {showIcon && <Globe className="w-3.5 h-3.5 text-gray-500 dark:text-slate-400" />}
         <CurrentFlag className="w-4 h-3 rounded-[2px] shadow-2xs shrink-0" />
         <span className="font-bold tracking-wide">{currentLang.label}</span>
         <ChevronDown
           className={cn(
-            "w-3.5 h-3.5 text-gray-500 transition-transform duration-200",
+            "w-3.5 h-3.5 text-gray-500 dark:text-slate-400 transition-transform duration-200",
             isOpen && "rotate-180"
           )}
         />
@@ -112,9 +112,9 @@ export default function LanguageSwitcher({
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-1.5 w-44 p-1.5 rounded-2xl bg-white border border-gray-100 shadow-2xl z-[120] animate-in fade-in-50 zoom-in-95 origin-top-right pointer-events-auto"
+          className="absolute right-0 top-full mt-1.5 w-44 p-1.5 rounded-2xl bg-white dark:bg-[#131b2e]/95 backdrop-blur-xl border border-gray-100 dark:border-slate-800 shadow-2xl z-[120] animate-in fade-in-50 zoom-in-95 origin-top-right pointer-events-auto"
         >
-          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 select-none">
+          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 select-none">
             Language / Idioma
           </div>
           {languages.map((item) => {
@@ -133,8 +133,8 @@ export default function LanguageSwitcher({
                 className={cn(
                   "w-full flex items-center justify-between px-2.5 py-2 rounded-xl cursor-pointer text-xs sm:text-sm font-medium transition-colors my-0.5 text-left",
                   isActive
-                    ? "bg-[#FFF9E6] text-black font-bold border border-[#FFE082]"
-                    : "text-gray-700 hover:bg-gray-100 active:bg-gray-200"
+                    ? "bg-[#FFF9E6] dark:bg-amber-950/40 text-black dark:text-amber-300 font-bold border border-[#FFE082] dark:border-amber-600/50"
+                    : "text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800/80 active:bg-gray-200 dark:active:bg-slate-700"
                 )}
               >
                 <div className="flex items-center gap-2.5">

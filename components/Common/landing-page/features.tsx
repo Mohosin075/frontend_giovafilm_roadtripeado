@@ -70,17 +70,17 @@ export function Features() {
   ];
 
   return (
-    <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden font-inter">
+    <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden font-inter bg-white dark:bg-[#0b0f19] transition-colors">
       {/* Curved Background Shape */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 right-0 w-full h-full bg-[#FFFDF5] clip-path-hero"></div>
+        <div className="absolute top-0 right-0 w-full h-full bg-[#FFFDF5] dark:bg-[#0e1424]/60 clip-path-hero transition-colors"></div>
       </div>
 
       <div className="relative z-10 max-w-360 mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
         {/* Left Content */}
         <div>
           <motion.h2
-            className="text-3xl sm:text-4xl lg:text-4.5xl font-bold text-gray-900 leading-tight mb-4 sm:mb-6 tracking-tight"
+            className="text-3xl sm:text-4xl lg:text-4.5xl font-bold text-gray-900 dark:text-slate-100 leading-tight mb-4 sm:mb-6 tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -90,7 +90,7 @@ export function Features() {
           </motion.h2>
 
           <motion.p
-            className="text-gray-500 text-sm sm:text-base leading-relaxed mb-8 sm:mb-12 max-w-lg"
+            className="text-gray-500 dark:text-slate-400 text-sm sm:text-base leading-relaxed mb-8 sm:mb-12 max-w-lg"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -113,15 +113,15 @@ export function Features() {
                 variants={itemVariants}
               >
                 <div
-                  className={`${feature.color} p-2 rounded-lg text-black shrink-0 shadow-xs mt-0.5`}
+                  className={`${feature.color} p-2 rounded-lg text-black shrink-0 shadow-md shadow-amber-500/20 mt-0.5`}
                 >
                   <feature.icon size={18} fill="currentColor" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-gray-900 mb-1">
+                  <h4 className="font-bold text-base text-gray-900 dark:text-slate-100 mb-1">
                     {feature.title}
                   </h4>
-                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 leading-relaxed font-medium">
                     {feature.description}
                   </p>
                 </div>
