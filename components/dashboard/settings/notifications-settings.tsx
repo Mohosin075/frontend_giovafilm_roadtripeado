@@ -36,9 +36,9 @@ export function NotificationSettings() {
 
   if (isProfileLoading) {
     return (
-      <Card className="bg-white">
+      <Card className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800">
         <CardHeader>
-          <CardTitle>{t("settings_admin.notifications")}</CardTitle>
+          <CardTitle className="text-gray-900 dark:text-slate-100">{t("settings_admin.notifications")}</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center p-8">
           <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
@@ -52,16 +52,16 @@ export function NotificationSettings() {
   const weeklyReports = profile?.settings?.weeklyReports ?? true;
 
   return (
-    <Card className="bg-white">
+    <Card className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800">
       <CardHeader>
-        <CardTitle>{t("settings_admin.notifications")}</CardTitle>
+        <CardTitle className="text-gray-900 dark:text-slate-100">{t("settings_admin.notifications")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium">{t("settings_admin.email_notifications")}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="font-medium text-gray-900 dark:text-slate-100">{t("settings_admin.email_notifications")}</p>
+            <p className="text-sm text-muted-foreground dark:text-slate-400">
               {t("settings_admin.email_desc")}
             </p>
           </div>
@@ -74,8 +74,8 @@ export function NotificationSettings() {
 
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium">{t("settings_admin.push_notifications")}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="font-medium text-gray-900 dark:text-slate-100">{t("settings_admin.push_notifications")}</p>
+            <p className="text-sm text-muted-foreground dark:text-slate-400">
               {t("settings_admin.push_desc")}
             </p>
           </div>
@@ -88,8 +88,8 @@ export function NotificationSettings() {
 
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium">{t("settings_admin.weekly_reports")}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="font-medium text-gray-900 dark:text-slate-100">{t("settings_admin.weekly_reports")}</p>
+            <p className="text-sm text-muted-foreground dark:text-slate-400">
               {t("settings_admin.weekly_desc")}
             </p>
           </div>

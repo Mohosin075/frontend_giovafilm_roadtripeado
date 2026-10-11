@@ -445,10 +445,10 @@ export default function PromosPage() {
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 flex items-center gap-2">
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-slate-100 flex items-center gap-2">
             <Ticket className="w-8 h-8 text-primary" /> {t("promos_admin.title") || "Promo & Invitation Links"}
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
             {t("promos_admin.subtitle") || "Differentiate and manage unique invitation codes for influencers and customer upgrades."}
           </p>
         </div>
@@ -456,7 +456,7 @@ export default function PromosPage() {
           <Button
             onClick={handleExportCSV}
             variant="outline"
-            className="flex items-center gap-2 border-gray-300 hover:bg-gray-50 rounded-xl"
+            className="flex items-center gap-2 border-gray-300 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800 dark:text-slate-200 rounded-xl"
           >
             <FileSpreadsheet size={16} /> {t("promos_admin.export_csv") || "Export CSV"}
           </Button>
@@ -466,7 +466,7 @@ export default function PromosPage() {
               refetchStats();
             }}
             variant="outline"
-            className="flex items-center gap-2 border-gray-300 hover:bg-gray-50 rounded-xl"
+            className="flex items-center gap-2 border-gray-300 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800 dark:text-slate-200 rounded-xl"
           >
             <RefreshCw size={16} className={isFetchingPromos ? "animate-spin" : ""} /> {t("promos_admin.refresh") || "Refresh"}
           </Button>
@@ -477,51 +477,51 @@ export default function PromosPage() {
       {statsRes?.data && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Total Promo Invites */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-[#131b2e] p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400">{t("promos_admin.total_generated") || "Total Generated"}</span>
-              <h3 className="text-2xl font-black text-gray-900">{statsRes.data.total}</h3>
-              <p className="text-[10px] text-gray-500">{t("promos_admin.codes_in_system") || "invitation codes in system"}</p>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400 dark:text-slate-500">{t("promos_admin.total_generated") || "Total Generated"}</span>
+              <h3 className="text-2xl font-black text-gray-900 dark:text-slate-100">{statsRes.data.total}</h3>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400">{t("promos_admin.codes_in_system") || "invitation codes in system"}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center shrink-0">
               <Ticket size={24} />
             </div>
           </div>
 
           {/* Card 2: Old Customer Upgrades ($5) */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-[#131b2e] p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400">{t("promos_admin.customer_upgrades") || "Customer Upgrades"}</span>
-              <h3 className="text-2xl font-black text-gray-900">{statsRes.data.upgrade}</h3>
-              <p className="text-[10px] text-gray-500">{t("promos_admin.upgrade_links_generated") || "upgrade links generated"}</p>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400 dark:text-slate-500">{t("promos_admin.customer_upgrades") || "Customer Upgrades"}</span>
+              <h3 className="text-2xl font-black text-gray-900 dark:text-slate-100">{statsRes.data.upgrade}</h3>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400">{t("promos_admin.upgrade_links_generated") || "upgrade links generated"}</p>
             </div>
-            <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center shrink-0">
               <ArrowUpCircle size={24} />
             </div>
           </div>
 
           {/* Card 3: Influencer Invites ($0) */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-[#131b2e] p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400">{t("promos_admin.influencer_invites") || "Influencer Invites"}</span>
-              <h3 className="text-2xl font-black text-gray-900">{statsRes.data.influencer}</h3>
-              <p className="text-[10px] text-gray-500">{t("promos.guest_passes_in_system") || "free guest passes in system"}</p>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400 dark:text-slate-500">{t("promos_admin.influencer_invites") || "Influencer Invites"}</span>
+              <h3 className="text-2xl font-black text-gray-900 dark:text-slate-100">{statsRes.data.influencer}</h3>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400">{t("promos.guest_passes_in_system") || "free guest passes in system"}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center shrink-0">
               <UserCheck size={24} />
             </div>
           </div>
 
           {/* Card 4: Conversion Rate / Claims */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-[#131b2e] p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400">{t("promos_admin.used_claimed") || "Claimed & Redeemed"}</span>
-              <h3 className="text-2xl font-black text-emerald-600">
-                {statsRes.data.used} <span className="text-xs font-bold text-gray-400">({Math.round((statsRes.data.used / (statsRes.data.total || 1)) * 100)}%)</span>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400 dark:text-slate-500">{t("promos_admin.used_claimed") || "Claimed & Redeemed"}</span>
+              <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                {statsRes.data.used} <span className="text-xs font-bold text-gray-400 dark:text-slate-500">({Math.round((statsRes.data.used / (statsRes.data.total || 1)) * 100)}%)</span>
               </h3>
-              <p className="text-[10px] text-gray-500">{statsRes.data.unused} {t("promos_admin.codes_active_unused") || "codes active/unused"}</p>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400">{statsRes.data.unused} {t("promos_admin.codes_active_unused") || "codes active/unused"}</p>
             </div>
-            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center shrink-0">
               <TrendingUp size={24} />
             </div>
           </div>
@@ -529,28 +529,28 @@ export default function PromosPage() {
       )}
 
       {/* Guide/Helper Info Box */}
-      <div className="bg-blue-50/50 rounded-2xl border border-blue-100 p-5 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-blue-900">
+      <div className="bg-blue-50/50 dark:bg-slate-900/60 rounded-2xl border border-blue-100 dark:border-slate-800 p-5 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-blue-900 dark:text-blue-200">
         <div className="space-y-1">
-          <h4 className="font-bold flex items-center gap-1.5 text-blue-950">
-            <HelpCircle size={14} className="text-blue-600" /> 1. {t("promos_admin.distinguish_invites") || "Distinguish Invites"}
+          <h4 className="font-bold flex items-center gap-1.5 text-blue-950 dark:text-blue-100">
+            <HelpCircle size={14} className="text-blue-600 dark:text-blue-400" /> 1. {t("promos_admin.distinguish_invites") || "Distinguish Invites"}
           </h4>
-          <p className="text-blue-800 leading-relaxed">
+          <p className="text-blue-800 dark:text-slate-300 leading-relaxed">
             {t("promos_admin.distinguish_desc") || "Use the Link Type Tabs to choose between Influencers (locked to $0) and Customers (locked to $5). The campaign label helps you filter them later in the list."}
           </p>
         </div>
         <div className="space-y-1">
-          <h4 className="font-bold flex items-center gap-1.5 text-blue-950">
-            <Send size={14} className="text-blue-600" /> 2. {t("promos_admin.bulk_invitation_flow") || "Bulk Invitation Flow"}
+          <h4 className="font-bold flex items-center gap-1.5 text-blue-950 dark:text-blue-100">
+            <Send size={14} className="text-blue-600 dark:text-blue-400" /> 2. {t("promos_admin.bulk_invitation_flow") || "Bulk Invitation Flow"}
           </h4>
-          <p className="text-blue-800 leading-relaxed">
+          <p className="text-blue-800 dark:text-slate-300 leading-relaxed">
             {t("promos_admin.bulk_invitation_desc") || "Paste your list of emails into the recipient emails textarea. Click Generate Links to create one unique secure link for each email."}
           </p>
         </div>
         <div className="space-y-1">
-          <h4 className="font-bold flex items-center gap-1.5 text-blue-950">
-            <CheckCircle size={14} className="text-blue-600" /> 3. {t("promos_admin.sending_and_tracking") || "Sending and Tracking"}
+          <h4 className="font-bold flex items-center gap-1.5 text-blue-950 dark:text-blue-100">
+            <CheckCircle size={14} className="text-blue-600 dark:text-blue-400" /> 3. {t("promos_admin.sending_and_tracking") || "Sending and Tracking"}
           </h4>
-          <p className="text-blue-800 leading-relaxed">
+          <p className="text-blue-800 dark:text-slate-300 leading-relaxed">
             {t("promos_admin.sending_tracking_desc") || "Click Send Pending Invites to trigger automatic background emails. In the list, you can see both the sent recipient email and who claimed it."}
           </p>
         </div>
@@ -558,24 +558,24 @@ export default function PromosPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Bulk Generator Card Form */}
-        <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 lg:col-span-1 h-fit space-y-6">
+        <div className="bg-white dark:bg-[#131b2e] rounded-3xl border border-gray-200 dark:border-slate-800 shadow-sm p-6 lg:col-span-1 h-fit space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <Plus size={20} className="text-primary" /> {t("promos_admin.generate_links") || "Generate Invitation"}
             </h2>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
               {t("promos_admin.select_invitation_type_hint") || "Select invitation type to automatically pre-configure rules."}
             </p>
           </div>
 
           {/* Link Type Tab Switchers */}
-          <div className="grid grid-cols-3 gap-1 p-1 bg-gray-100 rounded-2xl">
+          <div className="grid grid-cols-3 gap-1 p-1 bg-gray-100 dark:bg-slate-900/80 rounded-2xl">
             <button
               type="button"
               onClick={() => handleTypeChange("upgrade")}
-              className={`py-2 text-[10px] md:text-xs font-bold rounded-xl transition-all ${promoType === "upgrade"
-                  ? "bg-white text-black shadow-sm"
-                  : "text-gray-500 hover:text-gray-800"
+              className={`py-2 text-[10px] md:text-xs font-bold rounded-xl transition-all cursor-pointer ${promoType === "upgrade"
+                  ? "bg-white dark:bg-slate-800 text-black dark:text-slate-100 shadow-sm"
+                  : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
             >
               {t("promos_admin.customer_5") || "Customer ($5)"}
@@ -583,9 +583,9 @@ export default function PromosPage() {
             <button
               type="button"
               onClick={() => handleTypeChange("influencer")}
-              className={`py-2 text-[10px] md:text-xs font-bold rounded-xl transition-all ${promoType === "influencer"
-                  ? "bg-white text-black shadow-sm"
-                  : "text-gray-500 hover:text-gray-800"
+              className={`py-2 text-[10px] md:text-xs font-bold rounded-xl transition-all cursor-pointer ${promoType === "influencer"
+                  ? "bg-white dark:bg-slate-800 text-black dark:text-slate-100 shadow-sm"
+                  : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
             >
               {t("promos_admin.influencer_0") || "Influencer ($0)"}
@@ -593,9 +593,9 @@ export default function PromosPage() {
             <button
               type="button"
               onClick={() => handleTypeChange("custom")}
-              className={`py-2 text-[10px] md:text-xs font-bold rounded-xl transition-all ${promoType === "custom"
-                  ? "bg-white text-black shadow-sm"
-                  : "text-gray-500 hover:text-gray-800"
+              className={`py-2 text-[10px] md:text-xs font-bold rounded-xl transition-all cursor-pointer ${promoType === "custom"
+                  ? "bg-white dark:bg-slate-800 text-black dark:text-slate-100 shadow-sm"
+                  : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
             >
               {t("promos_admin.custom_offer") || "Custom Offer"}
@@ -605,16 +605,16 @@ export default function PromosPage() {
           <form onSubmit={handleGenerate} className="space-y-4 pt-2">
             {/* Target Map Selector */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 uppercase">{t("promos_admin.target_map") || "Target Map"} *</label>
+              <label className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase">{t("promos_admin.target_map") || "Target Map"} *</label>
               <select
                 required
                 value={selectedMapId}
                 onChange={(e) => setSelectedMapId(e.target.value)}
-                className="w-full h-10 px-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white"
+                className="w-full h-10 px-3 border border-gray-300 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white dark:bg-slate-900 dark:text-slate-100 cursor-pointer"
               >
-                <option value="">{t("promos_admin.select_road_trip_map") || "-- Select Road Trip Map --"}</option>
+                <option value="" className="dark:bg-slate-900">{t("promos_admin.select_road_trip_map") || "-- Select Road Trip Map --"}</option>
                 {maps.map((map: any) => (
-                  <option key={map._id} value={map._id}>
+                  <option key={map._id} value={map._id} className="dark:bg-slate-900">
                     {getSafeString(map.name, language)}
                   </option>
                 ))}
@@ -623,9 +623,9 @@ export default function PromosPage() {
 
             {/* Price (Enabled only for custom) */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 uppercase">{t("promos_admin.price") || "Price (USD)"} *</label>
+              <label className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase">{t("promos_admin.price") || "Price (USD)"} *</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm">$</span>
                 <Input
                   required
                   type="number"
@@ -635,11 +635,11 @@ export default function PromosPage() {
                   placeholder="e.g. 5.00"
                   value={price}
                   onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-                  className={`pl-7 h-10 rounded-xl ${promoType !== "custom" ? "bg-gray-50 text-gray-500 cursor-not-allowed" : ""
+                  className={`pl-7 h-10 rounded-xl dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100 ${promoType !== "custom" ? "bg-gray-50 dark:bg-slate-950 text-gray-500 dark:text-slate-500 cursor-not-allowed" : ""
                     }`}
                 />
               </div>
-              <p className="text-[10px] text-gray-400 leading-tight">
+              <p className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight">
                 {promoType === "upgrade" && (t("promos_admin.price_locked_5") || "Price locked to $5.00 for standard customer upgrades.")}
                 {promoType === "influencer" && (t("promos_admin.price_locked_0") || "Price locked to $0.00 for free influencer invites.")}
                 {promoType === "custom" && (t("promos_admin.modify_target_price") || "Modify target price for custom marketing bundles.")}
@@ -648,38 +648,38 @@ export default function PromosPage() {
 
             {/* Label */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 uppercase">{t("promos_admin.label") || "Label / Campaign"} *</label>
+              <label className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase">{t("promos_admin.label") || "Label / Campaign"} *</label>
               <Input
                 required
                 type="text"
                 placeholder={t("promos_admin.campaign_label_placeholder") || "e.g. Sarah VLOG Campaign, Batch 1 Upgrades"}
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
-                className="h-10 rounded-xl"
+                className="h-10 rounded-xl dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100"
               />
             </div>
 
             {/* Target Emails Textarea — Live UX */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-gray-700 uppercase">{t("promos_admin.target_emails") || "Target Emails"} *</label>
+                <label className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase">{t("promos_admin.target_emails") || "Target Emails"} *</label>
                 {/* Live email counter badge */}
                 {emailsText.trim() && (() => {
                   const parsed = emailsText
-                    .split(/[\n,]+/)
-                    .map(e => e.trim())
-                    .filter(e => e.length > 0);
+                     .split(/[\n,]+/)
+                     .map(e => e.trim())
+                     .filter(e => e.length > 0);
                   const valid = parsed.filter(e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
                   const invalid = parsed.length - valid.length;
                   return (
                     <div className="flex items-center gap-1.5">
                       {valid.length > 0 && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
                           ✓ {valid.length} {t("promos_admin.valid_count") || "valid"}
                         </span>
                       )}
                       {invalid > 0 && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-red-50 text-red-600 border border-red-100">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-300 border border-red-100 dark:border-red-900/50">
                           ✗ {invalid} {t("promos_admin.invalid_count") || "invalid"}
                         </span>
                       )}
@@ -693,23 +693,23 @@ export default function PromosPage() {
                 value={emailsText}
                 onChange={(e) => setEmailsText(e.target.value)}
                 rows={4}
-                className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 text-sm bg-white transition-colors duration-200 ${
+                className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 text-sm bg-white dark:bg-slate-900 dark:text-slate-100 transition-colors duration-200 ${
                   !emailsText.trim()
-                    ? "border-gray-300 focus:ring-primary/50"
+                    ? "border-gray-300 dark:border-slate-800 focus:ring-primary/50"
                     : (() => {
                         const valid = emailsText.split(/[\n,]+/).map(e => e.trim()).filter(e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
                         return valid.length > 0
-                          ? "border-emerald-400 focus:ring-emerald-400/40 bg-emerald-50/30"
-                          : "border-red-400 focus:ring-red-400/40 bg-red-50/30";
+                          ? "border-emerald-400 focus:ring-emerald-400/40 bg-emerald-50/30 dark:bg-emerald-950/20"
+                          : "border-red-400 focus:ring-red-400/40 bg-red-50/30 dark:bg-red-950/20";
                       })()
                 }`}
               />
               <p className={`text-[10px] leading-tight transition-colors ${
                 !emailsText.trim()
-                  ? "text-gray-400"
+                  ? "text-gray-400 dark:text-slate-500"
                   : (() => {
-                      const valid = emailsText.split(/[\n,]+/).map(e => e.trim()).filter(e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
-                      return valid.length > 0 ? "text-emerald-600 font-medium" : "text-red-500 font-medium";
+                      const valid = emailsText.split(/[\n,]+/).map(e => e.trim()).filter(e => e.length > 0);
+                      return valid.length > 0 ? "text-emerald-600 dark:text-emerald-400 font-medium" : "text-red-500 dark:text-red-400 font-medium";
                     })()
               }`}>
                 {!emailsText.trim()
@@ -727,21 +727,21 @@ export default function PromosPage() {
 
             {/* Expiry Date */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 uppercase flex items-center gap-1">
+              <label className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase flex items-center gap-1">
                 <Calendar size={12} /> {t("promos_admin.expiration_date_optional") || "Expiration Date (Optional)"}
               </label>
               <Input
                 type="date"
                 value={expiresAt}
                 onChange={(e) => setExpiresAt(e.target.value)}
-                className="h-10 rounded-xl"
+                className="h-10 rounded-xl dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100"
               />
             </div>
 
             <Button
               type="submit"
               disabled={isGenerating}
-              className="w-full h-10 bg-primary hover:bg-primary/90 text-black font-extrabold rounded-xl transition-all shadow-sm mt-4"
+              className="w-full h-10 bg-primary hover:bg-primary/90 text-black font-extrabold rounded-xl transition-all shadow-sm mt-4 cursor-pointer"
             >
               {isGenerating ? (t("common.loading") || "Processing...") : (t("promos_admin.generate_links") || "Generate Links")}
             </Button>
@@ -749,11 +749,11 @@ export default function PromosPage() {
         </div>
 
         {/* Tracking Table list */}
-        <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 lg:col-span-2 flex flex-col space-y-6">
+        <div className="bg-white dark:bg-[#131b2e] rounded-3xl border border-gray-200 dark:border-slate-800 shadow-sm p-6 lg:col-span-2 flex flex-col space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">{t("promos_admin.track_invitations") || "Track Invitations"}</h2>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">{t("promos_admin.track_invitations") || "Track Invitations"}</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                 {t("promos_admin.distinguish_realtime_hint") || "Distinguish influencer passes from customer upgrades in real-time."}
               </p>
             </div>
@@ -773,7 +773,7 @@ export default function PromosPage() {
                   className={`text-xs px-4 py-2 rounded-xl flex items-center gap-2 h-9 self-end md:self-auto font-bold transition-all ${
                     !isDisabled
                       ? "bg-amber-400 hover:bg-amber-500 text-black shadow-sm"
-                      : "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed opacity-60"
+                      : "bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 border border-gray-200 dark:border-slate-700 cursor-not-allowed opacity-60"
                   }`}
                   title={
                     isSendingEmails
@@ -783,13 +783,13 @@ export default function PromosPage() {
                       : "No pending emails to send in current list"
                   }
                 >
-                  <Send size={13} className={isSendingEmails ? "animate-spin text-gray-400" : pendingCount > 0 ? "animate-pulse" : ""} />
+                  <Send size={13} className={isSendingEmails ? "animate-spin text-gray-400 dark:text-slate-500" : pendingCount > 0 ? "animate-pulse" : ""} />
                   <span>{isSendingEmails ? (t("common.loading") || "Sending Invites...") : (t("promos_admin.send_pending_invites") || "Send Pending Invites")}</span>
                   <span
                     className={`px-2 py-0.5 text-[10px] font-black rounded-full ${
                       !isDisabled
                         ? "bg-black/10 text-black"
-                        : "bg-gray-200 text-gray-500"
+                        : "bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-slate-400"
                     }`}
                   >
                     {isSendingEmails ? "..." : pendingCount}
@@ -800,10 +800,10 @@ export default function PromosPage() {
           </div>
 
           {/* Table Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50 dark:bg-slate-900/60 border border-transparent dark:border-slate-800/80 p-4 rounded-2xl">
             {/* Search */}
             <div className="relative md:col-span-2">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
               <Input
                 placeholder={t("promos_admin.search_promos_placeholder") || "Search code, email, label..."}
                 value={searchTerm}
@@ -811,7 +811,7 @@ export default function PromosPage() {
                   setSearchTerm(e.target.value);
                   setPage(1);
                 }}
-                className="pl-10 h-10 rounded-xl bg-white border-gray-200"
+                className="pl-10 h-10 rounded-xl bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
               />
             </div>
 
@@ -822,7 +822,7 @@ export default function PromosPage() {
                 setTypeFilter(e.target.value);
                 setPage(1);
               }}
-              className="h-10 px-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-xs bg-white"
+              className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-xs bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100"
             >
               <option value="">{t("promos_admin.all_types") || "All invitation types"}</option>
               <option value="upgrade">{t("promos_admin.customer_5") || "Customer ($5)"}</option>
@@ -837,7 +837,7 @@ export default function PromosPage() {
                 setIsUsedFilter(e.target.value);
                 setPage(1);
               }}
-              className="h-10 px-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-xs bg-white"
+              className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-xs bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100"
             >
               <option value="">{t("promos_admin.all_statuses") || "All statuses"}</option>
               <option value="false">{t("promos_admin.active_unused") || "Active / Unused"}</option>
@@ -846,10 +846,10 @@ export default function PromosPage() {
           </div>
 
           {/* Table Grid */}
-          <div className="overflow-x-auto border border-gray-100 rounded-2xl">
+          <div className="overflow-x-auto border border-gray-100 dark:border-slate-800 rounded-2xl">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100 text-[10px] font-extrabold text-gray-500 uppercase tracking-wider">
+                <tr className="bg-gray-50 dark:bg-slate-900/60 border-b border-gray-100 dark:border-slate-800 text-[10px] font-extrabold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                   <th className="p-4">{t("promos_admin.link_code") || "Link / Code"}</th>
                   <th className="p-4">{t("promos_admin.type") || "Type"}</th>
                   <th className="p-4">{t("promos_admin.target_map") || "Target Map"}</th>
@@ -860,16 +860,16 @@ export default function PromosPage() {
                   <th className="p-4 text-right">{t("promos_admin.invite") || "Invite"}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-xs text-gray-700">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80 text-xs text-gray-700 dark:text-slate-300">
                 {isLoadingPromos ? (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-gray-400">
+                    <td colSpan={8} className="p-8 text-center text-gray-400 dark:text-slate-500">
                       {t("promos_admin.loading_details") || "Loading details..."}
                     </td>
                   </tr>
                 ) : promoLinks.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-gray-400">
+                    <td colSpan={8} className="p-8 text-center text-gray-400 dark:text-slate-500">
                       {t("promos_admin.no_records_found") || "No matching records found."}
                     </td>
                   </tr>
@@ -885,15 +885,15 @@ export default function PromosPage() {
                         key={promo._id}
                         className={`transition-colors ${
                           isPendingEmail
-                            ? "bg-amber-50/30 hover:bg-amber-50/50"
+                            ? "bg-amber-50/30 dark:bg-amber-950/20 hover:bg-amber-50/50 dark:hover:bg-amber-950/30"
                             : isEmailSent
-                            ? "bg-blue-50/10 hover:bg-blue-50/30"
-                            : "hover:bg-gray-50/30"
+                            ? "bg-blue-50/10 dark:bg-blue-950/20 hover:bg-blue-50/30 dark:hover:bg-blue-950/30"
+                            : "hover:bg-gray-50/30 dark:hover:bg-slate-800/30"
                         }`}
                       >
                         <td className="p-4 font-mono font-bold text-xs">
                           <div className="flex flex-col gap-1">
-                            <span className="text-gray-900">{promo.code}</span>
+                            <span className="text-gray-900 dark:text-slate-100">{promo.code}</span>
                             <div className="flex items-center gap-1.5">
                               <button
                                 onClick={() => handleCopyLink(promo.code)}
@@ -902,10 +902,10 @@ export default function PromosPage() {
                               >
                                 <Copy size={10} /> {t("promos_admin.url") || "URL"}
                               </button>
-                              <span className="text-gray-300">|</span>
+                              <span className="text-gray-300 dark:text-slate-700">|</span>
                               <button
                                 onClick={() => handleCopyCode(promo.code)}
-                                className="text-[10px] text-gray-400 hover:text-gray-600 flex items-center gap-0.5"
+                                className="text-[10px] text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 flex items-center gap-0.5"
                                 title={t("promos_admin.copy_code") || "Copy code"}
                               >
                                 <Copy size={10} /> {t("promos_admin.code") || "Code"}
@@ -915,45 +915,45 @@ export default function PromosPage() {
                         </td>
                         <td className="p-4">
                           {promo.promoType === "influencer" ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-xl bg-purple-50 text-purple-700 border border-purple-100">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-800/60">
                               <UserCheck size={10} /> {t("promos_admin.influencer") || "Influencer"}
                             </span>
                           ) : promo.promoType === "upgrade" ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-xl bg-blue-50 text-blue-700 border border-blue-100">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800/60">
                               <ArrowUpCircle size={10} /> {t("promos_admin.customer_5") || "Customer ($5)"}
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-xl bg-gray-50 text-gray-700 border border-gray-200">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-xl bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700">
                               <Settings size={10} /> {t("promos_admin.custom_offer") || "Custom Offer"}
                             </span>
                           )}
                         </td>
-                        <td className="p-4 font-bold text-gray-900">
+                        <td className="p-4 font-bold text-gray-900 dark:text-slate-100">
                           {getSafeString(promo.mapId?.name, language) || "N/A"}
                         </td>
-                        <td className="p-4 font-bold text-gray-900">
+                        <td className="p-4 font-bold text-gray-900 dark:text-slate-100">
                           ${promo.price.toFixed(2)}
                         </td>
-                        <td className="p-4 max-w-[100px] truncate" title={promo.label}>
+                        <td className="p-4 max-w-[100px] truncate text-gray-700 dark:text-slate-300" title={promo.label}>
                           {promo.label}
                         </td>
                         <td className="p-4 max-w-[200px] truncate">
                           <div className="flex flex-col gap-1 items-start">
-                            <span className="text-gray-900 font-semibold" title={promo.recipientEmail || (t("promos_admin.generic_no_email") || "Generic (No email)")}>
+                            <span className="text-gray-900 dark:text-slate-200 font-semibold" title={promo.recipientEmail || (t("promos_admin.generic_no_email") || "Generic (No email)")}>
                               {promo.recipientEmail || (t("promos_admin.generic_no_email") || "Generic (No email)")}
                             </span>
                             {isPendingEmail && (
-                              <span className="inline-flex items-center gap-1 text-[9px] font-bold text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-full border border-amber-200">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-bold text-amber-800 dark:text-amber-300 bg-amber-100/90 dark:bg-amber-950/40 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/60">
                                 <Send size={9} /> {t("promos_admin.pending_email_send") || "Pending Email Send"}
                               </span>
                             )}
                             {isEmailSent && (
-                              <span className="inline-flex items-center gap-1 text-[9px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800/60">
                                 <CheckCircle size={9} /> {t("promos_admin.email_sent") || "Email Sent"}
                               </span>
                             )}
                             {promo.isUsed && promo.usedBy?.email && (
-                              <span className="text-[10px] text-gray-400 font-medium" title={`Claimed by: ${promo.usedBy.email}`}>
+                              <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium" title={`Claimed by: ${promo.usedBy.email}`}>
                                 ↳ {t("promos_admin.claimed") || "Claimed"}: {promo.usedBy.email}
                               </span>
                             )}
@@ -961,23 +961,23 @@ export default function PromosPage() {
                         </td>
                         <td className="p-4">
                           {promo.isUsed ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-green-50 text-green-700 border border-green-200">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-green-50 dark:bg-emerald-950/40 text-green-700 dark:text-emerald-300 border border-green-200 dark:border-emerald-800/60">
                               <CheckCircle size={10} /> {t("promos_admin.claimed") || "Claimed"}
                             </span>
                           ) : isExpired ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-red-50 text-red-700 border border-red-200">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-red-50 dark:bg-rose-950/40 text-red-700 dark:text-rose-300 border border-red-200 dark:border-rose-800/60">
                               <XCircle size={10} /> {t("promos_admin.expired") || "Expired"}
                             </span>
                           ) : isPendingEmail ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-amber-100/80 text-amber-800 border border-amber-300">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-amber-100/80 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800/60">
                               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> {t("promos_admin.pending_send") || "Pending Send"}
                             </span>
                           ) : isEmailSent ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                              <Send size={10} className="text-blue-600" /> {t("promos_admin.email_sent") || "Email Sent"}
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60">
+                              <Send size={10} className="text-blue-600 dark:text-blue-400" /> {t("promos_admin.email_sent") || "Email Sent"}
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
                               {t("promos_admin.active") || "Active"}
                             </span>
                           )}
@@ -989,8 +989,8 @@ export default function PromosPage() {
                                 onClick={() => handleSendEmail(promo._id)}
                                 className={`p-1.5 transition-colors rounded-lg ${
                                   isPendingEmail
-                                    ? "text-amber-600 hover:text-amber-700 hover:bg-amber-100"
-                                    : "text-gray-400 hover:text-primary hover:bg-gray-100"
+                                    ? "text-amber-600 dark:text-amber-400 hover:text-amber-700 hover:bg-amber-100 dark:hover:bg-amber-950/50"
+                                    : "text-gray-400 dark:text-slate-400 hover:text-primary hover:bg-gray-100 dark:hover:bg-slate-800"
                                 }`}
                                 title={isEmailSent ? (t("promos_admin.resend_email_invite") || "Resend Email Invitation") : (t("promos_admin.send_email_invite") || "Send Email Invitation")}
                               >
@@ -999,7 +999,7 @@ export default function PromosPage() {
                             )}
                             <button
                               onClick={() => handleDelete(promo._id)}
-                              className="p-1.5 text-gray-500 hover:text-red-600 transition-colors hover:bg-red-50 rounded-lg"
+                              className="p-1.5 text-gray-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-rose-400 transition-colors hover:bg-red-50 dark:hover:bg-rose-950/30 rounded-lg"
                               title={t("promos_admin.delete_link") || "Delete Invitation Link"}
                             >
                               <Trash2 size={14} />
@@ -1016,8 +1016,8 @@ export default function PromosPage() {
 
           {/* Table Pagination */}
           {meta && meta.totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <span className="text-[10px] md:text-xs text-gray-500">
+            <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-slate-800">
+              <span className="text-[10px] md:text-xs text-gray-500 dark:text-slate-400">
                 {t("promos_admin.page") || "Page"} {page} {t("promos_admin.of") || "of"} {meta.totalPages} ({meta.total} {t("promos_admin.total") || "total"})
               </span>
               <div className="flex items-center gap-2">
@@ -1026,7 +1026,7 @@ export default function PromosPage() {
                   disabled={page === 1}
                   variant="outline"
                   size="sm"
-                  className="rounded-xl border-gray-300 text-xs px-3"
+                  className="rounded-xl border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 text-xs px-3"
                 >
                   {t("common.previous") || "Previous"}
                 </Button>
@@ -1035,7 +1035,7 @@ export default function PromosPage() {
                   disabled={page === meta.totalPages}
                   variant="outline"
                   size="sm"
-                  className="rounded-xl border-gray-300 text-xs px-3"
+                  className="rounded-xl border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 text-xs px-3"
                 >
                   {t("common.next") || "Next"}
                 </Button>

@@ -119,17 +119,17 @@ export function UpdatePlaceModal({
     >
       {/* Modal Box */}
       <div
-        className="relative w-full max-w-5xl h-[85vh] max-h-[780px] min-h-[580px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-5xl h-[85vh] max-h-[780px] min-h-[580px] bg-white dark:bg-[#131b2e] border border-transparent dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col text-gray-900 dark:text-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-white shrink-0">
-          <h2 className="text-2xl font-black uppercase tracking-tight">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-[#131b2e] shrink-0">
+          <h2 className="text-2xl font-black uppercase tracking-tight text-gray-900 dark:text-slate-100">
             {t("places_admin.update_place") || "Update Place"}
           </h2>
           <button
             onClick={() => onOpenChange(false)}
-            className="rounded-sm p-1 opacity-70 hover:opacity-100 transition-opacity focus:outline-none"
+            className="rounded-sm p-1 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 opacity-70 hover:opacity-100 transition-opacity focus:outline-none"
           >
             <X className="h-5 w-5" />
           </button>

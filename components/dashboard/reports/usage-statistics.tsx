@@ -12,19 +12,19 @@ function StatColumn({ title, items }: { title: string; items: StatItem[] }) {
   const { t, language } = useLanguage();
   return (
     <div>
-      <h3 className="font-semibold text-gray-900 mb-4">{title}</h3>
+      <h3 className="font-semibold text-gray-900 dark:text-slate-200 mb-4">{title}</h3>
       <div className="space-y-3">
         {items.length > 0 ? (
           items.map((item, idx) => (
-            <div key={idx} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100">
-              <span className="text-sm text-gray-700 font-medium truncate pr-2">{getLocalized(item.name, language)}</span>
-              <span className="text-sm font-bold text-blue-600">
+            <div key={idx} className="flex items-center justify-between bg-gray-50 dark:bg-slate-900/60 p-3 rounded-lg border border-gray-100 dark:border-slate-800">
+              <span className="text-sm text-gray-700 dark:text-slate-300 font-medium truncate pr-2">{getLocalized(item.name, language)}</span>
+              <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
                 {item.count.toLocaleString()}
               </span>
             </div>
           ))
         ) : (
-          <div className="p-4 text-center text-gray-400 text-xs bg-gray-50 rounded-lg border border-gray-100 border-dashed">
+          <div className="p-4 text-center text-gray-400 dark:text-slate-500 text-xs bg-gray-50 dark:bg-slate-900/40 rounded-lg border border-gray-100 dark:border-slate-800 border-dashed">
             {t("reports_admin.no_data")}
           </div>
         )}
@@ -51,13 +51,13 @@ export function UsageStatistics({
   const { t } = useLanguage();
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 p-6 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-lg font-bold text-gray-900">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">
           {t("reports_admin.usage_title")}
         </h2>
         {timeFilterActive && (
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
             {t("reports_admin.usage_desc")}
           </p>
         )}

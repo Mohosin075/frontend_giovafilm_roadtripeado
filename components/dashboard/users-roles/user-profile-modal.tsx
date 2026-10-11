@@ -61,16 +61,16 @@ export function UserProfileModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto rounded-3xl p-0 gap-0 border border-gray-100 shadow-2xl">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto rounded-3xl p-0 gap-0 border border-gray-100 dark:border-slate-800 shadow-2xl bg-white dark:bg-[#131b2e]">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-12 space-y-3">
             <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
-            <p className="text-sm font-medium text-gray-500">
+            <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
               {t("users_admin.loading_profile") || "Loading user profile..."}
             </p>
           </div>
         ) : !user ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-gray-500 dark:text-slate-400">
             {t("users_admin.user_not_found") || "User profile not found."}
           </div>
         ) : (
@@ -162,14 +162,14 @@ export function UserProfileModal({
             </div>
 
             {/* Modal Body Tabs */}
-            <div className="p-6 bg-gray-50/50">
-              <div className="grid grid-cols-3 bg-gray-200/70 p-1 rounded-2xl mb-4">
+            <div className="p-6 bg-gray-50/50 dark:bg-[#0b0f19]">
+              <div className="grid grid-cols-3 bg-gray-200/70 dark:bg-slate-900/80 p-1 rounded-2xl mb-4">
                 <button
                   onClick={() => setActiveTab("maps")}
                   className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                     activeTab === "maps"
-                      ? "bg-white text-amber-700 shadow-xs"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-300 shadow-xs"
+                      : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
                   }`}
                 >
                   <MapIcon size={14} />
@@ -180,8 +180,8 @@ export function UserProfileModal({
                   onClick={() => setActiveTab("prizes")}
                   className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                     activeTab === "prizes"
-                      ? "bg-white text-amber-700 shadow-xs"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-300 shadow-xs"
+                      : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
                   }`}
                 >
                   <Gift size={14} />
@@ -192,8 +192,8 @@ export function UserProfileModal({
                   onClick={() => setActiveTab("contributions")}
                   className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                     activeTab === "contributions"
-                      ? "bg-white text-amber-700 shadow-xs"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-300 shadow-xs"
+                      : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
                   }`}
                 >
                   <MessageSquare size={14} />
@@ -205,7 +205,7 @@ export function UserProfileModal({
               {activeTab === "maps" && (
                 <div className="space-y-3">
                   {purchasedMaps.length === 0 ? (
-                    <div className="bg-white border border-gray-100 rounded-2xl p-8 text-center text-gray-400 text-xs">
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 rounded-2xl p-8 text-center text-gray-400 dark:text-slate-500 text-xs">
                       <MapIcon size={24} className="mx-auto mb-2 opacity-40" />
                       {t("users_admin.no_activated_maps") || "No activated maps for this user."}
                     </div>
@@ -214,9 +214,9 @@ export function UserProfileModal({
                       {purchasedMaps.map((mapItem: any) => (
                         <div
                           key={mapItem._id}
-                          className="bg-white border border-gray-100 rounded-2xl p-3.5 flex items-center gap-3 shadow-2xs hover:shadow-xs transition-all"
+                          className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-2xs hover:shadow-xs transition-all"
                         >
-                          <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0 font-black overflow-hidden">
+                          <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-800/60 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0 font-black overflow-hidden">
                             {mapItem.coverPhoto || mapItem.images?.[0] ? (
                               <img
                                 src={getImageUrl(mapItem.coverPhoto || mapItem.images?.[0])}
@@ -228,14 +228,14 @@ export function UserProfileModal({
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-gray-900 truncate">
+                            <p className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate">
                               {getLocalized(mapItem.name, language)}
                             </p>
-                            <p className="text-[10px] text-gray-400 font-medium">
+                            <p className="text-[10px] text-gray-400 dark:text-slate-500 font-medium">
                               {mapItem.country || "Puerto Rico"}
                             </p>
                           </div>
-                          <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]">
+                          <Badge className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60 text-[10px]">
                             {t("users_admin.active") || "Active"}
                           </Badge>
                         </div>
@@ -250,16 +250,16 @@ export function UserProfileModal({
                 <div className="space-y-4">
                   {/* Claimed Free Map */}
                   {user.redeemedFreeMap && (
-                    <div className="bg-amber-50/60 border border-amber-200/70 rounded-2xl p-4 flex items-center justify-between">
+                    <div className="bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-800/60 rounded-2xl p-4 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0">
                           <Gift size={20} />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-amber-900">
+                          <p className="text-xs font-bold text-amber-900 dark:text-amber-300">
                             {t("users_admin.free_map_claimed") || "Free Map Claimed Reward"}
                           </p>
-                          <p className="text-xs text-amber-700 font-semibold">
+                          <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold">
                             {getLocalized(user.redeemedFreeMap.name, language)}
                           </p>
                         </div>
@@ -272,11 +272,11 @@ export function UserProfileModal({
 
                   {/* Redeemed Offers */}
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    <p className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider">
                       {t("users_admin.redeemed_offers") || "Redeemed Offers"} ({offerRedemptions.length})
                     </p>
                     {offerRedemptions.length === 0 ? (
-                      <p className="text-xs text-gray-400 bg-white border border-gray-100 p-4 rounded-xl text-center">
+                      <p className="text-xs text-gray-400 dark:text-slate-500 bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-xl text-center">
                         {t("users_admin.no_redeemed_offers") || "No offers redeemed yet."}
                       </p>
                     ) : (
@@ -284,13 +284,13 @@ export function UserProfileModal({
                         {offerRedemptions.map((item: any) => (
                           <div
                             key={item._id}
-                            className="bg-white border border-gray-100 p-3 rounded-xl flex items-center justify-between text-xs"
+                            className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-3 rounded-xl flex items-center justify-between text-xs"
                           >
                             <div>
-                              <p className="font-bold text-gray-900">
+                              <p className="font-bold text-gray-900 dark:text-slate-100">
                                 {getLocalized(item.offer?.title, language) || "Special Offer"}
                               </p>
-                              <p className="text-[10px] text-gray-500">
+                              <p className="text-[10px] text-gray-500 dark:text-slate-400">
                                 {item.offer?.place?.name
                                   ? getLocalized(item.offer.place.name, language)
                                   : item.offer?.business?.name
@@ -298,7 +298,7 @@ export function UserProfileModal({
                                     : "General Offer"}
                               </p>
                             </div>
-                            <span className="text-[10px] text-gray-400 font-medium">
+                            <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium">
                               {formatDate(item.createdAt || item.redemptionTime)}
                             </span>
                           </div>
@@ -309,11 +309,11 @@ export function UserProfileModal({
 
                   {/* Badges / Awards Progress */}
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    <p className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider">
                       {t("users_admin.unlocked_badges") || "Achievement Badges & Rewards"} ({awards.length})
                     </p>
                     {awards.length === 0 ? (
-                      <p className="text-xs text-gray-400 bg-white border border-gray-100 p-4 rounded-xl text-center">
+                      <p className="text-xs text-gray-400 dark:text-slate-500 bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-xl text-center">
                         {t("users_admin.no_badges") || "No badges available."}
                       </p>
                     ) : (
@@ -323,11 +323,11 @@ export function UserProfileModal({
                             key={awardItem._id}
                             className={`p-3 rounded-xl border flex items-center gap-3 text-xs ${
                               awardItem.isUnlocked
-                                ? "bg-white border-amber-200 shadow-2xs"
-                                : "bg-gray-100/70 border-gray-200 opacity-60"
+                                ? "bg-white dark:bg-[#131b2e] border-amber-200 dark:border-amber-800/60 shadow-2xs"
+                                : "bg-gray-100/70 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 opacity-60"
                             }`}
                           >
-                            <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 font-bold text-xs">
+                            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 font-bold text-xs">
                               {awardItem.configId?.coverPhoto ? (
                                 <img
                                   src={getImageUrl(awardItem.configId.coverPhoto)}
@@ -339,17 +339,17 @@ export function UserProfileModal({
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-bold text-gray-900 truncate">
+                              <p className="font-bold text-gray-900 dark:text-slate-100 truncate">
                                 {getLocalized(awardItem.configId?.title, language) || awardItem.type}
                               </p>
-                              <p className="text-[10px] text-gray-500">
+                              <p className="text-[10px] text-gray-500 dark:text-slate-400">
                                 {awardItem.progress} / {awardItem.target} XP
                               </p>
                             </div>
                             {awardItem.isUnlocked ? (
-                              <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                              <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
                             ) : (
-                              <Clock size={16} className="text-gray-400 shrink-0" />
+                              <Clock size={16} className="text-gray-400 dark:text-slate-500 shrink-0" />
                             )}
                           </div>
                         ))}
@@ -363,7 +363,7 @@ export function UserProfileModal({
               {activeTab === "contributions" && (
                 <div className="space-y-3">
                   {reviews.length === 0 ? (
-                    <div className="bg-white border border-gray-100 rounded-2xl p-8 text-center text-gray-400 text-xs">
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 rounded-2xl p-8 text-center text-gray-400 dark:text-slate-500 text-xs">
                       <MessageSquare size={24} className="mx-auto mb-2 opacity-40" />
                       {t("users_admin.no_contributions") || "No reviews or contributions submitted yet."}
                     </div>
@@ -372,34 +372,34 @@ export function UserProfileModal({
                       {reviews.map((rev: any) => (
                         <div
                           key={rev._id}
-                          className="bg-white border border-gray-100 p-4 rounded-2xl shadow-2xs space-y-1.5"
+                          className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1.5"
                         >
                           <div className="flex items-center justify-between">
-                            <p className="text-xs font-bold text-gray-900">
+                            <p className="text-xs font-bold text-gray-900 dark:text-slate-100">
                               {rev.placeId?.name
                                 ? getLocalized(rev.placeId.name, language)
                                 : rev.businessId?.name
                                   ? getLocalized(rev.businessId.name, language)
                                   : "Location Review"}
                             </p>
-                            <span className="text-[10px] text-gray-400 font-medium">
+                            <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium">
                               {formatDate(rev.createdAt)}
                             </span>
                           </div>
                           {rev.review && (
-                            <p className="text-xs text-gray-600 leading-relaxed italic">
+                            <p className="text-xs text-gray-600 dark:text-slate-300 leading-relaxed italic">
                               "{rev.review?.en || rev.review?.es || rev.review}"
                             </p>
                           )}
                           <div className="flex items-center justify-between text-[10px] pt-1">
-                            <span className="font-bold text-amber-600">
+                            <span className="font-bold text-amber-600 dark:text-amber-400">
                               ⭐ {rev.rating || 5}.0 Rating
                             </span>
                             <Badge
                               className={`text-[9px] ${
                                 rev.status === "Approved"
-                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                  : "bg-amber-50 text-amber-700 border-amber-200"
+                                  ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60"
+                                  : "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60"
                               }`}
                             >
                               {rev.status || "Approved"}

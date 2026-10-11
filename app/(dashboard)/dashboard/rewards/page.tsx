@@ -352,7 +352,7 @@ export default function RewardsAdminPage() {
   const getTypeBadge = (rewardType: string) => {
     if (rewardType === "PDF Itinerary" || rewardType === "Gourmet Guide") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-900/60">
           <FileText size={12} />
           {rewardType}
         </span>
@@ -360,7 +360,7 @@ export default function RewardsAdminPage() {
     }
     if (rewardType === "Free Map") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/60">
           <MapPin size={12} />
           {rewardType}
         </span>
@@ -368,14 +368,14 @@ export default function RewardsAdminPage() {
     }
     if (rewardType === "Exclusive Discount" || rewardType === "Permanent Discount") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200/60">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200/60 dark:border-purple-900/60">
           <Percent size={12} />
           {rewardType}
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200/60">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/60">
         <Award size={12} />
         {rewardType}
       </span>
@@ -387,14 +387,14 @@ export default function RewardsAdminPage() {
   const isMapType = type === "Free Map";
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
+    <div className="bg-gray-100 dark:bg-[#0b0f19] min-h-screen p-6 transition-colors">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-slate-100 tracking-tight">
             {t("rewards_admin.title") || "Rewards & Tiers Management"}
           </h1>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             {t("rewards_admin.subtitle") ||
               "Configure gamification levels, progression tiers, unlockable gifts, discounts, and PDF itineraries"}
           </p>
@@ -408,7 +408,7 @@ export default function RewardsAdminPage() {
               <select
                 value={levelFilter}
                 onChange={(e) => setLevelFilter(e.target.value)}
-                className="h-10 px-3 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 shadow-2xs focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="h-10 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-200 shadow-2xs focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               >
                 <option value="all">All Levels ({allLevels.length} Tiers)</option>
                 {allLevels.map((item: any) => {
@@ -443,20 +443,20 @@ export default function RewardsAdminPage() {
       </div>
 
       {/* Modern Tabs Navigation */}
-      <div className="flex items-center gap-2 border-b border-gray-200 pb-3 mb-6">
+      <div className="flex items-center gap-2 border-b border-gray-200 dark:border-slate-800 pb-3 mb-6">
         <button
           onClick={() => setActiveTab("rewards")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
             activeTab === "rewards"
               ? "bg-blue-600 text-white shadow-sm shadow-blue-500/25"
-              : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
+              : "bg-white dark:bg-[#131b2e] text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800/60 border border-gray-200 dark:border-slate-800"
           }`}
         >
           <Gift size={15} />
           <span>{t("rewards_admin.rewards_tab") || "Rewards Catalog"}</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              activeTab === "rewards" ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"
+              activeTab === "rewards" ? "bg-white/20 text-white" : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300"
             }`}
           >
             {configs.length}
@@ -468,14 +468,14 @@ export default function RewardsAdminPage() {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
             activeTab === "tiers"
               ? "bg-blue-600 text-white shadow-sm shadow-blue-500/25"
-              : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
+              : "bg-white dark:bg-[#131b2e] text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800/60 border border-gray-200 dark:border-slate-800"
           }`}
         >
           <Award size={15} />
           <span>{t("rewards_admin.tiers_tab") || "Tiers & Progression Levels"}</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              activeTab === "tiers" ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"
+              activeTab === "tiers" ? "bg-white/20 text-white" : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300"
             }`}
           >
             {allLevels.length}
@@ -487,11 +487,11 @@ export default function RewardsAdminPage() {
       {/* TAB 1: REWARDS CATALOG */}
       {/* ========================================================================= */}
       {activeTab === "rewards" && (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+        <div className="bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-200 dark:border-slate-800 overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/80 text-[11px] uppercase font-bold text-gray-500 tracking-wider">
+                <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-900/60 text-[11px] uppercase font-bold text-gray-500 dark:text-slate-400 tracking-wider">
                   <th className="px-6 py-4 text-left">Level & Rank</th>
                   <th className="px-6 py-4 text-left">{t("rewards_admin.cover") || "Icon"}</th>
                   <th className="px-6 py-4 text-left">
@@ -511,10 +511,10 @@ export default function RewardsAdminPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80">
                 {isLoadingConfigs ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-gray-400">
+                    <td colSpan={7} className="px-6 py-12 text-center text-gray-400 dark:text-slate-500">
                       <div className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                         {t("rewards_admin.loading_configs") || "Loading reward configurations..."}
@@ -523,7 +523,7 @@ export default function RewardsAdminPage() {
                   </tr>
                 ) : sortedAndFilteredConfigs.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-gray-500 font-medium text-sm">
+                    <td colSpan={7} className="px-6 py-12 text-center text-gray-500 dark:text-slate-400 font-medium text-sm">
                       {t("rewards_admin.no_rewards") || "No rewards found. Click 'Add New Reward' to create one."}
                     </td>
                   </tr>
@@ -532,14 +532,14 @@ export default function RewardsAdminPage() {
                     const levelInfo = getLevelInfoFromList(Number(reward.target) || 0, allLevels);
                     const levelTitle = getLocalized(levelInfo.name, language) || levelInfo.title || levelInfo.name;
                     return (
-                      <tr key={reward._id} className="hover:bg-gray-50/60 transition-colors">
+                      <tr key={reward._id} className="hover:bg-gray-50/60 dark:hover:bg-slate-800/40 transition-colors">
                         {/* Level Badge */}
                         <td className="px-6 py-4">
-                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold bg-blue-50 text-blue-800 border border-blue-200/60 shadow-2xs">
-                            <Award size={13} className="text-blue-600" />
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/60 shadow-2xs">
+                            <Award size={13} className="text-blue-600 dark:text-blue-400" />
                             <span>Level {levelInfo.level}</span>
                           </div>
-                          <div className="text-[11px] font-bold text-gray-500 mt-1">
+                          <div className="text-[11px] font-bold text-gray-500 dark:text-slate-400 mt-1">
                             {levelTitle}
                           </div>
                         </td>
@@ -550,10 +550,10 @@ export default function RewardsAdminPage() {
                             <img
                               src={getImageUrl(reward.coverPhoto)}
                               alt={getLocalized(reward.title, language)}
-                              className="w-12 h-12 object-cover rounded-xl border border-gray-200 shadow-2xs"
+                              className="w-12 h-12 object-cover rounded-xl border border-gray-200 dark:border-slate-800 shadow-2xs"
                             />
                           ) : (
-                            <div className="w-12 h-12 bg-gray-100 flex items-center justify-center rounded-xl text-gray-400 border border-gray-200">
+                            <div className="w-12 h-12 bg-gray-100 dark:bg-slate-800 flex items-center justify-center rounded-xl text-gray-400 dark:text-slate-500 border border-gray-200 dark:border-slate-700">
                               <ImageIcon size={20} />
                             </div>
                           )}
@@ -561,10 +561,10 @@ export default function RewardsAdminPage() {
 
                         {/* Title & Description */}
                         <td className="px-6 py-4">
-                          <div className="font-bold text-gray-900 text-sm">
+                          <div className="font-bold text-gray-900 dark:text-slate-100 text-sm">
                             {getLocalized(reward.title, language)}
                           </div>
-                          <div className="text-xs text-gray-500 line-clamp-2 max-w-md mt-0.5 font-normal leading-relaxed">
+                          <div className="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 max-w-md mt-0.5 font-normal leading-relaxed">
                             {getLocalized(reward.description, language)}
                           </div>
                         </td>
@@ -574,11 +574,11 @@ export default function RewardsAdminPage() {
 
                         {/* Points target */}
                         <td className="px-6 py-4">
-                          <div className="text-sm font-extrabold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/50 inline-block">
+                          <div className="text-sm font-extrabold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg border border-amber-200/50 dark:border-amber-900/50 inline-block">
                             {reward.target?.toLocaleString()} XP
                           </div>
                           {reward.discountPercentage !== undefined && (
-                            <div className="text-xs text-purple-700 font-bold mt-1">
+                            <div className="text-xs text-purple-700 dark:text-purple-300 font-bold mt-1">
                               Discount: {reward.discountPercentage}%
                             </div>
                           )}
@@ -587,13 +587,13 @@ export default function RewardsAdminPage() {
                         {/* Attached elements */}
                         <td className="px-6 py-4 text-xs space-y-1">
                           {reward.mapId && (
-                            <div className="flex items-center gap-1.5 text-blue-600 font-semibold">
+                            <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold">
                               <MapPin size={13} />
                               <span>Map: {reward.mapId?.name || reward.mapId?.title}</span>
                             </div>
                           )}
                           {reward.fileUrl && (
-                            <div className="flex items-center gap-1.5 text-emerald-600 font-semibold truncate max-w-[200px]">
+                            <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold truncate max-w-[200px]">
                               <FileText size={13} />
                               <a
                                 href={getImageUrl(reward.fileUrl)}
@@ -606,7 +606,7 @@ export default function RewardsAdminPage() {
                             </div>
                           )}
                           {!reward.mapId && !reward.fileUrl && (
-                            <span className="text-gray-400 italic">None</span>
+                            <span className="text-gray-400 dark:text-slate-500 italic">None</span>
                           )}
                         </td>
 
@@ -617,7 +617,7 @@ export default function RewardsAdminPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleOpenEditReward(reward)}
-                              className="h-9 w-9 p-0 rounded-xl text-gray-600 hover:text-blue-600 hover:bg-blue-50 cursor-pointer"
+                              className="h-9 w-9 p-0 rounded-xl text-gray-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 cursor-pointer"
                               title="Edit Reward"
                             >
                               <Edit size={16} />
@@ -626,7 +626,7 @@ export default function RewardsAdminPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDeleteReward(reward._id)}
-                              className="h-9 w-9 p-0 rounded-xl text-gray-600 hover:text-red-600 hover:bg-red-50 cursor-pointer"
+                              className="h-9 w-9 p-0 rounded-xl text-gray-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-slate-800 cursor-pointer"
                               title="Delete Reward"
                             >
                               <Trash2 size={16} />
@@ -649,13 +649,13 @@ export default function RewardsAdminPage() {
       {activeTab === "tiers" && (
         <div className="space-y-4">
           {/* Info Card */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/70 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-[#131b2e] border border-blue-200/70 dark:border-slate-800 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h3 className="font-bold text-blue-900 text-sm flex items-center gap-2">
-                <Award size={16} className="text-blue-600" />
+              <h3 className="font-bold text-blue-900 dark:text-slate-100 text-sm flex items-center gap-2">
+                <Award size={16} className="text-blue-600 dark:text-blue-400" />
                 Gamification Tiers & Milestones
               </h3>
-              <p className="text-xs text-blue-700/80 mt-1 max-w-2xl leading-relaxed">
+              <p className="text-xs text-blue-700/80 dark:text-slate-300 mt-1 max-w-2xl leading-relaxed">
                 Users automatically level up by collecting XP points from reviews, photos, and visits. You can add new tiers or edit existing thresholds here.
               </p>
             </div>
@@ -668,11 +668,11 @@ export default function RewardsAdminPage() {
             </Button>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-200 dark:border-slate-800 overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50/80 text-[11px] uppercase font-bold text-gray-500 tracking-wider">
+                  <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-900/60 text-[11px] uppercase font-bold text-gray-500 dark:text-slate-400 tracking-wider">
                     <th className="px-6 py-4 text-left">Level #</th>
                     <th className="px-6 py-4 text-left">Rank & Tier Name</th>
                     <th className="px-6 py-4 text-left">Minimum XP Required</th>
@@ -681,10 +681,10 @@ export default function RewardsAdminPage() {
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80">
                   {isLoadingLevels ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
+                      <td colSpan={6} className="px-6 py-12 text-center text-gray-400 dark:text-slate-500">
                         <div className="flex items-center justify-center gap-2">
                           <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                           Loading tiers & levels...
@@ -704,26 +704,26 @@ export default function RewardsAdminPage() {
                       });
 
                       return (
-                        <tr key={lvl.level} className="hover:bg-gray-50/60 transition-colors">
+                        <tr key={lvl.level} className="hover:bg-gray-50/60 dark:hover:bg-slate-800/40 transition-colors">
                           {/* Level Number */}
                           <td className="px-6 py-4">
-                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl font-black text-xs bg-slate-900 text-white shadow-2xs">
+                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl font-black text-xs bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100 shadow-2xs">
                               {lvl.level}
                             </span>
                           </td>
 
                           {/* Tier Name */}
                           <td className="px-6 py-4">
-                            <div className="font-extrabold text-gray-900 text-sm flex items-center gap-2">
+                            <div className="font-extrabold text-gray-900 dark:text-slate-100 text-sm flex items-center gap-2">
                               <span>{tierDisplayName}</span>
                               {lvl.level >= 10 && (
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-200">
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/40">
                                   Elite
                                 </span>
                               )}
                             </div>
                             {lvl.description && (
-                              <div className="text-xs text-gray-400 mt-0.5 line-clamp-1">
+                              <div className="text-xs text-gray-400 dark:text-slate-400 mt-0.5 line-clamp-1">
                                 {getLocalized(lvl.description, language)}
                               </div>
                             )}
@@ -731,14 +731,14 @@ export default function RewardsAdminPage() {
 
                           {/* Points / XP */}
                           <td className="px-6 py-4">
-                            <span className="font-bold text-xs text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/60">
+                            <span className="font-bold text-xs text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg border border-amber-200/60 dark:border-amber-900/50">
                               {xpRequired.toLocaleString()} XP
                             </span>
                           </td>
 
                           {/* Reviews Required */}
                           <td className="px-6 py-4">
-                            <span className="font-semibold text-xs text-gray-700 bg-gray-100 px-2.5 py-1 rounded-lg border border-gray-200">
+                            <span className="font-semibold text-xs text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg border border-gray-200 dark:border-slate-700">
                               {reviewsRequired} reviews
                             </span>
                           </td>
@@ -751,14 +751,14 @@ export default function RewardsAdminPage() {
                                   setLevelFilter(String(lvl.level));
                                   setActiveTab("rewards");
                                 }}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors cursor-pointer border border-blue-200"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors cursor-pointer border border-blue-200 dark:border-blue-900/40"
                               >
                                 <Gift size={12} />
                                 <span>{attachedRewards.length} reward{attachedRewards.length > 1 ? "s" : ""}</span>
                                 <ChevronRight size={12} />
                               </button>
                             ) : (
-                              <span className="text-xs text-gray-400 italic">No rewards set</span>
+                              <span className="text-xs text-gray-400 dark:text-slate-500 italic">No rewards set</span>
                             )}
                           </td>
 
@@ -769,7 +769,7 @@ export default function RewardsAdminPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleOpenEditTier(lvl)}
-                                className="h-9 px-3 rounded-xl text-xs font-bold text-blue-600 hover:bg-blue-50 cursor-pointer flex items-center gap-1"
+                                className="h-9 px-3 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 cursor-pointer flex items-center gap-1"
                               >
                                 <Edit size={14} />
                                 <span>Edit</span>
@@ -780,7 +780,7 @@ export default function RewardsAdminPage() {
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleDeleteTier(lvl)}
-                                  className="h-9 w-9 p-0 rounded-xl text-gray-400 hover:text-red-600 hover:bg-red-50 cursor-pointer"
+                                  className="h-9 w-9 p-0 rounded-xl text-gray-400 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-slate-800 cursor-pointer"
                                   title="Delete Tier"
                                 >
                                   <Trash2 size={15} />
@@ -803,10 +803,10 @@ export default function RewardsAdminPage() {
       {/* MODAL 1: ADD / EDIT REWARD */}
       {/* ========================================================================= */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl p-6 bg-white">
-          <DialogHeader className="pb-3 border-b border-gray-100">
-            <DialogTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
-              <Gift size={20} className="text-blue-600" />
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl p-6 bg-white dark:bg-[#131b2e] dark:border-slate-800 text-gray-900 dark:text-slate-100">
+          <DialogHeader className="pb-3 border-b border-gray-100 dark:border-slate-800">
+            <DialogTitle className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+              <Gift size={20} className="text-blue-600 dark:text-blue-400" />
               {isCreateMode
                 ? t("rewards_admin.add_new_reward") || "Add New Reward"
                 : t("rewards_admin.edit_reward") || "Edit Reward"}
@@ -816,24 +816,24 @@ export default function RewardsAdminPage() {
           <form onSubmit={handleSubmitReward} className="space-y-4 pt-2">
             {/* Category / Type */}
             <div className="space-y-1">
-              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                 {t("rewards_admin.reward_category") || "Reward Category / Type"}
               </Label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full h-11 px-3 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               >
-                <optgroup label="Content & Downloadables">
+                <optgroup label="Content & Downloadables" className="dark:bg-slate-900">
                   <option value="PDF Itinerary">PDF Itinerary</option>
                   <option value="Gourmet Guide">Gourmet Guide</option>
                 </optgroup>
-                <optgroup label="Map Perks & Unlocks">
+                <optgroup label="Map Perks & Unlocks" className="dark:bg-slate-900">
                   <option value="Free Map">Free Map Unlock</option>
                   <option value="Exclusive Discount">Exclusive Discount (Level Specific)</option>
                   <option value="Permanent Discount">Permanent Map Discount</option>
                 </optgroup>
-                <optgroup label="Gamification & Status">
+                <optgroup label="Gamification & Status" className="dark:bg-slate-900">
                   <option value="Top Reviewer">Top Reviewer Badge</option>
                   <option value="Trail Master">Trail Master Perk</option>
                   <option value="History Buff">History Buff Perk</option>
@@ -845,7 +845,7 @@ export default function RewardsAdminPage() {
             {/* Discount Percentage field (Shown ONLY for Discount Types) */}
             {isDiscountType && (
               <div className="space-y-1 animate-in fade-in duration-200">
-                <Label className="text-xs font-bold uppercase tracking-wider text-purple-700">
+                <Label className="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">
                   {t("rewards_admin.discount_percentage") || "Discount Percentage (%)"}
                 </Label>
                 <Input
@@ -855,7 +855,7 @@ export default function RewardsAdminPage() {
                   onChange={(e) => setDiscountPercentage(e.target.value)}
                   min="1"
                   max="100"
-                  className="rounded-xl h-11 font-bold text-purple-900 bg-purple-50/30 border-purple-200"
+                  className="rounded-xl h-11 font-bold text-purple-900 dark:text-purple-200 bg-purple-50/30 dark:bg-purple-950/30 border-purple-200 dark:border-purple-900/50"
                   required
                 />
               </div>
@@ -863,21 +863,21 @@ export default function RewardsAdminPage() {
 
             {/* Title */}
             <div className="space-y-1">
-              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                 {t("rewards_admin.reward_title") || "Reward Title"}
               </Label>
               <Input
                 placeholder="e.g. San Juan Heritage Tour PDF Itinerary"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="rounded-xl h-11"
+                className="rounded-xl h-11 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100"
                 required
               />
             </div>
 
             {/* Description */}
             <div className="space-y-1">
-              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                 {t("rewards_admin.description") || "Description"}
               </Label>
               <textarea
@@ -885,13 +885,13 @@ export default function RewardsAdminPage() {
                 placeholder="Describe what the user gets when unlocking this reward..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full text-sm p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full text-sm p-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100"
                 required
               />
             </div>
 
             {/* Quick Tier Assignment & Target XP */}
-            <div className="bg-gray-50/80 p-3.5 rounded-2xl border border-gray-200/80 space-y-3">
+            <div className="bg-gray-50/80 dark:bg-slate-900/60 p-3.5 rounded-2xl border border-gray-200/80 dark:border-slate-800 space-y-3">
               {(() => {
                 const matchedTier = allLevels.find(
                   (l: any) => String(l.points ?? l.xp) === String(target)
@@ -899,15 +899,15 @@ export default function RewardsAdminPage() {
                 return (
                   <>
                     <div className="space-y-1">
-                      <Label className="text-xs font-bold uppercase tracking-wider text-gray-600 flex items-center justify-between">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-slate-400 flex items-center justify-between">
                         <span>Assign to Tier / Level</span>
                         {matchedTier ? (
-                          <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                          <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                             <CheckCircle2 size={13} />
                             Requirement: {(Number(matchedTier.points ?? matchedTier.xp) || 0).toLocaleString()} XP
                           </span>
                         ) : (
-                          <span className="text-[11px] font-semibold text-amber-600">
+                          <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
                             Custom XP Requirement
                           </span>
                         )}
@@ -925,7 +925,7 @@ export default function RewardsAdminPage() {
                             setTarget("");
                           }
                         }}
-                        className="w-full h-11 px-3 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                        className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                       >
                         {allLevels.map((lvl: any) => {
                           const name = getLocalized(lvl.name, language) || lvl.title || lvl.name;
@@ -944,7 +944,7 @@ export default function RewardsAdminPage() {
                       <div className="grid grid-cols-2 gap-3 animate-in fade-in duration-200">
                         {/* Custom Target XP threshold */}
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-amber-700">
+                          <Label className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
                             {t("rewards_admin.points_target") || "Custom XP Points Required"}
                           </Label>
                           <Input
@@ -952,26 +952,26 @@ export default function RewardsAdminPage() {
                             placeholder="e.g. 500"
                             value={target}
                             onChange={(e) => setTarget(e.target.value)}
-                            className="rounded-xl h-11 font-bold text-amber-900 bg-white border-amber-200"
+                            className="rounded-xl h-11 font-bold text-amber-900 dark:text-amber-200 bg-white dark:bg-slate-900 border-amber-200 dark:border-amber-900/50"
                             required
                           />
                         </div>
 
                         {/* Map reference */}
                         <div className="space-y-1">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                          <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                             {t("rewards_admin.attach_map_optional") || "Attach Map (Optional)"}
                           </Label>
                           <select
                             value={mapId}
                             onChange={(e) => setMapId(e.target.value)}
-                            className="w-full h-11 px-3 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                            className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                           >
-                            <option value="" className="text-gray-900 bg-white">
+                            <option value="" className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
                               {isMapType ? "User Chooses Any Map" : "No Specific Map"}
                             </option>
                             {maps.map((map: any) => (
-                              <option key={map._id} value={map._id} className="text-gray-900 bg-white">
+                              <option key={map._id} value={map._id} className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
                                 {map.name || map.title}
                               </option>
                             ))}
@@ -980,19 +980,19 @@ export default function RewardsAdminPage() {
                       </div>
                     ) : (
                       <div className="space-y-1">
-                        <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                        <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                           {t("rewards_admin.attach_map_optional") || "Attach Map (Optional)"}
                         </Label>
                         <select
                           value={mapId}
                           onChange={(e) => setMapId(e.target.value)}
-                          className="w-full h-11 px-3 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                          className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                         >
-                          <option value="" className="text-gray-900 bg-white">
+                          <option value="" className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
                             {isMapType ? "User Chooses Any Map" : "No Specific Map"}
                           </option>
                           {maps.map((map: any) => (
-                            <option key={map._id} value={map._id} className="text-gray-900 bg-white">
+                            <option key={map._id} value={map._id} className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
                               {map.name || map.title}
                             </option>
                           ))}
@@ -1009,23 +1009,23 @@ export default function RewardsAdminPage() {
             <div className="grid grid-cols-2 gap-4 pt-1">
               {/* Cover Image / Badge Icon Upload */}
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                   {t("rewards_admin.cover_photo") || "Icon / Badge Image"}
                 </Label>
                 <div
                   onClick={() => coverInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-200 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-blue-400 transition-colors bg-gray-50/50"
+                  className="border-2 border-dashed border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-blue-400 dark:hover:border-blue-500/60 transition-colors bg-gray-50/50 dark:bg-slate-900/40"
                 >
                   {coverPreview ? (
                     <img
                       src={coverPreview}
                       alt="Preview"
-                      className="w-16 h-16 object-cover rounded-xl border border-gray-200 shadow-2xs"
+                      className="w-16 h-16 object-cover rounded-xl border border-gray-200 dark:border-slate-800 shadow-2xs"
                     />
                   ) : (
                     <>
-                      <ImageIcon size={22} className="text-gray-400" />
-                      <span className="text-[11px] font-bold text-gray-500">
+                      <ImageIcon size={22} className="text-gray-400 dark:text-slate-500" />
+                      <span className="text-[11px] font-bold text-gray-500 dark:text-slate-400">
                         {t("rewards_admin.click_to_upload") || "Click to upload image"}
                       </span>
                     </>
@@ -1042,12 +1042,12 @@ export default function RewardsAdminPage() {
 
               {/* PDF Document Upload */}
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                   {t("rewards_admin.downloadable_pdf") || "Downloadable PDF"}
                 </Label>
                 <div
                   onClick={() => pdfInputRef.current?.click()}
-                  className="relative border-2 border-dashed border-gray-200 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-blue-400 transition-colors bg-gray-50/50 h-[102px]"
+                  className="relative border-2 border-dashed border-gray-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-blue-400 dark:hover:border-blue-500/60 transition-colors bg-gray-50/50 dark:bg-slate-900/40 h-[102px]"
                 >
                   {(pdfFile || selectedReward?.fileUrl) && (
                     <button
@@ -1058,7 +1058,7 @@ export default function RewardsAdminPage() {
                         if (pdfInputRef.current) pdfInputRef.current.value = "";
                         if (selectedReward) setSelectedReward({ ...selectedReward, fileUrl: "", originalFileName: "" });
                       }}
-                      className="absolute top-2 right-2 p-1.5 bg-red-50 hover:bg-red-100 text-red-500 rounded-full transition-colors cursor-pointer z-10"
+                      className="absolute top-2 right-2 p-1.5 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 text-red-500 rounded-full transition-colors cursor-pointer z-10"
                       title="Remove PDF"
                     >
                       <Trash2 size={14} />
@@ -1066,8 +1066,8 @@ export default function RewardsAdminPage() {
                   )}
                   {pdfFile || selectedReward?.fileUrl ? (
                     <div className="text-center">
-                      <FileText size={22} className="text-emerald-600 mx-auto" />
-                      <span className="text-[10px] font-bold text-gray-700 block truncate max-w-[130px] mt-1">
+                      <FileText size={22} className="text-emerald-600 dark:text-emerald-400 mx-auto" />
+                      <span className="text-[10px] font-bold text-gray-700 dark:text-slate-300 block truncate max-w-[130px] mt-1">
                         {pdfFile
                           ? pdfFile.name
                           : (selectedReward?.originalFileName || selectedReward?.fileUrl?.split("/").pop())}
@@ -1075,8 +1075,8 @@ export default function RewardsAdminPage() {
                     </div>
                   ) : (
                     <>
-                      <Upload size={22} className="text-gray-400" />
-                      <span className="text-[11px] font-bold text-gray-500">
+                      <Upload size={22} className="text-gray-400 dark:text-slate-500" />
+                      <span className="text-[11px] font-bold text-gray-500 dark:text-slate-400">
                         {t("rewards_admin.click_to_upload_pdf") || "Upload PDF File"}
                       </span>
                     </>
@@ -1093,12 +1093,12 @@ export default function RewardsAdminPage() {
             </div>
 
             {/* Dialog Footer Actions */}
-            <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-100 dark:border-slate-800">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                className="h-11 px-5 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer"
+                className="h-11 px-5 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               >
                 {t("common.cancel") || "Cancel"}
               </Button>
@@ -1120,10 +1120,10 @@ export default function RewardsAdminPage() {
       {/* MODAL 2: ADD / EDIT TIER / LEVEL */}
       {/* ========================================================================= */}
       <Dialog open={tierModalOpen} onOpenChange={setTierModalOpen}>
-        <DialogContent className="max-w-md rounded-3xl p-6 bg-white">
-          <DialogHeader className="pb-3 border-b border-gray-100">
-            <DialogTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
-              <Award size={20} className="text-emerald-600" />
+        <DialogContent className="max-w-md rounded-3xl p-6 bg-white dark:bg-[#131b2e] dark:border-slate-800 text-gray-900 dark:text-slate-100">
+          <DialogHeader className="pb-3 border-b border-gray-100 dark:border-slate-800">
+            <DialogTitle className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+              <Award size={20} className="text-emerald-600 dark:text-emerald-400" />
               {isTierCreateMode
                 ? "Add New Gamification Tier / Level"
                 : `Edit Tier (Level ${tierLevel})`}
@@ -1134,7 +1134,7 @@ export default function RewardsAdminPage() {
             <div className="grid grid-cols-2 gap-3">
               {/* Level Number */}
               <div className="space-y-1">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                   Level Number
                 </Label>
                 <Input
@@ -1143,21 +1143,21 @@ export default function RewardsAdminPage() {
                   value={tierLevel}
                   onChange={(e) => setTierLevel(Number(e.target.value))}
                   disabled={!isTierCreateMode}
-                  className="rounded-xl h-11 font-extrabold text-gray-900 bg-gray-50/50"
+                  className="rounded-xl h-11 font-extrabold text-gray-900 dark:text-slate-100 bg-gray-50/50 dark:bg-slate-900/50 dark:border-slate-800"
                   required
                 />
               </div>
 
               {/* Tier Name */}
               <div className="space-y-1">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                   Tier / Rank Name
                 </Label>
                 <Input
                   placeholder="e.g. Gran Maestro"
                   value={tierName}
                   onChange={(e) => setTierName(e.target.value)}
-                  className="rounded-xl h-11 font-semibold"
+                  className="rounded-xl h-11 font-semibold dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100"
                   required
                 />
               </div>
@@ -1166,7 +1166,7 @@ export default function RewardsAdminPage() {
             <div className="grid grid-cols-2 gap-3">
               {/* Min XP Required */}
               <div className="space-y-1">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                   Required XP Points
                 </Label>
                 <Input
@@ -1175,14 +1175,14 @@ export default function RewardsAdminPage() {
                   placeholder="e.g. 5000"
                   value={tierPoints}
                   onChange={(e) => setTierPoints(Number(e.target.value))}
-                  className="rounded-xl h-11 font-bold text-amber-800 bg-amber-50/30 border-amber-200"
+                  className="rounded-xl h-11 font-bold text-amber-800 dark:text-amber-200 bg-amber-50/30 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50"
                   required
                 />
               </div>
 
               {/* Min Reviews Required */}
               <div className="space-y-1">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                   Required Approved Reviews
                 </Label>
                 <Input
@@ -1191,7 +1191,7 @@ export default function RewardsAdminPage() {
                   placeholder="e.g. 100"
                   value={tierReviews}
                   onChange={(e) => setTierReviews(Number(e.target.value))}
-                  className="rounded-xl h-11 font-bold text-blue-900 bg-blue-50/30 border-blue-200"
+                  className="rounded-xl h-11 font-bold text-blue-900 dark:text-blue-200 bg-blue-50/30 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900/50"
                   required
                 />
               </div>
@@ -1199,7 +1199,7 @@ export default function RewardsAdminPage() {
 
             {/* Description */}
             <div className="space-y-1">
-              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
+              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                 Description (Optional)
               </Label>
               <textarea
@@ -1207,17 +1207,17 @@ export default function RewardsAdminPage() {
                 placeholder="Brief description of this achievement level..."
                 value={tierDescription}
                 onChange={(e) => setTierDescription(e.target.value)}
-                className="w-full text-sm p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full text-sm p-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100"
               />
             </div>
 
             {/* Dialog Footer Actions */}
-            <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-100 dark:border-slate-800">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setTierModalOpen(false)}
-                className="h-11 px-5 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer"
+                className="h-11 px-5 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               >
                 {t("common.cancel") || "Cancel"}
               </Button>

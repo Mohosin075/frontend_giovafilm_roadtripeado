@@ -42,7 +42,7 @@ export default function NotificationMessage() {
         <div className="flex items-center gap-2 ">
           <Star size={24} className="text-yellow-500" />
           {/* <StarIcon size={24} className="text-yellow-500" /> */}
-          <h2 className="text-xl font-bold text-black font-inter">
+          <h2 className="text-xl font-bold text-black dark:text-slate-100 font-inter">
             {t("notifications_page.new_reviews")}
           </h2>
         </div>

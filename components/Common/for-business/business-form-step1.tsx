@@ -177,11 +177,11 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
         <div className="grid md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="businessName"
+            name="name"
             rules={{ required: t("for_business.step1.business_name_req") }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-900 font-semibold">
+                <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                   {t("for_business.step1.business_name")} <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
@@ -189,7 +189,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                     placeholder={t("for_business.step1.business_name_placeholder")}
                     {...field}
                     type="text"
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -203,7 +203,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
             rules={{ required: t("for_business.step1.category_req") }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-900 font-semibold ">
+                <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold ">
                   {t("for_business.step1.category")} <span className="text-red-500">*</span>
                 </FormLabel>
                 <Select
@@ -212,7 +212,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                   disabled={isLoadingCats}
                 >
                   <FormControl className="w-full">
-                    <SelectTrigger className="bg-gray-50 border-gray-200">
+                    <SelectTrigger className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                       <SelectValue
                         placeholder={
                           isLoadingCats
@@ -222,9 +222,9 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                       />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                     {!isLoadingCats && categories.length === 0 ? (
-                      <div className="px-3 py-6 text-center text-sm text-gray-500">
+                      <div className="px-3 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
                         {t("for_business.step1.no_categories")}
                       </div>
                     ) : (
@@ -248,14 +248,14 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
           rules={{ required: t("for_business.step1.business_desc_req") }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-900 font-semibold">
+              <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                 {t("for_business.step1.business_desc")} <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder={t("for_business.step1.business_desc_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200 min-h-32"
+                  className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 min-h-32"
                 />
               </FormControl>
               <FormMessage />
@@ -268,7 +268,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
       <div className="space-y-4">
         <div className="flex items-center gap-2 mb-4">
           <Mail className="w-5 h-5 text-yellow-400" />
-          <h3 className="text-base font-semibold text-gray-500 uppercase tracking-wide">
+          <h3 className="text-base font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
             {t("for_business.step1.contact_links")}
           </h3>
         </div>
@@ -286,7 +286,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
             }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-900 font-semibold">
+                <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                   {t("for_business.step1.phone")} <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
@@ -294,7 +294,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                     placeholder={t("for_business.step1.phone_placeholder")}
                     {...field}
                     type="tel"
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -313,7 +313,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
             }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-900 font-semibold">
+                <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                   {t("for_business.step1.website")}
                 </FormLabel>
                 <FormControl>
@@ -321,7 +321,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                     placeholder={t("for_business.step1.website_placeholder")}
                     {...field}
                     type="url"
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -335,14 +335,14 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
           name="instagram"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-900 font-semibold">
+              <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                 {t("for_business.step1.instagram")}
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("for_business.step1.instagram_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200"
+                  className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 />
               </FormControl>
               <FormMessage />
@@ -355,7 +355,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
       <div className="space-y-4">
         <div className="flex items-center gap-2 mb-4">
           <MapPin className="w-5 h-5 text-yellow-400" />
-          <h3 className="text-base font-semibold text-gray-500 uppercase tracking-wide">
+          <h3 className="text-base font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
             {t("for_business.step1.location_title")}
           </h3>
         </div>
@@ -366,14 +366,14 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
           rules={{ required: t("for_business.step1.street_req") }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-900 font-semibold">
+              <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                 {t("for_business.step1.street")} <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("for_business.step1.street_placeholder")}
                   {...field}
-                  className="bg-gray-50 border-gray-200"
+                  className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 />
               </FormControl>
               <FormMessage />
@@ -388,14 +388,14 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
             rules={{ required: t("for_business.step1.city_req") }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-900 font-semibold">
+                <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                   {t("for_business.step1.city")} <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t("for_business.step1.city_placeholder")}
                     {...field}
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                   />
                 </FormControl>
                 <FormMessage />
@@ -409,10 +409,10 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
             rules={{ required: t("for_business.step1.country_map_req") }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-900 font-semibold">
+                <FormLabel className="text-gray-900 dark:text-slate-100 font-semibold">
                   {t("for_business.step1.country_map")} <span className="text-red-500">*</span>
                 </FormLabel>
-                <p className="text-xs text-gray-500 -mt-1">
+                <p className="text-xs text-gray-500 dark:text-slate-400 -mt-1">
                   {t("for_business.step1.country_map_note")}
                 </p>
                 <Select
@@ -427,7 +427,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                   disabled={isLoadingMaps}
                 >
                   <FormControl className="w-full">
-                    <SelectTrigger className="bg-gray-50 border-gray-200">
+                    <SelectTrigger className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                       <SelectValue
                         placeholder={
                           isLoadingMaps
@@ -437,9 +437,9 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                       />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                     {!isLoadingMaps && maps.length === 0 ? (
-                      <div className="px-3 py-6 text-center text-sm text-gray-500">
+                      <div className="px-3 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
                         {t("for_business.step1.no_maps")}
                       </div>
                     ) : (
@@ -681,7 +681,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                             <Input
                               readOnly
                               value={dayHour.openTime}
-                              className="bg-gray-50/50 border-gray-200 text-gray-700 font-medium pr-10 rounded-xl focus-visible:ring-0"
+                              className="bg-gray-50/50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-700 dark:text-slate-200 font-medium pr-10 rounded-xl focus-visible:ring-0"
                             />
                             <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                           </div>
@@ -690,7 +690,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                             <Input
                               readOnly
                               value={dayHour.closeTime}
-                              className="bg-gray-50/50 border-gray-200 text-gray-700 font-medium pr-10 rounded-xl focus-visible:ring-0"
+                              className="bg-gray-50/50 dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-gray-700 dark:text-slate-200 font-medium pr-10 rounded-xl focus-visible:ring-0"
                             />
                             <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                           </div>
@@ -700,7 +700,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                       <button
                         type="button"
                         onClick={() => handleRemoveHour(idx)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-full transition-colors cursor-pointer"
                       >
                         <X size={18} />
                       </button>

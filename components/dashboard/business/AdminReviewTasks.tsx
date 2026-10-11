@@ -114,20 +114,20 @@ export default function AdminReviewTasks({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">
+    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 p-6">
+      <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-1">
         {t("admin_review.title")}
       </h2>
-      <p className="text-xs text-gray-500 mb-6">
+      <p className="text-xs text-gray-500 dark:text-slate-400 mb-6">
         {t("admin_review.changes_save_automatically")}
       </p>
 
       <div className="space-y-3">
-        <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2.5">
-          <span className="text-sm text-gray-700">{t("admin_review.location_pin_verified")}</span>
+        <div className="flex items-center justify-between rounded-lg bg-gray-50 dark:bg-slate-900/60 px-3 py-2.5">
+          <span className="text-sm text-gray-700 dark:text-slate-300">{t("admin_review.location_pin_verified")}</span>
           <span
             className={`text-xs font-semibold ${
-              checks.locationPinVerified ? "text-green-600" : "text-gray-400"
+              checks.locationPinVerified ? "text-green-600 dark:text-emerald-400" : "text-gray-400 dark:text-slate-500"
             }`}
           >
             {checks.locationPinVerified ? t("admin_review.verified") : t("admin_review.use_switch_above")}
@@ -137,12 +137,12 @@ export default function AdminReviewTasks({
         {TASKS.map((task) => (
           <label
             key={task.key}
-            className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 hover:bg-gray-50 cursor-pointer"
+            className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-slate-900/40 cursor-pointer"
           >
-            <span className="text-sm text-gray-700">{task.label}</span>
+            <span className="text-sm text-gray-700 dark:text-slate-300">{task.label}</span>
             <span className="flex items-center gap-2">
               {savingKey === task.key && (
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-gray-400" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-gray-400 dark:text-slate-500" />
               )}
               <input
                 type="checkbox"
@@ -156,13 +156,13 @@ export default function AdminReviewTasks({
         ))}
       </div>
 
-      <div className="mt-6 pt-6 border-t border-gray-200">
-        <p className="text-sm font-semibold text-gray-900">{t("admin_review.internal_notes")}</p>
-        <p className="text-xs text-gray-500 mt-0.5 mb-3">
+      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-800">
+        <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">{t("admin_review.internal_notes")}</p>
+        <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5 mb-3">
           {t("admin_review.private_note")}
         </p>
 
-        <div className="rounded-xl border border-gray-200 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+        <div className="rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
           <textarea
             value={notes}
             onChange={(e) => handleNotesChange(e.target.value)}
@@ -172,14 +172,14 @@ export default function AdminReviewTasks({
             data-gramm="false"
             data-gramm_editor="false"
             data-enable-grammarly="false"
-            className="w-full min-h-[96px] resize-none border-0 p-3 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none"
+            className="w-full min-h-[96px] resize-none border-0 p-3 text-sm bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none"
             rows={3}
           />
-          <div className="flex items-center justify-between gap-3 px-3 py-2 bg-gray-50 border-t border-gray-200">
-            <span className="text-xs text-gray-500">
+          <div className="flex items-center justify-between gap-3 px-3 py-2 bg-gray-50 dark:bg-slate-900/60 border-t border-gray-200 dark:border-slate-800">
+            <span className="text-xs text-gray-500 dark:text-slate-400">
               {notesStatus === "saving" && t("admin_review.saving")}
               {notesStatus === "saved" && (
-                <span className="inline-flex items-center gap-1 text-green-600">
+                <span className="inline-flex items-center gap-1 text-green-600 dark:text-emerald-400">
                   <CheckCircle2 className="h-3.5 w-3.5" /> {t("admin_review.saved")}
                 </span>
               )}

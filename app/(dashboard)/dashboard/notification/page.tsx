@@ -11,12 +11,12 @@ export default function Page() {
   const { t } = useLanguage();
 
   return (
-    <div className="bg-gray-100 font-inter!">
+    <div className="bg-gray-100 dark:bg-transparent font-inter!">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold text-gray-800">{t("notifications_page.title")}</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-slate-100">{t("notifications_page.title")}</h1>
 
-        <Button className="bg-white text-black border border-gray-300 flex items-center gap-2">
+        <Button className="bg-white dark:bg-[#131b2e] text-black dark:text-slate-100 border border-gray-300 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer shadow-sm">
           <CheckCheck size={24} />
           {t("notifications_page.mark_all_read")}
         </Button>

@@ -575,16 +575,16 @@ export const PlaceFormContent = ({
   return (
     <div className="w-full h-full flex-1 flex flex-col overflow-hidden font-arial">
       {/* Navigation Header */}
-      <div className="relative bg-gray-50/50 border-b border-gray-200/80 px-4 flex items-center h-14 shrink-0">
+      <div className="relative bg-gray-50/50 dark:bg-[#0e1424] border-b border-gray-200/80 dark:border-slate-800 px-4 flex items-center h-14 shrink-0">
         {/* Left Arrow & Fade */}
         {showLeftArrow && (
-          <div className="absolute left-0 top-0 bottom-0 flex items-center pl-1 z-20 bg-gradient-to-r from-gray-50 via-gray-50/90 to-transparent pr-8">
+          <div className="absolute left-0 top-0 bottom-0 flex items-center pl-1 z-20 bg-gradient-to-r from-gray-50 dark:from-[#0e1424] via-gray-50/90 dark:via-[#0e1424]/90 to-transparent pr-8">
             <button
               type="button"
               onClick={() => {
                 scrollRef.current?.scrollBy({ left: -150, behavior: "smooth" });
               }}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white border border-gray-200 shadow-md text-gray-600 hover:text-gray-900 transition-all active:scale-95"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-md text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 transition-all active:scale-95"
             >
               <ChevronLeft size={16} />
             </button>
@@ -597,7 +597,7 @@ export const PlaceFormContent = ({
           className="flex-1 overflow-x-auto no-scrollbar scroll-smooth flex items-center h-full"
           onScroll={checkScroll}
         >
-          <div className="flex items-center gap-1 bg-gray-200/50 p-1 rounded-xl min-w-max relative select-none">
+          <div className="flex items-center gap-1 bg-gray-200/50 dark:bg-slate-800/80 p-1 rounded-xl min-w-max relative select-none">
             {dynamicTabs.map((tab) => {
               const TabIcon = tab.icon;
               const isSelected = activeTab === tab.id;
@@ -637,14 +637,14 @@ export const PlaceFormContent = ({
                   }}
                   className={`relative flex items-center gap-1.5 px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 select-none whitespace-nowrap z-10 ${
                     isSelected
-                      ? "text-blue-600 font-bold"
-                      : "text-gray-500 hover:text-gray-800"
+                      ? "text-blue-600 dark:text-amber-400 font-bold"
+                      : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                   }`}
                 >
                   {isSelected && (
                     <motion.div
                       layoutId="activeTabBackground"
-                      className="absolute inset-0 bg-white border border-gray-200/80 shadow-sm rounded-lg -z-10"
+                      className="absolute inset-0 bg-white dark:bg-[#131b2e] border border-gray-200/80 dark:border-slate-700 shadow-sm rounded-lg -z-10"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -659,13 +659,13 @@ export const PlaceFormContent = ({
 
         {/* Right Arrow & Fade */}
         {showRightArrow && (
-          <div className="absolute right-0 top-0 bottom-0 flex items-center pr-1 z-20 bg-gradient-to-l from-gray-50 via-gray-50/90 to-transparent pl-8">
+          <div className="absolute right-0 top-0 bottom-0 flex items-center pr-1 z-20 bg-gradient-to-l from-gray-50 dark:from-[#0e1424] via-gray-50/90 dark:via-[#0e1424]/90 to-transparent pl-8">
             <button
               type="button"
               onClick={() => {
                 scrollRef.current?.scrollBy({ left: 150, behavior: "smooth" });
               }}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white border border-gray-200 shadow-md text-gray-600 hover:text-gray-900 transition-all active:scale-95"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-md text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 transition-all active:scale-95"
             >
               <ChevronRight size={16} />
             </button>
@@ -1820,7 +1820,7 @@ export const PlaceFormContent = ({
       )}
 
       {/* Footer */}
-      <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center shrink-0">
+      <div className="p-4 bg-gray-50 dark:bg-[#0e1424] border-t border-gray-100 dark:border-slate-800 flex justify-between items-center shrink-0">
         <div className="flex gap-2">
           <Button
             type="button"
@@ -1837,7 +1837,7 @@ export const PlaceFormContent = ({
               type="button"
               onClick={onDelete}
               disabled={isSaving}
-              className="px-5 h-10 border-red-200 text-red-500 hover:bg-red-50 font-bold text-xs uppercase tracking-widest rounded-xl transition-all disabled:opacity-50"
+              className="px-5 h-10 border-red-200 dark:border-rose-900/60 text-red-500 dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-950/30 font-bold text-xs uppercase tracking-widest rounded-xl transition-all disabled:opacity-50"
             >
               {t("common.delete") || "Delete"}
             </Button>
@@ -1851,7 +1851,7 @@ export const PlaceFormContent = ({
               variant="outline"
               disabled={isSaving}
               onClick={() => setActiveTab(dynamicTabs[currentTabIdx - 1].id)}
-              className="px-5 h-10 border-gray-200 font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-gray-50 transition-all flex items-center gap-1.5 disabled:opacity-50"
+              className="px-5 h-10 border-gray-200 dark:border-slate-700 font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 transition-all flex items-center gap-1.5 disabled:opacity-50"
             >
               <ArrowLeft size={14} /> {t("common.previous") || "Back"}
             </Button>
@@ -1863,7 +1863,7 @@ export const PlaceFormContent = ({
               variant="outline"
               onClick={() => handleSave(false)}
               disabled={isSaving || isOptimizingMedia}
-              className="px-5 h-10 border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 hover:border-amber-400 font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-60"
+              className="px-5 h-10 border-amber-300 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/60 hover:border-amber-400 font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-60"
             >
               {isSaving && <Loader2 size={14} className="animate-spin" />}
               {isSaving

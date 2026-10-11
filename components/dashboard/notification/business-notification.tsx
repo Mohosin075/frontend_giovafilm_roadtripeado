@@ -48,7 +48,7 @@ export default function BusinessNotification() {
     <div className="">
       <div className="mb-6 flex items-center gap-2">
         <Briefcase size={24} className="text-[#3B82F6]" />
-        <h1 className="text-xl font-bold text-black font-inter">
+        <h1 className="text-xl font-bold text-black dark:text-slate-100 font-inter">
           {t("notifications_page.business_notifications")}
         </h1>
       </div>

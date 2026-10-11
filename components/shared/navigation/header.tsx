@@ -642,9 +642,9 @@ export default function Header() {
                 <DropdownMenuContent
                   align="end"
                   sideOffset={10}
-                  className="w-[min(22rem,calc(100vw-1.25rem))] max-h-[min(32rem,80vh)] overflow-y-auto p-0 rounded-2xl border border-gray-100 shadow-xl"
+                  className="w-[min(22rem,calc(100vw-1.25rem))] max-h-[min(32rem,80vh)] overflow-y-auto p-0 rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-[#131b2e] shadow-xl"
                 >
-                  <div className="bg-gradient-to-b from-yellow-50 to-white px-4 pt-4 pb-3">
+                  <div className="bg-gradient-to-b from-yellow-50 to-white dark:from-slate-900/90 dark:to-[#131b2e] px-4 pt-4 pb-3 border-b border-gray-100 dark:border-slate-800/80">
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
@@ -652,7 +652,7 @@ export default function Header() {
                         className="relative shrink-0"
                         aria-label="Edit photo and profile"
                       >
-                        <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-white shadow-sm bg-gray-100">
+                        <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-white dark:border-slate-700 shadow-sm bg-gray-100 dark:bg-slate-800">
                           {user?.profile ? (
                             <Image
                               src={getImageUrl(user?.profile)}
@@ -666,23 +666,23 @@ export default function Header() {
                             <NoImage />
                           )}
                         </div>
-                        <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400 text-black shadow border-2 border-white">
+                        <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400 text-black shadow border-2 border-white dark:border-[#131b2e]">
                           <Edit2 size={13} />
                         </span>
                       </button>
                       <div className="min-w-0 flex-1">
-                        <h2 className="truncate text-lg font-bold text-gray-900 leading-tight">
+                        <h2 className="truncate text-lg font-bold text-gray-900 dark:text-slate-100 leading-tight">
                           {user?.name || "Explorer"}
                         </h2>
-                        <p className="mt-0.5 text-xs font-semibold text-gray-500">
+                        <p className="mt-0.5 text-xs font-semibold text-gray-500 dark:text-slate-400">
                           {t("levels.level")} {user?.level ?? 0}
                           {USER_LEVELS[user?.level ?? 0]?.name
                             ? ` · ${USER_LEVELS[user?.level ?? 0].name}`
                             : ""}
                         </p>
                         <div className="mt-2">
-                          <Progress value={progress} className="h-1.5" />
-                          <p className="mt-1 text-[11px] text-gray-500">
+                          <Progress value={progress} className="h-1.5 dark:bg-slate-800" />
+                          <p className="mt-1 text-[11px] text-gray-500 dark:text-slate-400">
                             {user?.points || 0} / {maxPoints} {t("levels.points")}
                           </p>
                         </div>
@@ -693,7 +693,7 @@ export default function Header() {
                       <Button
                         type="button"
                         onClick={handleEditProfile}
-                        className="h-10 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl"
+                        className="h-10 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl cursor-pointer"
                       >
                         <Edit2 size={15} />
                         {t("profile.edit_profile")}
@@ -703,7 +703,7 @@ export default function Header() {
                         variant="outline"
                         onClick={handleShareProfile}
                         disabled={isSharingProfile || !user?._id}
-                        className="h-10 rounded-xl border-gray-200"
+                        className="h-10 rounded-xl border-gray-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 cursor-pointer"
                       >
                         {isSharingProfile ? (
                           <Loader2 size={15} className="animate-spin" />
@@ -723,7 +723,7 @@ export default function Header() {
                         href="/dashboard"
                         onClick={() => setIsMobileProfileMenuOpen(false)}
                       >
-                        <DropdownMenuItem className="rounded-xl px-3 py-3 cursor-pointer">
+                        <DropdownMenuItem className="rounded-xl px-3 py-3 cursor-pointer dark:text-slate-200 dark:hover:bg-slate-800/60 dark:hover:text-white">
                           <Grid2x2 className="mr-3 size-5" />
                           Dashboard
                         </DropdownMenuItem>
@@ -737,7 +737,7 @@ export default function Header() {
                           href={item.href}
                           onClick={() => setIsMobileProfileMenuOpen(false)}
                         >
-                          <DropdownMenuItem className="rounded-xl px-3 py-3 cursor-pointer">
+                          <DropdownMenuItem className="rounded-xl px-3 py-3 cursor-pointer dark:text-slate-200 dark:hover:bg-slate-800/60 dark:hover:text-white">
                             <Icon className="mr-3 size-5" />
                             {item.label}
                           </DropdownMenuItem>
@@ -746,12 +746,12 @@ export default function Header() {
                     })}
                   </div>
 
-                  <div className="border-t px-3 py-2.5">
+                  <div className="border-t border-gray-100 dark:border-slate-800 px-3 py-2.5">
                     <Button
                       onClick={handleLogout}
                       disabled={isLoggingOut}
                       variant="ghost"
-                      className="w-full h-10 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 font-semibold"
+                      className="w-full h-10 rounded-xl text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/30 font-semibold cursor-pointer"
                     >
                       {isLoggingOut ? t("common.loading") : t("nav.logout")}
                     </Button>
@@ -798,7 +798,7 @@ export default function Header() {
 
             {/* Mobile & Tablet Search Header Drawer */}
             <div
-              className={`fixed top-0 inset-x-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-2xl transition-all duration-300 ease-out z-[95] lg:hidden border-b border-gray-200/80 dark:border-zinc-800 ${
+              className={`fixed top-0 inset-x-0 bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-md shadow-2xl transition-all duration-300 ease-out z-[95] lg:hidden border-b border-gray-200/80 dark:border-slate-800 ${
                 isSearchOpen
                   ? "opacity-100 translate-y-0 pointer-events-auto"
                   : "opacity-0 -translate-y-8 pointer-events-none"
@@ -806,13 +806,13 @@ export default function Header() {
             >
               <div className="p-4 sm:p-5 max-w-2xl mx-auto">
                 <div className="flex justify-between items-center mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                     {t("nav.map")}
                   </span>
                   <button
                     type="button"
                     onClick={closeMenus}
-                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full text-gray-600 dark:text-zinc-300 transition-colors"
+                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-600 dark:text-slate-300 transition-colors cursor-pointer"
                     aria-label="Close search"
                   >
                     <X className="size-5" />
@@ -822,7 +822,7 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={submitHeaderSearch}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black dark:hover:text-white transition-colors"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
                     aria-label="Search"
                   >
                     <Search className="size-5" />
@@ -838,14 +838,14 @@ export default function Header() {
                       }
                     }}
                     placeholder={t("search.placeholder_full")}
-                    className="w-full bg-[#F5F5F5] dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500 border border-gray-200/70 dark:border-zinc-700 rounded-full py-3 pl-12 pr-10 text-sm focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-primary/50 outline-none transition-all shadow-inner"
+                    className="w-full bg-[#F5F5F5] dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 border border-gray-200/70 dark:border-slate-800 rounded-full py-3 pl-12 pr-10 text-sm focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-primary/50 outline-none transition-all shadow-inner"
                     autoFocus
                   />
                   {searchTerm && (
                     <button
                       type="button"
                       onClick={() => setSearchTerm("")}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 p-1"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 p-1 cursor-pointer"
                     >
                       <X className="size-4" />
                     </button>
@@ -853,18 +853,18 @@ export default function Header() {
 
                   {/* Search Results Dropdown Mobile */}
                   {searchTerm && (
-                    <div className="mt-2 w-full bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden max-h-[60vh] overflow-y-auto">
+                    <div className="mt-2 w-full bg-white dark:bg-[#131b2e] rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden max-h-[60vh] overflow-y-auto">
                       <button
                         type="button"
                         onClick={submitHeaderSearch}
-                        className="w-full flex items-center gap-3 p-3.5 text-left text-sm font-bold text-amber-700 dark:text-amber-400 bg-amber-50/80 dark:bg-amber-950/40 hover:bg-amber-100/80 dark:hover:bg-amber-950/60 border-b border-amber-100 dark:border-amber-900/50 transition-colors"
+                        className="w-full flex items-center gap-3 p-3.5 text-left text-sm font-bold text-amber-700 dark:text-amber-400 bg-amber-50/80 dark:bg-amber-950/40 hover:bg-amber-100/80 dark:hover:bg-amber-950/60 border-b border-amber-100 dark:border-amber-900/50 transition-colors cursor-pointer"
                       >
                         <Search className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
                         <span>Search &ldquo;{searchTerm}&rdquo; on map</span>
                       </button>
 
                       {isSearchPending ? (
-                        <div className="p-4 text-center text-sm text-gray-500 dark:text-zinc-400 flex items-center justify-center gap-2">
+                        <div className="p-4 text-center text-sm text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2">
                           <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
                           {t("search.searching")}
                         </div>
@@ -890,9 +890,9 @@ export default function Header() {
                                 setSearchTerm("");
                                 closeMenus();
                               }}
-                              className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors border-b border-gray-50 dark:border-zinc-800/60 last:border-0"
+                              className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors border-b border-gray-50 dark:border-slate-800/60 last:border-0"
                             >
-                              <div className="size-10 rounded-lg overflow-hidden shrink-0">
+                              <div className="size-10 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-slate-800">
                                 {place.media?.[0] ? (
                                   <img
                                     src={getImageUrl(place.media[0])}
@@ -900,16 +900,16 @@ export default function Header() {
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
-                                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                    <Map className="size-4 text-gray-400" />
+                                  <div className="w-full h-full bg-gray-200 dark:bg-slate-800 flex items-center justify-center">
+                                    <Map className="size-4 text-gray-400 dark:text-slate-500" />
                                   </div>
                                 )}
                               </div>
                               <div className="min-w-0 flex-1">
-                                <h4 className="text-sm font-semibold text-gray-900 truncate">
+                                <h4 className="text-sm font-semibold text-gray-900 dark:text-slate-100 truncate">
                                   {getLocalized(place.name, language)}
                                 </h4>
-                                <p className="text-xs text-gray-500 truncate">
+                                <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
                                   {place.address}
                                 </p>
                               </div>
@@ -917,7 +917,7 @@ export default function Header() {
                           ))}
                         </div>
                       ) : (
-                        <div className="p-4 text-center text-xs text-gray-500">
+                        <div className="p-4 text-center text-xs text-gray-500 dark:text-slate-400">
                           Press enter or tap &ldquo;Search &lsquo;{searchTerm}&rsquo; on map&rdquo; to filter all matching spots.
                         </div>
                       )}
@@ -938,7 +938,7 @@ export default function Header() {
 
             {/* Mobile & Tablet Menu Slide-in */}
             <div
-              className={`fixed inset-y-0 right-0 w-full md:w-96 bg-white dark:bg-zinc-900 border-l border-transparent dark:border-zinc-800 shadow-2xl transform transition-transform duration-300 ease-in-out z-[100] lg:hidden ${
+              className={`fixed inset-y-0 right-0 w-full md:w-96 bg-white dark:bg-[#0e1424] border-l border-transparent dark:border-slate-800 shadow-2xl transform transition-transform duration-300 ease-in-out z-[100] lg:hidden ${
                 isMenuOpen
                   ? "translate-x-0 pointer-events-auto"
                   : "translate-x-full pointer-events-none"
@@ -946,14 +946,14 @@ export default function Header() {
             >
               <div className="p-6 h-full flex flex-col overflow-y-auto">
                 <div className="flex justify-between items-center mb-5 shrink-0">
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-zinc-100">{t("nav.menu")}</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">{t("nav.menu")}</h2>
                   <div className="flex items-center gap-2">
                     <ThemeToggle size="sm" />
                     <LanguageSwitcher />
                     <button
                       type="button"
                       onClick={closeMenus}
-                      className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full text-gray-600 dark:text-zinc-300 transition-colors"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-600 dark:text-slate-300 transition-colors cursor-pointer"
                       aria-label="Close menu"
                     >
                       <X className="size-5" />
@@ -971,8 +971,8 @@ export default function Header() {
                         key={index}
                         href={link.href}
                         onClick={closeMenus}
-                        className={`block px-4 py-2.5 font-semibold text-black dark:text-zinc-200 font-inter transition-colors rounded-xl ${
-                          isActive ? "bg-primary text-black" : "hover:bg-gray-100 dark:hover:bg-zinc-800"
+                        className={`block px-4 py-2.5 font-semibold text-black dark:text-slate-200 font-inter transition-colors rounded-xl ${
+                          isActive ? "bg-primary text-black font-bold" : "hover:bg-gray-100 dark:hover:bg-slate-800/60"
                         }`}
                       >
                         {link.name}
@@ -983,8 +983,8 @@ export default function Header() {
 
                 {/* User Menu Items in Hamburger (Mobile) */}
                 {isAuthenticated ? (
-                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-zinc-800">
-                    <h3 className="text-sm font-medium text-gray-500 dark:text-zinc-400 mb-3 px-4">
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-800">
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-3 px-4">
                       {t("nav.profile")}
                     </h3>
 
@@ -993,7 +993,7 @@ export default function Header() {
                         <Link
                           href={"/dashboard"}
                           onClick={closeMenus}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-900 dark:text-zinc-100 rounded-lg transition-colors font-semibold"
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-800/60 text-gray-900 dark:text-slate-100 rounded-lg transition-colors font-semibold"
                         >
                           <Grid2x2 className="size-5" />
                           Dashboard
@@ -1008,7 +1008,7 @@ export default function Header() {
                               key={index}
                               href={item.href}
                               onClick={closeMenus}
-                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-900 dark:text-zinc-100 rounded-lg transition-colors"
+                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-slate-800/60 text-gray-900 dark:text-slate-100 rounded-lg transition-colors"
                             >
                               <Icon className="size-5" />
                               <span>{item.label}</span>
@@ -1021,7 +1021,7 @@ export default function Header() {
                       <button
                         type="button"
                         onClick={() => handleLogout()}
-                        className="w-full flex items-center gap-3 px-4 py-3 bg-red-500 text-white hover:bg-red-600 rounded-lg transition-colors text-left mt-4 font-semibold"
+                        className="w-full flex items-center gap-3 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-left mt-4 font-semibold cursor-pointer"
                       >
                         <Map className="size-5" />
                         <span>{t("nav.logout")}</span>
@@ -1029,11 +1029,11 @@ export default function Header() {
                     </div>
                   </div>
                 ) : (
-                  <div className="mt-auto pt-6 border-t border-gray-200 dark:border-zinc-800">
+                  <div className="mt-auto pt-6 border-t border-gray-200 dark:border-slate-800">
                     <Link
                       href="/login"
                       onClick={closeMenus}
-                      className="block w-full text-center bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold font-public-sans rounded-xl py-3 text-sm transition-colors shadow-none"
+                      className="block w-full text-center bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold font-public-sans rounded-xl py-3 text-sm transition-colors shadow-none cursor-pointer"
                     >
                       {t("nav.login")}
                     </Link>

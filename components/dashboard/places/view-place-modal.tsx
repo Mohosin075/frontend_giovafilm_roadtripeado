@@ -213,12 +213,12 @@ export function ViewPlaceModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-3xl lg:max-w-4xl max-h-[90vh] sm:h-[85vh] flex flex-col gap-0 p-0 overflow-hidden border border-gray-100 shadow-2xl rounded-3xl bg-white text-gray-900"
+        className="max-w-3xl lg:max-w-4xl max-h-[90vh] sm:h-[85vh] flex flex-col gap-0 p-0 overflow-hidden border border-gray-100 dark:border-slate-800 shadow-2xl rounded-3xl bg-white dark:bg-[#131b2e] text-gray-900 dark:text-slate-100"
       >
         {isLoading ? (
-          <div className="p-12 space-y-4 flex-1 flex flex-col justify-center items-center bg-gray-50/50">
+          <div className="p-12 space-y-4 flex-1 flex flex-col justify-center items-center bg-gray-50/50 dark:bg-[#0b0f19]">
             <div className="w-10 h-10 rounded-full border-3 border-[#FFC107] border-t-transparent animate-spin" />
-            <p className="text-sm font-semibold text-gray-500">{t("place.loading_details")}</p>
+            <p className="text-sm font-semibold text-gray-500 dark:text-slate-400">{t("place.loading_details")}</p>
           </div>
         ) : place ? (
           <>
@@ -333,8 +333,8 @@ export function ViewPlaceModal({
               </div>
             </div>
 
-            {/* Navigation Tabs (Roadtripeado Gold Theme) */}
-            <div className="flex border-b border-gray-100 bg-white sticky top-0 z-10 overflow-x-auto no-scrollbar shrink-0 px-4 sm:px-6">
+            {/* Navigation Tabs */}
+            <div className="flex border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-[#131b2e] sticky top-0 z-10 overflow-x-auto no-scrollbar shrink-0 px-4 sm:px-6">
               <div className="flex w-full gap-2">
                 {dynamicTabs.map((tab) => {
                   const isActive = activeTab === tab.id;
@@ -345,11 +345,11 @@ export function ViewPlaceModal({
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex items-center gap-2 py-3.5 px-3 text-xs font-bold uppercase tracking-wider transition-all relative cursor-pointer outline-none whitespace-nowrap ${
                         isActive
-                          ? "text-black font-extrabold"
-                          : "text-gray-500 hover:text-gray-900"
+                          ? "text-black dark:text-slate-100 font-extrabold"
+                          : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
                       }`}
                     >
-                      <span className={isActive ? "text-[#D97706]" : "text-gray-400"}>
+                      <span className={isActive ? "text-[#D97706] dark:text-[#fabf13]" : "text-gray-400 dark:text-slate-500"}>
                         {tab.icon}
                       </span>
                       <span>{tab.label}</span>
@@ -363,19 +363,19 @@ export function ViewPlaceModal({
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 min-h-0 overflow-y-auto p-5 sm:p-6 bg-neutral-50/60">
+            <div className="flex-1 min-h-0 overflow-y-auto p-5 sm:p-6 bg-neutral-50/60 dark:bg-[#0b0f19]">
               <div className="space-y-5 animate-in fade-in duration-200">
                 {/* 1. OVERVIEW TAB */}
                 {activeTab === "overview" && (
                   <div className="space-y-4">
                     {/* About This Place */}
                     {hasContent(place.description) && (
-                      <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-2">
-                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800">
-                          <Info size={14} className="text-amber-600" />
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                          <Info size={14} className="text-amber-600 dark:text-amber-400" />
                           <span>{t("place.about_this_place")}</span>
                         </div>
-                        <p className="text-gray-700 text-sm leading-relaxed font-normal">
+                        <p className="text-gray-700 dark:text-slate-300 text-sm leading-relaxed font-normal">
                           {getLocalized(place.description, language)}
                         </p>
                       </div>
@@ -383,12 +383,12 @@ export function ViewPlaceModal({
 
                     {/* Access & Directions */}
                     {hasContent(place.access) && (
-                      <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-2">
-                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800">
-                          <Compass size={14} className="text-amber-600" />
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                          <Compass size={14} className="text-amber-600 dark:text-amber-400" />
                           <span>{t("place.access_and_getting_here")}</span>
                         </div>
-                        <p className="text-gray-700 text-sm leading-relaxed font-normal">
+                        <p className="text-gray-700 dark:text-slate-300 text-sm leading-relaxed font-normal">
                           {getLocalized(place.access, language)}
                         </p>
                       </div>
@@ -396,12 +396,12 @@ export function ViewPlaceModal({
 
                     {/* Tips & Recommendations */}
                     {hasContent(place.recommendations?.tips) && (
-                      <div className="bg-white border border-amber-100 bg-amber-50/30 p-5 rounded-2xl shadow-2xs space-y-2">
-                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800">
-                          <Lightbulb size={14} className="text-amber-600" />
+                      <div className="bg-white dark:bg-[#131b2e] border border-amber-100 dark:border-amber-800/40 bg-amber-50/30 dark:bg-amber-950/20 p-5 rounded-2xl shadow-2xs space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                          <Lightbulb size={14} className="text-amber-600 dark:text-amber-400" />
                           <span>{t("place.tips")}</span>
                         </div>
-                        <p className="text-gray-700 text-sm leading-relaxed font-normal">
+                        <p className="text-gray-700 dark:text-slate-300 text-sm leading-relaxed font-normal">
                           {getLocalized(place.recommendations.tips, language)}
                         </p>
                       </div>
@@ -409,22 +409,22 @@ export function ViewPlaceModal({
 
                     {/* Operating Hours or Schedules */}
                     {place.type === "Business" && place.operatingHours ? (
-                      <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-3">
-                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800">
-                          <Clock size={14} className="text-amber-600" />
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-3">
+                        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                          <Clock size={14} className="text-amber-600 dark:text-amber-400" />
                           <span>{t("place.business_hours")}</span>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-100">
-                            <span className="text-gray-500 font-medium">{t("place.daily_hours")}</span>
-                            <span className="font-bold text-gray-900">
+                          <div className="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800">
+                            <span className="text-gray-500 dark:text-slate-400 font-medium">{t("place.daily_hours")}</span>
+                            <span className="font-bold text-gray-900 dark:text-slate-100">
                               {convertTo12Hour(place.operatingHours.openTime)} - {convertTo12Hour(place.operatingHours.closeTime)}
                             </span>
                           </div>
                           {place.operatingHours.offDays && place.operatingHours.offDays.length > 0 && (
-                            <div className="flex items-center justify-between p-3 rounded-xl bg-red-50/50 border border-red-100">
-                              <span className="text-red-700 font-medium">{t("place.closed_days")}</span>
-                              <span className="font-bold text-red-800">
+                            <div className="flex items-center justify-between p-3 rounded-xl bg-red-50/50 dark:bg-rose-950/30 border border-red-100 dark:border-rose-800/40">
+                              <span className="text-red-700 dark:text-rose-300 font-medium">{t("place.closed_days")}</span>
+                              <span className="font-bold text-red-800 dark:text-rose-200">
                                 {place.operatingHours.offDays.join(", ")}
                               </span>
                             </div>
@@ -433,12 +433,12 @@ export function ViewPlaceModal({
                       </div>
                     ) : (
                       hasContent(place.schedules) && (
-                        <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-2">
-                          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800">
-                            <Clock size={14} className="text-amber-600" />
+                        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-2">
+                          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                            <Clock size={14} className="text-amber-600 dark:text-amber-400" />
                             <span>{t("place.schedules")}</span>
                           </div>
-                          <p className="text-gray-700 text-sm leading-relaxed font-normal">
+                          <p className="text-gray-700 dark:text-slate-300 text-sm leading-relaxed font-normal">
                             {formatLocalizedSchedule(place.schedules, language)}
                           </p>
                         </div>
@@ -448,12 +448,12 @@ export function ViewPlaceModal({
                     {/* Key Specifications Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {/* Coordinates */}
-                      <div className="bg-white border border-gray-100 p-4 rounded-2xl shadow-2xs space-y-1">
-                        <div className="flex items-center gap-1.5 text-gray-400 text-xs font-bold uppercase tracking-wider">
-                          <MapPin size={13} className="text-amber-600" />
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1">
+                        <div className="flex items-center gap-1.5 text-gray-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+                          <MapPin size={13} className="text-amber-600 dark:text-amber-400" />
                           <span>{t("place.coordinates")}</span>
                         </div>
-                        <p className="text-xs font-mono font-bold text-gray-800 truncate">
+                        <p className="text-xs font-mono font-bold text-gray-800 dark:text-slate-200 truncate">
                           {place?.location?.coordinates?.[1] !== undefined
                             ? place.location.coordinates[1].toFixed(4)
                             : "N/A"}
@@ -465,30 +465,30 @@ export function ViewPlaceModal({
                       </div>
 
                       {/* Connected Map */}
-                      <div className="bg-white border border-gray-100 p-4 rounded-2xl shadow-2xs space-y-1">
-                        <div className="flex items-center gap-1.5 text-gray-400 text-xs font-bold uppercase tracking-wider">
-                          <Navigation size={13} className="text-blue-600" />
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1">
+                        <div className="flex items-center gap-1.5 text-gray-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+                          <Navigation size={13} className="text-blue-600 dark:text-blue-400" />
                           <span>{t("place.connected_map")}</span>
                         </div>
-                        <p className="text-xs font-bold text-gray-900 truncate">
+                        <p className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate">
                           {getLocalized(typeof place.map === "object" ? place.map.name : place.map, language) || (t("place.general_map") || "General Map")}
                         </p>
                       </div>
 
                       {/* Difficulty */}
                       {hasContent(place.difficulty) && (
-                        <div className="bg-white border border-gray-100 p-4 rounded-2xl shadow-2xs space-y-1">
-                          <div className="flex items-center gap-1.5 text-gray-400 text-xs font-bold uppercase tracking-wider">
-                            <Gauge size={13} className="text-emerald-600" />
+                        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1">
+                          <div className="flex items-center gap-1.5 text-gray-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <Gauge size={13} className="text-emerald-600 dark:text-emerald-400" />
                             <span>{t("place.difficulty")}</span>
                           </div>
                           <span
                             className={`inline-block text-[11px] font-bold uppercase px-2 py-0.5 rounded-md ${
                               ["easy", "fácil", "facil"].includes(place.difficulty.toLowerCase().trim())
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
+                                ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60"
                                 : ["medium", "moderate", "moderado"].includes(place.difficulty.toLowerCase().trim())
-                                ? "bg-amber-50 text-amber-700 border border-amber-200/60"
-                                : "bg-red-50 text-red-700 border border-red-200/60"
+                                ? "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60"
+                                : "bg-red-50 dark:bg-rose-950/40 text-red-700 dark:text-rose-300 border border-red-200/60 dark:border-rose-800/60"
                             }`}
                           >
                             {getDifficultyLabel(place.difficulty)}
@@ -498,12 +498,12 @@ export function ViewPlaceModal({
 
                       {/* Walking / Hike Time */}
                       {hasContent(place.hikeTime) && (
-                        <div className="bg-white border border-gray-100 p-4 rounded-2xl shadow-2xs space-y-1">
-                          <div className="flex items-center gap-1.5 text-gray-400 text-xs font-bold uppercase tracking-wider">
-                            <Clock size={13} className="text-indigo-600" />
+                        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1">
+                          <div className="flex items-center gap-1.5 text-gray-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <Clock size={13} className="text-indigo-600 dark:text-indigo-400" />
                             <span>{t("place.walking_time")}</span>
                           </div>
-                          <p className="text-xs font-bold text-gray-800">
+                          <p className="text-xs font-bold text-gray-800 dark:text-slate-200">
                             {formatHikeTime(place.hikeTime)}
                           </p>
                         </div>
@@ -511,12 +511,12 @@ export function ViewPlaceModal({
 
                       {/* Entry Cost */}
                       {hasContent(place.entryCost) && (
-                        <div className="bg-white border border-gray-100 p-4 rounded-2xl shadow-2xs space-y-1">
-                          <div className="flex items-center gap-1.5 text-gray-400 text-xs font-bold uppercase tracking-wider">
-                            <Coins size={13} className="text-amber-600" />
+                        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1">
+                          <div className="flex items-center gap-1.5 text-gray-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <Coins size={13} className="text-amber-600 dark:text-amber-400" />
                             <span>{t("place.entry_cost")}</span>
                           </div>
-                          <p className="text-xs font-bold text-gray-800">
+                          <p className="text-xs font-bold text-gray-800 dark:text-slate-200">
                             {formatEntryCost(place.entryCost)}
                           </p>
                         </div>
@@ -524,12 +524,12 @@ export function ViewPlaceModal({
 
                       {/* Atmosphere */}
                       {hasContent(place.atmosphere) && (
-                        <div className="bg-white border border-gray-100 p-4 rounded-2xl shadow-2xs space-y-1">
-                          <div className="flex items-center gap-1.5 text-gray-400 text-xs font-bold uppercase tracking-wider">
-                            <Sparkles size={13} className="text-rose-500" />
+                        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1">
+                          <div className="flex items-center gap-1.5 text-gray-400 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <Sparkles size={13} className="text-rose-500 dark:text-rose-400" />
                             <span>{t("place.atmosphere")}</span>
                           </div>
-                          <p className="text-xs font-bold text-gray-800 truncate">
+                          <p className="text-xs font-bold text-gray-800 dark:text-slate-200 truncate">
                             {getLocalized(place.atmosphere, language)}
                           </p>
                         </div>
@@ -538,17 +538,17 @@ export function ViewPlaceModal({
 
                     {/* Contact & External Links */}
                     {(hasContent(place.phone) || hasContent(place.website) || hasContent(place.instagram)) && (
-                      <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-3">
-                        <div className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-3">
+                        <div className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
                           {t("place.contact_and_links")}
                         </div>
                         <div className="flex flex-wrap gap-3 text-xs">
                           {hasContent(place.phone) && (
                             <a
                               href={`tel:${place.phone}`}
-                              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-800 font-semibold border border-gray-200 transition-colors"
+                              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gray-50 dark:bg-slate-900/80 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-800 dark:text-slate-200 font-semibold border border-gray-200 dark:border-slate-700 transition-colors"
                             >
-                              <Phone size={13} className="text-emerald-600" />
+                              <Phone size={13} className="text-emerald-600 dark:text-emerald-400" />
                               <span>{place.phone}</span>
                             </a>
                           )}
@@ -558,11 +558,11 @@ export function ViewPlaceModal({
                               href={place.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-800 font-semibold border border-gray-200 transition-colors"
+                              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gray-50 dark:bg-slate-900/80 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-800 dark:text-slate-200 font-semibold border border-gray-200 dark:border-slate-700 transition-colors"
                             >
-                              <Globe size={13} className="text-blue-600" />
+                              <Globe size={13} className="text-blue-600 dark:text-blue-400" />
                               <span>{t("place.visit_website")}</span>
-                              <ExternalLink size={11} className="text-gray-400" />
+                              <ExternalLink size={11} className="text-gray-400 dark:text-slate-500" />
                             </a>
                           )}
 
@@ -571,11 +571,11 @@ export function ViewPlaceModal({
                               href={`https://instagram.com/${place.instagram.replace("@", "")}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-pink-50 hover:bg-pink-100/80 text-pink-800 font-semibold border border-pink-200 transition-colors"
+                              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-pink-50 dark:bg-pink-950/30 hover:bg-pink-100/80 dark:hover:bg-pink-950/50 text-pink-800 dark:text-pink-300 font-semibold border border-pink-200 dark:border-pink-800/60 transition-colors"
                             >
-                              <Instagram size={13} className="text-pink-600" />
+                              <Instagram size={13} className="text-pink-600 dark:text-pink-400" />
                               <span>{place.instagram}</span>
-                              <ExternalLink size={11} className="text-pink-400" />
+                              <ExternalLink size={11} className="text-pink-400 dark:text-pink-500" />
                             </a>
                           )}
                         </div>
@@ -588,12 +588,12 @@ export function ViewPlaceModal({
                 {activeTab === "menu" && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                        <Utensils className="text-[#D97706]" size={16} />
+                      <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+                        <Utensils className="text-[#D97706] dark:text-[#fabf13]" size={16} />
                         <span>{t("place.menu_pricing_photos")}</span>
                       </h3>
                       {place?.menuImages && place.menuImages.length > 0 && (
-                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">
+                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300">
                           {place.menuImages.length} {t("place.photos")}
                         </span>
                       )}
@@ -604,7 +604,7 @@ export function ViewPlaceModal({
                         {place.menuImages.map((image: string, index: number) => (
                           <div
                             key={index}
-                            className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-gray-200 cursor-pointer group shadow-2xs hover:shadow-md transition-all"
+                            className="relative aspect-square rounded-2xl overflow-hidden bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 cursor-pointer group shadow-2xs hover:shadow-md transition-all"
                             onClick={() => {
                               setSelectedMenuIndex(index);
                               setMenuLightboxOpen(true);
@@ -625,9 +625,9 @@ export function ViewPlaceModal({
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-12 bg-white border border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-2">
-                        <Utensils size={24} className="text-gray-300" />
-                        <p className="text-xs text-gray-500 font-medium">
+                      <div className="text-center py-12 bg-white dark:bg-[#131b2e] border border-dashed border-gray-200 dark:border-slate-800 rounded-2xl flex flex-col items-center justify-center gap-2">
+                        <Utensils size={24} className="text-gray-300 dark:text-slate-600" />
+                        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
                           {t("place.no_menu")}
                         </p>
                       </div>
@@ -638,8 +638,8 @@ export function ViewPlaceModal({
                 {/* 3. ACCESSIBILITY TAB */}
                 {activeTab === "accessibility" && (
                   <div className="space-y-4">
-                    <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-3">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-3">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
                         {t("place.accessibility_features")}
                       </h3>
                       {place.accessibility?.features && place.accessibility.features.length > 0 ? (
@@ -647,9 +647,9 @@ export function ViewPlaceModal({
                           {place.accessibility.features.map((feature: string) => (
                             <div
                               key={feature}
-                              className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-xs font-semibold"
+                              className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800 rounded-xl text-gray-800 dark:text-slate-200 text-xs font-semibold"
                             >
-                              <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800">
+                              <div className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">
                                 <Accessibility size={14} />
                               </div>
                               <span>{feature}</span>
@@ -657,18 +657,18 @@ export function ViewPlaceModal({
                           ))}
                         </div>
                       ) : (
-                        <p className="text-xs text-gray-500 italic">
+                        <p className="text-xs text-gray-500 dark:text-slate-400 italic">
                           {t("place.no_accessibility_features")}
                         </p>
                       )}
                     </div>
 
                     {place.accessibility?.notes && (
-                      <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-2">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-2">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-400">
                           {t("place.additional_notes")}
                         </h4>
-                        <p className="text-xs text-gray-700 leading-relaxed">
+                        <p className="text-xs text-gray-700 dark:text-slate-300 leading-relaxed">
                           {getLocalized(place.accessibility.notes, language)}
                         </p>
                       </div>
@@ -679,8 +679,8 @@ export function ViewPlaceModal({
                 {/* 4. SERVICES TAB */}
                 {activeTab === "services" && (
                   <div className="space-y-4">
-                    <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs space-y-4">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-4">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
                         {t("place.services_available")}
                       </h3>
                       {place.services && place.services.length > 0 ? (
@@ -688,19 +688,19 @@ export function ViewPlaceModal({
                           {place.services.map((service: string) => (
                             <div
                               key={service}
-                              className="p-4 bg-gray-50 border border-gray-100 rounded-2xl flex flex-col items-center justify-center gap-2 text-center"
+                              className="p-4 bg-gray-50 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800 rounded-2xl flex flex-col items-center justify-center gap-2 text-center"
                             >
-                              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center">
+                              <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 flex items-center justify-center">
                                 {getServiceIcon(service)}
                               </div>
-                              <span className="text-xs font-bold text-gray-800">
+                              <span className="text-xs font-bold text-gray-800 dark:text-slate-200">
                                 {getServiceLabel(service)}
                               </span>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-xs text-gray-500 italic text-center py-6">
+                        <p className="text-xs text-gray-500 dark:text-slate-400 italic text-center py-6">
                           {t("place.no_services_listed")}
                         </p>
                       )}
@@ -718,9 +718,9 @@ export function ViewPlaceModal({
                     ) : reviews?.data && reviews.data.length > 0 ? (
                       <div className="space-y-4">
                         {/* Rating Summary Card */}
-                        <div className="flex items-center gap-5 bg-white border border-gray-100 p-5 rounded-2xl shadow-2xs">
-                          <div className="text-center pr-5 border-r border-gray-100 shrink-0">
-                            <div className="text-3xl font-black text-gray-950 leading-none">
+                        <div className="flex items-center gap-5 bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs">
+                          <div className="text-center pr-5 border-r border-gray-100 dark:border-slate-800 shrink-0">
+                            <div className="text-3xl font-black text-gray-950 dark:text-slate-100 leading-none">
                               {(
                                 reviews.data.reduce(
                                   (acc: number, rev: any) => acc + rev.rating,
@@ -728,7 +728,7 @@ export function ViewPlaceModal({
                                 ) / reviews.data.length
                               ).toFixed(1)}
                             </div>
-                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                            <div className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-1">
                               {t("reviews.average")}
                             </div>
                           </div>
@@ -745,7 +745,7 @@ export function ViewPlaceModal({
                                   />
                                 ))}
                             </div>
-                            <p className="text-xs text-gray-500 font-medium">
+                            <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
                               {(t("reviews.based_on_customer_reviews") || "Based on {count} customer reviews").replace("{count}", String(reviews.data.length))}
                             </p>
                           </div>
@@ -756,30 +756,30 @@ export function ViewPlaceModal({
                           {reviews.data.map((review: any) => (
                             <div
                               key={review._id}
-                              className="bg-white border border-gray-100 p-4 sm:p-5 rounded-2xl space-y-3 shadow-2xs"
+                              className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 sm:p-5 rounded-2xl space-y-3 shadow-2xs"
                             >
                               <div className="flex justify-between items-start gap-4">
                                 <div className="flex items-center gap-3">
-                                  <Avatar className="h-9 w-9 border border-gray-100">
+                                  <Avatar className="h-9 w-9 border border-gray-100 dark:border-slate-800">
                                     <AvatarImage
                                       src={getImageUrl(review?.reviewer?.profile)}
                                     />
-                                    <AvatarFallback className="bg-amber-100 text-amber-900 font-bold text-xs">
+                                    <AvatarFallback className="bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 font-bold text-xs">
                                       {review?.reviewer?.name?.charAt(0) || "U"}
                                     </AvatarFallback>
                                   </Avatar>
                                   <div>
-                                    <p className="text-xs font-bold text-gray-900">
+                                    <p className="text-xs font-bold text-gray-900 dark:text-slate-100">
                                       {review?.reviewer?.name || t("reviews.anonymous_user")}
                                     </p>
-                                    <div className="flex items-center gap-1 text-[10px] text-gray-400">
+                                    <div className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-slate-500">
                                       <Calendar size={10} />
                                       {new Date(review.createdAt).toLocaleDateString()}
                                     </div>
                                   </div>
                                 </div>
 
-                                <div className="flex gap-0.5 text-amber-400 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-100">
+                                <div className="flex gap-0.5 text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-lg border border-amber-100 dark:border-amber-800/60">
                                   {Array(5)
                                     .fill(0)
                                     .map((_, i) => (
@@ -789,14 +789,14 @@ export function ViewPlaceModal({
                                         className={
                                           i < review.rating
                                             ? "fill-amber-400 text-amber-400"
-                                            : "text-gray-200"
+                                            : "text-gray-200 dark:text-slate-700"
                                         }
                                       />
                                     ))}
                                 </div>
                               </div>
 
-                              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed bg-gray-50/70 p-3 rounded-xl border border-gray-100">
+                              <p className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50/70 dark:bg-slate-900/60 p-3 rounded-xl border border-gray-100 dark:border-slate-800">
                                 {getLocalized(review.review, language)}
                               </p>
                             </div>
@@ -804,9 +804,9 @@ export function ViewPlaceModal({
                         </div>
                       </div>
                     ) : (
-                      <div className="text-center py-12 bg-white border border-dashed border-gray-200 rounded-2xl space-y-2">
-                        <MessageSquare className="mx-auto h-8 w-8 text-gray-300" />
-                        <p className="text-xs text-gray-500 font-medium">
+                      <div className="text-center py-12 bg-white dark:bg-[#131b2e] border border-dashed border-gray-200 dark:border-slate-800 rounded-2xl space-y-2">
+                        <MessageSquare className="mx-auto h-8 w-8 text-gray-300 dark:text-slate-600" />
+                        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
                           {t("reviews.no_reviews_yet_place")}
                         </p>
                       </div>
@@ -817,7 +817,7 @@ export function ViewPlaceModal({
             </div>
           </>
         ) : (
-          <div className="p-12 text-center text-gray-400 bg-gray-50 flex-1 flex items-center justify-center">
+          <div className="p-12 text-center text-gray-400 dark:text-slate-500 bg-gray-50 dark:bg-[#0b0f19] flex-1 flex items-center justify-center">
             {t("place.failed_to_load")}
           </div>
         )}

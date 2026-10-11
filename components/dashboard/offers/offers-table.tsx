@@ -95,13 +95,13 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Active":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 dark:bg-emerald-950/40 text-green-800 dark:text-emerald-300 border border-transparent dark:border-emerald-800/60";
       case "Paused":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 dark:bg-amber-950/40 text-yellow-800 dark:text-amber-300 border border-transparent dark:border-amber-800/60";
       case "Expired":
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-300 border border-transparent dark:border-slate-700";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300";
     }
   };
 
@@ -113,12 +113,12 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col">
+    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col">
       {/* Table Toolbar */}
-      <div className="p-4 border-b border-gray-200 flex flex-wrap justify-between items-center gap-4 bg-white">
+      <div className="p-4 border-b border-gray-200 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4 bg-white dark:bg-[#131b2e]">
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           <div className="relative w-full md:w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
             <Input
               placeholder={t("search.search_offers")}
               value={searchTerm}
@@ -136,7 +136,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
               setCountry(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white min-w-[150px]"
+            className="h-10 px-3 border border-gray-300 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 min-w-[150px]"
           >
             <option value="">{t("places_admin.all_countries")}</option>
             {countries?.map((c: string) => (
@@ -152,7 +152,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
               setStatus(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white min-w-[140px]"
+            className="h-10 px-3 border border-gray-300 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 min-w-[140px]"
           >
             <option value="">{t("places_admin.all_status")}</option>
             <option value="Active">{t("offers_admin.active")}</option>
@@ -166,26 +166,26 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
         <table className="w-full">
           {/* Header */}
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+            <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/60">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200">
                 {t("offers_admin.offer_title")}
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200">
                 {t("offers_admin.place_business")}
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200">
                 {t("offers_admin.discount")}
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200">
                 {t("offers_admin.valid_until")}
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200">
                 {t("offers_admin.status")}
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200">
                 {t("offers_admin.redemptions_per_user")}
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200">
                 {t("rewards_admin.actions")}
               </th>
             </tr>
@@ -197,7 +197,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
               <tr>
                 <td
                   colSpan={7}
-                  className="px-6 py-10 text-center text-gray-400"
+                  className="px-6 py-10 text-center text-gray-400 dark:text-slate-500"
                 >
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -209,7 +209,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
               <tr>
                 <td
                   colSpan={7}
-                  className="px-6 py-10 text-center text-gray-500"
+                  className="px-6 py-10 text-center text-gray-500 dark:text-slate-400"
                 >
                   {t("offers_admin.no_locations")}
                 </td>
@@ -228,22 +228,22 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
                     key={offer._id}
                     className={`${
                       index !== displayedOffers.length - 1
-                        ? "border-b border-gray-100"
+                        ? "border-b border-gray-100 dark:border-slate-800/80"
                         : ""
-                    } hover:bg-gray-50 transition-colors`}
+                    } hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors`}
                   >
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-slate-100">
                       {getLocalized(offer.title, language)}
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       <div className="flex flex-col">
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-gray-900 dark:text-slate-100">
                           {getLocalized(offer.business?.name, language) || getLocalized(offer.place?.name, language) || "N/A"}
                         </span>
                         {locationSubtitle && (
                           <span
-                            className="text-xs text-gray-400 truncate max-w-[220px]"
+                            className="text-xs text-gray-400 dark:text-slate-500 truncate max-w-[220px]"
                             title={locationSubtitle}
                           >
                             {locationSubtitle}
@@ -252,11 +252,11 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       {formatOfferDiscountLabel(offer)}
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       {offer.validUntil
                         ? new Date(offer.validUntil).toLocaleDateString()
                         : t("offer.no_expiration")}
@@ -272,7 +272,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       {offer.redemptionsCount || 0}
                     </td>
 
@@ -282,7 +282,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
                         {/* Edit */}
                         <button
                           onClick={() => onEdit?.(offer)}
-                          className="text-blue-500 hover:text-blue-700 transition-colors"
+                          className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                           aria-label="Edit offer"
                         >
                           <Edit size={18} />
@@ -290,7 +290,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
 
                         {offer.status === "Paused" && (
                           <button
-                            className="text-green-600 hover:text-green-700"
+                            className="text-green-600 dark:text-emerald-400 hover:text-green-700 dark:hover:text-emerald-300 transition-colors"
                             aria-label="Resume offer"
                           >
                             <Play size={18} />
@@ -301,7 +301,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
                         {user?.role !== "map_editor" && (
                           <button
                             onClick={() => handleDelete(offer._id, offer.title)}
-                            className="text-red-500 hover:text-red-700 transition-colors"
+                            className="text-red-500 dark:text-rose-400 hover:text-red-700 dark:hover:text-rose-300 transition-colors"
                             aria-label="Delete offer"
                           >
                             <Trash2 size={18} />
@@ -319,16 +319,16 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
 
       {/* Pagination */}
       {!isLoading && meta && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white mt-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-[#131b2e] mt-auto">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">{t("dashboard.table.rows_per_page")}</span>
+            <span className="text-sm text-gray-600 dark:text-slate-400">{t("dashboard.table.rows_per_page")}</span>
             <select
               value={limit}
               onChange={(e) => {
                 setLimit(Number(e.target.value));
                 setPage(1);
               }}
-              className="border border-gray-300 rounded p-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 dark:border-slate-700 rounded p-1 text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -338,7 +338,7 @@ export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 border-none">
+            <span className="text-sm text-gray-600 dark:text-slate-400 border-none">
               {t("common.page")} {meta.page} / {meta.totalPage || 1}
             </span>
             <div className="flex items-center gap-2">

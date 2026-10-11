@@ -137,29 +137,29 @@ export function BusinessTable() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Approved":
-        return "bg-green-100 text-green-700";
+        return "bg-green-100 dark:bg-emerald-950/40 text-green-700 dark:text-emerald-300 border border-transparent dark:border-emerald-800/60";
       case "Pending":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-yellow-100 dark:bg-amber-950/40 text-yellow-700 dark:text-amber-300 border border-transparent dark:border-amber-800/60";
       case "Rejected":
-        return "bg-red-100 text-red-700";
+        return "bg-red-100 dark:bg-rose-950/40 text-red-700 dark:text-rose-300 border border-transparent dark:border-rose-800/60";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300";
     }
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg mt-6 overflow-hidden">
+    <div className="bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 rounded-xl mt-6 overflow-hidden">
       {/* FILTER BAR */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-gray-200 dark:border-slate-800">
         <div className="flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
           <div className="relative w-full lg:w-96">
-            <Search size={16} className="absolute left-3 top-3 text-gray-400" />
+            <Search size={16} className="absolute left-3 top-3 text-gray-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder={t("search.placeholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -189,7 +189,7 @@ export function BusinessTable() {
                   setStatus("all");
                   setPage(1);
                 }}
-                className="text-blue-600 text-sm font-semibold hover:underline"
+                className="text-blue-600 dark:text-blue-400 text-sm font-semibold hover:underline"
               >
                 {t("places_admin.clear_filters")}
               </button>
@@ -200,8 +200,8 @@ export function BusinessTable() {
 
       {/* BULK ACTION BAR */}
       {selected.length > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200 animate-in slide-in-from-top-2">
-          <p className="text-sm font-medium text-gray-700">
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-slate-900/60 border-b border-gray-200 dark:border-slate-800 animate-in slide-in-from-top-2">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-300">
             {selected.length} {t("business_admin.businesses_selected")}
           </p>
           <div className="flex gap-2">
@@ -222,7 +222,7 @@ export function BusinessTable() {
           </div>
           <button
             onClick={() => setSelected([])}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-colors"
           >
             <RotateCcw size={18} />
           </button>
@@ -232,13 +232,13 @@ export function BusinessTable() {
       {/* TABLE */}
       <div className="overflow-x-auto relative">
         {(isLoading || isFetching) && (
-          <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center backdrop-blur-[1px]">
+          <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/50 z-10 flex items-center justify-center backdrop-blur-[1px]">
             <Loader2 size={32} className="text-blue-600 animate-spin" />
           </div>
         )}
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200 text-sm text-gray-600">
+            <tr className="bg-gray-50 dark:bg-slate-900/60 border-b border-gray-200 dark:border-slate-800 text-sm text-gray-600 dark:text-slate-300">
               {businessTableHeaders.map((header, index) => (
                 <th
                   key={index}
@@ -249,7 +249,7 @@ export function BusinessTable() {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80">
             {businesses.length > 0
               ? businesses.map((business: any) => (
                   <tr
@@ -257,7 +257,7 @@ export function BusinessTable() {
                     onClick={() =>
                       router.push(`/dashboard/business/${business._id}`)
                     }
-                    className="hover:bg-blue-50/30 cursor-pointer transition-colors group"
+                    className="hover:bg-blue-50/30 dark:hover:bg-slate-800/40 cursor-pointer transition-colors group"
                   >
                     <td
                       className="px-6 py-4"
@@ -267,27 +267,27 @@ export function BusinessTable() {
                         type="checkbox"
                         checked={selected.includes(business._id)}
                         onChange={() => toggleSelect(business._id)}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded border-gray-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
                     </td>
                     <td className="px-6 py-4">
-                      <p className="font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
+                      <p className="font-bold text-gray-900 dark:text-slate-100 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
                         {getLocalized(business.name, language)}
                       </p>
-                      <p className="text-sm text-gray-500 line-clamp-1 max-w-[200px]">
+                      <p className="text-sm text-gray-500 dark:text-slate-400 line-clamp-1 max-w-[200px]">
                         {getLocalized(business.description, language)}
                       </p>
                     </td>
                     <td className="px-6 py-4 text-sm">
-                      <span className="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs font-medium lowercase">
+                      <span className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium lowercase">
                         {getLocalized(business.category?.name, language) || "N/A"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       <p className="truncate max-w-[150px]">
                         {business.location?.address}
                       </p>
-                      <p className="text-[10px] text-gray-400 uppercase font-bold">
+                      <p className="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-bold">
                         {business.location?.city}
                       </p>
                     </td>
@@ -300,7 +300,7 @@ export function BusinessTable() {
                         {business.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 font-medium">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400 font-medium">
                       {business.createdAt
                         ? formatDate(business.createdAt)
                         : "N/A"}
@@ -311,7 +311,7 @@ export function BusinessTable() {
                     >
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="text-gray-400 hover:text-gray-900 hover:bg-gray-100 p-1.5 rounded-lg transition-all">
+                          <button className="text-gray-400 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800 p-1.5 rounded-lg transition-all">
                             <MoreHorizontal size={18} />
                           </button>
                         </DropdownMenuTrigger>
@@ -335,7 +335,7 @@ export function BusinessTable() {
 
                           <DropdownMenuItem
                             onClick={() => handleDeleteSingle(business._id)}
-                            className="text-red-600 font-bold focus:bg-red-50"
+                            className="text-red-600 font-bold focus:bg-red-50 dark:focus:bg-rose-950/40"
                           >
                             {t("business_admin.delete_business")}
                           </DropdownMenuItem>
@@ -347,9 +347,9 @@ export function BusinessTable() {
               : !isLoading && (
                   <tr>
                     <td colSpan={7} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center gap-2 text-gray-400">
-                        <Search size={40} className="text-gray-200" />
-                        <p className="font-medium text-gray-500">
+                      <div className="flex flex-col items-center gap-2 text-gray-400 dark:text-slate-500">
+                        <Search size={40} className="text-gray-200 dark:text-slate-700" />
+                        <p className="font-medium text-gray-500 dark:text-slate-400">
                           {t("business_admin.no_businesses")}
                         </p>
                         <p className="text-xs">
@@ -364,7 +364,7 @@ export function BusinessTable() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-6 py-4 text-sm text-gray-500 border-t border-gray-200 bg-gray-50/50">
+      <div className="flex items-center justify-between px-6 py-4 text-sm text-gray-500 dark:text-slate-400 border-t border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-900/60">
         <p>
           Showing {businesses.length > 0 ? (page - 1) * limit + 1 : 0}–
           {Math.min(page * limit, meta.total)} of {meta.total} results
@@ -373,7 +373,7 @@ export function BusinessTable() {
           <button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
-            className="px-4 py-1.5 border rounded-md bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
+            className="px-4 py-1.5 border border-gray-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
           >
             Prev
           </button>
@@ -386,7 +386,7 @@ export function BusinessTable() {
                   className={`w-8 h-8 flex items-center justify-center rounded-md border transition-all font-medium ${
                     page === p
                       ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-white hover:bg-gray-50"
+                      : "bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700"
                   }`}
                 >
                   {p}
@@ -397,7 +397,7 @@ export function BusinessTable() {
           <button
             disabled={page === meta.totalPage}
             onClick={() => setPage(page + 1)}
-            className="px-4 py-1.5 border rounded-md bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
+            className="px-4 py-1.5 border border-gray-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
           >
             Next
           </button>

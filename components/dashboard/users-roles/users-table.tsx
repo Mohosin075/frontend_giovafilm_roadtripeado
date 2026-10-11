@@ -249,9 +249,9 @@ export function UsersTable(): React.ReactElement {
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-[#131b2e] p-4 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
         <div className="relative w-full md:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
           <Input
             placeholder={t("users_admin.search_users_placeholder")}
             value={searchTerm}
@@ -288,27 +288,27 @@ export function UsersTable(): React.ReactElement {
         </div>
       </div>
 
-      <Card className="overflow-hidden border border-gray-200 py-0 shadow-none">
+      <Card className="overflow-hidden border border-gray-200 dark:border-slate-800 bg-white dark:bg-[#131b2e] py-0 shadow-none">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-slate-900/60 border-b border-gray-200 dark:border-slate-800">
               <tr>
                 {userTableHeaders.map((header) => (
                   <th
                     key={header}
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900"
+                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-slate-200"
                   >
                     {header}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-slate-800/80">
               {isLoading ? (
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-6 py-10 text-center text-gray-500"
+                    className="px-6 py-10 text-center text-gray-500 dark:text-slate-400"
                   >
                     {t("users_admin.loading_users")}
                   </td>
@@ -317,7 +317,7 @@ export function UsersTable(): React.ReactElement {
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-6 py-10 text-center text-red-500"
+                    className="px-6 py-10 text-center text-red-500 dark:text-rose-400"
                   >
                     Failed to load users.
                   </td>
@@ -326,7 +326,7 @@ export function UsersTable(): React.ReactElement {
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-6 py-10 text-center text-gray-500"
+                    className="px-6 py-10 text-center text-gray-500 dark:text-slate-400"
                   >
                     {t("users_admin.no_maps")}
                   </td>
@@ -335,25 +335,25 @@ export function UsersTable(): React.ReactElement {
                 users.map((user: any) => (
                   <tr
                     key={user._id}
-                    className="hover:bg-gray-50 transition-colors"
+                    className="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors"
                   >
-                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-slate-100 font-medium">
                       <div className="flex flex-col">
                         <span
                           onClick={() => handleViewProfile(user._id)}
-                          className="cursor-pointer hover:underline font-semibold hover:text-amber-600 transition-colors"
+                          className="cursor-pointer hover:underline font-semibold hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                         >
                           {user.name || "Unknown User"}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       {user.email}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       {currentUser?._id === user._id ||
                         !canManageUserRole(currentUser?.role, user.role) ? (
-                        <div className="px-3 py-1 bg-blue-50 text-blue-700 rounded border border-blue-200 inline-block text-[10px] font-bold uppercase tracking-wider">
+                        <div className="px-3 py-1 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 rounded border border-blue-200 dark:border-blue-800/60 inline-block text-[10px] font-bold uppercase tracking-wider">
                           {user.role}
                         </div>
                       ) : (
@@ -382,33 +382,33 @@ export function UsersTable(): React.ReactElement {
                             </SelectContent>
                           </Select>
                           {user.role === "map_editor" && (
-                            <div className="text-[10px] text-gray-500 flex flex-col gap-0.5 mt-1 font-semibold bg-gray-50 p-1.5 rounded border border-gray-150">
+                            <div className="text-[10px] text-gray-500 dark:text-slate-400 flex flex-col gap-0.5 mt-1 font-semibold bg-gray-50 dark:bg-slate-900/60 p-1.5 rounded border border-gray-150 dark:border-slate-800">
                               <span>Maps: {user.assignedMaps?.length || 0} assigned</span>
                             </div>
                           )}
                         </div>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       <div
                         className={`px-2 py-0.5 rounded-full text-[10px] font-semibold inline-block ${user.status === "active"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-green-100 dark:bg-emerald-950/40 text-green-700 dark:text-emerald-300 border border-transparent dark:border-emerald-800/60"
                             : user.status === "inactive"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
+                              ? "bg-yellow-100 dark:bg-amber-950/40 text-yellow-700 dark:text-amber-300 border border-transparent dark:border-amber-800/60"
+                              : "bg-red-100 dark:bg-rose-950/40 text-red-700 dark:text-rose-300 border border-transparent dark:border-rose-800/60"
                           }`}
                       >
                         {user.status}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400">
                       {formatDate(user.createdAt)}
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleViewProfile(user._id)}
-                          className="text-amber-600 hover:text-amber-700 transition-colors p-2 hover:bg-amber-50 rounded"
+                          className="text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors p-2 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded"
                           title={t("users_admin.view_profile") || "View User Profile"}
                           aria-label={t("users_admin.view_profile") || "View User Profile"}
                         >
@@ -418,7 +418,7 @@ export function UsersTable(): React.ReactElement {
                           canManageUserRole(currentUser?.role, user.role) && (
                             <button
                               onClick={() => handleEditAccess(user)}
-                              className="text-blue-500 hover:text-blue-700 transition-colors p-2 hover:bg-blue-50 rounded"
+                              className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors p-2 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded"
                               title={t("users_admin.edit_editor_access")}
                               aria-label={t("users_admin.edit_editor_access")}
                             >
@@ -429,7 +429,7 @@ export function UsersTable(): React.ReactElement {
                           currentUser?._id !== user._id && (
                             <button
                               onClick={() => handleDelete(user._id)}
-                              className="text-red-500 hover:text-red-700 transition-colors p-2 hover:bg-red-50 rounded"
+                              className="text-red-500 dark:text-rose-400 hover:text-red-700 dark:hover:text-rose-300 transition-colors p-2 hover:bg-red-50 dark:hover:bg-rose-950/40 rounded"
                               aria-label={t("common.delete")}
                             >
                               <Trash2 size={18} />
@@ -446,20 +446,20 @@ export function UsersTable(): React.ReactElement {
 
         {/* Pagination */}
         {meta && meta.totalPage > 1 && (
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-            <div className="text-sm text-gray-600">
+          <div className="px-6 py-4 bg-gray-50 dark:bg-slate-900/60 border-t border-gray-200 dark:border-slate-800 flex items-center justify-between">
+            <div className="text-sm text-gray-600 dark:text-slate-400">
               Showing{" "}
-              <span className="font-medium">{users.length > 0 ? (page - 1) * limit + 1 : 0}</span>–
-              <span className="font-medium">
+              <span className="font-medium text-gray-900 dark:text-slate-200">{users.length > 0 ? (page - 1) * limit + 1 : 0}</span>–
+              <span className="font-medium text-gray-900 dark:text-slate-200">
                 {Math.min(page * limit, meta.total)}
               </span>{" "}
-              of <span className="font-medium">{meta.total}</span> results
+              of <span className="font-medium text-gray-900 dark:text-slate-200">{meta.total}</span> results
             </div>
             <div className="flex gap-2">
               <button
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
-                className="px-3 py-1 border border-gray-300 rounded bg-white text-sm disabled:opacity-50"
+                className="px-3 py-1 border border-gray-300 dark:border-slate-700 rounded bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-slate-300 disabled:opacity-50"
               >
                 Previous
               </button>
@@ -471,7 +471,7 @@ export function UsersTable(): React.ReactElement {
                       onClick={() => setPage(p)}
                       className={`w-8 h-8 flex items-center justify-center rounded-md border transition-all font-medium ${page === p
                           ? "bg-blue-600 text-white border-blue-600"
-                          : "bg-white hover:bg-gray-50"
+                          : "bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700"
                         }`}
                     >
                       {p}
@@ -482,7 +482,7 @@ export function UsersTable(): React.ReactElement {
               <button
                 disabled={page === meta.totalPage}
                 onClick={() => setPage(page + 1)}
-                className="px-3 py-1 border border-gray-300 rounded bg-white text-sm disabled:opacity-50"
+                className="px-3 py-1 border border-gray-300 dark:border-slate-700 rounded bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-slate-300 disabled:opacity-50"
               >
                 Next
               </button>
@@ -493,22 +493,22 @@ export function UsersTable(): React.ReactElement {
 
       {/* Editor Access Control Modal */}
       <Dialog open={isAccessModalOpen} onOpenChange={setIsAccessModalOpen}>
-        <DialogContent className="sm:max-w-[500px] bg-white border border-gray-200">
+        <DialogContent className="sm:max-w-[500px] bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
           <DialogHeader>
-            <DialogTitle className="text-gray-900 font-bold text-lg">
+            <DialogTitle className="text-gray-900 dark:text-slate-100 font-bold text-lg">
               {modalMode === "change_role" ? "Assign Map Editor Access" : "Edit Map Editor Access"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 my-2">
-              <p className="text-sm text-gray-600 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+              <p className="text-sm text-gray-600 dark:text-slate-300 bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-800/60 rounded-lg px-3 py-2">
                 {t("users_admin.assign_at_least_one")} <strong>{t("maps_admin.map_name").toLowerCase()}</strong>. {t("users_admin.scoped_access")}
               </p>
 
             {/* Maps list */}
             <div className="flex flex-col space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold text-gray-700">
+                <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                   Assign Maps ({selectedMaps.length} selected)
                 </label>
                 <div className="flex items-center gap-2 text-xs font-semibold">
@@ -517,15 +517,15 @@ export function UsersTable(): React.ReactElement {
                     onClick={() => {
                       setSelectedMaps(maps.map((m: any) => normalizeId(m._id)));
                     }}
-                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
                   >
                     {t("users_admin.select_all")}
                   </button>
-                  <span className="text-gray-300">|</span>
+                  <span className="text-gray-300 dark:text-slate-700">|</span>
                   <button
                     type="button"
                     onClick={() => setSelectedMaps([])}
-                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    className="text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
                   >
                     {t("users_admin.clear_all")}
                   </button>
@@ -539,9 +539,9 @@ export function UsersTable(): React.ReactElement {
                 className="h-9 text-xs"
               />
 
-              <div className="border border-gray-200 rounded-lg p-2 max-h-56 overflow-y-auto space-y-1.5 bg-gray-50/50">
+              <div className="border border-gray-200 dark:border-slate-800 rounded-lg p-2 max-h-56 overflow-y-auto space-y-1.5 bg-gray-50/50 dark:bg-slate-900/40">
                 {filteredModalMaps.length === 0 ? (
-                  <p className="text-xs text-gray-500 py-4 text-center">No maps found.</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 py-4 text-center">No maps found.</p>
                 ) : (
                   filteredModalMaps.map((map: any) => {
                     const mapId = normalizeId(map._id);
@@ -550,8 +550,8 @@ export function UsersTable(): React.ReactElement {
                       <label
                         key={mapId}
                         className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-xs font-medium cursor-pointer select-none transition-all ${isChecked
-                            ? "bg-blue-50/80 text-blue-700 border border-blue-100"
-                            : "text-gray-700 border border-transparent hover:bg-gray-100/70"
+                            ? "bg-blue-50/80 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800/60"
+                            : "text-gray-700 dark:text-slate-300 border border-transparent hover:bg-gray-100/70 dark:hover:bg-slate-800/60"
                           }`}
                       >
                         <input

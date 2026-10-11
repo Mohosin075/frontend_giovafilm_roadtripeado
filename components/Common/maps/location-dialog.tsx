@@ -112,26 +112,26 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
       <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
         {/* Click outside backdrop */}
         <div
-          className="absolute inset-0 bg-black/25 backdrop-blur-[2px] transition-opacity duration-300 animate-in fade-in"
+          className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 animate-in fade-in"
           onClick={onClose}
           aria-hidden="true"
         />
-        <div className="bg-white rounded-[32px] overflow-hidden shadow-2xl w-full max-w-md relative z-10 p-8 text-center space-y-6 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95">
+        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 rounded-[32px] overflow-hidden shadow-2xl w-full max-w-md relative z-10 p-8 text-center space-y-6 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95">
           {/* Close */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center shadow hover:bg-gray-200 transition-colors"
+            className="absolute top-4 right-4 z-10 w-8 h-8 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-full flex items-center justify-center shadow hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
 
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 dark:bg-amber-950/50 text-yellow-600 dark:text-amber-400 rounded-full">
             <Lock size={28} />
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl font-black text-gray-900">{t("map.unlock_full_map")}</h2>
-            <p className="text-gray-500 text-sm leading-relaxed px-4">
+            <h2 className="text-2xl font-black text-gray-900 dark:text-slate-100">{t("map.unlock_full_map")}</h2>
+            <p className="text-gray-500 dark:text-slate-400 text-sm leading-relaxed px-4">
               {message}
             </p>
           </div>
@@ -142,13 +142,13 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
               onClick={onClose}
               className="w-full"
             >
-              <Button className="w-full bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-xl h-12">
+              <Button className="w-full bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-xl h-12 shadow-md shadow-yellow-500/20 cursor-pointer">
                 {t("map.buy_map")}
               </Button>
             </Link>
             <button
               onClick={onClose}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl h-12 transition-colors cursor-pointer text-sm"
+              className="w-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 font-semibold rounded-xl h-12 transition-colors cursor-pointer text-sm"
             >
               {t("common.cancel")}
             </button>
@@ -163,20 +163,20 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
     return (
       <div className="absolute inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-4 pb-16 sm:pb-4">
         <div
-          className="absolute inset-0 bg-black/25 backdrop-blur-[2px] transition-opacity duration-300 animate-in fade-in"
+          className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 animate-in fade-in"
           onClick={onClose}
           aria-hidden="true"
         />
-        <div className="bg-white rounded-t-[28px] rounded-b-[20px] sm:rounded-[32px] shadow-2xl w-full max-w-md relative z-10 flex flex-col overflow-hidden max-h-[80dvh] sm:max-h-[85vh] min-h-0 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-6 sm:slide-in-from-bottom-4">
-          <div className="h-36 sm:h-48 shrink-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
+        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 rounded-t-[28px] rounded-b-[20px] sm:rounded-[32px] shadow-2xl w-full max-w-md relative z-10 flex flex-col overflow-hidden max-h-[80dvh] sm:max-h-[85vh] min-h-0 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-6 sm:slide-in-from-bottom-4">
+          <div className="h-36 sm:h-48 shrink-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800 animate-pulse" />
           <div className="p-4 sm:p-6 space-y-3">
-            <div className="h-6 w-3/4 bg-gray-200 rounded-lg animate-pulse" />
-            <div className="h-4 w-1/3 bg-gray-100 rounded animate-pulse" />
+            <div className="h-6 w-3/4 bg-gray-200 dark:bg-slate-800 rounded-lg animate-pulse" />
+            <div className="h-4 w-1/3 bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
             <div className="space-y-2 pt-2">
-              <div className="h-3.5 w-full bg-gray-100 rounded animate-pulse" />
-              <div className="h-3.5 w-5/6 bg-gray-100 rounded animate-pulse" />
+              <div className="h-3.5 w-full bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
+              <div className="h-3.5 w-5/6 bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
             </div>
-            <div className="h-11 w-full bg-gray-200 rounded-xl animate-pulse mt-4" />
+            <div className="h-11 w-full bg-gray-200 dark:bg-slate-800 rounded-xl animate-pulse mt-4" />
           </div>
         </div>
       </div>
@@ -187,23 +187,23 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
     return (
       <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
         <div
-          className="absolute inset-0 bg-black/25 backdrop-blur-[2px] transition-opacity duration-300 animate-in fade-in"
+          className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 animate-in fade-in"
           onClick={onClose}
           aria-hidden="true"
         />
-        <div className="bg-white rounded-[32px] overflow-hidden shadow-2xl w-full max-w-md relative z-10 p-8 text-center space-y-4 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95">
+        <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 rounded-[32px] overflow-hidden shadow-2xl w-full max-w-md relative z-10 p-8 text-center space-y-4 transition-all duration-300 ease-out animate-in fade-in-0 zoom-in-95">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center shadow hover:bg-gray-200 transition-colors"
+            className="absolute top-4 right-4 z-10 w-8 h-8 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-full flex items-center justify-center shadow hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
-          <h2 className="text-xl font-bold text-gray-900 pt-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 pt-2">
             {t("search.no_results")}
           </h2>
           <Button
             onClick={onClose}
-            className="w-full bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-xl h-12"
+            className="w-full bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-xl h-12 shadow-md shadow-yellow-500/20 cursor-pointer"
           >
             {t("common.close")}
           </Button>
@@ -291,8 +291,8 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
           ) : null}
 
           {type !== "business" && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4">
-              <p className="text-[11px] text-amber-800 leading-relaxed font-medium">
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 rounded-xl p-3 mb-4">
+              <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed font-medium">
                 {t("place.notice_disclaimer")}
               </p>
             </div>
