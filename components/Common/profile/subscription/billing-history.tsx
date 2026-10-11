@@ -24,55 +24,55 @@ const BillingHistory = () => {
     : [];
 
   return (
-    <Card>
+    <Card className="bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
       <CardHeader>
-        <CardTitle>{t("billing_history.title")}</CardTitle>
+        <CardTitle className="text-gray-900 dark:text-slate-100">{t("billing_history.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-3 p-6">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
-            <p className="text-sm text-gray-500">{t("billing_history.loading")}</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">{t("billing_history.loading")}</p>
           </div>
         ) : subs.length > 0 ? (
-          <div className="rounded-md border">
+          <div className="rounded-md border border-gray-200 dark:border-slate-800">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>{t("billing_history.plan")}</TableHead>
-                  <TableHead>{t("billing_history.business")}</TableHead>
-                  <TableHead>{t("billing_history.amount")}</TableHead>
-                  <TableHead>{t("billing_history.status")}</TableHead>
-                  <TableHead>{t("billing_history.billing_period")}</TableHead>
-                  <TableHead>{t("billing_history.next_payment")}</TableHead>
+                <TableRow className="border-b border-gray-200 dark:border-slate-800">
+                  <TableHead className="text-gray-700 dark:text-slate-300">{t("billing_history.plan")}</TableHead>
+                  <TableHead className="text-gray-700 dark:text-slate-300">{t("billing_history.business")}</TableHead>
+                  <TableHead className="text-gray-700 dark:text-slate-300">{t("billing_history.amount")}</TableHead>
+                  <TableHead className="text-gray-700 dark:text-slate-300">{t("billing_history.status")}</TableHead>
+                  <TableHead className="text-gray-700 dark:text-slate-300">{t("billing_history.billing_period")}</TableHead>
+                  <TableHead className="text-gray-700 dark:text-slate-300">{t("billing_history.next_payment")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {subs.map((sub: any) => (
-                  <TableRow key={sub._id}>
-                    <TableCell className="font-medium">
+                  <TableRow key={sub._id} className="border-b border-gray-100 dark:border-slate-800/60">
+                    <TableCell className="font-medium text-gray-900 dark:text-slate-100">
                       {sub.planId?.name || "Premium Plan"}
                     </TableCell>
-                    <TableCell className="font-semibold text-slate-700">
+                    <TableCell className="font-semibold text-slate-700 dark:text-slate-200">
                       {sub.businessId?.name || "—"}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-gray-900 dark:text-slate-100">
                       {sub.planId?.price != null ? `$${sub.planId.price}` : "—"}
                     </TableCell>
                     <TableCell>
                       <span
                         className={`inline-block px-2 py-0.5 text-[10px] font-bold tracking-wider rounded-full uppercase ${
                           sub.status === "active"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-green-100 dark:bg-emerald-950/50 text-green-700 dark:text-emerald-400"
                             : sub.status === "canceled"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-yellow-100 text-yellow-700"
+                            ? "bg-red-100 dark:bg-rose-950/50 text-red-700 dark:text-rose-400"
+                            : "bg-yellow-100 dark:bg-amber-950/50 text-yellow-700 dark:text-amber-400"
                         }`}
                       >
                         {sub.status === "active" ? t("offers_admin.active") : sub.status}
                       </span>
                     </TableCell>
-                    <TableCell className="text-gray-600 text-xs">
+                    <TableCell className="text-gray-600 dark:text-slate-400 text-xs">
                       {sub.currentPeriodStart
                         ? new Date(sub.currentPeriodStart).toLocaleDateString()
                         : "—"}
@@ -81,7 +81,7 @@ const BillingHistory = () => {
                         ? new Date(sub.currentPeriodEnd).toLocaleDateString()
                         : "—"}
                     </TableCell>
-                    <TableCell className="text-gray-600 text-xs">
+                    <TableCell className="text-xs text-gray-700 dark:text-slate-300">
                       {sub.status === "canceled"
                         ? t("offers_admin.expired")
                         : sub.cancelAtPeriodEnd
@@ -96,7 +96,7 @@ const BillingHistory = () => {
             </Table>
           </div>
         ) : (
-          <div className="text-center p-6 text-gray-500 border rounded-lg bg-gray-50">
+          <div className="text-center p-6 text-gray-500 dark:text-slate-400 border border-gray-200 dark:border-slate-800 rounded-lg bg-gray-50 dark:bg-[#0e1424]">
             {t("billing_history.no_history")}
           </div>
         )}

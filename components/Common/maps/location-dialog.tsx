@@ -285,8 +285,8 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
             </div>
           ) : isLoading ? (
             <div className="space-y-2 mb-4">
-              <div className="h-3.5 w-full bg-gray-100 rounded animate-pulse" />
-              <div className="h-3.5 w-4/5 bg-gray-100 rounded animate-pulse" />
+              <div className="h-3.5 w-full bg-gray-100 dark:bg-slate-800 rounded animate-pulse" />
+              <div className="h-3.5 w-4/5 bg-gray-100 dark:bg-slate-800 rounded animate-pulse" />
             </div>
           ) : null}
 

@@ -475,36 +475,36 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                 {t("for_business.step1.add_custom_hours")}
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-md bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
               <DialogHeader>
-                <DialogTitle>{t("for_business.step1.add_business_hours")}</DialogTitle>
+                <DialogTitle className="text-gray-900 dark:text-slate-100">{t("for_business.step1.add_business_hours")}</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-4">
-                <div className="flex items-center gap-4 border-b border-gray-100 pb-2">
+                <div className="flex items-center gap-4 border-b border-gray-100 dark:border-slate-800 pb-2">
                   <button
                     type="button"
-                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "everyday" ? "border-yellow-400 text-yellow-600" : "border-transparent text-gray-400 hover:text-gray-600"}`}
+                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "everyday" ? "border-yellow-400 text-yellow-600 dark:text-yellow-400" : "border-transparent text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200"}`}
                     onClick={() => setSelectionType("everyday")}
                   >
                     {t("for_business.step1.everyday")}
                   </button>
                   <button
                     type="button"
-                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "range" ? "border-yellow-400 text-yellow-600" : "border-transparent text-gray-400 hover:text-gray-600"}`}
+                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "range" ? "border-yellow-400 text-yellow-600 dark:text-yellow-400" : "border-transparent text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200"}`}
                     onClick={() => setSelectionType("range")}
                   >
                     {t("for_business.step1.date_range")}
                   </button>
                   <button
                     type="button"
-                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "individual" ? "border-yellow-400 text-yellow-600" : "border-transparent text-gray-400 hover:text-gray-600"}`}
+                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "individual" ? "border-yellow-400 text-yellow-600 dark:text-yellow-400" : "border-transparent text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200"}`}
                     onClick={() => setSelectionType("individual")}
                   >
                     {t("for_business.step1.individual_days")}
                   </button>
                   <button
                     type="button"
-                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "always-open" ? "border-green-500 text-green-600" : "border-transparent text-gray-400 hover:text-gray-600"}`}
+                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${selectionType === "always-open" ? "border-green-500 text-green-600 dark:text-green-400" : "border-transparent text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200"}`}
                     onClick={() => setSelectionType("always-open")}
                   >
                     {t("for_business.step1.always_open")}
@@ -513,7 +513,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
 
                 {selectionType === "everyday" && (
                   <div className="py-2">
-                    <p className="text-sm font-medium text-gray-500">
+                    <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
                       {t("for_business.step1.everyday_note")}
                     </p>
                   </div>
@@ -529,7 +529,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                         <SelectTrigger className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                           {DAYS.map((d) => (
                             <SelectItem key={d} value={d}>
                               {t(`for_business.step1.days.${d}`)}
@@ -546,7 +546,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                         <SelectTrigger className="bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                           {DAYS.map((d) => (
                             <SelectItem key={d} value={d}>
                               {t(`for_business.step1.days.${d}`)}
@@ -561,10 +561,10 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                 {selectionType === "always-open" && (
                   <div className="py-4 flex flex-col items-center gap-2 text-center">
                     <span className="text-3xl">🕐</span>
-                    <p className="text-sm font-semibold text-green-700">
+                    <p className="text-sm font-semibold text-green-700 dark:text-green-400">
                       {t("for_business.step1.always_open_msg")}
                     </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-400 dark:text-slate-500">
                       {t("for_business.step1.always_open_submsg")}
                     </p>
                   </div>
@@ -572,7 +572,7 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
 
                 {selectionType === "individual" && (
                   <div className="space-y-2">
-                    <Label className="text-sm font-bold text-gray-700">
+                    <Label className="text-sm font-bold text-gray-700 dark:text-slate-300">
                       {t("for_business.step1.select_days")}
                     </Label>
                     <div className="flex flex-wrap gap-2">
@@ -585,8 +585,8 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                             onClick={() => {
                               setSelectedDays((prev) =>
                                 prev.includes(d)
-                                  ? prev.filter((x) => x !== d)
-                                  : [...prev, d],
+                                ? prev.filter((x) => x !== d)
+                                : [...prev, d],
                               );
                             }}
                             className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-colors ${isSelected ? "bg-yellow-100 dark:bg-yellow-950/60 border-yellow-400 text-yellow-800 dark:text-yellow-300" : "bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-700"}`}
@@ -636,14 +636,14 @@ export function BusinessFormStep1({ form }: BusinessFormStep1Props) {
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex-1 font-bold text-gray-500 hover:text-gray-700 rounded-xl h-11"
+                    className="flex-1 font-bold text-gray-500 dark:text-slate-300 dark:bg-slate-900/60 dark:border-slate-800 hover:text-gray-700 dark:hover:text-slate-100 rounded-xl h-11"
                     onClick={() => setIsDialogOpen(false)}
                   >
                     {t("for_business.step1.cancel")}
                   </Button>
                   <Button
                     type="button"
-                    className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-white font-black rounded-xl h-11 tracking-widest shadow-lg shadow-yellow-100 transition-all"
+                    className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black font-black rounded-xl h-11 tracking-wider shadow-lg shadow-yellow-100/50 dark:shadow-none transition-all"
                     onClick={handleAddHours}
                   >
                     {t("for_business.step1.add")}

@@ -149,12 +149,12 @@ export function InviteUserForm(): React.ReactElement {
   const isEditor = formData.role === "map_editor";
 
   return (
-    <Card className="p-6 bg-white border border-gray-200">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">{t("users_admin.invite_user")}</h2>
+    <Card className="p-6 bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
+      <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-6">{t("users_admin.invite_user")}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
             {t("users_admin.email_address")} <span className="text-red-500">*</span>
           </label>
           <Input
@@ -163,13 +163,13 @@ export function InviteUserForm(): React.ReactElement {
             placeholder="user@example.com"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full"
+            className="w-full bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100"
             disabled={isLoading}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
             {t("users_admin.role")} <span className="text-red-500">*</span>
           </label>
           <select
@@ -180,7 +180,7 @@ export function InviteUserForm(): React.ReactElement {
                 : allowedRoles[0] || "user"
             }
             onChange={handleInputChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-white"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 [&>option]:bg-white [&>option]:dark:bg-slate-900 [&>option]:text-gray-900 [&>option]:dark:text-slate-100"
             disabled={isLoading || allowedRoles.length === 0}
           >
             {allowedRoles.map((role) => (
@@ -193,19 +193,19 @@ export function InviteUserForm(): React.ReactElement {
 
         {isEditor && (
           <div className="col-span-1 md:col-span-2 space-y-3">
-            <p className="text-sm text-gray-600 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+            <p className="text-sm text-gray-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900/40 rounded-lg px-3 py-2">
               {t("users_admin.assign_map")}. {t("users_admin.scoped_access")}
             </p>
 
             {isLoadingMaps ? (
-              <div className="flex items-center justify-center gap-2 py-10 text-sm text-gray-500">
+              <div className="flex items-center justify-center gap-2 py-10 text-sm text-gray-500 dark:text-slate-400">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 {t("users_admin.loading_maps")}
               </div>
             ) : (
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-semibold text-gray-700">
+                  <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                     Assign Maps ({selectedMaps.length} selected)
                   </label>
                   <div className="flex items-center gap-2 text-xs font-semibold">
@@ -214,15 +214,15 @@ export function InviteUserForm(): React.ReactElement {
                       onClick={() => {
                         setSelectedMaps(maps.map((m: any) => normalizeId(m._id)));
                       }}
-                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
                     >
                       {t("users_admin.select_all")}
                     </button>
-                    <span className="text-gray-300">|</span>
+                    <span className="text-gray-300 dark:text-slate-600">|</span>
                     <button
                       type="button"
                       onClick={() => setSelectedMaps([])}
-                      className="text-gray-500 hover:text-gray-700 transition-colors"
+                      className="text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors"
                     >
                       {t("users_admin.clear_all")}
                     </button>
@@ -233,12 +233,12 @@ export function InviteUserForm(): React.ReactElement {
                   placeholder={t("common.search_maps")}
                   value={mapSearch}
                   onChange={(e) => setMapSearch(e.target.value)}
-                  className="h-9 text-xs"
+                  className="h-9 text-xs bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100"
                 />
 
-                <div className="border border-gray-200 rounded-lg p-2 max-h-56 overflow-y-auto space-y-1.5 bg-gray-50/50">
+                <div className="border border-gray-200 dark:border-slate-800 rounded-lg p-2 max-h-56 overflow-y-auto space-y-1.5 bg-gray-50/50 dark:bg-[#0e1424]">
                   {filteredMaps.length === 0 ? (
-                    <p className="text-xs text-gray-500 py-4 text-center">
+                    <p className="text-xs text-gray-500 dark:text-slate-400 py-4 text-center">
                       {t("users_admin.no_maps")}
                     </p>
                   ) : (
@@ -250,8 +250,8 @@ export function InviteUserForm(): React.ReactElement {
                           key={mapId}
                           className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-xs font-medium cursor-pointer select-none transition-all ${
                             isChecked
-                              ? "bg-blue-50/80 text-blue-700 border border-blue-100"
-                              : "text-gray-700 border border-transparent hover:bg-gray-100/70"
+                              ? "bg-blue-50/80 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/40"
+                              : "text-gray-700 dark:text-slate-300 border border-transparent hover:bg-gray-100/70 dark:hover:bg-slate-800/60"
                           }`}
                         >
                           <input
@@ -260,7 +260,7 @@ export function InviteUserForm(): React.ReactElement {
                             onChange={(e) =>
                               handleMapToggle(map, e.target.checked)
                             }
-                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
+                            className="rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
                           />
                           <span className="truncate">
                             {getLocalized(map.name, language)}{" "}
@@ -281,7 +281,7 @@ export function InviteUserForm(): React.ReactElement {
         <Button
           onClick={resetForm}
           variant="outline"
-          className="px-6"
+          className="px-6 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700"
           disabled={isLoading}
         >
           {t("common.cancel")}

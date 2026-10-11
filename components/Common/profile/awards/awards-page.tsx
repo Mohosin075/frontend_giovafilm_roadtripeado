@@ -412,16 +412,16 @@ export default function AwardsPage() {
 
               {/* Pagination Controls */}
               {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-4 mt-12 bg-gray-50 p-4 rounded-xl border">
+                <div className="flex justify-center items-center gap-4 mt-12 bg-gray-50 dark:bg-[#131b2e] p-4 rounded-xl border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                   <Button
                     variant="outline"
                     onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                     disabled={page === 1}
-                    className="bg-white"
+                    className="bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700"
                   >
                     Previous
                   </Button>
-                  <span className="text-gray-600 font-bold px-4">
+                  <span className="text-gray-600 dark:text-slate-300 font-bold px-4">
                     Page {page} of {totalPages}
                   </span>
                   <Button
@@ -430,7 +430,7 @@ export default function AwardsPage() {
                       setPage((prev) => Math.min(prev + 1, totalPages))
                     }
                     disabled={page === totalPages}
-                    className="bg-white"
+                    className="bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700"
                   >
                     Next
                   </Button>

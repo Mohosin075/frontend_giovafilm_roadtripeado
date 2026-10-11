@@ -1,49 +1,26 @@
+import React from "react";
 import { InfoWindow } from "@vis.gl/react-google-maps";
 import { PlaceFormContent } from "./PlaceFormContent";
 
 interface PlaceInfoWindowProps {
   position: { lat: number; lng: number };
+  categories: any[];
   onClose: () => void;
   onDelete?: () => void;
-  categories: any[];
-  onSave: (data: any) => Promise<void>;
-  isSaving: boolean;
+  onSave: (payload: any) => Promise<void>;
+  isSaving?: boolean;
   isFetchingAddress?: boolean;
-  initialData?: {
-    name: string;
-    description: string;
-    category: string;
-    type?: string;
-    address?: string;
-    accessDescription?: string;
-    tips?: string;
-    services?: string[];
-    accessibility?: any;
-    images?: string[];
-    menuImages?: string[];
-    status?: string;
-    isNew: boolean;
-    phone?: string;
-    website?: string;
-    instagram?: string;
-    schedules?: string;
-    entryCost?: string | number;
-    hikeTime?: string | number;
-    atmosphere?: string;
-    difficulty?: string;
-    operatingHours?: Record<string, { open: string; close: string; closed: boolean }>;
-    position?: { lat: number; lng: number };
-  };
+  initialData?: any;
 }
 
 export const PlaceInfoWindow = ({
   position,
+  categories,
   onClose,
   onDelete,
-  categories,
   onSave,
-  isSaving,
-  isFetchingAddress,
+  isSaving = false,
+  isFetchingAddress = false,
   initialData,
 }: PlaceInfoWindowProps) => {
   // Offset InfoWindow upward so the pin and its drag icon remain fully visible beneath it
@@ -51,7 +28,7 @@ export const PlaceInfoWindow = ({
 
   return (
     <InfoWindow position={position} onCloseClick={onClose} headerDisabled pixelOffset={offsetSize}>
-      <div className="w-[calc(100vw-32px)] max-w-[calc(100vw-32px)] sm:w-[550px] sm:max-w-[550px] md:w-[650px] md:max-w-[650px] bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200 flex flex-col animate-in fade-in duration-300 max-h-[85vh]">
+      <div className="w-[calc(100vw-32px)] max-w-[calc(100vw-32px)] sm:w-[550px] sm:max-w-[550px] md:w-[650px] md:max-w-[650px] bg-white dark:bg-[#131b2e] rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-slate-800 flex flex-col animate-in fade-in duration-300 max-h-[85vh]">
         <PlaceFormContent
           categories={categories}
           isSaving={isSaving}
@@ -82,8 +59,14 @@ export const PlaceInfoWindow = ({
           max-height: 85vh !important;
           overflow: auto !important;
         }
+        .dark .gm-style-iw-c {
+          background: #131b2e !important;
+        }
         .gm-style-iw-tc::after {
           background: white !important;
+        }
+        .dark .gm-style-iw-tc::after {
+          background: #131b2e !important;
         }
         .no-scrollbar::-webkit-scrollbar {
           display: none;

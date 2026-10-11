@@ -234,18 +234,18 @@ function ClaimPromoContent() {
   // Case A: Stripe Checkout SUCCESS Redirect
   if (success) {
     return (
-      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] text-gray-900">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-gray-100 shadow-xl p-8 text-center space-y-6 relative z-10">
-          <div className="mx-auto w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center">
+      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
+        <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl p-8 text-center space-y-6 relative z-10">
+          <div className="mx-auto w-16 h-16 bg-emerald-50 dark:bg-emerald-950/40 rounded-full flex items-center justify-center">
             <CheckCircle className="w-10 h-10 text-emerald-500" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-gray-900">Upgrade Successful!</h2>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">Upgrade Successful!</h2>
+            <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
               Payment verified. The map access has been successfully added to your account.
             </p>
           </div>
-          <div className="bg-emerald-50/70 p-4 rounded-xl border border-emerald-100 text-xs font-bold text-emerald-800 uppercase tracking-wider">
+          <div className="bg-emerald-50/70 dark:bg-emerald-950/40 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/40 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
             Status: Lifetime Access Granted ✅
           </div>
           <Button
@@ -262,14 +262,14 @@ function ClaimPromoContent() {
   // Case B: Stripe Checkout CANCELLED Redirect
   if (cancelled) {
     return (
-      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] text-gray-900">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-gray-100 shadow-xl p-8 text-center space-y-6 relative z-10">
-          <div className="mx-auto w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center">
+      <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
+        <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl p-8 text-center space-y-6 relative z-10">
+          <div className="mx-auto w-16 h-16 bg-amber-50 dark:bg-amber-950/40 rounded-full flex items-center justify-center">
             <XCircle className="w-10 h-10 text-[#FFC107]" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-gray-900">Checkout Canceled</h2>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">Checkout Canceled</h2>
+            <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
               Checkout was canceled. No charges were made. You can complete the upgrade whenever you're ready.
             </p>
           </div>
@@ -283,7 +283,7 @@ function ClaimPromoContent() {
             <Button
               onClick={handleGoToCatalog}
               variant="outline"
-              className="w-full h-14 border-gray-200 text-gray-600 font-bold rounded-lg hover:bg-gray-50 text-base"
+              className="w-full h-14 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 text-base"
             >
               Return to Catalog
             </Button>
@@ -717,27 +717,27 @@ function ClaimPromoContent() {
       {/* ── Custom Email Mismatch Modal ── */}
       {showMismatchModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl max-w-md w-full p-6 text-center space-y-6 relative overflow-hidden">
+          <div className="bg-white dark:bg-[#131b2e] rounded-3xl border border-gray-100 dark:border-slate-800 shadow-2xl max-w-md w-full p-6 text-center space-y-6 relative overflow-hidden text-gray-900 dark:text-slate-100">
             {/* Top Banner Icon */}
-            <div className="mx-auto w-16 h-16 bg-amber-50 border border-amber-100 rounded-2xl flex items-center justify-center text-amber-500 shadow-sm">
+            <div className="mx-auto w-16 h-16 bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-2xl flex items-center justify-center text-amber-500 dark:text-amber-400 shadow-sm">
               <MailCheck className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-xl font-black text-gray-900 tracking-tight">
+              <h3 className="text-xl font-black text-gray-900 dark:text-slate-100 tracking-tight">
                 Account Email Mismatch
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed font-medium px-2">
+              <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed font-medium px-2">
                 {mismatchMessage ||
                   `This invitation is specifically reserved for ${promoData?.recipientEmail}. You are logged in as ${userProfile?.email}.`}
               </p>
             </div>
 
-            <div className="bg-amber-50/70 p-3.5 rounded-xl border border-amber-200/60 text-xs text-amber-900 text-left font-medium space-y-1">
-              <p className="font-bold text-amber-950 flex items-center gap-1.5">
-                <AlertCircle size={14} className="text-amber-600 shrink-0" /> Important Notice:
+            <div className="bg-amber-50/70 dark:bg-amber-500/10 p-3.5 rounded-xl border border-amber-200/60 dark:border-amber-500/20 text-xs text-amber-900 dark:text-amber-300 text-left font-medium space-y-1">
+              <p className="font-bold text-amber-950 dark:text-amber-200 flex items-center gap-1.5">
+                <AlertCircle size={14} className="text-amber-600 dark:text-amber-400 shrink-0" /> Important Notice:
               </p>
-              <p className="text-[11px] leading-relaxed text-amber-800">
+              <p className="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300/80">
                 To claim this map access, please log out of your current account and log in or sign up with <strong>{promoData?.recipientEmail || "the invited email"}</strong>.
               </p>
             </div>
@@ -762,7 +762,7 @@ function ClaimPromoContent() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowMismatchModal(false)}
-                className="w-full h-11 border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-gray-50 text-sm cursor-pointer"
+                className="w-full h-11 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 text-sm cursor-pointer"
               >
                 Close
               </Button>

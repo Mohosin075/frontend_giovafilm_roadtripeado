@@ -1629,7 +1629,7 @@ export default function AddPlacePage() {
             </button>
           </div> */}
 
-          <div className="bg-gray-100 p-3 text-[10px] font-bold text-gray-500 uppercase truncate">
+          <div className="bg-gray-100 dark:bg-slate-900/90 border-t border-gray-200 dark:border-slate-800 p-3 text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase truncate">
             Selected Map: {getSafeString(selectedMap?.name, language) || selectedMap?.country || "None"}
           </div>
         </div>
@@ -1637,15 +1637,15 @@ export default function AddPlacePage() {
         {/* Map Area */}
         <div className="flex-1 relative">
           {/* Floating Map Status Legend */}
-          <div className="absolute top-4 right-4 z-20 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-xl shadow-md border border-gray-200/80 flex items-center gap-3 select-none pointer-events-none">
+          <div className="absolute top-4 right-4 z-20 bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-sm px-3.5 py-1.5 rounded-xl shadow-md border border-gray-200/80 dark:border-slate-800 flex items-center gap-3 select-none pointer-events-none">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm" />
-              <span className="text-gray-700 font-bold text-[11px] uppercase tracking-wider">{t("places_admin.published") || "Published"}</span>
+              <span className="text-gray-700 dark:text-slate-200 font-bold text-[11px] uppercase tracking-wider">{t("places_admin.published") || "Published"}</span>
             </div>
-            <div className="h-3 w-px bg-gray-200" />
+            <div className="h-3 w-px bg-gray-200 dark:bg-slate-700" />
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm" />
-              <span className="text-gray-700 font-bold text-[11px] uppercase tracking-wider">{t("places_admin.draft") || "Draft"}</span>
+              <span className="text-gray-700 dark:text-slate-200 font-bold text-[11px] uppercase tracking-wider">{t("places_admin.draft") || "Draft"}</span>
             </div>
           </div>
 

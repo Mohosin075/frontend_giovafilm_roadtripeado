@@ -323,9 +323,9 @@ export function CreateOfferDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="min-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
+          <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-slate-100">
             {isEdit ? "Update Offer" : "Create New Offer"}
           </DialogTitle>
         </DialogHeader>
@@ -333,7 +333,7 @@ export function CreateOfferDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
           {/* Offer Photo */}
           <div>
-            <Label className="text-sm font-medium text-gray-700 mb-2 block">
+            <Label className="text-sm font-medium text-gray-700 dark:text-slate-200 mb-2 block">
               Offer Photo
             </Label>
 
@@ -364,8 +364,8 @@ export function CreateOfferDialog({
               }}
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer relative ${
                 isDraggingPhoto
-                  ? "border-blue-500 bg-blue-50/60 ring-2 ring-blue-400/30 scale-[1.01]"
-                  : "border-gray-300 hover:border-gray-400"
+                  ? "border-blue-500 bg-blue-50/60 dark:bg-blue-900/20 ring-2 ring-blue-400/30 scale-[1.01]"
+                  : "border-gray-300 dark:border-slate-700 hover:border-gray-400 dark:hover:border-slate-600 bg-gray-50/50 dark:bg-slate-900/40"
               }`}
             >
               {preview ? (
@@ -385,11 +385,11 @@ export function CreateOfferDialog({
                 </div>
               ) : (
                 <>
-                  <Upload className="mx-auto mb-2 text-gray-400" size={32} />
-                  <p className="text-sm text-gray-600">
+                  <Upload className="mx-auto mb-2 text-gray-400 dark:text-slate-500" size={32} />
+                  <p className="text-sm text-gray-600 dark:text-slate-300">
                     {t("offers_admin.upload_hint")}
                   </p>
-                  <p className="text-xs text-gray-500">{t("offers_admin.upload_format")}</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">{t("offers_admin.upload_format")}</p>
                 </>
               )}
 
@@ -408,14 +408,14 @@ export function CreateOfferDialog({
           <div>
             <Label
               htmlFor="title"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-gray-700 dark:text-slate-200"
             >
               {t("offers_admin.offer_title")}
             </Label>
             <Input
               id="title"
               placeholder={t("offers_admin.title_placeholder")}
-              className="mt-1"
+              className="mt-1 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               {...register("title", { required: t("offers_admin.title") + " is required" })}
             />
           </div>
@@ -423,7 +423,7 @@ export function CreateOfferDialog({
           {/* Searchable location picker (business or place — same submit logic) */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium text-gray-700">
+              <Label className="text-sm font-medium text-gray-700 dark:text-slate-200">
                 {t("offers_admin.choose_location")}
               </Label>
             </div>
@@ -441,31 +441,31 @@ export function CreateOfferDialog({
               <button
                 type="button"
                 onClick={() => setDropdownOpen((o) => !o)}
-                className="w-full flex items-center justify-between px-3 py-2.5 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full flex items-center justify-between px-3 py-2.5 border border-gray-300 dark:border-slate-800 rounded-md bg-white dark:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <span
-                  className={selectedEntity ? "text-gray-900" : "text-gray-400"}
+                  className={selectedEntity ? "text-gray-900 dark:text-slate-100" : "text-gray-400 dark:text-slate-500"}
                 >
                   {selectedEntity ? selectedEntity.name : t("offers_admin.search_by_name")}
                 </span>
                 <ChevronDown
                   size={16}
-                  className={`text-gray-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                  className={`text-gray-400 dark:text-slate-500 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
                 />
               </button>
 
               {/* Dropdown panel */}
               {dropdownOpen && (
-                <div className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+                <div className="absolute z-50 mt-1 w-full bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 rounded-md shadow-lg overflow-hidden">
                   {/* Search input */}
-                  <div className="p-2 border-b border-gray-100">
+                  <div className="p-2 border-b border-gray-100 dark:border-slate-800">
                     <input
                       autoFocus
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder={t("offers_admin.type_name_to_search")}
-                      className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                     />
                   </div>
 
@@ -479,14 +479,14 @@ export function CreateOfferDialog({
                           setSearchQuery("");
                           setDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-sm text-gray-400 hover:bg-gray-50"
+                        className="w-full text-left px-3 py-2 text-sm text-gray-400 dark:text-slate-500 hover:bg-gray-50 dark:hover:bg-slate-800/60"
                       >
                         {t("offers_admin.clear_selection")}
                       </button>
                     </li>
 
                     {filteredOptions.length === 0 ? (
-                      <li className="px-3 py-3 text-sm text-gray-400 text-center">
+                      <li className="px-3 py-3 text-sm text-gray-400 dark:text-slate-500 text-center">
                         {t("offers_admin.no_locations")}
                       </li>
                     ) : (
@@ -501,10 +501,10 @@ export function CreateOfferDialog({
                               setSearchQuery("");
                               setDropdownOpen(false);
                             }}
-                            className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-blue-50 ${
+                            className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-blue-50 dark:hover:bg-slate-800/60 ${
                               selectedId === item._id
-                                ? "bg-blue-50 text-blue-700 font-medium"
-                                : "text-gray-700"
+                                ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium"
+                                : "text-gray-700 dark:text-slate-200"
                             }`}
                           >
                             {item.name}
@@ -522,14 +522,14 @@ export function CreateOfferDialog({
           <div>
             <Label
               htmlFor="description"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-gray-700 dark:text-slate-200"
             >
               {t("offers_admin.offer_description") || "Offer Description"}
             </Label>
             <textarea
               id="description"
               placeholder={t("offers_admin.offer_description_placeholder") || "Describe the offer..."}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-slate-900/60 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
               rows={4}
               {...register("description", {
                 required: "Description is required",
@@ -542,7 +542,7 @@ export function CreateOfferDialog({
             <div>
               <Label
                 htmlFor="maxRedemptions"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-slate-200"
               >
                 {t("offers_admin.redemptions_per_user")}
               </Label>
@@ -551,12 +551,12 @@ export function CreateOfferDialog({
                 type="number"
                 min={0}
                 placeholder={t("offers_admin.e_g_1") || "e.g., 1"}
-                className="mt-1"
+                className="mt-1 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                 {...register("maxRedemptions", {
                   required: "Redemptions per user is required",
                 })}
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
                 {t("offers_admin.redemptions_per_user_hint") || "How many times one customer can use this offer"}
               </p>
             </div>
@@ -564,13 +564,13 @@ export function CreateOfferDialog({
             <div>
               <Label
                 htmlFor="redemptionFrequency"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-slate-200"
               >
                 {t("offers_admin.redemption_frequency") || "Redemption Frequency"}
               </Label>
               <select
                 id="redemptionFrequency"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white dark:bg-slate-900/60 text-gray-900 dark:text-slate-100"
                 {...register("redemptionFrequency")}
                 onChange={(e) => {
                   const val = e.target.value;
@@ -589,29 +589,29 @@ export function CreateOfferDialog({
               </select>
 
               {(watch("redemptionFrequency") || "daily") === "daily" && (
-                <p className="mt-1.5 text-xs text-blue-600 font-medium">
+                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
                   Customers can redeem this offer once every 24 hours
                 </p>
               )}
               {watch("redemptionFrequency") === "weekly" && (
-                <p className="mt-1.5 text-xs text-blue-600 font-medium">
+                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
                   Customers can redeem this offer once every 7 days
                 </p>
               )}
               {watch("redemptionFrequency") === "monthly" && (
-                <p className="mt-1.5 text-xs text-blue-600 font-medium">
+                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
                   Customers can redeem this offer once every 30 days
                 </p>
               )}
               {watch("redemptionFrequency") === "once" && (
-                <p className="mt-1.5 text-xs text-amber-600 font-medium">
+                <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium">
                   Each customer can only redeem this offer once
                 </p>
               )}
 
               {watch("redemptionFrequency") === "custom" && (
                 <div className="mt-2">
-                  <Label htmlFor="redemptionDuration" className="text-xs text-gray-600">
+                  <Label htmlFor="redemptionDuration" className="text-xs text-gray-600 dark:text-slate-300">
                     Duration in minutes
                   </Label>
                   <Input
@@ -619,7 +619,7 @@ export function CreateOfferDialog({
                     type="number"
                     min={1}
                     placeholder="e.g., 1440 for 24 hours"
-                    className="mt-1 text-xs"
+                    className="mt-1 text-xs dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100"
                     {...register("redemptionDuration", {
                       required: "Duration is required",
                     })}
@@ -632,7 +632,7 @@ export function CreateOfferDialog({
           <div>
             <Label
               htmlFor="totalRedemptionLimit"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-gray-700 dark:text-slate-200"
             >
               {t("offers_admin.total_redemption_limit")}
             </Label>
@@ -641,10 +641,10 @@ export function CreateOfferDialog({
               type="number"
               min={0}
               placeholder={t("offers_admin.leave_empty_unlimited")}
-              className="mt-1"
+              className="mt-1 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               {...register("totalRedemptionLimit")}
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
               {t("offers_admin.total_limit_hint")}
             </p>
           </div>
@@ -654,13 +654,13 @@ export function CreateOfferDialog({
             <div>
               <Label
                 htmlFor="discountType"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-slate-200"
               >
                 {t("offers_admin.discount_type")}
               </Label>
               <select
                 id="discountType"
-                className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-1 px-3 py-1 border border-gray-300 dark:border-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-900/60 text-gray-900 dark:text-slate-100"
                 {...register("discountType", { required: "Type is required" })}
                 onChange={(e) => {
                   void register("discountType").onChange(e);
@@ -683,7 +683,7 @@ export function CreateOfferDialog({
               <div>
                 <Label
                   htmlFor="discountValue"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-gray-700 dark:text-slate-200"
                 >
                   {discountType === "Fixed Price"
                     ? "Total Bundle Price ($)"
@@ -696,7 +696,7 @@ export function CreateOfferDialog({
                   type="number"
                   min={0}
                   placeholder={discountType === "Fixed Price" ? "e.g. 25" : "20"}
-                  className="mt-1"
+                  className="mt-1 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                   {...register("discountValue", {
                     required:
                       discountType !== "BOGO" && discountType !== "Free item"
@@ -706,7 +706,7 @@ export function CreateOfferDialog({
                   })}
                 />
                 {discountType === "Fixed Price" && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                     Enter the total fixed price for the bundle offer (e.g. 2 pizzas + 1 donut for $25).
                   </p>
                 )}
@@ -715,17 +715,17 @@ export function CreateOfferDialog({
           </div>
 
           {discountType === "BOGO" && (
-            <div className="space-y-3 rounded-lg border border-yellow-200 bg-yellow-50/70 p-4">
+            <div className="space-y-3 rounded-lg border border-yellow-200 dark:border-amber-500/20 bg-yellow-50/70 dark:bg-amber-500/10 p-4">
               <div>
                 <Label
                   htmlFor="bogoSecondType"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-gray-700 dark:text-slate-200"
                 >
                   {t("offers_admin.second_item")}
                 </Label>
                 <select
                   id="bogoSecondType"
-                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-md bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   {...register("bogoSecondType", {
                     required:
                       discountType === "BOGO"
@@ -737,7 +737,7 @@ export function CreateOfferDialog({
                   <option value="free">{t("offers_admin.second_item_free")}</option>
                   <option value="percentage">{t("offers_admin.second_item_pct")}</option>
                 </select>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                   {t("offers_admin.bogo_hint")}
                 </p>
               </div>
@@ -745,7 +745,7 @@ export function CreateOfferDialog({
                 <div>
                   <Label
                     htmlFor="discountValue"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-gray-700 dark:text-slate-200"
                   >
                     {t("offers_admin.pct_off_second_item") || "% off second item"}
                   </Label>
@@ -755,7 +755,7 @@ export function CreateOfferDialog({
                     min={1}
                     max={100}
                     placeholder="e.g., 50"
-                    className="mt-1 bg-white"
+                    className="mt-1 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100"
                     {...register("discountValue", {
                       required:
                         bogoSecondType === "percentage"
@@ -775,14 +775,14 @@ export function CreateOfferDialog({
             <div>
               <Label
                 htmlFor="validFrom"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-slate-200"
               >
                 {t("offers_admin.valid_from") || "Valid From"}
               </Label>
               <Input
                 id="validFrom"
                 type="date"
-                className="mt-1"
+                className="mt-1 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100"
                 {...register("validFrom", {
                   required: "Start date is required",
                 })}
@@ -794,14 +794,14 @@ export function CreateOfferDialog({
                 <div>
                   <Label
                     htmlFor="validUntil"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-gray-700 dark:text-slate-200"
                   >
                     {t("offers_admin.valid_until")}
                   </Label>
                   <Input
                     id="validUntil"
                     type="date"
-                    className="mt-1"
+                    className="mt-1 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100"
                     {...register("validUntil", {
                       required: !noExpiration ? "End date is required" : false,
                     })}
@@ -823,7 +823,7 @@ export function CreateOfferDialog({
                 />
                 <Label
                   htmlFor="noExpiration"
-                  className="text-sm font-medium text-gray-700 cursor-pointer"
+                  className="text-sm font-medium text-gray-700 dark:text-slate-200 cursor-pointer"
                 >
                   {t("offers_admin.no_expiration") || "No Expiration"}
                 </Label>
@@ -835,7 +835,7 @@ export function CreateOfferDialog({
           <div>
             <Label
               htmlFor="redemptionRules"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-gray-700 dark:text-slate-200"
             >
               {t("offers_admin.redemption_rules") || "Redemption Rules"}
             </Label>
@@ -850,12 +850,12 @@ export function CreateOfferDialog({
                   if (e.target.value.trim()) setRuleError("");
                 }}
                 placeholder={t("offers_admin.redemption_rule_placeholder") || "e.g., One per user per visit"}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 outline-none resize-none"
               />
               <Button
                 type="button"
                 onClick={handleAddRule}
-                className="self-start bg-primary hover:bg-primary/80 text-white px-4 py-2 h-auto"
+                className="self-start bg-primary hover:bg-primary/80 text-black font-semibold px-4 py-2 h-auto"
               >
                 {t("common.add")}
               </Button>
@@ -872,10 +872,10 @@ export function CreateOfferDialog({
                 {rules.map((rule, index) => (
                   <li
                     key={index}
-                    className="flex items-start justify-between gap-2 bg-gray-50 border border-gray-200 rounded-md px-3 py-2"
+                    className="flex items-start justify-between gap-2 bg-gray-50 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 rounded-md px-3 py-2"
                   >
-                    <span className="text-sm text-gray-700 leading-snug">
-                      <span className="font-medium text-gray-400 mr-2">
+                    <span className="text-sm text-gray-700 dark:text-slate-200 leading-snug">
+                      <span className="font-medium text-gray-400 dark:text-slate-500 mr-2">
                         {index + 1}.
                       </span>
                       {rule}
@@ -897,30 +897,29 @@ export function CreateOfferDialog({
           <div>
             <Label
               htmlFor="buttonLabel"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-gray-700 dark:text-slate-200"
             >
               {t("offers_admin.button_label") || "Button Label"}
             </Label>
             <Input
               id="buttonLabel"
               placeholder={t("offers_admin.redeem_offer") || "Redeem Offer"}
-              className="mt-1"
+              className="mt-1 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               {...register("buttonLabel")}
             />
           </div>
 
-          {/* Status - only for edit */}
           {isEdit && (
             <div>
               <Label
                 htmlFor="status"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-slate-200"
               >
                 {t("offers_admin.status")}
               </Label>
               <select
                 id="status"
-                className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-1 px-3 py-1 border border-gray-300 dark:border-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-900/60 text-gray-900 dark:text-slate-100"
                 {...register("status")}
               >
                 <option value="Active">{t("offers_admin.active")}</option>
@@ -936,7 +935,7 @@ export function CreateOfferDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-gray-300"
+              className="border-gray-300 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               {t("common.cancel")}
             </Button>

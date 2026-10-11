@@ -687,7 +687,7 @@ export const PlaceFormContent = ({
                     setFormData({ ...formData, name: e.target.value });
                     if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
                   }}
-                  className={`w-full bg-white rounded-lg h-9 text-sm italic ${errors.name ? "border-red-500 focus:ring-red-500" : "border-gray-200"}`}
+                  className={`w-full bg-white dark:bg-slate-900/60 dark:text-slate-100 rounded-lg h-9 text-sm italic ${errors.name ? "border-red-500 focus:ring-red-500" : "border-gray-200 dark:border-slate-800"}`}
                 />
                 {errors.name && <p className="text-[11px] text-red-500 font-semibold">{errors.name}</p>}
               </div>
@@ -695,7 +695,7 @@ export const PlaceFormContent = ({
                 <Label className="text-sm font-medium">
                   {t("business_admin.category")} <span className="text-red-500">*</span>
                   {formData.type === "Business" && (
-                    <span className="ml-2 text-[10px] bg-blue-50 text-blue-600 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">{t("places_admin.business_user")}</span>
+                    <span className="ml-2 text-[10px] bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">{t("places_admin.business_user")}</span>
                   )}
                 </Label>
                 <Select
@@ -705,7 +705,7 @@ export const PlaceFormContent = ({
                     if (errors.category) setErrors((prev) => ({ ...prev, category: "" }));
                   }}
                 >
-                  <SelectTrigger className={`w-full h-10 bg-white rounded-lg text-sm italic ${errors.category ? "border-red-500 focus:ring-red-500" : "border-gray-200"}`}>
+                  <SelectTrigger className={`w-full h-10 bg-white dark:bg-slate-900/60 dark:text-slate-100 rounded-lg text-sm italic ${errors.category ? "border-red-500 focus:ring-red-500" : "border-gray-200 dark:border-slate-800"}`}>
                     <div className="flex items-center gap-2">
                       {formData.category && (
                         <CategoryIcon
@@ -725,7 +725,7 @@ export const PlaceFormContent = ({
                       <SelectValue placeholder={formData.type === "Business" ? t("places_admin.choose_business_category") : t("places_admin.choose_category")} />
                     </div>
                   </SelectTrigger>
-                  <SelectContent position="popper" style={{ zIndex: 99999 }}>
+                  <SelectContent position="popper" style={{ zIndex: 99999 }} className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                     {categories.map((cat: any) => (
                       <SelectItem key={cat._id} value={cat._id}>
                         <div className="flex items-center gap-2">
@@ -754,10 +754,10 @@ export const PlaceFormContent = ({
                     if (errors.type) setErrors((prev) => ({ ...prev, type: "" }));
                   }}
                 >
-                  <SelectTrigger className={`w-full h-10 bg-white rounded-lg text-sm italic ${errors.type ? "border-red-500 focus:ring-red-500" : "border-gray-200"}`}>
+                  <SelectTrigger className={`w-full h-10 bg-white dark:bg-slate-900/60 dark:text-slate-100 rounded-lg text-sm italic ${errors.type ? "border-red-500 focus:ring-red-500" : "border-gray-200 dark:border-slate-800"}`}>
                     <SelectValue placeholder={t("places_admin.select_type")} />
                   </SelectTrigger>
-                  <SelectContent position="popper" style={{ zIndex: 99999 }}>
+                  <SelectContent position="popper" style={{ zIndex: 99999 }} className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100">
                     <SelectItem value="Regular">{t("places_admin.regular_location")}</SelectItem>
                     <SelectItem value="Business">{t("places_admin.business_user")}</SelectItem>
                   </SelectContent>
@@ -768,32 +768,32 @@ export const PlaceFormContent = ({
 
              {/* Business Contact Info */}
             {formData.type === "Business" && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border border-gray-100 p-4 rounded-xl bg-gray-50/30">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border border-gray-100 dark:border-slate-800 p-4 rounded-xl bg-gray-50/30 dark:bg-[#0e1424]">
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t("places_admin.phone_number")}</Label>
+                  <Label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">{t("places_admin.phone_number")}</Label>
                   <Input
                     placeholder="+1 (555) 000-0000"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="bg-white border-gray-200 text-xs h-9"
+                    className="bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 text-xs h-9"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t("places_admin.website_url")}</Label>
+                  <Label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">{t("places_admin.website_url")}</Label>
                   <Input
                     placeholder="https://example.com"
                     value={formData.website}
                     onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                    className="bg-white border-gray-200 text-xs h-9"
+                    className="bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 text-xs h-9"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t("places_admin.instagram_username")}</Label>
+                  <Label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">{t("places_admin.instagram_username")}</Label>
                   <Input
                     placeholder="@username"
                     value={formData.instagram}
                     onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
-                    className="bg-white border-gray-200 text-xs h-9"
+                    className="bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 text-xs h-9"
                   />
                 </div>
               </div>
@@ -804,12 +804,12 @@ export const PlaceFormContent = ({
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Label className="text-sm font-medium">{t("places_admin.operating_hours")}</Label>
-                  <span className="text-[10px] bg-blue-50 text-blue-600 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">{t("places_admin.business_user")}</span>
+                  <span className="text-[10px] bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">{t("places_admin.business_user")}</span>
                 </div>
-                <div className="border border-gray-100 rounded-xl overflow-hidden divide-y divide-gray-100">
+                <div className="border border-gray-100 dark:border-slate-800 rounded-xl overflow-hidden divide-y divide-gray-100 dark:divide-slate-800">
                   {Object.entries(formData.operatingHours).map(([day, hours]) => (
-                    <div key={day} className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${hours.closed ? "bg-gray-50" : "bg-white"}`}>
-                      <span className={`w-24 text-xs font-semibold shrink-0 ${hours.closed ? "text-gray-400" : "text-gray-700"}`}>
+                    <div key={day} className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${hours.closed ? "bg-gray-50 dark:bg-slate-900/40" : "bg-white dark:bg-[#131b2e]"}`}>
+                      <span className={`w-24 text-xs font-semibold shrink-0 ${hours.closed ? "text-gray-400 dark:text-slate-500" : "text-gray-700 dark:text-slate-200"}`}>
                         {day}
                       </span>
                       <label className="flex items-center gap-1.5 cursor-pointer shrink-0">
@@ -819,7 +819,7 @@ export const PlaceFormContent = ({
                           onChange={(e) => updateOperatingHours(day, { closed: e.target.checked })}
                           className="w-3.5 h-3.5 accent-red-500 cursor-pointer"
                         />
-                        <span className="text-[11px] text-gray-500 select-none">{t("place.closed")}</span>
+                        <span className="text-[11px] text-gray-500 dark:text-slate-400 select-none">{t("place.closed")}</span>
                       </label>
                       {!hours.closed ? (
                         <div className="flex items-center gap-2 flex-1">
@@ -827,14 +827,14 @@ export const PlaceFormContent = ({
                             type="time"
                             value={hours.open}
                             onChange={(e) => updateOperatingHours(day, { open: e.target.value })}
-                            className="h-8 px-2 rounded-lg border border-gray-200 bg-white text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-all cursor-pointer"
+                            className="h-8 px-2 rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 text-xs text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-all cursor-pointer"
                           />
                           <span className="text-gray-400 text-xs font-bold">—</span>
                           <input
                             type="time"
                             value={hours.close}
                             onChange={(e) => updateOperatingHours(day, { close: e.target.value })}
-                            className="h-8 px-2 rounded-lg border border-gray-200 bg-white text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-all cursor-pointer"
+                            className="h-8 px-2 rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 text-xs text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-all cursor-pointer"
                           />
                         </div>
                       ) : (
@@ -855,7 +855,7 @@ export const PlaceFormContent = ({
                   setFormData({ ...formData, description: e.target.value });
                   if (errors.description) setErrors((prev) => ({ ...prev, description: "" }));
                 }}
-                className={`w-full bg-white rounded-lg min-h-[120px]! text-sm resize-none italic ${errors.description ? "border-red-500 focus:ring-red-500" : "border-gray-200"}`}
+                className={`w-full bg-white dark:bg-slate-900/60 dark:text-slate-100 rounded-lg min-h-[120px]! text-sm resize-none italic ${errors.description ? "border-red-500 focus:ring-red-500" : "border-gray-200 dark:border-slate-800"}`}
               />
               {errors.description && <p className="text-[11px] text-red-500 font-semibold">{errors.description}</p>}
             </div>
@@ -889,16 +889,16 @@ export const PlaceFormContent = ({
                     handleIncomingMediaFiles(Array.from(e.dataTransfer.files));
                   }
                 }}
-                className={`border-2 border-dashed rounded-xl p-6 bg-white flex flex-col items-center justify-center gap-3 group transition-all cursor-pointer select-none ${
+                className={`border-2 border-dashed rounded-xl p-6 bg-white dark:bg-[#0e1424] flex flex-col items-center justify-center gap-3 group transition-all cursor-pointer select-none ${
                   isDraggingMedia
-                    ? "border-blue-500 bg-blue-50/60 ring-2 ring-blue-400/30 scale-[1.01]"
+                    ? "border-blue-500 bg-blue-50/60 dark:bg-blue-950/40 ring-2 ring-blue-400/30 scale-[1.01]"
                     : errors.media
-                      ? "border-red-500 hover:border-red-600 bg-red-50/10"
-                      : "border-gray-200 hover:border-blue-400 hover:bg-gray-50/50"
+                      ? "border-red-500 hover:border-red-600 bg-red-50/10 dark:bg-red-950/20"
+                      : "border-gray-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500/50 hover:bg-gray-50/50 dark:hover:bg-slate-900/60"
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                  isDraggingMedia ? "bg-blue-100 text-blue-600" : "bg-gray-50 text-gray-400 group-hover:text-blue-500 group-hover:bg-blue-50"
+                  isDraggingMedia ? "bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400" : "bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-slate-400 group-hover:text-blue-500 group-hover:bg-blue-50 dark:group-hover:bg-slate-700"
                 }`}>
                   {isOptimizingMedia ? (
                     <Loader2 size={20} className="animate-spin text-blue-500" />
@@ -907,14 +907,14 @@ export const PlaceFormContent = ({
                   )}
                 </div>
                 <div className="text-center">
-                  <p className="text-xs font-bold text-gray-700">
+                  <p className="text-xs font-bold text-gray-700 dark:text-slate-200">
                     {isOptimizingMedia
                       ? (language === "es" ? "Optimizando archivos..." : "Optimizing media for rapid upload...")
                       : isDraggingMedia
                         ? (language === "es" ? "Arrastra fotos o videos aquí" : "Drop photos or videos here")
                         : (language === "es" ? "Haz clic para subir o arrastra y suelta" : "Click to upload or drag and drop")}
                   </p>
-                  <p className="text-[9px] text-gray-400 tracking-tight mt-0.5">
+                  <p className="text-[9px] text-gray-400 dark:text-slate-500 tracking-tight mt-0.5">
                     {language === "es"
                       ? "Imágenes y videos de hasta 200MB (arrastrar y soltar compatible)"
                       : "Images and videos up to 200MB (drag & drop supported)"}
@@ -1219,7 +1219,7 @@ export const PlaceFormContent = ({
                     setFormData({ ...formData, address: e.target.value });
                     if (errors.address) setErrors((prev) => ({ ...prev, address: "" }));
                   }}
-                  className={`bg-white rounded-lg h-10 pl-10 text-sm italic ${isFetchingAddress ? "animate-pulse text-gray-400" : ""} ${errors.address ? "border-red-500 focus:ring-red-500" : "border-gray-200"}`}
+                  className={`bg-white dark:bg-slate-900/60 dark:text-slate-100 rounded-lg h-10 pl-10 text-sm italic ${isFetchingAddress ? "animate-pulse text-gray-400" : ""} ${errors.address ? "border-red-500 focus:ring-red-500" : "border-gray-200 dark:border-slate-800"}`}
                   disabled={isFetchingAddress}
                 />
                 {isFetchingAddress && (
@@ -1275,7 +1275,7 @@ export const PlaceFormContent = ({
                     onChange={(e) =>
                       setFormData({ ...formData, atmosphere: e.target.value })
                     }
-                    className="w-full bg-white border-gray-200 rounded-lg h-9 text-sm italic"
+                    className="w-full bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 rounded-lg h-9 text-sm italic"
                   />
                 </div>
 
@@ -1288,13 +1288,13 @@ export const PlaceFormContent = ({
                         <div className="flex items-center justify-between">
                           <Label className="text-sm font-medium">{t("place.entry_cost") || "Entry Cost"}</Label>
                           {formData.entryCost && (
-                            <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                            <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 dark:bg-blue-950/50 dark:text-blue-400 px-2 py-0.5 rounded">
                               {formData.entryCost}
                             </span>
                           )}
                         </div>
-                        <div className="flex rounded-lg border border-gray-200 bg-white h-9 overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
-                          <span className="flex items-center pl-3 text-xs font-bold text-gray-500 select-none">
+                        <div className="flex rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 h-9 overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+                          <span className="flex items-center pl-3 text-xs font-bold text-gray-500 dark:text-slate-400 select-none">
                             $
                           </span>
                           <input
@@ -1303,12 +1303,12 @@ export const PlaceFormContent = ({
                             value={entryCostType === "Free" ? "" : entryCostAmount}
                             disabled={entryCostType === "Free"}
                             onChange={(e) => handleEntryCostAmountChange(e.target.value)}
-                            className="w-full bg-transparent pl-1.5 pr-2 text-sm italic focus:outline-none disabled:bg-gray-50 disabled:text-gray-400"
+                            className="w-full bg-transparent pl-1.5 pr-2 text-sm italic text-gray-900 dark:text-slate-100 focus:outline-none disabled:bg-gray-50 dark:disabled:bg-slate-900/40 disabled:text-gray-400"
                           />
                           <select
                             value={entryCostType}
                             onChange={(e) => handleEntryCostTypeChange(e.target.value)}
-                            className="border-l border-gray-200 bg-gray-50 px-2.5 text-xs font-medium text-gray-700 focus:outline-none cursor-pointer hover:bg-gray-100 transition-colors"
+                            className="border-l border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800 px-2.5 text-xs font-medium text-gray-700 dark:text-slate-200 focus:outline-none cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                           >
                             <option value="/ person">/ person</option>
                             <option value="/ vehicle">/ vehicle</option>
@@ -1317,7 +1317,7 @@ export const PlaceFormContent = ({
                             <option value="Free">{t("places_admin.free_entry") || "Free entry"}</option>
                           </select>
                         </div>
-                        <p className="text-[10px] text-gray-400">
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500">
                           e.g., $10 / person, $15 / vehicle, or Free
                         </p>
                       </div>
@@ -1331,19 +1331,20 @@ export const PlaceFormContent = ({
                             setFormData({ ...formData, difficulty: val })
                           }
                         >
-                          <SelectTrigger className="w-full h-9 bg-white border-gray-200 rounded-lg text-sm italic">
+                          <SelectTrigger className="w-full h-9 bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 rounded-lg text-sm italic">
                             <SelectValue placeholder={t("places_admin.select_difficulty") || "Select difficulty"} />
                           </SelectTrigger>
                           <SelectContent
                             position="popper"
                             style={{ zIndex: 99999 }}
+                            className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100"
                           >
                             <SelectItem value="Easy">{t("place.easy") || "Easy"}</SelectItem>
                             <SelectItem value="Moderate">{t("place.medium") || "Moderate"}</SelectItem>
                             <SelectItem value="Hard">{t("place.hard") || "Hard"}</SelectItem>
                           </SelectContent>
                         </Select>
-                        <p className="text-[10px] text-gray-400">
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500">
                           Trail or terrain difficulty level
                         </p>
                       </div>
@@ -1353,29 +1354,29 @@ export const PlaceFormContent = ({
                         <div className="flex items-center justify-between">
                           <Label className="text-sm font-medium">{t("place.walking_time") || "Walking Time"}</Label>
                           {formData.hikeTime && (
-                            <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                            <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-2 py-0.5 rounded">
                               {formData.hikeTime}
                             </span>
                           )}
                         </div>
-                        <div className="flex rounded-lg border border-gray-200 bg-white h-9 overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+                        <div className="flex rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 h-9 overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
                           <input
                             type="text"
                             placeholder="e.g. 45"
                             value={hikeTimeAmount}
                             onChange={(e) => handleHikeTimeAmountChange(e.target.value)}
-                            className="w-full bg-transparent px-3 text-sm italic focus:outline-none"
+                            className="w-full bg-transparent px-3 text-sm italic text-gray-900 dark:text-slate-100 focus:outline-none"
                           />
                           <select
                             value={hikeTimeUnit}
                             onChange={(e) => handleHikeTimeUnitChange(e.target.value as "mins" | "hours")}
-                            className="border-l border-gray-200 bg-gray-50 px-2.5 text-xs font-medium text-gray-700 focus:outline-none cursor-pointer hover:bg-gray-100 transition-colors"
+                            className="border-l border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800 px-2.5 text-xs font-medium text-gray-700 dark:text-slate-200 focus:outline-none cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                           >
                             <option value="mins">{t("places_admin.minutes") || "Minutes"}</option>
                             <option value="hours">{t("places_admin.hours") || "Hours"}</option>
                           </select>
                         </div>
-                        <p className="text-[10px] text-gray-400">
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500">
                           Approx. time to walk/hike (e.g. 45 mins, 1.5 hours)
                         </p>
                       </div>
@@ -1388,12 +1389,12 @@ export const PlaceFormContent = ({
 
         {activeTab === 1 && (
           <div className="space-y-5 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="bg-white p-5 rounded-xl border border-gray-200 space-y-4">
+            <div className="bg-white dark:bg-[#0e1424] p-5 rounded-xl border border-gray-200 dark:border-slate-800 space-y-4">
               <div className="space-y-1">
-                <Label className="text-sm font-bold text-gray-800">
+                <Label className="text-sm font-bold text-gray-800 dark:text-slate-100">
                   {t("places_admin.access_description") || (language === "es" ? "Descripción de Acceso" : "Access Description")}
                 </Label>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-[11px] text-gray-500 dark:text-slate-400">
                   {language === "es"
                     ? "Escribe cómo llegar aquí (transporte público, taxi, notas de estacionamiento). Sé conciso."
                     : "Write how to get here (public transport, taxi, parking notes). Keep it simple."}
@@ -1410,7 +1411,7 @@ export const PlaceFormContent = ({
                     accessDescription: e.target.value,
                   })
                 }
-                className="min-h-[140px] border-gray-100 italic text-sm bg-gray-50 focus:bg-white transition-colors"
+                className="min-h-[140px] border-gray-100 dark:border-slate-800 italic text-sm bg-gray-50 dark:bg-slate-900/60 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 transition-colors"
               />
             </div>
           </div>
@@ -1418,12 +1419,12 @@ export const PlaceFormContent = ({
 
         {activeTab === 2 && (
           <div className="space-y-5 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="bg-white p-5 rounded-xl border border-gray-200 space-y-4">
+            <div className="bg-white dark:bg-[#0e1424] p-5 rounded-xl border border-gray-200 dark:border-slate-800 space-y-4">
               <div className="space-y-1">
-                <Label className="text-sm font-bold text-gray-800">
+                <Label className="text-sm font-bold text-gray-800 dark:text-slate-100">
                   Menu & Prices Photos
                 </Label>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-[11px] text-gray-500 dark:text-slate-400">
                   Upload images of your menu, price list, or product listings.
                 </p>
               </div>
@@ -1455,22 +1456,22 @@ export const PlaceFormContent = ({
                     handleIncomingMenuFiles(Array.from(e.dataTransfer.files));
                   }
                 }}
-                className={`border-2 border-dashed rounded-xl p-6 bg-white flex flex-col items-center justify-center gap-3 transition-all cursor-pointer select-none ${
+                className={`border-2 border-dashed rounded-xl p-6 bg-white dark:bg-[#131b2e] flex flex-col items-center justify-center gap-3 transition-all cursor-pointer select-none ${
                   isDraggingMenu
-                    ? "border-blue-500 bg-blue-50/60 ring-2 ring-blue-400/30 scale-[1.01]"
-                    : "border-gray-200 hover:border-blue-400 hover:bg-gray-50/50"
+                    ? "border-blue-500 bg-blue-50/60 dark:bg-blue-950/40 ring-2 ring-blue-400/30 scale-[1.01]"
+                    : "border-gray-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500/50 hover:bg-gray-50/50 dark:hover:bg-slate-900/60"
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                  isDraggingMenu ? "bg-blue-100 text-blue-600" : "bg-gray-50 text-gray-400"
+                  isDraggingMenu ? "bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400" : "bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-slate-400"
                 }`}>
                   <Upload size={20} />
                 </div>
                 <div className="text-center">
-                  <p className="text-xs font-bold text-gray-700">
+                  <p className="text-xs font-bold text-gray-700 dark:text-slate-200">
                     {isDraggingMenu ? "Drop menu photos here" : "Click to upload menu photos or drag and drop"}
                   </p>
-                  <p className="text-[9px] text-gray-400 tracking-tight mt-0.5">
+                  <p className="text-[9px] text-gray-400 dark:text-slate-500 tracking-tight mt-0.5">
                     Images and PDF up to 20MB (drag & drop supported)
                   </p>
                 </div>
@@ -1639,7 +1640,7 @@ export const PlaceFormContent = ({
 
         {activeTab === 3 && (
           <div className="space-y-5 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-6">
+            <div className="bg-white dark:bg-[#0e1424] p-6 rounded-xl border border-gray-200 dark:border-slate-800 space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -1651,7 +1652,7 @@ export const PlaceFormContent = ({
                   />
                   <Label
                     htmlFor="wheelchair"
-                    className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                    className="text-sm font-medium text-gray-700 dark:text-slate-200 flex items-center gap-2"
                   >
                     {language === "es" ? "Acceso en Silla de Ruedas" : "Wheelchair Access"}
                   </Label>
@@ -1666,7 +1667,7 @@ export const PlaceFormContent = ({
                   />
                   <Label
                     htmlFor="children"
-                    className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                    className="text-sm font-medium text-gray-700 dark:text-slate-200 flex items-center gap-2"
                   >
                     {language === "es" ? "Apto para Niños" : "Children"}
                   </Label>
@@ -1681,7 +1682,7 @@ export const PlaceFormContent = ({
                   />
                   <Label
                     htmlFor="pets"
-                    className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                    className="text-sm font-medium text-gray-700 dark:text-slate-200 flex items-center gap-2"
                   >
                     {language === "es" ? "Mascotas Permitidas" : "Pets"}
                   </Label>
@@ -1696,7 +1697,7 @@ export const PlaceFormContent = ({
                   />
                   <Label
                     htmlFor="senior"
-                    className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                    className="text-sm font-medium text-gray-700 dark:text-slate-200 flex items-center gap-2"
                   >
                     {language === "es" ? "Acceso Adultos Mayores" : "Senior Access"}
                   </Label>
@@ -1704,14 +1705,14 @@ export const PlaceFormContent = ({
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium">
+                <Label className="text-sm font-medium text-gray-800 dark:text-slate-200">
                   {language === "es" ? "Notas (opcional)" : "Notes (optional)"}
                 </Label>
                 <Textarea
                   placeholder={language === "es" ? "Información adicional de accesibilidad..." : "Additional accessibility information..."}
                   value={formData.accessibility.notes}
                   onChange={(e) => updateAccessibility("notes", e.target.value)}
-                  className="min-h-[100px] border-gray-100 italic text-sm"
+                  className="min-h-[100px] border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/60 dark:text-slate-100 italic text-sm"
                 />
               </div>
             </div>
@@ -1720,12 +1721,12 @@ export const PlaceFormContent = ({
 
         {activeTab === 4 && (
           <div className="space-y-5 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="bg-white p-6 rounded-xl border border-gray-200 space-y-4">
+            <div className="bg-white dark:bg-[#0e1424] p-6 rounded-xl border border-gray-200 dark:border-slate-800 space-y-4">
               <div className="space-y-1">
-                <Label className="text-sm font-bold text-gray-800">
+                <Label className="text-sm font-bold text-gray-800 dark:text-slate-100">
                   {language === "es" ? "Qué Llevar / Consejos" : "What to Take / Tips"}
                 </Label>
-                <p className="text-sm font-medium">
+                <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
                   {language === "es"
                     ? "Agua, calzado cómodo, protector solar, chaqueta ligera..."
                     : "Water, comfortable shoes, sunscreen, light jacket..."}
@@ -1740,7 +1741,7 @@ export const PlaceFormContent = ({
                     tips: e.target.value,
                   })
                 }
-                className="min-h-[160px] border-gray-100 italic text-sm bg-gray-50 focus:bg-white"
+                className="min-h-[160px] border-gray-100 dark:border-slate-800 italic text-sm bg-gray-50 dark:bg-slate-900/60 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900"
               />
             </div>
           </div>
@@ -1749,7 +1750,7 @@ export const PlaceFormContent = ({
         {activeTab === 5 && (
           <div className="space-y-5 animate-in slide-in-from-bottom-2 duration-300">
             <div className="space-y-1 mb-3">
-              <p className="text-sm font-semibold">
+              <p className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                 {language === "es" ? "Los servicios aparecerán en una cuadrícula compacta." : "Services will appear in a compact grid."}
               </p>
             </div>
@@ -1778,8 +1779,8 @@ export const PlaceFormContent = ({
                     key={service.id}
                     onClick={() => toggleService(service.id)}
                     className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-all ${formData.services.includes(service.id)
-                      ? "bg-blue-50 border-blue-200"
-                      : "bg-white border-gray-100 hover:border-gray-200"
+                      ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800/60 text-blue-900 dark:text-blue-300"
+                      : "bg-white dark:bg-slate-900/60 border-gray-100 dark:border-slate-800 hover:border-gray-200 dark:hover:border-slate-700 text-gray-700 dark:text-slate-200"
                       }`}
                   >
                     <Checkbox

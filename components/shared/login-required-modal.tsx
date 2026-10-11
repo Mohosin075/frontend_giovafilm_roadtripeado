@@ -214,16 +214,16 @@ export function LoginRequiredProvider({
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent
           overlayClassName="backdrop-blur-sm bg-black/40"
-          className="max-w-md bg-white border border-gray-200 rounded-2xl"
+          className="max-w-md bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-slate-100"
         >
           <DialogHeader className="items-center text-center sm:text-center">
-            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">
               <LogIn size={22} />
             </div>
-            <DialogTitle className="text-xl font-bold tracking-tight text-gray-900">
+            <DialogTitle className="text-xl font-bold tracking-tight text-gray-900 dark:text-slate-100">
               {t("login_required.title")}
             </DialogTitle>
-            <DialogDescription className="text-sm leading-relaxed text-gray-600">
+            <DialogDescription className="text-sm leading-relaxed text-gray-600 dark:text-slate-400">
               {t("login_required.description")}
             </DialogDescription>
           </DialogHeader>
@@ -236,7 +236,7 @@ export function LoginRequiredProvider({
             </Button>
             <Button
               variant="outline"
-              className="h-11 w-full rounded-xl font-semibold"
+              className="h-11 w-full rounded-xl font-semibold dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
               onClick={() => goTo("/register")}
             >
               {t("login_required.create_account")}

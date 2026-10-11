@@ -147,7 +147,7 @@ export default function RestaurantDetail() {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-50 min-h-screen py-8">
+      <div className="bg-gray-50 dark:bg-[#0b0f19] min-h-screen py-8">
         <div className="max-w-7xl mx-auto px-4">
           <Skeleton className="h-8 w-48 mb-6" />
           <div className="grid lg:grid-cols-3 gap-8">
@@ -174,13 +174,13 @@ export default function RestaurantDetail() {
       (offerError as any)?.data?.mapId ||
       null;
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <div className="text-center space-y-6 max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
-            <Lock className="w-8 h-8 text-yellow-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b0f19] p-4 text-gray-900 dark:text-slate-100">
+        <div className="text-center space-y-6 max-w-md bg-white dark:bg-[#131b2e] p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800">
+          <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-950/40 rounded-full flex items-center justify-center mx-auto">
+            <Lock className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">{t("offer.unlock_offer_title")}</h2>
-          <p className="text-gray-600 leading-relaxed">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{t("offer.unlock_offer_title")}</h2>
+          <p className="text-gray-600 dark:text-slate-400 leading-relaxed">
             {(offerError as any)?.data?.message ||
               t("offer.unlock_offer_desc")}
           </p>
@@ -191,7 +191,7 @@ export default function RestaurantDetail() {
             </Button>
           </Link>
           <Link href="/offer">
-            <Button variant="ghost" className="text-gray-500 w-full cursor-pointer">
+            <Button variant="ghost" className="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 w-full cursor-pointer">
               {t("offer.back_to_offers")}
             </Button>
           </Link>

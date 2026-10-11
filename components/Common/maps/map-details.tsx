@@ -912,7 +912,7 @@ export default function MapDetails() {
                     ))
                   ) : (
                     <CarouselItem className="pl-0 h-full basis-full">
-                      <div className="min-h-[280px] md:min-h-[420px] flex items-center justify-center bg-gray-100">
+                      <div className="min-h-[280px] md:min-h-[420px] flex items-center justify-center bg-gray-100 dark:bg-slate-900">
                         <NoImage />
                       </div>
                     </CarouselItem>
@@ -932,7 +932,7 @@ export default function MapDetails() {
               <FavouriteButton
                 placeId={id}
                 type={isBusinessEntity ? "Business" : "Place"}
-                Style="absolute top-4 left-4 z-20 w-11 h-11 border-none bg-white hover:bg-white hover:scale-105 active:scale-95 shadow-md p-3 rounded-xl transition-all duration-200 cursor-pointer"
+                Style="absolute top-4 left-4 z-20 w-11 h-11 border-none bg-white dark:bg-[#131b2e] hover:bg-white dark:hover:bg-[#1e293b] hover:scale-105 active:scale-95 shadow-md p-3 rounded-xl transition-all duration-200 cursor-pointer"
               />
 
               {mediaList.length > 0 && (

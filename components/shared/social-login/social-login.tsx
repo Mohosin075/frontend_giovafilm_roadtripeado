@@ -26,7 +26,7 @@ export default function SocialLogin() {
     <div className="w-full grid grid-cols-2 gap-4">
       <button
         onClick={handleGoogleLogin}
-        className="flex items-center justify-center gap-3 py-3.5 bg-white border border-[#EEEEEE] rounded-2xl shadow-sm hover:bg-gray-50 transition-all cursor-pointer"
+        className="flex items-center justify-center gap-3 py-3.5 bg-white dark:bg-slate-900/60 border border-[#EEEEEE] dark:border-slate-800 rounded-2xl shadow-sm hover:bg-gray-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
       >
         <Image
           src={googleIcon}
@@ -35,9 +35,9 @@ export default function SocialLogin() {
           height={200}
           className="w-5 h-5"
         />
-        <span className="text-sm font-bold text-[#424242]">Google</span>
+        <span className="text-sm font-bold text-[#424242] dark:text-slate-200">Google</span>
       </button>
-      <button className="flex items-center justify-center gap-3 py-3.5 bg-white border border-[#EEEEEE] rounded-2xl shadow-sm hover:bg-gray-50 transition-all cursor-pointer">
+      <button className="flex items-center justify-center gap-3 py-3.5 bg-white dark:bg-slate-900/60 border border-[#EEEEEE] dark:border-slate-800 rounded-2xl shadow-sm hover:bg-gray-50 dark:hover:bg-slate-800 transition-all cursor-pointer">
         <Image
           src={facebookIcon}
           alt="Facebook"
@@ -45,7 +45,7 @@ export default function SocialLogin() {
           height={200}
           className="w-5 h-5"
         />
-        <span className="text-sm font-bold text-[#424242]">Facebook</span>
+        <span className="text-sm font-bold text-[#424242] dark:text-slate-200">Facebook</span>
       </button>
     </div>
   );

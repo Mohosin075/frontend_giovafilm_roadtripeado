@@ -84,7 +84,7 @@ export function TimeRangePicker({
   };
 
   const selectCls =
-    "h-9 rounded-lg border border-gray-200 bg-white px-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all cursor-pointer";
+    "h-9 rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 px-2 text-sm text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all cursor-pointer [&>option]:bg-white [&>option]:dark:bg-slate-900 [&>option]:text-gray-900 [&>option]:dark:text-slate-100";
 
   return (
     <div className={`flex items-center gap-2 flex-wrap ${className}`}>

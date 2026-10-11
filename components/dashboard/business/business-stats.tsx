@@ -29,11 +29,11 @@ export function BusinessStats() {
   const getColor = (type: Stat["changeType"]) => {
     switch (type) {
       case "positive":
-        return "bg-green-100 text-green-700";
+        return "bg-green-100 dark:bg-emerald-950/50 text-green-700 dark:text-emerald-400";
       case "negative":
-        return "bg-red-100 text-red-700";
+        return "bg-red-100 dark:bg-rose-950/50 text-red-700 dark:text-rose-400";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300";
     }
   };
 
@@ -42,12 +42,12 @@ export function BusinessStats() {
       {stats.map((stat) => (
         <div
           key={stat.key}
-          className="bg-white border border-gray-200 rounded-lg p-5"
+          className="bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 rounded-lg p-5"
         >
-          <p className="text-sm text-gray-500">{stat.title}</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400">{stat.title}</p>
 
           <div className="flex items-center gap-3 mt-2">
-            <h2 className="text-2xl font-semibold">{stat.value}</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-slate-100">{stat.value}</h2>
 
             <span
               className={`text-xs px-2 py-1 rounded ${getColor(

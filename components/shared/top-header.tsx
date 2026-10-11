@@ -36,11 +36,11 @@ export default function TopHeader() {
   return (
     <div>
       <header className="px-5 pt-6 pb-4 sticky top-0 z-20">
-        <div className="flex items-center rounded-full px-4 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-50 bg-white">
+        <div className="flex items-center rounded-full px-4 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 dark:border-slate-800 bg-white dark:bg-[#131b2e] text-gray-900 dark:text-slate-100">
           {/* Hamburger + Search */}
           <div className="flex items-center gap-3 flex-1">
             <div
-              className="w-8 h-8 flex items-center justify-center cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center cursor-pointer text-gray-900 dark:text-slate-100"
               onClick={() => setMenuOpen(true)}
             >
               <svg
@@ -52,13 +52,13 @@ export default function TopHeader() {
               >
                 <path
                   d="M4 12H20M4 6H20M4 18H12"
-                  stroke="black"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
               </svg>
             </div>
-            <span className="text-gray-400 text-sm font-medium line-clamp-1">
+            <span className="text-gray-400 dark:text-slate-500 text-sm font-medium line-clamp-1">
               {t("search.placeholder")}
             </span>
           </div>
@@ -94,13 +94,13 @@ export default function TopHeader() {
 
       {/* Slide-in Menu */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white z-40 shadow-lg transform transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-white dark:bg-[#131b2e] border-r border-gray-100 dark:border-slate-800 z-40 shadow-lg transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex justify-between items-center px-5 py-4 border-b">
-          <h2 className="text-lg font-bold">{t("nav.menu")}</h2>
-          <button onClick={() => setMenuOpen(false)} className="text-gray-500">
+        <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100 dark:border-slate-800">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">{t("nav.menu")}</h2>
+          <button onClick={() => setMenuOpen(false)} className="text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200">
             ✕
           </button>
         </div>
@@ -112,10 +112,10 @@ export default function TopHeader() {
               key={item.path}
               href={item.path}
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/80 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 transition-colors"
             >
               {item.icon}
-              <span className="text-gray-700 font-medium">{item.label}</span>
+              <span className="font-medium">{item.label}</span>
             </Link>
           ))}
         </nav>

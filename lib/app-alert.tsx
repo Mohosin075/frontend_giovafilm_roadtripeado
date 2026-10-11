@@ -61,28 +61,28 @@ type IconMeta = {
 
 const ICON_META: Record<AppAlertIcon, IconMeta> = {
   success: {
-    wrap: "bg-emerald-50 text-emerald-600 ring-emerald-100",
-    icon: "text-emerald-600",
+    wrap: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-emerald-100 dark:ring-emerald-500/20",
+    icon: "text-emerald-600 dark:text-emerald-400",
     Icon: CheckCircle2,
   },
   error: {
-    wrap: "bg-rose-50 text-rose-600 ring-rose-100",
-    icon: "text-rose-600",
+    wrap: "bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 ring-rose-100 dark:ring-rose-500/20",
+    icon: "text-rose-600 dark:text-rose-400",
     Icon: XCircle,
   },
   warning: {
-    wrap: "bg-amber-50 text-amber-600 ring-amber-100",
-    icon: "text-amber-500",
+    wrap: "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-amber-100 dark:ring-amber-500/20",
+    icon: "text-amber-500 dark:text-amber-400",
     Icon: AlertTriangle,
   },
   info: {
-    wrap: "bg-yellow-50 text-yellow-600 ring-yellow-100",
-    icon: "text-yellow-500",
+    wrap: "bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 ring-yellow-100 dark:ring-yellow-500/20",
+    icon: "text-yellow-500 dark:text-yellow-400",
     Icon: Info,
   },
   question: {
-    wrap: "bg-yellow-50 text-yellow-600 ring-yellow-100",
-    icon: "text-yellow-500",
+    wrap: "bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 ring-yellow-100 dark:ring-yellow-500/20",
+    icon: "text-yellow-500 dark:text-yellow-400",
     Icon: HelpCircle,
   },
 };
@@ -257,14 +257,14 @@ function AppAlertModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="app-alert-title"
-        className={`relative w-full max-w-[420px] overflow-hidden rounded-[28px] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.22)] ring-1 ring-black/5 transition-all duration-200 ${
+        className={`relative w-full max-w-[420px] overflow-hidden rounded-[28px] bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 shadow-[0_24px_80px_rgba(15,23,42,0.22)] ring-1 ring-black/5 dark:ring-white/10 transition-all duration-200 ${
           open
             ? "translate-y-0 scale-100 opacity-100"
             : "translate-y-4 scale-95 opacity-0"
         }`}
       >
         {timerProgressBar && timer ? (
-          <div className="h-1 w-full bg-yellow-100">
+          <div className="h-1 w-full bg-yellow-100 dark:bg-slate-800">
             <div
               className="h-full bg-[#FACC15] transition-[width] duration-75"
               style={{ width: `${progress}%` }}
@@ -282,27 +282,27 @@ function AppAlertModal({
           {cleanTitle ? (
             <h3
               id="app-alert-title"
-              className="text-center font-[family-name:var(--font-inter)] text-[22px] font-bold tracking-tight text-slate-900"
+              className="text-center font-[family-name:var(--font-inter)] text-[22px] font-bold tracking-tight text-slate-900 dark:text-slate-100"
             >
               {cleanTitle}
             </h3>
           ) : null}
 
           {cleanText ? (
-            <p className="mt-2 text-center font-[family-name:var(--font-inter)] text-sm leading-6 text-slate-500">
+            <p className="mt-2 text-center font-[family-name:var(--font-inter)] text-sm leading-6 text-slate-500 dark:text-slate-400">
               {cleanText}
             </p>
           ) : null}
 
           {html ? (
             <div
-              className="mt-2 text-center font-[family-name:var(--font-inter)] text-sm leading-6 text-slate-500"
+              className="mt-2 text-center font-[family-name:var(--font-inter)] text-sm leading-6 text-slate-500 dark:text-slate-400"
               dangerouslySetInnerHTML={{ __html: html }}
             />
           ) : null}
 
           {timer && icon !== "success" ? (
-            <p className="mt-3 text-center text-xs font-semibold tracking-wide text-amber-600">
+            <p className="mt-3 text-center text-xs font-semibold tracking-wide text-amber-600 dark:text-amber-400">
               Auto-confirming in {secondsLeft}s
             </p>
           ) : null}
@@ -321,8 +321,8 @@ function AppAlertModal({
                     }}
                     className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm font-medium transition ${
                       active
-                        ? "border-yellow-400 bg-yellow-50 text-slate-900 ring-2 ring-yellow-200"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-yellow-300 hover:bg-yellow-50/50"
+                        ? "border-yellow-400 dark:border-yellow-500 bg-yellow-50 dark:bg-yellow-500/10 text-slate-900 dark:text-slate-100 ring-2 ring-yellow-200 dark:ring-yellow-500/30"
+                        : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 text-slate-700 dark:text-slate-200 hover:border-yellow-300 dark:hover:border-yellow-500/40 hover:bg-yellow-50/50 dark:hover:bg-slate-800"
                     }`}
                   >
                     <span>{label}</span>
@@ -330,19 +330,19 @@ function AppAlertModal({
                       className={`h-4 w-4 rounded-full border-2 ${
                         active
                           ? "border-yellow-500 bg-yellow-400"
-                          : "border-slate-300 bg-white"
+                          : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800"
                       }`}
                     />
                   </button>
                 );
               })}
               {!selected && inputPlaceholder ? (
-                <p className="px-1 pt-1 text-xs text-slate-400">
+                <p className="px-1 pt-1 text-xs text-slate-400 dark:text-slate-500">
                   {inputPlaceholder}
                 </p>
               ) : null}
               {inputError ? (
-                <p className="px-1 text-xs font-medium text-rose-500">
+                <p className="px-1 text-xs font-medium text-rose-500 dark:text-rose-400">
                   {inputError}
                 </p>
               ) : null}
@@ -361,7 +361,7 @@ function AppAlertModal({
                     dismiss: "cancel",
                   })
                 }
-                className="h-12 flex-1 rounded-2xl bg-slate-100 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
+                className="h-12 flex-1 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-200 dark:hover:bg-slate-700/80"
               >
                 {cancelButtonText}
               </button>
@@ -370,7 +370,7 @@ function AppAlertModal({
               <button
                 type="button"
                 onClick={deny}
-                className="h-12 flex-1 rounded-2xl bg-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-300"
+                className="h-12 flex-1 rounded-2xl bg-slate-200 dark:bg-slate-800/80 border border-transparent dark:border-slate-700 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-300 dark:hover:bg-slate-700"
               >
                 {denyButtonText}
               </button>
@@ -380,10 +380,10 @@ function AppAlertModal({
               onClick={confirm}
               className={`h-12 flex-1 rounded-2xl px-4 text-sm font-bold transition ${
                 destructive
-                  ? "bg-rose-500 text-white hover:bg-rose-600"
+                  ? "bg-rose-500 text-white hover:bg-rose-600 shadow-sm"
                   : icon === "success"
-                    ? "bg-emerald-500 text-white hover:bg-emerald-600"
-                    : "bg-[#FACC15] text-slate-900 hover:bg-[#F59E0B]"
+                    ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm"
+                    : "bg-[#FACC15] text-slate-900 hover:bg-[#F59E0B] shadow-sm"
               }`}
             >
               {confirmButtonText}

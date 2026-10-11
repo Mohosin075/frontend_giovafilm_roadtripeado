@@ -66,7 +66,7 @@ export const HomeScreen = () => {
       <main className="px-5 flex-1 pb-24">
         {/* Section Header */}
         <div className="flex justify-between items-center mb-5 mt-2">
-          <h2 className="text-xl font-bold text-[#1A1A1A]">Featured Maps</h2>
+          <h2 className="text-xl font-bold text-[#1A1A1A] dark:text-slate-100">Featured Maps</h2>
           <button className="text-[#FFC107] text-sm font-bold">{t("common.view_all")}</button>
         </div>
 
@@ -79,7 +79,7 @@ export const HomeScreen = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: card.id * 0.05 }}
               //   onClick={() => onNavigate("details")}
-              className="bg-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col cursor-pointer pb-2"
+              className="bg-white dark:bg-[#131b2e] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 dark:border-slate-800 flex flex-col cursor-pointer pb-2"
             >
               {/* Image Container */}
               <div className="relative aspect-4/3">
@@ -89,26 +89,26 @@ export const HomeScreen = () => {
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <button className="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
+                <button className="absolute top-2 right-2 w-8 h-8 bg-white/90 dark:bg-slate-900/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
                   <Heart className="w-4 h-4 text-[#FFC107]" />
                 </button>
               </div>
 
               {/* Card Details */}
               <div className="p-3 flex flex-col flex-1">
-                <h3 className="text-[13px] font-bold text-[#1A1A1A] leading-tight mb-1 line-clamp-2">
+                <h3 className="text-[13px] font-bold text-[#1A1A1A] dark:text-slate-100 leading-tight mb-1 line-clamp-2">
                   {card.title}
                 </h3>
-                <p className="text-[11px] text-[#9E9E9E] mb-2">
+                <p className="text-[11px] text-[#9E9E9E] dark:text-slate-400 mb-2">
                   {card.subtitle}
                 </p>
                 <div className="mt-auto">
-                  <span className="text-sm font-bold text-[#1A1A1A] block mb-2">
+                  <span className="text-sm font-bold text-[#1A1A1A] dark:text-slate-100 block mb-2">
                     {card.price}
                   </span>
                   <Link
                     href={`/details/${card.id}`}
-                    className="px-[54px] py-2.5 bg-[#FFC107] hover:bg-[#FFB300] text-white text-[12px] font-bold rounded-full transition-colors shadow-sm"
+                    className="px-[54px] py-2.5 bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold text-[12px] rounded-full transition-colors shadow-sm block text-center"
                   >
                     Buy Now
                   </Link>
