@@ -88,6 +88,15 @@ export const metadata: Metadata = {
     description:
       "Interactive travel maps to discover hidden gems and authentic local experiences in cities around the world.",
   },
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
