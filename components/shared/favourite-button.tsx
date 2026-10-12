@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   useAddToFavouriteMutation,
   useGetFavouritesQuery,
@@ -27,22 +26,21 @@ export function FavouriteButton({ placeId, type, Style }: Props) {
   const { data: favouritesData } = useGetFavouritesQuery();
   const favouritesList: TFavouriteItem[] = favouritesData?.data || [];
 
-  const key =
-    type === "Map"
-      ? "map"
-      : type === "Place"
-        ? "place"
-        : type === "Offer"
-          ? "offer"
-          : "business";
-  const isFavourite = favouritesList.some((fav: TFavouriteItem) => {
-    if (fav.type !== type) return false;
-    const id =
-      typeof fav[key] === "string"
-        ? fav[key]
-        : (fav[key] as { _id: string })?._id;
-    return id === placeId;
+  const existingFav: any = favouritesList.find((fav: any) => {
+    const placeRef = fav.place?._id || fav.place;
+    const businessRef = fav.business?._id || fav.business;
+    const mapRef = fav.map?._id || fav.map;
+    const offerRef = fav.offer?._id || fav.offer;
+
+    if (type === "Map") return String(mapRef) === String(placeId);
+    if (type === "Offer") return String(offerRef) === String(placeId);
+    return (
+      String(placeRef) === String(placeId) ||
+      String(businessRef) === String(placeId)
+    );
   });
+
+  const isFavourite = Boolean(existingFav);
 
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const router = useRouter();
@@ -64,14 +62,21 @@ export function FavouriteButton({ placeId, type, Style }: Props) {
     }
 
     try {
-      const payload: TAddFavouritePayload =
-        type === "Map"
+      const payload: TAddFavouritePayload = existingFav
+        ? existingFav.place
+          ? { type: existingFav.type || "Place", place: placeId }
+          : existingFav.business
+            ? { type: existingFav.type || "Business", business: placeId }
+            : existingFav.map
+              ? { type: "Map", map: placeId }
+              : { type: "Offer", offer: placeId }
+        : type === "Map"
           ? { type, map: placeId }
-          : type === "Place"
-            ? { type, place: placeId }
-            : type === "Offer"
-              ? { type, offer: placeId }
-              : { type, business: placeId };
+          : type === "Offer"
+            ? { type, offer: placeId }
+            : type === "Business"
+              ? { type: "Business", business: placeId }
+              : { type: "Place", place: placeId };
 
       await addToFavourite(payload).unwrap();
 

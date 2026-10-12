@@ -878,8 +878,7 @@ export default function AddPlacePage() {
       if (q) {
         const nameStr = getSearchableString(place.name);
         const addrStr = getSearchableString(place.address);
-        const catStr = getSearchableString(pCat?.name);
-        if (!nameStr.includes(q) && !addrStr.includes(q) && !catStr.includes(q)) {
+        if (!nameStr.includes(q) && !addrStr.includes(q)) {
           return false;
         }
       }
@@ -903,8 +902,7 @@ export default function AddPlacePage() {
           if (q) {
             const nameStr = getSearchableString(p.name);
             const addrStr = getSearchableString(p.address);
-            const catStr = getSearchableString(cat?.name);
-            if (!nameStr.includes(q) && !addrStr.includes(q) && !catStr.includes(q)) {
+            if (!nameStr.includes(q) && !addrStr.includes(q)) {
               return false;
             }
           }

@@ -2,16 +2,16 @@
 
 import { Input } from "@/components/ui/input";
 import { NoImage } from "@/lib/others/others";
-import { getImageUrl } from "@/lib/utils";
+import { getImageUrl, getLocalized } from "@/lib/utils";
 import {
   useAddToFavouriteMutation,
+  useRemoveFavouriteMutation,
   useGetFavouritesQuery,
 } from "@/redux/features/favourite/favouriteApi";
 import {
   Building2,
   ChevronLeft,
   ChevronRight,
-  Map,
   MapPin,
   Search,
 } from "lucide-react";
@@ -24,21 +24,21 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 const PAGE_SIZE = 9;
 
 export default function FavoritePlaces() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [search, setSearch] = useState("");
   const [activeType, setActiveType] = useState("all");
   const [page, setPage] = useState(1);
 
+  // Removed "Map" filter button as requested
   const TYPE_FILTERS = [
     { label: t("common.all"), value: "all" },
     { label: t("nav.places"), value: "Place", icon: MapPin },
     { label: t("dashboard.sidebar.business"), value: "Business", icon: Building2 },
-    { label: t("nav.map"), value: "Map", icon: Map },
   ];
 
   const { data: favouritesRes, isLoading } = useGetFavouritesQuery();
-  const [addToFavourite, { isLoading: isRemoving }] =
-    useAddToFavouriteMutation();
+  const [addToFavourite] = useAddToFavouriteMutation();
+  const [removeFavourite, { isLoading: isRemoving }] = useRemoveFavouriteMutation();
 
   const handleTypeChange = (value: string) => {
     setActiveType(value);
@@ -50,21 +50,39 @@ export default function FavoritePlaces() {
     setPage(1);
   };
 
-  // Remove from favourite (POST acts as toggle on the backend)
+  // Helper to identify business entities
+  const isBusinessItem = (fav: any) => {
+    return (
+      fav.type === "Business" ||
+      Boolean(fav.business) ||
+      fav.place?.type === "Business" ||
+      fav.place?.placeType === "Business"
+    );
+  };
+
+  // Helper to identify place entities
+  const isPlaceItem = (fav: any) => {
+    return Boolean(fav.place) && !isBusinessItem(fav);
+  };
+
+  // Remove from favourite by id directly or fallback to toggle
   const handleRemove = async (fav: any) => {
-    const key =
-      fav.type === "Map"
-        ? "map"
-        : fav.type === "Offer"
-          ? "offer"
-          : fav.type === "Business"
-            ? "business"
-            : "place";
-    const refId = typeof fav[key] === "string" ? fav[key] : fav[key]?._id;
-    if (!refId) return;
     try {
-      await addToFavourite({ type: fav.type, [key]: refId }).unwrap();
-      toast.success(t("places.removed_from_favorites"));
+      if (fav._id) {
+        await removeFavourite(fav._id).unwrap();
+      } else {
+        const key = fav.business
+          ? "business"
+          : fav.map
+            ? "map"
+            : fav.offer
+              ? "offer"
+              : "place";
+        const refId = typeof fav[key] === "string" ? fav[key] : fav[key]?._id;
+        if (!refId) return;
+        await addToFavourite({ type: fav.type || "Place", [key]: refId }).unwrap();
+      }
+      toast.success(t("places.removed_from_favorites") || "Removed from favorites");
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to remove");
     }
@@ -75,28 +93,50 @@ export default function FavoritePlaces() {
   // Filter by type and search
   const filtered = useMemo(() => {
     return allFavourites.filter((fav) => {
-      const matchesType = activeType === "all" || fav.type === activeType;
+      // Must have valid entity data
+      if (!fav.place && !fav.business && !fav.map && !fav.offer) {
+        return false;
+      }
 
-      const name =
-        fav.map?.name ||
+      const isBiz = isBusinessItem(fav);
+      const isPlc = isPlaceItem(fav);
+
+      if (activeType === "Place") {
+        if (!isPlc) return false;
+      } else if (activeType === "Business") {
+        if (!isBiz) return false;
+      } else if (activeType === "all") {
+        // "all" includes places and businesses (and maps/offers if any)
+      }
+
+      const name = getLocalized(
         fav.place?.name ||
-        fav.business?.name ||
-        fav.name ||
-        "";
-      const description =
-        fav.map?.description ||
-        fav.place?.description ||
-        fav.business?.description ||
-        fav.description ||
-        "";
-      const matchesSearch =
-        search.trim() === "" ||
-        name.toLowerCase().includes(search.toLowerCase()) ||
-        description.toLowerCase().includes(search.toLowerCase());
+          fav.business?.name ||
+          fav.map?.name ||
+          fav.offer?.title ||
+          fav.offer?.name ||
+          fav.name,
+        language
+      );
 
-      return matchesType && matchesSearch;
+      const description = getLocalized(
+        fav.place?.description ||
+          fav.business?.description ||
+          fav.map?.description ||
+          fav.offer?.description ||
+          fav.description,
+        language
+      );
+
+      const q = search.trim().toLowerCase();
+      const matchesSearch =
+        !q ||
+        name.toLowerCase().includes(q) ||
+        description.toLowerCase().includes(q);
+
+      return matchesSearch;
     });
-  }, [allFavourites, activeType, search]);
+  }, [allFavourites, activeType, search, language]);
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -106,13 +146,15 @@ export default function FavoritePlaces() {
     <section className="max-w-7xl mx-auto px-6 py-10 font-public-sans">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{t("nav.favorite_places")}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
+          {t("nav.favorite_places")}
+        </h1>
 
         {/* Search */}
         <div className="flex items-center border border-gray-200 dark:border-slate-800 rounded-lg px-3 py-1 bg-white dark:bg-[#131b2e]">
           <Search className="text-gray-400 dark:text-slate-500 w-4 h-4 mr-2" />
           <Input
-            placeholder={t("filters.favorites")}
+            placeholder={t("filters.favorites") || "Search favorites..."}
             className="border-none focus-visible:ring-0 w-52 bg-transparent text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
             value={search}
             onChange={handleSearch}
@@ -142,50 +184,73 @@ export default function FavoritePlaces() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center gap-3 py-16">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
-          <p className="text-sm text-gray-500 dark:text-slate-400">{t("common.loading")}</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400">
+            {t("common.loading")}
+          </p>
         </div>
       )}
 
       {/* Empty state */}
       {!isLoading && paginated.length === 0 && (
         <div className="text-center py-16 text-gray-400 dark:text-slate-500 text-sm">
-          {t("filters.favorites")}
+          {search
+            ? t("common.no_results") || "No results found."
+            : t("places.no_favorites") || "You have no favorites yet."}
         </div>
       )}
 
       {/* Grid */}
       <div className="grid md:grid-cols-3 gap-6 mt-6">
         {paginated.map((fav: any) => {
-          // Resolve name and description from nested object
-          const name =
-            fav.map?.name ||
-            fav.place?.name ||
-            fav.business?.name ||
-            fav.name ||
-            "Untitled";
-          const description =
-            fav.map?.description ||
-            fav.place?.description ||
-            fav.business?.description ||
-            fav.description ||
-            "No description available.";
+          const isBiz = isBusinessItem(fav);
+          const isPlc = isPlaceItem(fav);
 
-          // Resolve image — map: images[], place: media[], business: media.photos[]
-          const rawImage = fav.map
-            ? fav.map?.images?.[0]
-            : fav.business
-              ? fav.business?.media?.photos?.[0]
-              : fav.place?.media?.[0];
+          // Resolve localized name and description safely
+          const name =
+            getLocalized(
+              fav.place?.name ||
+                fav.business?.name ||
+                fav.map?.name ||
+                fav.offer?.title ||
+                fav.offer?.name ||
+                fav.name,
+              language
+            ) || "Untitled";
+
+          const description =
+            getLocalized(
+              fav.place?.description ||
+                fav.business?.description ||
+                fav.map?.description ||
+                fav.offer?.description ||
+                fav.description,
+              language
+            ) || "";
+
+          // Resolve image — place: media[], business: media.photos[], map: images[]
+          const rawImage =
+            fav.place?.media?.[0] ||
+            fav.business?.media?.photos?.[0] ||
+            fav.business?.media?.[0] ||
+            fav.map?.images?.[0] ||
+            fav.offer?.image ||
+            fav.offer?.media?.[0];
+
           const imageSrc = rawImage ? getImageUrl(rawImage) : null;
 
-          const href =
-            fav.type === "Map"
-              ? `/catalog/${fav.map?._id || fav.map}`
-              : fav.type === "Business"
-                ? `/maps/${fav.business?._id || fav.business}?type=business`
-                : fav.type === "Place"
-                  ? `/maps/${fav.place?._id || fav.place}`
-                  : fav.href || "#";
+          const targetPlaceId =
+            fav.business?._id ||
+            fav.place?._id ||
+            (typeof fav.business === "string" ? fav.business : null) ||
+            (typeof fav.place === "string" ? fav.place : null);
+
+          const href = isBiz
+            ? `/maps/${targetPlaceId}?type=business`
+            : isPlc
+              ? `/maps/${targetPlaceId}`
+              : fav.map
+                ? `/catalog/${fav.map?._id || fav.map}`
+                : fav.href || "#";
 
           return (
             <div
@@ -204,18 +269,35 @@ export default function FavoritePlaces() {
                   ) : (
                     <NoImage />
                   )}
-                  {fav.badge && (
-                    <span
-                      className={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-full z-10 ${fav.badgeColor}`}
-                    >
-                      {fav.badge}
-                    </span>
-                  )}
+
+                  {/* Badge indicating Place or Business */}
+                  <span
+                    className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full z-10 flex items-center gap-1.5 backdrop-blur-md shadow-sm ${
+                      isBiz
+                        ? "bg-purple-600/90 text-white"
+                        : isPlc
+                          ? "bg-amber-500/90 text-black font-extrabold"
+                          : "bg-blue-600/90 text-white"
+                    }`}
+                  >
+                    {isBiz ? (
+                      <Building2 className="w-3 h-3" />
+                    ) : isPlc ? (
+                      <MapPin className="w-3 h-3" />
+                    ) : null}
+                    {isBiz
+                      ? t("dashboard.sidebar.business") || "Business"
+                      : isPlc
+                        ? t("nav.places") || "Place"
+                        : t("nav.map") || "Map"}
+                  </span>
                 </div>
               </Link>
 
               <div className="p-4 flex flex-col flex-1">
-                <h3 className="font-semibold text-lg line-clamp-1 text-gray-900 dark:text-slate-100">{name}</h3>
+                <h3 className="font-semibold text-lg line-clamp-1 text-gray-900 dark:text-slate-100">
+                  {name}
+                </h3>
                 <p className="text-gray-500 dark:text-slate-400 text-sm mt-1 line-clamp-2 flex-1">
                   {description}
                 </p>

@@ -11,15 +11,27 @@ const favouriteApi = baseApi.injectEndpoints({
       invalidatesTags: ["Favourite"],
     }),
 
-    getFavourites: builder.query<any, void>({
-      query: () => ({
+    removeFavourite: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/favourite/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Favourite"],
+    }),
+
+    getFavourites: builder.query<any, Record<string, any> | void>({
+      query: (params) => ({
         url: `/favourite`,
         method: "GET",
+        params: { limit: 1000, ...(params || {}) },
       }),
       providesTags: ["Favourite"],
     }),
   }),
 });
 
-export const { useAddToFavouriteMutation, useGetFavouritesQuery } =
-  favouriteApi;
+export const {
+  useAddToFavouriteMutation,
+  useRemoveFavouriteMutation,
+  useGetFavouritesQuery,
+} = favouriteApi;
