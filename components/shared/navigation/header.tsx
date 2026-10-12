@@ -116,6 +116,11 @@ export default function Header() {
     }
   }, [isMenuOpen, isSearchOpen]);
 
+  // Ensure search input in sidebar is never stale/cached when opening or closing
+  useEffect(() => {
+    setSearchTerm("");
+  }, [isMenuOpen]);
+
   useEffect(() => {
     const onScroll = () => {
       const past = window.scrollY > 120;
@@ -267,6 +272,7 @@ export default function Header() {
       setIsSearchOpen(false);
       setIsMobileProfileMenuOpen(false);
       setIsProfileMenuOpen(false);
+      setSearchTerm("");
     }
   };
 
@@ -277,6 +283,8 @@ export default function Header() {
       setIsMenuOpen(false);
       setIsMobileProfileMenuOpen(false);
       setIsProfileMenuOpen(false);
+    } else {
+      setSearchTerm("");
     }
   };
 
@@ -285,6 +293,7 @@ export default function Header() {
     setIsSearchOpen(false);
     setIsMobileProfileMenuOpen(false);
     setIsProfileMenuOpen(false);
+    setSearchTerm("");
   };
 
   return (
@@ -598,6 +607,17 @@ export default function Header() {
 
           {/* Mobile & Tablet Icons */}
           <div className="flex lg:hidden items-center gap-2">
+            {!hideHeaderSearch && (
+              <button
+                type="button"
+                onClick={toggleSearch}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-full transition-colors cursor-pointer"
+                aria-label="Toggle search"
+              >
+                <Search className="size-5" />
+              </button>
+            )}
+
             {/* Profile Icon - Mobile */}
             {isAuthenticated ? (
               <DropdownMenu
@@ -771,7 +791,6 @@ export default function Header() {
             </button>
           </div>
         </nav>
-
       </header>
 
       {/* Portaled Mobile Overlays & Drawers (prevents trapping inside header stacking context/transforms) */}
@@ -982,6 +1001,7 @@ export default function Header() {
                           type="button"
                           onClick={() => setSearchTerm("")}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 p-1 cursor-pointer"
+                          aria-label="Clear search"
                         >
                           <X className="size-3.5" />
                         </button>
