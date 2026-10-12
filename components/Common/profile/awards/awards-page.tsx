@@ -24,6 +24,7 @@ import Image from "next/image";
 import { getImageUrl, getLocalized, downloadFileWithCustomName } from "@/lib/utils";
 import { NoImage } from "@/lib/others/others";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { toast } from "sonner";
 
 const getAwardIcon = (type: string) => {
   switch (type) {
@@ -94,12 +95,19 @@ export default function AwardsPage() {
 
     try {
       await downloadFileWithCustomName(downloadTarget, downloadFileName);
+      toast.success(
+        language === "es"
+          ? "Descarga iniciada..."
+          : "Download started..."
+      );
     } catch {
       if (award.config?.fileUrl) {
         window.open(getImageUrl(award.config.fileUrl), "_blank");
       }
     } finally {
-      setDownloadingAwardId(null);
+      setTimeout(() => {
+        setDownloadingAwardId(null);
+      }, 1500);
     }
   };
 

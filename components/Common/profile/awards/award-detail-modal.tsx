@@ -93,13 +93,20 @@ export function AwardDetailModal({
     const configId = award.config?._id || award.configId;
     const downloadTarget = configId
       ? getImageUrl(`/api/v1/awards/configs/${configId}/download`)
-      : fileUrl;
+      : getImageUrl(fileUrl);
     try {
       await downloadFileWithCustomName(downloadTarget, downloadFileName);
+      toast.success(
+        language === "es"
+          ? "Descarga iniciada..."
+          : "Download started..."
+      );
     } catch {
-      window.open(fileUrl, "_blank");
+      window.open(getImageUrl(fileUrl), "_blank");
     } finally {
-      setIsDownloading(false);
+      setTimeout(() => {
+        setIsDownloading(false);
+      }, 1500);
     }
   };
 

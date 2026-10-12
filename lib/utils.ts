@@ -604,8 +604,9 @@ export function convertTo12Hour(timeStr?: string | null): string {
 }
 
 /**
- * Triggers downloading a file with a custom filename.
- * Uses fetch + blob URL so modern browsers always respect link.download regardless of cross-origin or server filename.
+ * Triggers downloading a file with a custom filename using the browser's native download manager.
+ * Avoids buffering large files into JavaScript heap memory via fetch+blob,
+ * allowing real-time browser download progress and faster streaming.
  */
 export async function downloadFileWithCustomName(
   url: string,
@@ -620,33 +621,20 @@ export async function downloadFileWithCustomName(
     filename += ".pdf";
   }
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
-    const res = await fetch(url, { mode: "cors", signal: controller.signal });
-    clearTimeout(timeoutId);
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const blob = await res.blob();
-    const blobUrl = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
-  } catch (err) {
-    console.warn("Direct blob download failed, falling back to direct link:", err);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    try {
+      document.body.removeChild(link);
+    } catch {
+      // ignore
+    }
+  }, 200);
 }
 
 
