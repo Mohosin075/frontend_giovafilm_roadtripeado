@@ -266,36 +266,33 @@ export default function AwardsPage() {
                   : "Collect trophies and unlock premium travel perks."}
               </p>
             </div>
-            
+
             {/* Filter Tabs */}
             <div className="flex bg-gray-100 dark:bg-slate-900/80 p-0.5 md:p-1 rounded-xl self-start md:self-auto">
               <button
                 onClick={() => setActiveFilter("all")}
-                className={`px-2.5 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase rounded-lg transition-all ${
-                  activeFilter === "all"
+                className={`px-2.5 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase rounded-lg transition-all ${activeFilter === "all"
                     ? "bg-white dark:bg-[#131b2e] text-gray-900 dark:text-slate-100 shadow-sm"
                     : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"
-                }`}
+                  }`}
               >
                 {language === "es" ? "Todos los Trofeos" : "All Trophies"}
               </button>
               <button
                 onClick={() => setActiveFilter("unlocked")}
-                className={`px-2.5 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase rounded-lg transition-all ${
-                  activeFilter === "unlocked"
+                className={`px-2.5 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase rounded-lg transition-all ${activeFilter === "unlocked"
                     ? "bg-white dark:bg-[#131b2e] text-gray-900 dark:text-slate-100 shadow-sm"
                     : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"
-                }`}
+                  }`}
               >
                 {language === "es" ? `Desbloqueados (${unlockedAwards.length})` : `Unlocked (${unlockedAwards.length})`}
               </button>
               <button
                 onClick={() => setActiveFilter("locked")}
-                className={`px-2.5 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase rounded-lg transition-all ${
-                  activeFilter === "locked"
+                className={`px-2.5 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase rounded-lg transition-all ${activeFilter === "locked"
                     ? "bg-white dark:bg-[#131b2e] text-gray-900 dark:text-slate-100 shadow-sm"
                     : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"
-                }`}
+                  }`}
               >
                 {language === "es" ? `En Progreso (${lockedAwards.length})` : `In Progress (${lockedAwards.length})`}
               </button>

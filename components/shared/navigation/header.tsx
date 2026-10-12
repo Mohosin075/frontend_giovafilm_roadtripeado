@@ -506,9 +506,16 @@ export default function Header() {
                       </div>
 
                       {/* User Name */}
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-0.5">
                         {user?.name}
                       </h2>
+
+                      {/* User Email */}
+                      {user?.email && (
+                        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium mb-2 break-all">
+                          {user.email}
+                        </p>
+                      )}
 
                       <div className="space-y-1 mb-4">
                         <p>
@@ -685,6 +692,11 @@ export default function Header() {
                         <h2 className="truncate text-lg font-bold text-gray-900 dark:text-slate-100 leading-tight">
                           {user?.name || "Explorer"}
                         </h2>
+                        {user?.email && (
+                          <p className="truncate text-xs text-gray-500 dark:text-slate-400">
+                            {user.email}
+                          </p>
+                        )}
                         <p className="mt-0.5 text-xs font-semibold text-gray-500 dark:text-slate-400">
                           {t("levels.level")} {user?.level ?? 0}
                           {USER_LEVELS[user?.level ?? 0]?.name
