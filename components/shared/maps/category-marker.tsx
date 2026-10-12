@@ -75,11 +75,10 @@ export const CategoryMarker = React.memo(function CategoryMarker({
       {/* ── Name Tooltip (Pure CSS driven: 0 JS re-renders during mouse wheel zoom) ── */}
       {Boolean(displayName) && !isLocked && (
         <div
-          className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap transition-opacity duration-150 z-[100] flex items-center gap-1.5 ${
-            isSelected
+          className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap transition-opacity duration-150 z-[100] flex items-center gap-1.5 ${isSelected
               ? "opacity-100"
               : "opacity-0 group-hover:opacity-100"
-          }`}
+            }`}
           style={{
             bottom: `${height + (isSelected ? 10 : 6)}px`,
             backgroundColor: isSelected ? "#0F172A" : "rgba(15, 23, 42, 0.94)",

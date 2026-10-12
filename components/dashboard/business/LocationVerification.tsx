@@ -5,6 +5,7 @@ import { useUpdateBusinessMutation } from "@/redux/features/business/businessApi
 import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -14,6 +15,11 @@ export default function LocationVerification({
   isAccuracyVerified,
 }: any) {
   const { t } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
+
   // mapLocation.coordinates is [lng, lat] (GeoJSON order)
   const lng = location?.mapLocation?.coordinates?.[0];
   const lat = location?.mapLocation?.coordinates?.[1];
@@ -63,6 +69,7 @@ export default function LocationVerification({
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string}
         >
           <Map
+            colorScheme={isDark ? "DARK" : "LIGHT"}
             style={{ width: "100%", height: "100%" }}
             center={center}
             zoom={15}

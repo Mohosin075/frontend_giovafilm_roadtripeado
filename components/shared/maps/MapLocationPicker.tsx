@@ -7,8 +7,8 @@ import {
   useMap,
 } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { CustomLocationButton } from "./CustomLocationButton";
-import { mapStyles } from "@/lib/utils";
 
 
 interface MapLocationPickerProps {
@@ -39,6 +39,11 @@ export function MapLocationPicker({
   initialLocation,
   onLocationSelect,
 }: MapLocationPickerProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
+
   const defaultPosition = initialLocation || { lat: 23.8103, lng: 90.4125 };
   const [markerPos, setMarkerPos] = useState(defaultPosition);
 
@@ -51,11 +56,12 @@ export function MapLocationPicker({
   };
 
   return (
-    <div className="w-full h-full min-h-[400px] relative rounded-lg overflow-hidden border border-gray-200">
+    <div className="w-full h-full min-h-[400px] relative rounded-lg overflow-hidden border border-gray-200 dark:border-slate-800">
       <APIProvider
         apiKey={(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || "").trim()}
       >
         <Map
+          colorScheme={isDark ? "DARK" : "LIGHT"}
           defaultCenter={defaultPosition}
           defaultZoom={13}
           minZoom={3}

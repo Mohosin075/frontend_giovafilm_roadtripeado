@@ -1,6 +1,5 @@
 "use client";
 
-import { mapStyles } from "@/lib/utils";
 import {
   AdvancedMarker,
   APIProvider,
@@ -8,11 +7,17 @@ import {
   Pin,
 } from "@vis.gl/react-google-maps";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function MapContent() {
   const { t } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
+
   const searchParams = useSearchParams();
   const lat = parseFloat(searchParams.get("lat") || "0");
   const lng = parseFloat(searchParams.get("lng") || "0");
@@ -33,6 +38,7 @@ function MapContent() {
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string}
       >
         <Map
+          colorScheme={isDark ? "DARK" : "LIGHT"}
           defaultCenter={position}
           defaultZoom={15}
           minZoom={3}

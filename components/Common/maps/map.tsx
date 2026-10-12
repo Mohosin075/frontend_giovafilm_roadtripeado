@@ -22,6 +22,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 import { MapFilters, SelectedMapFilter } from "./MapFilters";
 import LocationDialog from "./location-dialog";
 import { getUsableMediaUrl } from "@/lib/utils";
@@ -389,6 +390,8 @@ export default function MapPage() {
   const [focusReady, setFocusReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = hasMounted && resolvedTheme === "dark";
   const [initialMapState, setInitialMapState] = useState<{ center: { lat: number, lng: number }, zoom: number } | null>(null);
   const focusMapAppliedRef = useRef(false);
 
@@ -860,6 +863,7 @@ export default function MapPage() {
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string}
         >
           <Map
+            colorScheme={isDark ? "DARK" : "LIGHT"}
             defaultCenter={initialMapState?.center || defaultPosition}
             defaultZoom={initialMapState?.zoom || 13}
             onCameraChanged={(ev) => {
@@ -987,14 +991,14 @@ export default function MapPage() {
 
         {/* Active Search Filter Chip */}
         {searchQuery && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-gray-200/80 text-xs sm:text-sm font-medium text-gray-800 animate-in fade-in slide-in-from-top-2">
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-white/95 dark:bg-[#111928]/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-gray-200/80 dark:border-slate-700/80 text-xs sm:text-sm font-medium text-gray-800 dark:text-slate-200 animate-in fade-in slide-in-from-top-2">
             <span>
-              Searching: <strong className="text-black">&ldquo;{searchQuery}&rdquo;</strong> ({displayPlaces.length})
+              Searching: <strong className="text-black dark:text-white">&ldquo;{searchQuery}&rdquo;</strong> ({displayPlaces.length})
             </span>
             <button
               type="button"
               onClick={() => router.push("/maps", { scroll: false })}
-              className="p-1 hover:bg-gray-100 rounded-full text-gray-500 hover:text-black transition-colors"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors"
               aria-label="Clear search"
             >
               <X size={14} />
