@@ -932,7 +932,7 @@ export default function MapDetails() {
               <FavouriteButton
                 placeId={id}
                 type={isBusinessEntity ? "Business" : "Place"}
-                Style="absolute top-4 left-4 z-20 w-11 h-11 border-none bg-white dark:bg-[#131b2e] hover:bg-white dark:hover:bg-[#1e293b] hover:scale-105 active:scale-95 shadow-md p-3 rounded-xl transition-all duration-200 cursor-pointer"
+                Style="absolute top-4 left-4 z-20 w-11 h-11 border border-black/5 dark:border-white/10 bg-white/95 dark:bg-[#131b2e]/95 hover:bg-white dark:hover:bg-[#1e293b] hover:scale-105 active:scale-95 shadow-md p-2.5 rounded-xl transition-all duration-200 cursor-pointer backdrop-blur-sm"
               />
 
               {mediaList.length > 0 && (

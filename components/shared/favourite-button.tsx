@@ -86,9 +86,12 @@ export function FavouriteButton({ placeId, type, Style }: Props) {
   return (
     <button
       type="button"
-      className={`inline-flex items-center justify-center shrink-0 transition-all duration-200 ${Style || ""}`}
+      className={`inline-flex items-center justify-center shrink-0 transition-all duration-200 cursor-pointer ${
+        !Style?.includes("bg-") ? "bg-white dark:bg-[#131b2e] border border-gray-200/80 dark:border-slate-700/80 shadow-sm hover:bg-gray-50 dark:hover:bg-[#1c263d]" : ""
+      } ${Style || ""}`}
       onClick={handleFavourite}
       disabled={isLoading}
+      aria-label="Toggle favourite"
     >
       <Heart
         size={20}
@@ -96,8 +99,8 @@ export function FavouriteButton({ placeId, type, Style }: Props) {
           isFavourite
             ? "text-red-500 fill-red-500"
             : isLoading
-              ? "animate-pulse text-gray-300"
-              : "text-slate-800 hover:text-red-500 hover:fill-red-500/20 transition-all duration-200"
+              ? "animate-pulse text-gray-400 dark:text-slate-500"
+              : "text-slate-700 dark:text-white/90 hover:text-red-500 dark:hover:text-red-400 hover:fill-red-500/20 transition-all duration-200"
         }
       />
     </button>

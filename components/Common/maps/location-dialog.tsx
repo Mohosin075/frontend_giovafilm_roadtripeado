@@ -309,7 +309,7 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
               <FavouriteButton
                 placeId={locationId}
                 type={type === "business" ? "Business" : "Place"}
-                Style="w-11 h-11 sm:w-12 sm:h-12 rounded-xl"
+                Style="w-11 h-11 sm:w-12 sm:h-12 rounded-xl border border-gray-200 dark:border-slate-700/80 bg-gray-50 dark:bg-[#1a233a] hover:bg-gray-100 dark:hover:bg-[#232f4e]"
               />
             )}
           </div>
