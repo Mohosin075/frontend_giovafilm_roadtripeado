@@ -372,11 +372,11 @@ export const adminMenuItems = [
     url: "/dashboard/users-roles",
     icon: Users,
   },
-  // {
-  //   title: "Notification",
-  //   url: "/dashboard/notification",
-  //   icon: Bell,
-  // },
+  {
+    title: "Notifications",
+    url: "/dashboard/notification",
+    icon: Bell,
+  },
   {
     title: "Business",
     url: "/dashboard/business",

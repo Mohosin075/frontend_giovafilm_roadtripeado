@@ -12,6 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
+  Bell,
   Check,
   CircleDollarSign,
   Edit2,
@@ -34,6 +35,8 @@ import { logout } from "@/redux/features/auth/authSlice";
 import { broadcastLogout } from "@/components/shared/cross-tab-logout-listener";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { useGetPlacesQuery } from "@/redux/features/place/placeApi";
+import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
+import { getSocket, emitWhenReady } from "@/lib/socket";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { persistor } from "@/redux/store";
 import { baseApi } from "@/redux/api/baseApi";
@@ -52,6 +55,7 @@ import { shareProfile } from "@/lib/share-profile";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSwitcher from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import NotificationBellDropdown from "@/components/shared/notification-bell-dropdown";
 
 function getPlaceSearchHref(place: any, onMapsPage: boolean) {
   if (!onMapsPage) return `/places/${place._id || place.id}`;
@@ -143,6 +147,7 @@ export default function Header() {
   ];
 
   const menuItems = [
+    { label: t("nav.notifications") || "Notifications", href: "/notifications", icon: Bell },
     { label: t("nav.my_business"), href: "/profile/my-business", icon: Grid2x2 },
     { label: t("nav.favorite_places"), href: "/profile/favorite-places", icon: Heart },
     { label: t("nav.purchased_maps"), href: "/profile/purchased-maps", icon: Map },
@@ -172,6 +177,35 @@ export default function Header() {
       (searchTerm !== debouncedSearch || isFetching));
   const isAuthenticated = useAppSelector((state) => state.auth.accessToken);
 
+  const { data: user } = useGetProfileQuery({});
+
+  const { data: unreadData, refetch: refetchUnread } = useGetUnreadCountQuery(
+    undefined,
+    { skip: !isAuthenticated }
+  );
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const socket = getSocket();
+    if (!socket) return;
+
+    if (user?._id) {
+      emitWhenReady("join-room", user._id);
+    }
+
+    const handleUpdate = () => {
+      refetchUnread();
+    };
+
+    socket.on("unread_count_update", handleUpdate);
+    socket.on("notification", handleUpdate);
+
+    return () => {
+      socket.off("unread_count_update", handleUpdate);
+      socket.off("notification", handleUpdate);
+    };
+  }, [isAuthenticated, user?._id, refetchUnread]);
+
   const submitHeaderSearch = () => {
     const next = searchTerm.trim();
     if (!next) return;
@@ -188,11 +222,10 @@ export default function Header() {
     return () => clearTimeout(timer);
   }, [enterSearching, isFetching]);
 
-  const { data: user } = useGetProfileQuery({});
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");
   const visibleMenuItems = isAdminOrEditor
     ? menuItems.filter((item) =>
-      ["/profile/favorite-places", "/profile/contributions-reviews", "/profile/awards"].includes(item.href)
+      ["/notifications", "/profile/favorite-places", "/profile/contributions-reviews", "/profile/awards"].includes(item.href)
     )
     : menuItems;
   const [logoutApi] = useLogoutMutation();
@@ -454,6 +487,12 @@ export default function Header() {
 
             {/* Auth Section - Desktop */}
             <div className="flex items-center gap-3">
+              {isAuthenticated && (
+                <NotificationBellDropdown
+                  userId={user?._id}
+                  viewAllHref="/notifications"
+                />
+              )}
               <ThemeToggle />
               <LanguageSwitcher />
               {isAuthenticated ? (
@@ -623,6 +662,14 @@ export default function Header() {
               >
                 <Search className="size-5" />
               </button>
+            )}
+
+            {/* Notification Bell - Mobile */}
+            {isAuthenticated && (
+              <NotificationBellDropdown
+                userId={user?._id}
+                viewAllHref="/notifications"
+              />
             )}
 
             {/* Profile Icon - Mobile */}

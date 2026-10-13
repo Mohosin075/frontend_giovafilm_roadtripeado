@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Bell } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -15,6 +17,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { getImageUrl } from "@/lib/utils";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
+import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
+import { getSocket, emitWhenReady } from "@/lib/socket";
 import ProfileUpdateModal from "../Common/profile/profile-update-modal";
 import { SidebarTrigger } from "../ui/sidebar";
 import { useRouter } from "next/navigation";
@@ -27,13 +31,36 @@ import { baseApi } from "@/redux/api/baseApi";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageSwitcher from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import NotificationBellDropdown from "@/components/shared/notification-bell-dropdown";
 
 export default function DashTopHeader() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const { data: user } = useGetProfileQuery({});
+  const { data: unreadData, refetch: refetchUnread } = useGetUnreadCountQuery();
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+
+    if (user?._id) {
+      emitWhenReady("join-room", user._id);
+    }
+
+    const handleUpdate = () => {
+      refetchUnread();
+    };
+
+    socket.on("unread_count_update", handleUpdate);
+    socket.on("notification", handleUpdate);
+
+    return () => {
+      socket.off("unread_count_update", handleUpdate);
+      socket.off("notification", handleUpdate);
+    };
+  }, [user?._id, refetchUnread]);
 
   const [logoutApi] = useLogoutMutation();
 
@@ -60,6 +87,10 @@ export default function DashTopHeader() {
         </div>
 
         <div className="flex items-center gap-3">
+          <NotificationBellDropdown
+            userId={user?._id}
+            viewAllHref="/dashboard/notification"
+          />
           <ThemeToggle />
           <LanguageSwitcher />
           <DropdownMenu>

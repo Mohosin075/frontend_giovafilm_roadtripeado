@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate, getImageUrl } from "@/lib/utils";
 import { shareProfile } from "@/lib/share-profile";
 import {
+  Bell,
   Check,
   Edit2,
   Heart,
@@ -45,6 +46,12 @@ export function ProfileSidebar({ data }: ProfileProps) {
   const { t } = useLanguage();
 
   const allProfileLinks = [
+    {
+      href: "/notifications",
+      label: t("nav.notifications") || "Notifications",
+      icon: Bell,
+      roles: ["all"],
+    },
     {
       href: "/profile/favorite-places",
       label: t("nav.favorite_places"),

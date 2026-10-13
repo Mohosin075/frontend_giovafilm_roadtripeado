@@ -26,14 +26,28 @@ const flushPending = () => {
 
 export const getSocket = (): Socket | null => {
   if (typeof window === "undefined") return null;
-  if (socket) return socket;
 
-  const token = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("accessToken="))
-    ?.split("=")
-    .slice(1)
-    .join("=");
+  const getToken = () => {
+    return document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="))
+      ?.split("=")
+      .slice(1)
+      .join("=");
+  };
+
+  const rawToken = getToken();
+  const token = rawToken ? decodeURIComponent(rawToken) : undefined;
+
+  if (socket) {
+    if (token && (socket.auth as any)?.token !== token) {
+      socket.auth = { token };
+      if (!socket.connected) {
+        socket.connect();
+      }
+    }
+    return socket;
+  }
 
   socket = io(getSocketOrigin(), {
     path: "/socket.io",
@@ -44,12 +58,14 @@ export const getSocket = (): Socket | null => {
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000,
     auth: {
-      token: token ? decodeURIComponent(token) : undefined,
+      token,
     },
   });
 
   if (!flushBound) {
-    socket.on("connect", flushPending);
+    socket.on("connect", () => {
+      flushPending();
+    });
     flushBound = true;
   }
 
