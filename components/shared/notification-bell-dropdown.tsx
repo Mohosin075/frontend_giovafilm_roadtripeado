@@ -109,6 +109,7 @@ export default function NotificationBellDropdown({
             ? notif.content[language] || notif.content.en || notif.content.es || ""
             : notif.content || "";
 
+        // 1. Rich In-App Toast
         toast.info(titleStr, {
           description: contentStr,
           action: {
@@ -121,8 +122,28 @@ export default function NotificationBellDropdown({
               }
             },
           },
-          duration: 5000,
+          duration: 6000,
         });
+
+        // 2. Native System Desktop Push Notification
+        if (typeof window !== "undefined" && "Notification" in window) {
+          if (Notification.permission === "granted") {
+            try {
+              const desktopNotif = new window.Notification(titleStr, {
+                body: contentStr,
+                icon: "/logo.png",
+              });
+              desktopNotif.onclick = () => {
+                window.focus();
+                if (notif.actionUrl) {
+                  router.push(notif.actionUrl);
+                } else {
+                  router.push(viewAllHref);
+                }
+              };
+            } catch {}
+          }
+        }
       }
     };
 
@@ -237,7 +258,20 @@ export default function NotificationBellDropdown({
     : (Array.isArray(rawNotifs?.data) ? rawNotifs.data : []);
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (
+          nextOpen &&
+          typeof window !== "undefined" &&
+          "Notification" in window &&
+          Notification.permission === "default"
+        ) {
+          Notification.requestPermission();
+        }
+      }}
+    >
       <DropdownMenuTrigger asChild>
         <button
           type="button"

@@ -38,8 +38,14 @@ import {
   Sparkles,
   Trash2,
   X,
+  BellRing,
 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  getNotificationPermission,
+  requestNotificationPermission,
+  showDesktopNotification,
+} from "@/lib/push-notification";
 
 function formatRelativeTime(dateString: string, lang: string = "es"): string {
   if (!dateString) return "";
@@ -91,6 +97,58 @@ export default function NotificationsPage() {
   const [archiveNotification] = useArchiveNotificationMutation();
   const [clearMyNotifications, { isLoading: isClearing }] = useClearMyNotificationsMutation();
 
+  const [pushPermission, setPushPermission] = useState<NotificationPermission | "unsupported">("default");
+
+  useEffect(() => {
+    setPushPermission(getNotificationPermission());
+  }, []);
+
+  const handleEnablePush = async () => {
+    const perm = await requestNotificationPermission();
+    setPushPermission(perm);
+    if (perm === "granted") {
+      toast.success(
+        language === "es"
+          ? "¡Notificaciones de escritorio activadas!"
+          : "Desktop push notifications enabled!"
+      );
+      showDesktopNotification(
+        language === "es" ? "¡Push Activado en PC! 🚀" : "Desktop Push Active! 🚀",
+        {
+          body:
+            language === "es"
+              ? "Ahora recibirás alertas emergentes en tu PC al instante."
+              : "You will now receive instant desktop push alerts on your PC.",
+          url: "/notifications",
+        }
+      );
+    } else if (perm === "denied") {
+      toast.error(
+        language === "es"
+          ? "Las notificaciones están bloqueadas en tu navegador. Habilítalas en los ajustes del sitio."
+          : "Notifications are blocked by your browser. Please allow them in site settings."
+      );
+    }
+  };
+
+  const handleTestPush = () => {
+    showDesktopNotification(
+      language === "es" ? "Prueba de Push en PC 🔔" : "Roadtripeado Test Push 🔔",
+      {
+        body:
+          language === "es"
+            ? "¡Excelente! Las notificaciones push en tu PC funcionan al 100%."
+            : "Success! Desktop push notifications on your PC are working 100%.",
+        url: "/notifications",
+      }
+    );
+    toast.success(
+      language === "es"
+        ? "Notificación enviada a tu PC"
+        : "Desktop push notification sent to your PC"
+    );
+  };
+
   const handleClearRead = async () => {
     try {
       await clearMyNotifications({ onlyRead: true }).unwrap();
@@ -118,9 +176,24 @@ export default function NotificationsPage() {
       emitWhenReady("join-room", user._id);
     }
 
-    const handleUpdate = () => {
+    const handleUpdate = (payload?: any) => {
       refetch();
       refetchUnread();
+      const notif = payload?.data;
+      if (notif) {
+        const titleStr =
+          typeof notif.title === "object"
+            ? notif.title[language] || notif.title.en || notif.title.es || "Roadtripeado"
+            : notif.title || "Roadtripeado";
+        const contentStr =
+          typeof notif.content === "object"
+            ? notif.content[language] || notif.content.en || notif.content.es || ""
+            : notif.content || "";
+        showDesktopNotification(titleStr, {
+          body: contentStr,
+          url: notif.actionUrl || "/notifications",
+        });
+      }
     };
 
     socket.on("notification", handleUpdate);
@@ -130,7 +203,7 @@ export default function NotificationsPage() {
       socket.off("notification", handleUpdate);
       socket.off("unread_count_update", handleUpdate);
     };
-  }, [isAuthenticated, user?._id, refetch, refetchUnread]);
+  }, [isAuthenticated, user?._id, refetch, refetchUnread, language]);
 
   const rawNotifs = notifData as any;
   const notifications: INotificationItem[] = Array.isArray(rawNotifs)
@@ -358,6 +431,19 @@ export default function NotificationsPage() {
 
           {/* Desktop Actions */}
           <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+            {pushPermission === "granted" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleTestPush}
+                className="rounded-xl border border-yellow-300/80 dark:border-yellow-700/60 bg-yellow-50/70 dark:bg-yellow-950/30 hover:bg-yellow-100 text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer h-10 px-3.5 shadow-2xs"
+                title={language === "es" ? "Probar notificación emergente en tu PC" : "Test desktop push popup on your PC"}
+              >
+                <BellRing size={16} className="text-yellow-600 dark:text-yellow-400" />
+                <span>{language === "es" ? "Probar Push en PC" : "Test Push on PC"}</span>
+              </Button>
+            )}
+
             {totalUnread > 0 && (
               <Button
                 variant="outline"
@@ -393,6 +479,44 @@ export default function NotificationsPage() {
             )}
           </div>
         </div>
+
+        {/* Desktop Push Notification Banner (If permission not yet granted or denied) */}
+        {pushPermission === "default" && (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 mb-6 rounded-2xl bg-amber-500/10 border border-amber-500/30">
+            <div className="flex items-center gap-3">
+              <div className="size-10 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <BellRing size={20} />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100">
+                  {language === "es" ? "Habilitar notificaciones en tu PC" : "Enable Push Notifications on your PC"}
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-slate-400">
+                  {language === "es"
+                    ? "Recibe alertas emergentes directamente en tu computadora cuando lleguen ofertas y premios."
+                    : "Receive instant desktop popups on your PC when new offers, rewards, and updates arrive."}
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleEnablePush}
+              className="bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold text-xs sm:text-sm rounded-xl px-4 py-2 shrink-0 shadow-2xs cursor-pointer"
+            >
+              {language === "es" ? "Activar en PC" : "Enable on PC"}
+            </Button>
+          </div>
+        )}
+
+        {pushPermission === "denied" && (
+          <div className="flex items-center gap-3 p-3.5 mb-6 rounded-2xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 text-xs text-red-700 dark:text-red-300">
+            <AlertCircle size={18} className="shrink-0" />
+            <span>
+              {language === "es"
+                ? "Las notificaciones de escritorio están bloqueadas en este navegador. Haz clic en el ícono de candado junto a la URL para permitirlas."
+                : "Desktop notifications are blocked by your browser. Click the lock/tune icon in the browser address bar to allow notifications."}
+            </span>
+          </div>
+        )}
 
         {/* Search & Unread Filter */}
         <div className="flex items-center gap-3 mb-6 sm:mb-8">
