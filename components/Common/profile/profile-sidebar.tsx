@@ -14,6 +14,7 @@ import {
   Share2,
   Star,
   Trophy,
+  MapPin,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +46,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
   const [open, setOpen] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const allProfileLinks = [
     {
@@ -76,6 +77,12 @@ export function ProfileSidebar({ data }: ProfileProps) {
       href: "/profile/contributions-reviews",
       label: t("nav.contributions"),
       icon: Star,
+      roles: ["all"],
+    },
+    {
+      href: "/profile/recommended-places",
+      label: language === "es" ? "Lugares recomendados" : "Recommended Spots",
+      icon: MapPin,
       roles: ["all"],
     },
     {

@@ -28,6 +28,7 @@ import {
   Trophy,
   User,
   X,
+  MapPin,
 } from "lucide-react";
 
 import { getImageUrl, getLocalized } from "@/lib/utils";
@@ -154,6 +155,7 @@ export default function Header() {
     { label: t("nav.my_business"), href: "/profile/my-business", icon: Grid2x2 },
     { label: t("nav.purchased_maps"), href: "/profile/purchased-maps", icon: Map },
     { label: t("nav.contributions"), href: "/profile/contributions-reviews", icon: Star },
+    { label: language === "es" ? "Lugares Recomendados" : "Recommended Spots", href: "/profile/recommended-places", icon: MapPin },
     { label: t("nav.subscription"), href: "/profile/subscription", icon: CircleDollarSign },
     { label: t("nav.awards"), href: "/profile/awards", icon: Trophy },
   ];
@@ -227,7 +229,7 @@ export default function Header() {
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");
   const visibleMenuItems = isAdminOrEditor
     ? menuItems.filter((item) =>
-      ["/notifications", "/profile/visited-places", "/profile/favorite-places", "/profile/contributions-reviews", "/profile/awards"].includes(item.href)
+      ["/notifications", "/profile/visited-places", "/profile/favorite-places", "/profile/contributions-reviews", "/profile/recommended-places", "/profile/awards"].includes(item.href)
     )
     : menuItems;
   const [logoutApi] = useLogoutMutation();

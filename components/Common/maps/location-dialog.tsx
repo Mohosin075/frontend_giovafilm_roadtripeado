@@ -10,7 +10,7 @@ import { useGetSingleBusinessQuery } from "@/redux/features/business/businessApi
 import { useGetPlaceDetailsQuery } from "@/redux/features/place/placeApi";
 import { normalizePinType, trackUsage } from "@/lib/record-visit";
 import { useEffect, useState } from "react";
-import { Star, X, Lock } from "lucide-react";
+import { Star, X, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -264,6 +264,18 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
               {getSafeString(location?.map?.name, language) || location?.location?.country || ""}
             </span>
           </div>
+
+          {(location?.discoveredByName || location?.discoveredBy?.name) && (
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/25 dark:border-amber-400/20 text-xs font-semibold text-amber-900 dark:text-amber-200 w-fit mb-3">
+              <Sparkles size={13} className="text-amber-500 fill-amber-500 shrink-0" />
+              <span>
+                {language === "es" ? "Descubierto por" : "Discovered by"}{" "}
+                <span className="font-bold">
+                  {location.discoveredByName || location.discoveredBy?.name}
+                </span>
+              </span>
+            </div>
+          )}
 
           {location?.description ? (
             <div className="mb-4">

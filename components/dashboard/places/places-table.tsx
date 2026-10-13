@@ -4,11 +4,31 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   useDeletePlaceMutation,
   useGetPlacesQuery,
   useUpdatePlaceMutation,
+  useReviewRecommendedPlaceMutation,
 } from "@/redux/features/place/placeApi";
-import { Edit, Eye, EyeOff, FileText, MessageSquare, Search, Trash2 } from "lucide-react";
+import {
+  Check,
+  Clock,
+  Edit,
+  Eye,
+  EyeOff,
+  FileText,
+  MessageSquare,
+  Search,
+  Sparkles,
+  Trash2,
+  X,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
@@ -43,6 +63,13 @@ interface Place {
   rating: number;
   totalReview: number;
   address: string;
+  discoveredByName?: string;
+  discoveredBy?: {
+    _id: string;
+    name: string;
+    level?: number;
+  } | null;
+  adminFeedback?: string;
 }
 
 export function PlacesTable() {
@@ -55,6 +82,9 @@ export function PlacesTable() {
   const [category, setCategory] = useState("");
   const [country, setCountry] = useState("");
   const [type, setType] = useState("");
+
+  const [rejectTargetPlace, setRejectTargetPlace] = useState<Place | null>(null);
+  const [rejectFeedback, setRejectFeedback] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -81,8 +111,16 @@ export function PlacesTable() {
     country,
     type,
   });
+  const { data: pendingStatsResponse } = useGetPlacesQuery({
+    status: "Pending",
+    limit: 1,
+  });
+  const pendingCount = pendingStatsResponse?.meta?.total || 0;
+
   const [deletePlace] = useDeletePlaceMutation();
   const [updatePlace] = useUpdatePlaceMutation();
+  const [reviewRecommendedPlace, { isLoading: isReviewing }] =
+    useReviewRecommendedPlaceMutation();
 
   const handleToggleStatus = async (id: string, currentStatus: string) => {
     const nextStatus = currentStatus === "Published" ? "Draft" : "Published";
@@ -97,6 +135,73 @@ export function PlacesTable() {
       toast.error(
         error?.data?.message || error?.message || "Failed to update place status"
       );
+    }
+  };
+
+  const handleApprovePlace = async (place: Place) => {
+    const contributor =
+      place.discoveredByName || place.discoveredBy?.name || "el usuario";
+    appAlert
+      .fire({
+        title:
+          language === "es"
+            ? "¿Aprobar lugar recomendado?"
+            : "Approve recommended spot?",
+        text:
+          language === "es"
+            ? `¿Deseas aprobar "${getSafeString(
+                place.name,
+                language
+              )}" y otorgar 50 puntos a ${contributor}?`
+            : `Do you want to approve "${getSafeString(
+                place.name,
+                language
+              )}" and award 50 points to ${contributor}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText:
+          language === "es" ? "Sí, aprobar (+50 pts)" : "Yes, approve (+50 pts)",
+        cancelButtonText: language === "es" ? "Cancelar" : "Cancel",
+        confirmButtonColor: "#10B981",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await reviewRecommendedPlace({
+              id: place._id,
+              data: { status: "Published", pointsAwarded: 50 },
+            }).unwrap();
+            toast.success(
+              language === "es"
+                ? "Lugar aprobado y 50 puntos otorgados al descubridor."
+                : "Spot approved, published, and 50 points awarded to contributor."
+            );
+          } catch (error: any) {
+            toast.error(error?.data?.message || "Failed to approve place");
+          }
+        }
+      });
+  };
+
+  const confirmRejectPlace = async () => {
+    if (!rejectTargetPlace) return;
+    try {
+      await reviewRecommendedPlace({
+        id: rejectTargetPlace._id,
+        data: {
+          status: "Rejected",
+          adminFeedback: rejectFeedback.trim(),
+        },
+      }).unwrap();
+      toast.success(
+        language === "es"
+          ? "Lugar rechazado exitosamente."
+          : "Place rejected successfully."
+      );
+      setRejectTargetPlace(null);
+      setRejectFeedback("");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to reject place");
     }
   };
 
@@ -138,9 +243,17 @@ export function PlacesTable() {
   };
 
   const getStatusColor = (status: string) => {
-    return status === "Active" || status === "Published"
-      ? "bg-green-100 text-green-800 dark:bg-emerald-500/10 dark:text-emerald-400"
-      : "bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-300";
+    switch (status) {
+      case "Active":
+      case "Published":
+        return "bg-green-100 text-green-800 dark:bg-emerald-500/10 dark:text-emerald-400";
+      case "Pending":
+        return "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400 font-semibold border border-amber-300 dark:border-amber-700/50";
+      case "Rejected":
+        return "bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-400 font-semibold border border-rose-300 dark:border-rose-700/50";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-300";
+    }
   };
 
   const tableHeaders = [
@@ -181,7 +294,46 @@ export function PlacesTable() {
             <option value="">{t("places_admin.all_status")}</option>
             <option value="Published">{t("places_admin.published")}</option>
             <option value="Draft">{t("places_admin.draft")}</option>
+            <option value="Pending">
+              {language === "es" ? "Pendiente de revisión" : "Pending Review"}
+              {pendingCount > 0 ? ` (${pendingCount})` : ""}
+            </option>
+            <option value="Rejected">
+              {language === "es" ? "Rechazado" : "Rejected"}
+            </option>
           </select>
+
+          {pendingCount > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setStatus(status === "Pending" ? "" : "Pending");
+                setPage(1);
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 h-10 rounded-lg text-xs font-semibold transition-all border cursor-pointer ${
+                status === "Pending"
+                  ? "bg-amber-500 text-white border-amber-500 shadow-xs"
+                  : "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700/60 hover:bg-amber-100 dark:hover:bg-amber-900/40"
+              }`}
+            >
+              <Clock
+                size={14}
+                className={status === "Pending" ? "text-white" : "text-amber-500"}
+              />
+              <span>
+                {language === "es" ? "Pendientes:" : "Pending:"}
+              </span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
+                  status === "Pending"
+                    ? "bg-black/20 text-white"
+                    : "bg-amber-500/20 text-amber-800 dark:text-amber-200"
+                }`}
+              >
+                {pendingCount}
+              </span>
+            </button>
+          )}
 
           <select
             value={category}
@@ -270,8 +422,27 @@ export function PlacesTable() {
                     } hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors`}
                 >
                   <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-slate-100">
-                    <div className="flex flex-col">
-                      <span>{getSafeString(place.name, language)}</span>
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex items-center gap-2">
+                        <span>{getSafeString(place.name, language)}</span>
+                        {(place.discoveredByName || place.discoveredBy) && (
+                          <span
+                            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30"
+                            title={`Discovered by: ${
+                              place.discoveredByName ||
+                              (typeof place.discoveredBy === "object"
+                                ? place.discoveredBy?.name
+                                : place.discoveredBy)
+                            }`}
+                          >
+                            <Sparkles size={10} className="text-amber-500" />
+                            {place.discoveredByName ||
+                              (typeof place.discoveredBy === "object"
+                                ? place.discoveredBy?.name
+                                : place.discoveredBy)}
+                          </span>
+                        )}
+                      </div>
                       <span className="text-xs text-gray-400 dark:text-slate-500 truncate max-w-[200px]">
                         {place.address}
                       </span>
@@ -285,14 +456,21 @@ export function PlacesTable() {
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
                         place.status,
                       )}`}
                     >
+                      {place.status === "Pending" && (
+                        <Clock size={12} className="shrink-0" />
+                      )}
                       {place.status === "Published"
                         ? (t("places_admin.published") || "Published")
                         : place.status === "Draft"
                         ? (t("places_admin.draft") || "Draft")
+                        : place.status === "Pending"
+                        ? (language === "es" ? "Pendiente" : "Pending")
+                        : place.status === "Rejected"
+                        ? (language === "es" ? "Rechazado" : "Rejected")
                         : place.status}
                     </span>
                   </td>
@@ -305,7 +483,40 @@ export function PlacesTable() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
+                      {place.status === "Pending" && (
+                        <>
+                          <button
+                            onClick={() => handleApprovePlace(place)}
+                            disabled={isReviewing}
+                            className="p-1 rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition-colors"
+                            title={
+                              language === "es"
+                                ? "Aprobar lugar (+50 pts)"
+                                : "Approve spot (+50 pts)"
+                            }
+                            aria-label="Approve spot"
+                          >
+                            <Check size={18} className="stroke-[2.5]" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setRejectTargetPlace(place);
+                              setRejectFeedback("");
+                            }}
+                            disabled={isReviewing}
+                            className="p-1 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 transition-colors"
+                            title={
+                              language === "es"
+                                ? "Rechazar lugar"
+                                : "Reject spot"
+                            }
+                            aria-label="Reject spot"
+                          >
+                            <X size={18} className="stroke-[2.5]" />
+                          </button>
+                        </>
+                      )}
                       <button
                         onClick={() => {
                           setSelectedPlaceId(place._id);
@@ -440,6 +651,63 @@ export function PlacesTable() {
         onClose={() => setIsReviewModalOpen(false)}
         placeId={selectedPlaceId || undefined}
       />
+
+      {/* Reject Feedback Modal */}
+      <Dialog
+        open={!!rejectTargetPlace}
+        onOpenChange={(open) => !open && setRejectTargetPlace(null)}
+      >
+        <DialogContent className="max-w-md bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 p-6 rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+              <X className="text-rose-500 w-5 h-5" />
+              {language === "es"
+                ? "Rechazar lugar recomendado"
+                : "Reject Recommended Spot"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
+              {language === "es"
+                ? `Indica al usuario el motivo por el cual "${getSafeString(
+                    rejectTargetPlace?.name,
+                    language
+                  )}" no fue aprobado:`
+                : `Let the user know why "${getSafeString(
+                    rejectTargetPlace?.name,
+                    language
+                  )}" was not approved:`}
+            </p>
+            <textarea
+              value={rejectFeedback}
+              onChange={(e) => setRejectFeedback(e.target.value)}
+              rows={3}
+              placeholder={
+                language === "es"
+                  ? "Ej: Las fotos son poco claras o las coordenadas son incorrectas..."
+                  : "E.g., Photos are blurry or location coordinates are incorrect..."
+              }
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none"
+            />
+          </div>
+          <DialogFooter className="flex gap-2 justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setRejectTargetPlace(null)}
+              className="dark:border-slate-700"
+            >
+              {language === "es" ? "Cancelar" : "Cancel"}
+            </Button>
+            <Button
+              onClick={confirmRejectPlace}
+              disabled={isReviewing}
+              className="bg-rose-600 hover:bg-rose-700 text-white font-semibold cursor-pointer"
+            >
+              {language === "es" ? "Confirmar rechazo" : "Confirm Rejection"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

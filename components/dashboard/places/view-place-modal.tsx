@@ -10,18 +10,25 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { formatEntryCost, formatHikeTime, getImageUrl, getLocalized, convertTo12Hour, formatLocalizedSchedule } from "@/lib/utils";
-import { useGetPlaceDetailsQuery } from "@/redux/features/place/placeApi";
+import {
+  useGetPlaceDetailsQuery,
+  useReviewRecommendedPlaceMutation,
+} from "@/redux/features/place/placeApi";
 import { useGetReviewsByPlaceQuery } from "@/redux/features/review/reviewApi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { MenuLightbox } from "@/components/Common/maps/MenuLightbox";
+import { toast } from "sonner";
+import { appAlert } from "@/lib/app-alert";
 import {
   Accessibility,
   Baby,
   Calendar,
   Car,
+  Check,
   Clock,
   Coins,
   Compass,
@@ -69,12 +76,98 @@ export function ViewPlaceModal({
       skip: !placeId,
     });
 
+  const [reviewRecommendedPlace, { isLoading: isReviewing }] =
+    useReviewRecommendedPlaceMutation();
+
   const [activeTab, setActiveTab] = useState("overview");
   const [imageErrorIndex, setImageErrorIndex] = useState<Record<number, boolean>>({});
   const [menuLightboxOpen, setMenuLightboxOpen] = useState(false);
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
 
   const place = response?.data;
+
+  const handleApprove = async () => {
+    if (!place) return;
+    const contributor =
+      place.discoveredByName || place.discoveredBy?.name || "el usuario";
+    appAlert
+      .fire({
+        title:
+          language === "es"
+            ? "¿Aprobar lugar recomendado?"
+            : "Approve recommended spot?",
+        text:
+          language === "es"
+            ? `¿Deseas aprobar "${getLocalized(
+                place.name,
+                language
+              )}" y otorgar 50 puntos a ${contributor}?`
+            : `Do you want to approve "${getLocalized(
+                place.name,
+                language
+              )}" and award 50 points to ${contributor}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText:
+          language === "es" ? "Sí, aprobar (+50 pts)" : "Yes, approve (+50 pts)",
+        cancelButtonText: language === "es" ? "Cancelar" : "Cancel",
+        confirmButtonColor: "#10B981",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await reviewRecommendedPlace({
+              id: place._id,
+              data: { status: "Published", pointsAwarded: 50 },
+            }).unwrap();
+            toast.success(
+              language === "es"
+                ? "Lugar aprobado y 50 puntos otorgados al descubridor."
+                : "Spot approved, published, and 50 points awarded!"
+            );
+          } catch (error: any) {
+            toast.error(error?.data?.message || "Failed to approve place");
+          }
+        }
+      });
+  };
+
+  const handleReject = async () => {
+    if (!place) return;
+    appAlert
+      .fire({
+        title:
+          language === "es"
+            ? "¿Rechazar lugar recomendado?"
+            : "Reject recommended spot?",
+        text:
+          language === "es"
+            ? "¿Estás seguro de que deseas rechazar este lugar?"
+            : "Are you sure you want to reject this recommended place?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: language === "es" ? "Rechazar" : "Reject",
+        cancelButtonText: language === "es" ? "Cancelar" : "Cancel",
+        confirmButtonColor: "#EF4444",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await reviewRecommendedPlace({
+              id: place._id,
+              data: { status: "Rejected" },
+            }).unwrap();
+            toast.success(
+              language === "es"
+                ? "Lugar rechazado exitosamente."
+                : "Spot rejected successfully."
+            );
+          } catch (error: any) {
+            toast.error(error?.data?.message || "Failed to reject place");
+          }
+        }
+      });
+  };
 
   const categoryName = getLocalized(
     typeof place?.category === "object" && place?.category?.name
@@ -323,6 +416,20 @@ export function ViewPlaceModal({
                   {getLocalized(place.name, language)}
                 </DialogTitle>
 
+                {/* Contributor / Discovered by */}
+                {(place.discoveredByName || place.discoveredBy) && (
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/30 backdrop-blur-md w-fit">
+                    <Sparkles size={11} className="text-amber-400" />
+                    <span>
+                      {language === "es" ? "Descubierto por:" : "Discovered by:"}{" "}
+                      {place.discoveredByName ||
+                        (typeof place.discoveredBy === "object"
+                          ? place.discoveredBy?.name
+                          : place.discoveredBy)}
+                    </span>
+                  </div>
+                )}
+
                 {/* Location Address */}
                 {place.address && (
                   <div className="flex items-center gap-1.5 text-white/85 text-xs sm:text-sm font-medium">
@@ -332,6 +439,68 @@ export function ViewPlaceModal({
                 )}
               </div>
             </div>
+
+            {/* Pending Approval Banner */}
+            {place.status === "Pending" && (
+              <div className="bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-amber-500/5 border-b border-amber-500/30 px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                    <Clock size={18} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wide">
+                      {language === "es"
+                        ? "Lugar recomendado pendiente de aprobación"
+                        : "Tourist Spot Awaiting Approval"}
+                    </div>
+                    <div className="text-xs text-amber-700 dark:text-amber-300">
+                      {language === "es" ? "Recomendado por:" : "Recommended by:"}{" "}
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        {place.discoveredByName ||
+                          (typeof place.discoveredBy === "object"
+                            ? place.discoveredBy?.name
+                            : place.discoveredBy) ||
+                          "Usuario"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    onClick={handleApprove}
+                    disabled={isReviewing}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold gap-1.5 h-8 text-xs shadow-sm cursor-pointer"
+                  >
+                    <Check size={14} />
+                    {language === "es" ? "Aprobar (+50 pts)" : "Approve (+50 pts)"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleReject}
+                    disabled={isReviewing}
+                    className="border-rose-300 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-semibold gap-1.5 h-8 text-xs cursor-pointer"
+                  >
+                    <X size={14} />
+                    {language === "es" ? "Rechazar" : "Reject"}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Rejection Feedback Banner */}
+            {place.status === "Rejected" && place.adminFeedback && (
+              <div className="bg-rose-50 dark:bg-rose-950/30 border-b border-rose-200 dark:border-rose-800/40 px-6 py-3 flex items-center gap-2.5 shrink-0">
+                <X size={16} className="text-rose-500 shrink-0" />
+                <div className="text-xs text-rose-700 dark:text-rose-300">
+                  <span className="font-bold">
+                    {language === "es" ? "Motivo de rechazo: " : "Rejection Reason: "}
+                  </span>
+                  {place.adminFeedback}
+                </div>
+              </div>
+            )}
 
             {/* Navigation Tabs */}
             <div className="flex border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-[#131b2e] sticky top-0 z-10 overflow-x-auto no-scrollbar shrink-0 px-4 sm:px-6">

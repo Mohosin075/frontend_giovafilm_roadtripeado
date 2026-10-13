@@ -1067,6 +1067,18 @@ export default function MapDetails() {
                 {getLocalized(placeData?.name, language) || "Untitled location"}
               </h1>
 
+              {(placeData?.discoveredByName || placeData?.discoveredBy?.name) && (
+                <div className="mt-2.5 flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/25 dark:border-amber-400/20 text-xs font-semibold text-amber-900 dark:text-amber-200 w-fit">
+                  <Sparkles size={13} className="text-amber-500 fill-amber-500 shrink-0" />
+                  <span>
+                    {language === "es" ? "Descubierto por" : "Discovered by"}{" "}
+                    <span className="font-bold">
+                      {placeData.discoveredByName || placeData.discoveredBy?.name}
+                    </span>
+                  </span>
+                </div>
+              )}
+
               <div className="mt-2 flex items-start gap-2 text-sm text-gray-600 dark:text-slate-400">
                 <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EC5B13]/10">
                   <MapPin size={13} className="text-[#FF8A4C]" />

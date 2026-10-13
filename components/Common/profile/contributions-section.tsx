@@ -1,11 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { Button } from "@/components/ui/button";
+import { RecommendSpotModal } from "@/components/shared/recommend-spot-modal";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 
 export function ContributionsSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isEs = language === "es";
+  const [isRecommendOpen, setIsRecommendOpen] = useState(false);
   const { data: user, isLoading } = useGetProfileQuery({});
   
   const currentPoints = user?.points || 0;
@@ -40,13 +46,23 @@ export function ContributionsSection() {
   return (
     <div className="bg-white dark:bg-[#131b2e] rounded-2xl p-4 sm:p-8 border border-gray-200 dark:border-slate-800 space-y-4 sm:space-y-8 transition-colors">
       {/* Header */}
-      <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-0.5">
-          {t("contributions.your_contributions")}
-        </h2>
-        <p className="text-gray-500 dark:text-slate-400 text-xs sm:text-sm">
-          {t("contributions.track_impact")}
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-0.5">
+            {t("contributions.your_contributions")}
+          </h2>
+          <p className="text-gray-500 dark:text-slate-400 text-xs sm:text-sm">
+            {t("contributions.track_impact")}
+          </p>
+        </div>
+
+        <Button
+          onClick={() => setIsRecommendOpen(true)}
+          className="bg-amber-400 hover:bg-amber-500 text-black font-bold rounded-xl h-11 px-4 text-xs sm:text-sm shrink-0 cursor-pointer shadow-md shadow-amber-500/20 inline-flex items-center gap-1.5"
+        >
+          <Plus size={16} />
+          <span>{isEs ? "Recomendar Lugar" : "Recommend Spot"}</span>
+        </Button>
       </div>
 
       {/* Statistics Grid */}
@@ -129,6 +145,11 @@ export function ContributionsSection() {
           {t("contributions.earn_points_help")}
         </p>
       </div>
+
+      <RecommendSpotModal
+        open={isRecommendOpen}
+        onOpenChange={setIsRecommendOpen}
+      />
     </div>
   );
 }
