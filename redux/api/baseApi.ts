@@ -82,6 +82,7 @@ export const baseApi = createApi({
     "Review",
     "Subscription",
     "Favourite",
+    "Visited",
     "Award",
     "Promo",
     "Notification",

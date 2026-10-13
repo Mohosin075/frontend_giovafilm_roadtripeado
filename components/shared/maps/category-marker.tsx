@@ -15,6 +15,7 @@ interface CategoryMarkerProps {
   isLocked?: boolean;
   isMobile?: boolean;
   status?: string;
+  isVisited?: boolean;
 }
 
 export const CategoryMarker = React.memo(function CategoryMarker({
@@ -26,6 +27,7 @@ export const CategoryMarker = React.memo(function CategoryMarker({
   isLocked = false,
   isMobile = false,
   status,
+  isVisited = false,
 }: CategoryMarkerProps) {
   const { language } = useLanguage();
   // Proportions for a 100% Uniform Google Maps POI Pin
@@ -130,10 +132,14 @@ export const CategoryMarker = React.memo(function CategoryMarker({
         className="pin-body w-full h-full relative transition-transform duration-150 ease-out"
         style={{
           transform: isSelected ? "scale(1.22)" : undefined,
-          filter: isSelected ? "drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5))" : undefined,
+          filter: isSelected
+            ? "drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5))"
+            : isVisited
+              ? "drop-shadow(0 0 8px rgba(255, 215, 0, 0.8))"
+              : undefined,
         }}
       >
-        {/* 100% Google Maps Replica SVG (Clean White Pin Body, or Warm Amber with Dashed Border for Draft) */}
+        {/* 100% Google Maps Replica SVG (Clean White Pin Body, Gold for Visited, or Warm Amber for Draft) */}
         <svg
           width={width}
           height={height}
@@ -152,9 +158,9 @@ export const CategoryMarker = React.memo(function CategoryMarker({
           {/* Subtle drop shadow outline inside SVG */}
           <path
             d="M20 1C9.5 1 1 9.5 1 20C1 28.5 10.5 38.2 15.3 42.6C16.8 43.9 18.4 44.5 20 44.5C21.6 44.5 23.2 43.9 24.7 42.6C29.5 38.2 39 28.5 39 20C39 9.5 30.5 1 20 1Z"
-            fill={status === "Draft" ? "#FFFBEB" : "#FFFFFF"}
-            stroke={status === "Draft" ? "#D97706" : "rgba(0,0,0,0.08)"}
-            strokeWidth={status === "Draft" ? "2.5" : "1"}
+            fill={isVisited ? "#FFD700" : status === "Draft" ? "#FFFBEB" : "#FFFFFF"}
+            stroke={isVisited ? "#B8860B" : status === "Draft" ? "#D97706" : "rgba(0,0,0,0.08)"}
+            strokeWidth={isVisited ? "2.5" : status === "Draft" ? "2.5" : "1"}
             strokeDasharray={status === "Draft" ? "4 2" : "none"}
           />
         </svg>

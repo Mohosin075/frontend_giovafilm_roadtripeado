@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Bell,
   Check,
+  CheckCircle2,
   CircleDollarSign,
   Edit2,
   Grid2x2,
@@ -148,8 +149,9 @@ export default function Header() {
 
   const menuItems = [
     { label: t("nav.notifications") || "Notifications", href: "/notifications", icon: Bell },
-    { label: t("nav.my_business"), href: "/profile/my-business", icon: Grid2x2 },
+    { label: "Visited Places", href: "/profile/visited-places", icon: CheckCircle2 },
     { label: t("nav.favorite_places"), href: "/profile/favorite-places", icon: Heart },
+    { label: t("nav.my_business"), href: "/profile/my-business", icon: Grid2x2 },
     { label: t("nav.purchased_maps"), href: "/profile/purchased-maps", icon: Map },
     { label: t("nav.contributions"), href: "/profile/contributions-reviews", icon: Star },
     { label: t("nav.subscription"), href: "/profile/subscription", icon: CircleDollarSign },
@@ -225,7 +227,7 @@ export default function Header() {
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");
   const visibleMenuItems = isAdminOrEditor
     ? menuItems.filter((item) =>
-      ["/notifications", "/profile/favorite-places", "/profile/contributions-reviews", "/profile/awards"].includes(item.href)
+      ["/notifications", "/profile/visited-places", "/profile/favorite-places", "/profile/contributions-reviews", "/profile/awards"].includes(item.href)
     )
     : menuItems;
   const [logoutApi] = useLogoutMutation();

@@ -1,6 +1,7 @@
 "use client";
 
 import { FavouriteButton } from "@/components/shared/favourite-button";
+import { VisitedButton } from "@/components/shared/visited-button";
 import { SafeImage } from "@/components/shared/safe-image";
 import { Button } from "@/components/ui/button";
 import { NoImage } from "@/lib/others/others";
@@ -306,11 +307,19 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
             </Link>
 
             {locationId && (
-              <FavouriteButton
-                placeId={locationId}
-                type={type === "business" ? "Business" : "Place"}
-                Style="w-11 h-11 sm:w-12 sm:h-12 rounded-xl border border-gray-200 dark:border-slate-700/80 bg-gray-50 dark:bg-[#1a233a] hover:bg-gray-100 dark:hover:bg-[#232f4e]"
-              />
+              <>
+                <VisitedButton
+                  placeId={locationId}
+                  type={type === "business" ? "Business" : "Place"}
+                  initialIsVisited={location?.isVisited}
+                  Style="w-11 h-11 sm:w-12 sm:h-12"
+                />
+                <FavouriteButton
+                  placeId={locationId}
+                  type={type === "business" ? "Business" : "Place"}
+                  Style="w-11 h-11 sm:w-12 sm:h-12 rounded-xl border border-gray-200 dark:border-slate-700/80 bg-gray-50 dark:bg-[#1a233a] hover:bg-gray-100 dark:hover:bg-[#232f4e]"
+                />
+              </>
             )}
           </div>
         </div>

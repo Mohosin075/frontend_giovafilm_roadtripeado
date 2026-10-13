@@ -184,6 +184,7 @@ function ViewportPlaceMarkers({
               isSelected={selectedLocation?.id === place._id}
               isLocked={place.isLocked}
               isMobile={isMobile}
+              isVisited={place.isVisited}
             />
           </AdvancedMarker>
         );

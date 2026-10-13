@@ -6,6 +6,7 @@ import { shareProfile } from "@/lib/share-profile";
 import {
   Bell,
   Check,
+  CheckCircle2,
   Edit2,
   Heart,
   Loader2,
@@ -30,6 +31,7 @@ interface ProfileSidebar {
   profile: string;
   level?: number;
   points?: number;
+  visitedPlacesCount?: number;
   phone?: string;
   website?: string;
   instagram?: string;
@@ -50,6 +52,12 @@ export function ProfileSidebar({ data }: ProfileProps) {
       href: "/notifications",
       label: t("nav.notifications") || "Notifications",
       icon: Bell,
+      roles: ["all"],
+    },
+    {
+      href: "/profile/visited-places",
+      label: t("nav.visited_places") || "Visited Places",
+      icon: CheckCircle2,
       roles: ["all"],
     },
     {
@@ -162,6 +170,13 @@ export function ProfileSidebar({ data }: ProfileProps) {
               </div>
             );
           })()}
+
+          {/* Visited Places Counter Badge */}
+          <div className="flex items-center justify-center mb-3">
+            <span className="inline-flex items-center gap-1.5 bg-amber-400/15 border border-amber-400/40 text-amber-700 dark:text-amber-400 px-3.5 py-1 rounded-full text-xs font-bold shadow-xs">
+              📍 Visited {data?.visitedPlacesCount ?? (profile as any)?.data?.visitedPlacesCount ?? 0} places
+            </span>
+          </div>
 
           {/* Role Badge */}
           <div className="block mb-2">

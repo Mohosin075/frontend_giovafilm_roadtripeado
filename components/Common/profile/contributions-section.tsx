@@ -2,6 +2,7 @@
 
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import Link from "next/link";
 
 export function ContributionsSection() {
   const { t } = useLanguage();
@@ -50,8 +51,8 @@ export function ContributionsSection() {
 
       {/* Statistics Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-3 gap-2 sm:gap-4">
-          {[1, 2, 3].map((i) => (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+          {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
               className="bg-gray-50 dark:bg-slate-900/60 rounded-xl p-3 sm:p-6 border border-gray-100 dark:border-slate-800 h-20 sm:h-28 animate-pulse"
@@ -59,7 +60,7 @@ export function ContributionsSection() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
           {/* Total Points */}
           <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
             <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
@@ -75,6 +76,19 @@ export function ContributionsSection() {
             </p>
             <p className="text-lg sm:text-4xl font-extrabold text-amber-500">{user?.totalReviewsApproved || 0}</p>
           </div>
+
+          {/* Visited Places */}
+          <Link
+            href="/profile/visited-places"
+            className="bg-gray-50 dark:bg-[#0e1424] hover:bg-amber-500/10 dark:hover:bg-amber-500/10 transition-colors rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center cursor-pointer group"
+          >
+            <p className="text-gray-500 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
+              Visited Places
+            </p>
+            <p className="text-lg sm:text-4xl font-extrabold text-amber-500">
+              {user?.visitedPlacesCount || 0}
+            </p>
+          </Link>
 
           {/* Level */}
           <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
