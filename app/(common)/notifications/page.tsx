@@ -131,23 +131,6 @@ export default function NotificationsPage() {
     }
   };
 
-  const handleTestPush = () => {
-    showDesktopNotification(
-      language === "es" ? "Prueba de Push en PC 🔔" : "Roadtripeado Test Push 🔔",
-      {
-        body:
-          language === "es"
-            ? "¡Excelente! Las notificaciones push en tu PC funcionan al 100%."
-            : "Success! Desktop push notifications on your PC are working 100%.",
-        url: "/notifications",
-      }
-    );
-    toast.success(
-      language === "es"
-        ? "Notificación enviada a tu PC"
-        : "Desktop push notification sent to your PC"
-    );
-  };
 
   const handleClearRead = async () => {
     try {
@@ -431,18 +414,6 @@ export default function NotificationsPage() {
 
           {/* Desktop Actions */}
           <div className="hidden sm:flex items-center gap-2.5 shrink-0">
-            {pushPermission === "granted" && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleTestPush}
-                className="rounded-xl border border-yellow-300/80 dark:border-yellow-700/60 bg-yellow-50/70 dark:bg-yellow-950/30 hover:bg-yellow-100 text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer h-10 px-3.5 shadow-2xs"
-                title={language === "es" ? "Probar notificación emergente en tu PC" : "Test desktop push popup on your PC"}
-              >
-                <BellRing size={16} className="text-yellow-600 dark:text-yellow-400" />
-                <span>{language === "es" ? "Probar Push en PC" : "Test Push on PC"}</span>
-              </Button>
-            )}
 
             {totalUnread > 0 && (
               <Button
