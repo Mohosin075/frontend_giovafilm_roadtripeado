@@ -213,7 +213,7 @@ export function RecommendedPlacesList() {
                 {place.status === "Published" && (
                   <div className="pt-1 flex justify-end">
                     <Link
-                      href={`/maps/${place._id}?type=place`}
+                      href={`/places/${place._id}`}
                       className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 hover:text-amber-700 dark:text-amber-400 transition-colors"
                     >
                       <span>{isEs ? "Ver en el mapa" : "View on map"}</span>

@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { buildPlaceRequestBody } from "@/components/dashboard/places/place-payload";
+import { getLocalized } from "@/lib/utils";
 import Link from "next/link";
 
 interface RecommendSpotModalProps {
@@ -62,7 +63,11 @@ export function RecommendSpotModal({
   const { openLoginRequired } = useLoginRequired();
 
   const { data: mapsData } = useGetMapsQuery({ limit: 100 });
-  const maps = mapsData?.data || [];
+  const allMaps: any[] = mapsData?.data || [];
+  // Only show published maps for users to recommend spots to
+  const maps = allMaps.filter(
+    (m: any) => m.status === "Published" || !m.status
+  );
 
   const { data: categoriesData } = useGetCategoriesQuery({ limit: 100 });
   const categories = categoriesData?.data || [];
@@ -482,7 +487,7 @@ export function RecommendSpotModal({
           /* MAIN FORM CONTENT - SPACIOUS 2-COL ON DESKTOP, FLUID 1-COL ON MOBILE */
           <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0 flex-1 overflow-hidden">
             {/* Header */}
-            <DialogHeader className="text-left p-4 sm:p-6 pb-4 border-b border-gray-150 dark:border-slate-800 shrink-0">
+            <DialogHeader className="text-left p-4 sm:p-6 pb-4 pr-12 sm:pr-14 border-b border-gray-150 dark:border-slate-800 shrink-0">
               <div className="flex items-center justify-between gap-2">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 text-xs font-bold w-fit border border-amber-500/20">
                   <Sparkles size={13} className="text-amber-500 fill-amber-500" />
@@ -566,7 +571,7 @@ export function RecommendSpotModal({
                         <SelectContent>
                           {maps.map((m: any) => (
                             <SelectItem key={m._id} value={m._id}>
-                              {m.name || m.country}
+                              {getLocalized(m.name, language) || m.country || "Map"}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -603,7 +608,7 @@ export function RecommendSpotModal({
                         <SelectContent>
                           {categories.map((c: any) => (
                             <SelectItem key={c._id} value={c._id}>
-                              {c.name}
+                              {getLocalized(c.name, language) || c.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
