@@ -3,12 +3,14 @@
 import { useGetSubscriptionPlansQuery, useGetMySubscriptionQuery } from "@/redux/features/subscription/subscriptionApi";
 import { PricingCard, Plan } from "@/components/Common/pricing/PricingCard";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAppSelector } from "@/redux/hook";
 
 export default function PricingPage() {
+  const { t } = useLanguage();
   const token = useAppSelector((state) => state.auth.accessToken);
 
   const { data: plansRes, isLoading: plansLoading, error } = useGetSubscriptionPlansQuery();
@@ -26,11 +28,14 @@ export default function PricingPage() {
         {/* Header Section */}
         <div className="text-center space-y-6 max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">
-            Simple, transparent <span className="text-yellow-400">pricing</span>
+            {t("pricing_page.title_prefix") || "Simple, transparent"}{" "}
+            <span className="text-yellow-400">
+              {t("pricing_page.title_highlight") || "pricing"}
+            </span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-slate-400 leading-relaxed">
-            Choose the perfect plan to grow your business and connect with
-            travelers like never before.
+            {t("pricing_page.subtitle") ||
+              "Choose the perfect plan to grow your business and connect with travelers like never before."}
           </p>
         </div>
 
@@ -39,29 +44,29 @@ export default function PricingPage() {
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-gray-500 dark:text-slate-400 font-medium font-public-sans text-xl">
-              Loading pricing plans...
+              {t("pricing_page.loading") || "Loading pricing plans..."}
             </p>
           </div>
         ) : error ? (
           <div className="text-center py-20 bg-white dark:bg-[#131b2e] rounded-3xl border border-dashed border-gray-300 dark:border-slate-800 space-y-4">
             <p className="text-red-500 font-medium text-lg">
-              Failed to load subscription plans.
+              {t("pricing_page.failed") || "Failed to load subscription plans."}
             </p>
             <Button
               onClick={() => window.location.reload()}
               variant="outline"
               className="rounded-xl dark:bg-[#0e1424] dark:border-slate-700 dark:text-slate-200"
             >
-              Try Again
+              {t("pricing_page.try_again") || "Try Again"}
             </Button>
           </div>
         ) : plans.length === 0 ? (
           <div className="text-center py-20 bg-white dark:bg-[#131b2e] rounded-3xl border border-dashed border-gray-300 dark:border-slate-800">
             <p className="text-gray-500 dark:text-slate-400 font-medium text-lg">
-              No pricing plans available.
+              {t("pricing_page.no_plans") || "No pricing plans available."}
             </p>
             <p className="mt-2 text-sm text-gray-400 dark:text-slate-500">
-              Please check back later.
+              {t("pricing_page.check_back") || "Please check back later."}
             </p>
           </div>
         ) : (
@@ -80,11 +85,8 @@ export default function PricingPage() {
         {/* FAQ Preview or Footer */}
         <div className="text-center mt-6">
           <p className="text-gray-500 font-medium">
-            Need a custom solution for your enterprise?
+            {t("pricing_page.custom_solution") || "Need a custom solution for your enterprise?"}
           </p>
-          {/* <Button variant="link" className="text-blue-600 font-bold text-lg hover:text-blue-700">
-            Contact our sales team →
-          </Button> */}
         </div>
       </div>
     </main>

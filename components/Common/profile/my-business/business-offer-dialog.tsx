@@ -254,14 +254,16 @@ export function BusinessOfferDialog({
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#131b2e] border dark:border-slate-800 text-slate-900 dark:text-slate-100">
         <DialogHeader>
           <DialogTitle className="text-slate-900 dark:text-slate-100">
-            {isEdit ? "Edit Offer" : "Add Offer"}
+            {isEdit
+              ? t("business.edit_offer") || "Edit Offer"
+              : t("business.add_offer") || "Add Offer"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2 block">
-              Offer Photo
+              {t("business.offer_photo") || "Offer Photo"}
             </Label>
             <div
               onClick={() => fileRef.current?.click()}
@@ -322,10 +324,10 @@ export function BusinessOfferDialog({
                 <>
                   <Upload className="mx-auto mb-2 text-gray-400 dark:text-slate-500" size={28} />
                   <p className="text-sm font-medium text-gray-700 dark:text-slate-300">
-                    Upload offer photo
+                    {t("business.upload_offer_photo") || "Upload offer photo"}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">
-                    PNG or JPG, up to 10MB
+                    {t("business.photo_hint") || "PNG or JPG, up to 10MB"}
                   </p>
                 </>
               )}
@@ -377,17 +379,19 @@ export function BusinessOfferDialog({
               className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             >
               <option value="">{t("offers_admin.select_type") || "Select type"}</option>
-              <option value="Percentage">Percentage</option>
-              <option value="Flat">Flat Amount</option>
-              <option value="BOGO">Buy One Get One (BOGO)</option>
-              <option value="Free item">{t("offers_admin.free_item") || "Free Item"}</option>
+              <option value="Percentage">{t("business.percentage") || "Percentage"}</option>
+              <option value="Flat">{t("business.flat_amount") || "Flat Amount"}</option>
+              <option value="BOGO">{t("business.bogo") || "Buy One Get One (BOGO)"}</option>
+              <option value="Free item">{t("business.free_item") || t("offers_admin.free_item") || "Free Item"}</option>
             </select>
           </div>
 
           {discountType === "BOGO" && (
             <div className="space-y-3 rounded-xl border border-yellow-200 dark:border-yellow-900/40 bg-yellow-50/70 dark:bg-yellow-950/20 p-4">
               <div>
-                <Label htmlFor="offer-bogo-type" className="text-gray-700 dark:text-slate-300">Second item</Label>
+                <Label htmlFor="offer-bogo-type" className="text-gray-700 dark:text-slate-300">
+                  {t("business.second_item") || "Second item"}
+                </Label>
                 <select
                   id="offer-bogo-type"
                   value={bogoSecondType}
@@ -396,12 +400,14 @@ export function BusinessOfferDialog({
                 >
                   <option value="">{t("offers.choose_second_item_type")}</option>
                   <option value="free">{t("offers.second_item_free")}</option>
-                  <option value="percentage">Second item has a % discount</option>
+                  <option value="percentage">{t("business.second_item_pct") || "Second item has a % discount"}</option>
                 </select>
               </div>
               {bogoSecondType === "percentage" && (
                 <div>
-                  <Label htmlFor="offer-discount-value" className="text-gray-700 dark:text-slate-300">% off second item</Label>
+                  <Label htmlFor="offer-discount-value" className="text-gray-700 dark:text-slate-300">
+                    {t("business.pct_off_second") || "% off second item"}
+                  </Label>
                   <Input
                     id="offer-discount-value"
                     type="number"
@@ -445,11 +451,13 @@ export function BusinessOfferDialog({
                 className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
               />
               <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
-                How many times one customer can use this offer
+                {t("business.redemptions_help") || "How many times one customer can use this offer"}
               </p>
             </div>
             <div>
-              <Label htmlFor="offer-frequency" className="text-sm font-medium text-gray-700 dark:text-slate-300">Redemption Frequency</Label>
+              <Label htmlFor="offer-frequency" className="text-sm font-medium text-gray-700 dark:text-slate-300">
+                {t("business.redemption_frequency") || "Redemption Frequency"}
+              </Label>
               <select
                 id="offer-frequency"
                 className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
@@ -463,38 +471,38 @@ export function BusinessOfferDialog({
                   else if (val === "once") setRedemptionDuration("525600");
                 }}
               >
-                <option value="daily">Daily (Once per 24 hours)</option>
-                <option value="weekly">Weekly (Once per 7 days)</option>
-                <option value="monthly">Monthly (Once per 30 days)</option>
-                <option value="once">{t("offers.one_time_only")}</option>
-                <option value="custom">Custom Duration</option>
+                <option value="daily">{t("business.freq_daily") || "Daily (Once per 24 hours)"}</option>
+                <option value="weekly">{t("business.freq_weekly") || "Weekly (Once per 7 days)"}</option>
+                <option value="monthly">{t("business.freq_monthly") || "Monthly (Once per 30 days)"}</option>
+                <option value="once">{t("business.freq_once") || t("offers.one_time_only") || "One-time only"}</option>
+                <option value="custom">{t("business.freq_custom") || "Custom Duration"}</option>
               </select>
 
               {redemptionFrequency === "daily" && (
                 <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  Customers can redeem this offer once every 24 hours
+                  {t("business.redeem_daily_hint") || "Customers can redeem this offer once every 24 hours"}
                 </p>
               )}
               {redemptionFrequency === "weekly" && (
                 <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  Customers can redeem this offer once every 7 days
+                  {t("business.redeem_weekly_hint") || "Customers can redeem this offer once every 7 days"}
                 </p>
               )}
               {redemptionFrequency === "monthly" && (
                 <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  Customers can redeem this offer once every 30 days
+                  {t("business.redeem_monthly_hint") || "Customers can redeem this offer once every 30 days"}
                 </p>
               )}
               {redemptionFrequency === "once" && (
                 <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium">
-                  Each customer can only redeem this offer once
+                  {t("business.redeem_once_hint") || "Each customer can only redeem this offer once"}
                 </p>
               )}
 
               {redemptionFrequency === "custom" && (
                 <div className="mt-2">
                   <Label htmlFor="offer-duration" className="text-xs text-gray-600 dark:text-slate-400">
-                    Duration in minutes
+                    {t("business.duration_minutes") || "Duration in minutes"}
                   </Label>
                   <Input
                     id="offer-duration"
@@ -512,7 +520,9 @@ export function BusinessOfferDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="offer-from" className="text-gray-700 dark:text-slate-300">Valid From</Label>
+              <Label htmlFor="offer-from" className="text-gray-700 dark:text-slate-300">
+                {t("business.valid_from") || "Valid From"}
+              </Label>
               <Input
                 id="offer-from"
                 type="date"
@@ -524,7 +534,9 @@ export function BusinessOfferDialog({
             <div className="space-y-2">
               {!noExpiration && (
                 <div>
-                  <Label htmlFor="offer-until" className="text-gray-700 dark:text-slate-300">Valid Until</Label>
+                  <Label htmlFor="offer-until" className="text-gray-700 dark:text-slate-300">
+                    {t("business.valid_until") || "Valid Until"}
+                  </Label>
                   <Input
                     id="offer-until"
                     type="date"
@@ -540,18 +552,20 @@ export function BusinessOfferDialog({
                   checked={noExpiration}
                   onChange={(e) => setNoExpiration(e.target.checked)}
                 />
-                No Expiration
+                {t("business.no_expiration") || "No Expiration"}
               </label>
             </div>
           </div>
 
           <div>
-            <Label htmlFor="offer-rules" className="text-gray-700 dark:text-slate-300">Redemption Rules</Label>
+            <Label htmlFor="offer-rules" className="text-gray-700 dark:text-slate-300">
+              {t("business.redemption_rules") || "Redemption Rules"}
+            </Label>
             <textarea
               id="offer-rules"
               value={redemptionRules}
               onChange={(e) => setRedemptionRules(e.target.value)}
-              placeholder="One rule per line"
+              placeholder={t("business.one_rule_per_line") || "One rule per line"}
               rows={3}
               className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
@@ -564,10 +578,14 @@ export function BusinessOfferDialog({
               onClick={() => onOpenChange(false)}
               className="dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
             >
-              Cancel
+              {t("common.cancel") || "Cancel"}
             </Button>
             <Button type="submit" disabled={isLoading} className="min-w-32 bg-[#fabf13] hover:bg-[#e0ac10] text-slate-950 font-bold">
-              {isLoading ? "Saving..." : isEdit ? "Update Offer" : "Save Offer"}
+              {isLoading
+                ? t("business.saving") || "Saving..."
+                : isEdit
+                  ? t("business.update_offer") || "Update Offer"
+                  : t("business.save_offer") || "Save Offer"}
             </Button>
           </div>
         </form>

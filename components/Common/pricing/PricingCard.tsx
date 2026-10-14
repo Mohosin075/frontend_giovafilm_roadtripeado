@@ -140,13 +140,13 @@ export function PricingCard({
       >
         {isFormStep
           ? isSelected
-            ? "Plan Selected"
-            : "Select Plan"
+            ? (t("pricing_card.plan_selected") || "Plan Selected")
+            : (t("pricing_card.select_plan") || "Select Plan")
           : isLoading
-            ? "Processing..."
+            ? (t("pricing_card.processing") || "Processing...")
             : isSelected
-              ? "Current Plan"
-              : "Get Started"}
+              ? (t("pricing_card.current_plan") || "Current Plan")
+              : (t("pricing_card.get_started") || "Get Started")}
       </Button>
 
       {/* Features */}

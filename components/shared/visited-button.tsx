@@ -67,8 +67,8 @@ export function VisitedButton({
 
       toast.success(
         nextVisited
-          ? "Marked as visited! 🌟"
-          : "Removed from visited places",
+          ? (t("visited.marked_success") || "Marked as visited! 🌟")
+          : (t("visited.removed_success") || "Removed from visited places"),
       );
     } catch (error: unknown) {
       toast.error(getApiErrorMessage(error));
@@ -85,7 +85,7 @@ export function VisitedButton({
       } ${Style || ""}`}
       onClick={handleToggle}
       disabled={isLoading}
-      title={isVisited ? "Visited" : "Mark as Visited"}
+      title={isVisited ? (t("visited.badge") || "Visited") : (t("visited.mark_visited") || "Mark as Visited")}
       aria-label="Toggle visited"
     >
       <Check
@@ -100,7 +100,7 @@ export function VisitedButton({
       />
       {showText && (
         <span className="text-xs sm:text-sm font-semibold">
-          {isVisited ? "Visited" : "Mark Visited"}
+          {isVisited ? (t("visited.badge") || "Visited") : (t("visited.mark_visited_short") || "Mark Visited")}
         </span>
       )}
     </button>

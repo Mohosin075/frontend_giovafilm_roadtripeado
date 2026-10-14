@@ -134,7 +134,7 @@ export function PlacesTable() {
       await updatePlace({ id: place._id, data: { status: nextStatus } }).unwrap();
       toast.success(
         nextStatus === "Draft"
-          ? (language === "es" ? "Lugar cambiado a borrador (oculto del mapa)" : "Place set to Draft (hidden from map)")
+          ? (t("places_admin.draft_hidden_toast") || "Place set to Draft (hidden from map)")
           : (t("places_admin.published_successfully") || "Place published successfully (Live on map)")
       );
     } catch (error: any) {
@@ -147,27 +147,20 @@ export function PlacesTable() {
   const handleApprovePlace = async (place: Place) => {
     const contributor =
       place.discoveredByName || place.discoveredBy?.name || "el usuario";
+    const titleText = t("places_admin.approve_recommended_title") || "Approve recommended spot?";
+    const bodyTemplate = t("places_admin.approve_recommended_prompt") || 'Do you want to approve "{name}" and award 50 points to {contributor}?';
+    const bodyText = bodyTemplate
+      .replace("{name}", getSafeString(place.name, language))
+      .replace("{contributor}", contributor);
+
     appAlert
       .fire({
-        title:
-          language === "es"
-            ? "¿Aprobar lugar recomendado?"
-            : "Approve recommended spot?",
-        text:
-          language === "es"
-            ? `¿Deseas aprobar "${getSafeString(
-                place.name,
-                language
-              )}" y otorgar 50 puntos a ${contributor}?`
-            : `Do you want to approve "${getSafeString(
-                place.name,
-                language
-              )}" and award 50 points to ${contributor}?`,
+        title: titleText,
+        text: bodyText,
         icon: "question",
         showCancelButton: true,
-        confirmButtonText:
-          language === "es" ? "Sí, aprobar (+50 pts)" : "Yes, approve (+50 pts)",
-        cancelButtonText: language === "es" ? "Cancelar" : "Cancel",
+        confirmButtonText: t("places_admin.approve_btn_pts") || "Yes, approve (+50 pts)",
+        cancelButtonText: t("common.cancel") || "Cancel",
         confirmButtonColor: "#10B981",
       })
       .then(async (result) => {
@@ -178,9 +171,7 @@ export function PlacesTable() {
               data: { status: "Published", pointsAwarded: 50 },
             }).unwrap();
             toast.success(
-              language === "es"
-                ? "Lugar aprobado y 50 puntos otorgados al descubridor."
-                : "Spot approved, published, and 50 points awarded to contributor."
+              t("places_admin.approve_success_toast") || "Spot approved, published, and 50 points awarded to contributor."
             );
           } catch (error: any) {
             toast.error(error?.data?.message || "Failed to approve place");
@@ -200,9 +191,7 @@ export function PlacesTable() {
         },
       }).unwrap();
       toast.success(
-        language === "es"
-          ? "Lugar rechazado exitosamente."
-          : "Place rejected successfully."
+        t("places_admin.reject_success_toast") || "Place rejected successfully."
       );
       setRejectTargetPlace(null);
       setRejectFeedback("");
@@ -308,7 +297,7 @@ export function PlacesTable() {
             <option value="Published">{t("places_admin.published")}</option>
             <option value="Draft">{t("places_admin.draft")}</option>
             <option value="Rejected">
-              {language === "es" ? "Rechazado" : "Rejected"}
+              {t("common.rejected") || "Rejected"}
             </option>
           </select>
 
@@ -316,15 +305,11 @@ export function PlacesTable() {
             <Link
               href="/dashboard/reviews-verification"
               className="inline-flex items-center gap-2 px-3.5 h-10 rounded-lg text-xs font-bold transition-all border cursor-pointer bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700/60 shadow-xs"
-              title={
-                language === "es"
-                  ? "Ir a Verificación y Moderación para revisar lugares pendientes"
-                  : "Go to Moderation to review pending tourist spots"
-              }
+              title={t("places_admin.pending_moderation_title") || "Go to Moderation to review pending tourist spots"}
             >
               <ShieldCheck size={15} className="text-amber-500" />
               <span>
-                {language === "es" ? "Moderación Pendiente:" : "Pending Moderation:"}
+                {t("places_admin.pending_moderation") || "Pending Moderation:"}
               </span>
               <span className="px-1.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500 text-black">
                 {pendingCount}
@@ -469,12 +454,12 @@ export function PlacesTable() {
                             ? (t("places_admin.published") || "Published")
                             : place.status === "Draft"
                             ? (isApprovedPlace
-                                ? (language === "es" ? "Aceptado (Borrador)" : "Accepted (Draft)")
+                                ? (t("places_admin.accepted_draft") || "Accepted (Draft)")
                                 : (t("places_admin.draft") || "Draft"))
                             : place.status === "Pending"
-                            ? (language === "es" ? "Pendiente" : "Pending")
+                            ? (t("common.pending") || "Pending")
                             : place.status === "Rejected"
-                            ? (language === "es" ? "Rechazado" : "Rejected")
+                            ? (t("common.rejected") || "Rejected")
                             : place.status}
                         </span>
                       );
@@ -639,32 +624,19 @@ export function PlacesTable() {
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <X className="text-rose-500 w-5 h-5" />
-              {language === "es"
-                ? "Rechazar lugar recomendado"
-                : "Reject Recommended Spot"}
+              {t("places_admin.reject_recommended_title") || "Reject Recommended Spot"}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <p className="text-sm text-gray-600 dark:text-slate-400">
-              {language === "es"
-                ? `Indica al usuario el motivo por el cual "${getSafeString(
-                    rejectTargetPlace?.name,
-                    language
-                  )}" no fue aprobado:`
-                : `Let the user know why "${getSafeString(
-                    rejectTargetPlace?.name,
-                    language
-                  )}" was not approved:`}
+              {(t("places_admin.reject_reason_prompt") || 'Let the user know why "{name}" was not approved:')
+                .replace("{name}", getSafeString(rejectTargetPlace?.name, language))}
             </p>
             <textarea
               value={rejectFeedback}
               onChange={(e) => setRejectFeedback(e.target.value)}
               rows={3}
-              placeholder={
-                language === "es"
-                  ? "Ej: Las fotos son poco claras o las coordenadas son incorrectas..."
-                  : "E.g., Photos are blurry or location coordinates are incorrect..."
-              }
+              placeholder={t("places_admin.reject_feedback_placeholder") || "E.g., Photos are blurry or location coordinates are incorrect..."}
               className="w-full rounded-xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none"
             />
           </div>
@@ -674,14 +646,14 @@ export function PlacesTable() {
               onClick={() => setRejectTargetPlace(null)}
               className="dark:border-slate-700"
             >
-              {language === "es" ? "Cancelar" : "Cancel"}
+              {t("common.cancel") || "Cancel"}
             </Button>
             <Button
               onClick={confirmRejectPlace}
               disabled={isReviewing}
               className="bg-rose-600 hover:bg-rose-700 text-white font-semibold cursor-pointer"
             >
-              {language === "es" ? "Confirmar rechazo" : "Confirm Rejection"}
+              {t("places_admin.confirm_rejection") || "Confirm Rejection"}
             </Button>
           </DialogFooter>
         </DialogContent>

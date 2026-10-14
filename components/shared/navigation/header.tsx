@@ -150,12 +150,12 @@ export default function Header() {
 
   const menuItems = [
     { label: t("nav.notifications") || "Notifications", href: "/notifications", icon: Bell },
-    { label: "Visited Places", href: "/profile/visited-places", icon: CheckCircle2 },
+    { label: t("nav.visited_places") || "Visited Places", href: "/profile/visited-places", icon: CheckCircle2 },
     { label: t("nav.favorite_places"), href: "/profile/favorite-places", icon: Heart },
     { label: t("nav.my_business"), href: "/profile/my-business", icon: Grid2x2 },
     { label: t("nav.purchased_maps"), href: "/profile/purchased-maps", icon: Map },
     { label: t("nav.contributions"), href: "/profile/contributions-reviews", icon: Star },
-    { label: language === "es" ? "Lugares Recomendados" : "Recommended Spots", href: "/profile/recommended-places", icon: MapPin },
+    { label: t("nav.recommended_places") || "Recommended Spots", href: "/profile/recommended-places", icon: MapPin },
     { label: t("nav.subscription"), href: "/profile/subscription", icon: CircleDollarSign },
     { label: t("nav.awards"), href: "/profile/awards", icon: Trophy },
   ];
@@ -613,7 +613,7 @@ export default function Header() {
                         <Link href={"/dashboard"}>
                           <DropdownMenuItem className="px-4 py-3 cursor-pointer">
                             <Grid2x2 className="mr-3 size-5" />
-                            Dashboard
+                            {t("nav.dashboard") || "Dashboard"}
                           </DropdownMenuItem>
                         </Link>
                       )}
@@ -799,7 +799,7 @@ export default function Header() {
                       >
                         <DropdownMenuItem className="rounded-xl px-3 py-3 cursor-pointer dark:text-slate-200 dark:hover:bg-slate-800/60 dark:hover:text-white">
                           <Grid2x2 className="mr-3 size-5" />
-                          Dashboard
+                          {t("nav.dashboard") || "Dashboard"}
                         </DropdownMenuItem>
                       </Link>
                     )}
@@ -1183,7 +1183,7 @@ export default function Header() {
                           className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-800/60 text-gray-900 dark:text-slate-100 rounded-lg transition-colors font-semibold"
                         >
                           <Grid2x2 className="size-5" />
-                          Dashboard
+                          {t("nav.dashboard") || "Dashboard"}
                         </Link>
                       )}
                       <div className="space-y-1">

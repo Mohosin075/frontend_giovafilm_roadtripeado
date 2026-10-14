@@ -38,7 +38,7 @@ export function AwardDetailModal({
   award,
   user,
 }: AwardDetailModalProps) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const [copiedCode, setCopiedCode] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -80,9 +80,7 @@ export function AwardDetailModal({
     navigator.clipboard.writeText(promoCode);
     setCopiedCode(true);
     toast.success(
-      language === "es"
-        ? "¡Código de descuento copiado al portapapeles!"
-        : "Discount code copied to clipboard!"
+      t("promos.code_copied") || "Discount code copied to clipboard!"
     );
     setTimeout(() => setCopiedCode(false), 3000);
   };
@@ -97,9 +95,7 @@ export function AwardDetailModal({
     try {
       await downloadFileWithCustomName(downloadTarget, downloadFileName);
       toast.success(
-        language === "es"
-          ? "Descarga iniciada..."
-          : "Download started..."
+        t("awards.download_started") || "Download started..."
       );
     } catch {
       window.open(getImageUrl(fileUrl), "_blank");
@@ -139,12 +135,12 @@ export function AwardDetailModal({
             {isUnlocked ? (
               <div className="bg-amber-500 text-white font-black text-[11px] px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5 uppercase tracking-wider">
                 <Check size={13} className="stroke-[3]" />
-                <span>{language === "es" ? "Desbloqueado" : "Unlocked"}</span>
+                <span>{t("awards.unlocked") || "Unlocked"}</span>
               </div>
             ) : (
               <div className="bg-slate-900/90 backdrop-blur-md text-amber-400 font-bold text-[11px] px-3 py-1 rounded-full shadow-lg border border-amber-500/30 flex items-center gap-1.5 uppercase tracking-wider">
                 <Lock size={12} />
-                <span>{percent}% {language === "es" ? "Completado" : "PROGRESS"}</span>
+                <span>{percent}% {t("awards.completed") || "PROGRESS"}</span>
               </div>
             )}
           </div>
@@ -186,7 +182,7 @@ export function AwardDetailModal({
           <div className="space-y-2 bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
             <div className="flex justify-between items-center text-xs font-bold">
               <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px]">
-                {language === "es" ? "PROGRESO DE TROFEO" : "TROPHY PROGRESS"}
+                {t("awards.trophy_progress") || "TROPHY PROGRESS"}
               </span>
               <span className="text-amber-800 dark:text-amber-400 font-extrabold">
                 {current.toLocaleString()} / {total.toLocaleString()} ({percent}%)
@@ -206,13 +202,13 @@ export function AwardDetailModal({
                       disabled
                       className="w-full h-12 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider rounded-xl cursor-not-allowed border-0"
                     >
-                      {language === "es" ? "Mapa Canjeado" : "Map Claimed"}
+                      {t("awards.map_claimed") || "Map Claimed"}
                     </Button>
                   ) : (
                     <Link href="/catalog?redeemFreeMap=1" className="block w-full" onClick={onClose}>
                       <Button className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-amber-500/20 gap-2 border-0 cursor-pointer">
                         <MapIcon size={16} />
-                        {language === "es" ? "ELEGIR MAPA GRATIS" : "CHOOSE FREE MAP"}
+                        {t("awards.choose_free_map") || "CHOOSE FREE MAP"}
                       </Button>
                     </Link>
                   )
@@ -227,8 +223,8 @@ export function AwardDetailModal({
                   >
                     <FileText size={16} />
                     {isDownloading
-                      ? (language === "es" ? "DESCARGANDO..." : "DOWNLOADING...")
-                      : (language === "es" ? "DESCARGAR PDF" : "DOWNLOAD PDF")}
+                      ? (t("awards.downloading") || "DOWNLOADING...")
+                      : (t("awards.download_pdf") || "DOWNLOAD PDF")}
                   </Button>
                 )}
 
@@ -238,7 +234,7 @@ export function AwardDetailModal({
                     <div className="bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl p-3.5 flex items-center justify-between">
                       <div>
                         <p className="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-widest">
-                          {language === "es" ? "Código de Descuento" : "Discount Promo Code"}
+                          {t("awards.discount_promo_code") || "Discount Promo Code"}
                         </p>
                         <p className="text-base font-black font-mono text-slate-900 dark:text-slate-100 tracking-wider">
                           {promoCode}
@@ -252,15 +248,15 @@ export function AwardDetailModal({
                       >
                         <Copy size={13} />
                         {copiedCode
-                          ? (language === "es" ? "¡Copiado!" : "Copied!")
-                          : (language === "es" ? "Copiar" : "Copy Code")}
+                          ? (t("awards.copied") || "Copied!")
+                          : (t("awards.copy_code") || "Copy Code")}
                       </Button>
                     </div>
 
                     <Link href="/catalog" className="block w-full" onClick={onClose}>
                       <Button className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-amber-500/20 gap-2 border-0 cursor-pointer">
                         <Tag size={16} />
-                        {language === "es" ? "USAR DESCUENTO EN CATÁLOGO" : "USE DISCOUNT IN CATALOG"}
+                        {t("awards.use_discount_catalog") || "USE DISCOUNT IN CATALOG"}
                       </Button>
                     </Link>
                   </div>
@@ -271,9 +267,7 @@ export function AwardDetailModal({
                   <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl p-3.5 text-center">
                     <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center justify-center gap-1.5">
                       <Sparkles size={15} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
-                      {language === "es"
-                        ? "¡Recompensa desbloqueada! Tus puntos de experiencia han sido acreditados."
-                        : "Reward unlocked! Your XP points have been credited."}
+                      {t("awards.reward_unlocked_xp") || "Reward unlocked! Your XP points have been credited."}
                     </p>
                   </div>
                 )}
@@ -282,14 +276,11 @@ export function AwardDetailModal({
               <div className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl p-4 text-center space-y-1">
                 <p className="text-xs font-bold text-amber-900 dark:text-amber-300 flex items-center justify-center gap-1.5">
                   <Lock size={14} className="text-amber-700 dark:text-amber-400 shrink-0" />
-                  {language === "es"
-                    ? "Trofeo en Progreso"
-                    : "Trophy In Progress"}
+                  {t("awards.trophy_in_progress") || "Trophy In Progress"}
                 </p>
                 <p className="text-xs text-amber-800/80 dark:text-amber-400/90 leading-relaxed font-medium">
-                  {language === "es"
-                    ? `Sigue explorando lugares, dejando reseñas y ganando XP para alcanzar los ${total.toLocaleString()} puntos y desbloquear esta recompensa.`
-                    : `Keep exploring places, leaving reviews, and earning XP to reach ${total.toLocaleString()} points and unlock this perk.`}
+                  {(t("awards.keep_exploring_prompt") || "Keep exploring places, leaving reviews, and earning XP to reach {points} points and unlock this perk.")
+                    .replace("{points}", total.toLocaleString())}
                 </p>
               </div>
             )}

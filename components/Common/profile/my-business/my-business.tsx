@@ -147,17 +147,17 @@ export default function MyBusinessPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-              My <span className="text-primary">Businesses</span>
+              {t("business.my_businesses") || "My Businesses"}
             </h1>
             <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">
-              Manage and track your business performance across the platform.
+              {t("business.my_businesses_subtitle") || "Manage and track your business performance across the platform."}
             </p>
           </div>
 
           <Link href="/for-business">
             <Button className="rounded-xl px-6 h-12 bg-primary hover:bg-primary/90 text-slate-950 font-extrabold shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 gap-2 cursor-pointer">
               <Plus size={20} strokeWidth={3} />
-              Add New Business
+              {t("business.add_new_business") || "Add New Business"}
             </Button>
           </Link>
         </div>
@@ -269,18 +269,17 @@ export default function MyBusinessPage() {
               <Building2 size={40} className="text-slate-300 dark:text-slate-600" />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-              No Businesses Yet
+              {t("business.no_businesses_yet") || "No Businesses Yet"}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-8">
-              Register your first business to start reaching thousands of
-              travelers and local explorers.
+              {t("business.no_businesses_desc") || "Register your first business to start reaching thousands of travelers and local explorers."}
             </p>
             <Link href="/for-business">
               <Button
                 variant="outline"
                 className="rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 font-bold px-8 cursor-pointer"
               >
-                Get Started
+                {t("business.get_started") || "Get Started"}
               </Button>
             </Link>
           </motion.div>
@@ -366,7 +365,7 @@ export default function MyBusinessPage() {
                           className="rounded-lg gap-2 font-medium focus:bg-slate-50 dark:focus:bg-slate-850 cursor-pointer"
                         >
                           <Link href={`/profile/my-business/${business._id}`}>
-                            <Eye size={16} /> View Details
+                            <Eye size={16} /> {t("business.view_details") || "View Details"}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -386,13 +385,13 @@ export default function MyBusinessPage() {
                           }}
                           className="rounded-lg gap-2 font-medium focus:bg-slate-50 dark:focus:bg-slate-850 cursor-pointer"
                         >
-                          <ExternalLink size={16} /> View on Map
+                          <ExternalLink size={16} /> {t("business.view_on_map") || "View on Map"}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDeleteBusiness(business._id, business.name)}
                           className="rounded-lg gap-2 font-medium text-red-600 focus:text-red-700 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer"
                         >
-                          <Trash2 size={16} strokeWidth={2.5} /> Delete Business
+                          <Trash2 size={16} strokeWidth={2.5} /> {t("business.delete_business") || "Delete Business"}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -407,7 +406,7 @@ export default function MyBusinessPage() {
 
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Subscription:</span>
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{t("business.subscription") || "Subscription"}:</span>
                       <Badge
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                           business.hasActiveSubscription
@@ -416,7 +415,7 @@ export default function MyBusinessPage() {
                         }`}
                         variant="outline"
                       >
-                        {business.hasActiveSubscription ? "Active" : "Inactive / Unpaid"}
+                        {business.hasActiveSubscription ? (t("business.status_active") || "Active") : (t("business.status_inactive") || "Inactive / Unpaid")}
                       </Badge>
                     </div>
 
@@ -444,7 +443,7 @@ export default function MyBusinessPage() {
                       <div className="flex items-start gap-2">
                         <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                         <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold leading-relaxed">
-                          This business is not visible on the map because it lacks an active subscription.
+                          {t("business.not_visible_warning") || "This business is not visible on the map because it lacks an active subscription."}
                         </p>
                       </div>
                       {business.plan ? (
@@ -454,7 +453,7 @@ export default function MyBusinessPage() {
                           disabled={isPaymentLoading}
                           className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg h-9 text-xs"
                         >
-                          {isPaymentLoading && loadingBusinessId === business._id ? "Processing..." : "Activate Listing (Pay Now)"}
+                          {isPaymentLoading && loadingBusinessId === business._id ? (t("business.processing") || "Processing...") : (t("business.activate_listing_pay") || "Activate Listing (Pay Now)")}
                         </Button>
                       ) : (
                         <Link href="/pricing">
@@ -462,7 +461,7 @@ export default function MyBusinessPage() {
                             size="sm"
                             className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg h-9 text-xs"
                           >
-                            Upgrade to Premium
+                            {t("business.upgrade_to_premium") || "Upgrade to Premium"}
                           </Button>
                         </Link>
                       )}

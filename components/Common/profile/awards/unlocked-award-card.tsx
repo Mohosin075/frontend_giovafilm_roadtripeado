@@ -20,7 +20,7 @@ export function UnlockedAwardCard({
   children,
   onClick,
 }: UnlockedAwardProps) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <Card
@@ -52,7 +52,7 @@ export function UnlockedAwardCard({
         <div className="pt-1.5 mt-auto space-y-2">
           <div className="space-y-1">
             <div className="flex justify-between text-[10px] sm:text-[11px] text-amber-700 dark:text-amber-400 font-extrabold tracking-wider">
-              <span>{language === "es" ? "DESBLOQUEADO" : "UNLOCKED"}</span>
+              <span>{(t("awards.unlocked") || (language === "es" ? "DESBLOQUEADO" : "UNLOCKED")).toUpperCase()}</span>
               <span>100%</span>
             </div>
 
@@ -72,7 +72,7 @@ export function UnlockedAwardCard({
                 }}
                 className="w-full text-center text-[10px] sm:text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 hover:underline cursor-pointer py-0.5"
               >
-                {language === "es" ? "Ver más detalles" : "View more details"}
+                {t("awards.view_details") || (language === "es" ? "Ver más detalles" : "View more details")}
               </button>
             </div>
           ) : (
@@ -82,7 +82,7 @@ export function UnlockedAwardCard({
                 onClick={onClick}
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-amber-500/20 cursor-pointer"
               >
-                {language === "es" ? "Ver más detalles" : "View more details"}
+                {t("awards.view_details") || (language === "es" ? "Ver más detalles" : "View more details")}
               </Button>
             </div>
           )}

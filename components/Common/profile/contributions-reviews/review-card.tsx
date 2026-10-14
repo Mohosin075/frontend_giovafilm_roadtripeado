@@ -20,7 +20,7 @@ export function ReviewCard({ review }: any) {
 
   const isBusinessReview = !!review?.businessId;
   const target = isBusinessReview ? review.businessId : review.placeId;
-  const targetName = getLocalized(target?.name, language) || "Unknown";
+  const targetName = getLocalized(target?.name, language) || t("common.unknown") || "Unknown";
   const coverImage = isBusinessReview
     ? target?.media?.photos?.[0]
     : target?.media?.[0];
@@ -63,7 +63,11 @@ export function ReviewCard({ review }: any) {
                       : "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40"
                 }`}
               >
-                {review.status}
+                {review.status === "Approved"
+                  ? (t("common.approved") || "Approved")
+                  : review.status === "Rejected"
+                    ? (t("common.rejected") || "Rejected")
+                    : (t("common.pending") || "Pending")}
               </span>
             )}
           </div>

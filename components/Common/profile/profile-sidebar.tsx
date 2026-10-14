@@ -81,7 +81,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
     },
     {
       href: "/profile/recommended-places",
-      label: language === "es" ? "Lugares recomendados" : "Recommended Spots",
+      label: t("nav.recommended_places") || "Recommended Spots",
       icon: MapPin,
       roles: ["all"],
     },
@@ -181,7 +181,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
           {/* Visited Places Counter Badge */}
           <div className="flex items-center justify-center mb-3">
             <span className="inline-flex items-center gap-1.5 bg-amber-400/15 border border-amber-400/40 text-amber-700 dark:text-amber-400 px-3.5 py-1 rounded-full text-xs font-bold shadow-xs">
-              📍 Visited {data?.visitedPlacesCount ?? (profile as any)?.data?.visitedPlacesCount ?? 0} places
+              📍 {(t("visited.visited_places_count") || "Visited {count} places").replace("{count}", String(data?.visitedPlacesCount ?? (profile as any)?.data?.visitedPlacesCount ?? 0))}
             </span>
           </div>
 

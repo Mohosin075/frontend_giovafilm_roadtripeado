@@ -60,9 +60,9 @@ export default function VisitedPlaces() {
         placeId: String(targetId),
         type: item.type || "Place",
       }).unwrap();
-      toast.success("Removed from visited places");
+      toast.success(t("visited.removed_success") || "Removed from visited places");
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to remove");
+      toast.error(error?.data?.message || t("visited.remove_failed") || "Failed to remove");
     }
   };
 
@@ -96,13 +96,13 @@ export default function VisitedPlaces() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
-            <span>{t("nav.visited_places") || "Visited Places"}</span>
+            <span>{t("visited.title") || t("nav.visited_places") || "Visited Places"}</span>
             <span className="text-base font-semibold bg-amber-400/20 text-amber-600 dark:text-amber-400 px-3 py-0.5 rounded-full">
               {allVisited.length}
             </span>
           </h1>
           <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-            Places you have marked as visited on Roadtripeado
+            {t("visited.subtitle") || "Places you have marked as visited on Roadtripeado"}
           </p>
         </div>
 
@@ -150,16 +150,16 @@ export default function VisitedPlaces() {
         <div className="text-center py-20 bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800/80">
           <CheckCircle2 className="w-12 h-12 text-amber-400 mx-auto mb-3 opacity-60" />
           <p className="text-gray-500 dark:text-slate-400 font-medium text-lg">
-            No visited places yet
+            {t("visited.no_places") || "No visited places yet"}
           </p>
           <p className="text-sm text-gray-400 dark:text-slate-500 mt-1">
-            Tap the "Visited" checkmark on any location map pin to add it here.
+            {t("visited.no_places_desc") || "Tap the \"Visited\" checkmark on any location map pin to add it here."}
           </p>
           <Link
             href="/maps"
             className="inline-block mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
           >
-            Explore Maps
+            {t("visited.explore_maps") || "Explore Maps"}
           </Link>
         </div>
       ) : (
@@ -197,7 +197,7 @@ export default function VisitedPlaces() {
                   {/* Gold Visited Badge */}
                   <div className="absolute top-3 left-3 bg-amber-400/90 text-black px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm backdrop-blur-xs">
                     <CheckCircle2 size={13} className="text-black" />
-                    <span>Visited</span>
+                    <span>{t("visited.badge") || "Visited"}</span>
                   </div>
 
                   {/* Remove Button */}
@@ -206,7 +206,7 @@ export default function VisitedPlaces() {
                     onClick={() => handleRemove(item)}
                     disabled={isToggling}
                     className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 hover:bg-red-600 text-white flex items-center justify-center transition-colors cursor-pointer"
-                    title="Remove from visited"
+                    title={t("visited.remove_tooltip") || "Remove from visited"}
                   >
                     <Trash2 size={14} />
                   </button>
@@ -220,7 +220,7 @@ export default function VisitedPlaces() {
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1 truncate mb-2">
                       <MapPin size={12} className="shrink-0 text-amber-500" />
-                      <span>{entity?.address || entity?.map?.name || "View on map"}</span>
+                      <span>{entity?.address || entity?.map?.name || t("visited.view_on_map") || "View on map"}</span>
                     </p>
                   </div>
 
@@ -234,7 +234,7 @@ export default function VisitedPlaces() {
                       href={`/maps/${targetId}?type=${typeParam}`}
                       className="font-bold text-amber-600 dark:text-amber-400 hover:underline"
                     >
-                      View Details →
+                      {t("visited.view_details") || "View Details →"}
                     </Link>
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export default function VisitedPlaces() {
             <ChevronLeft size={16} />
           </button>
           <span className="text-sm font-medium text-gray-600 dark:text-slate-300">
-            Page {page} of {totalPages}
+            {t("visited.page") || "Page"} {page} {t("visited.of") || "of"} {totalPages}
           </span>
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}

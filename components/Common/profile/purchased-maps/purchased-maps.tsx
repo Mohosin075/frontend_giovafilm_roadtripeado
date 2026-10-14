@@ -13,13 +13,13 @@ import {
 } from "lucide-react";
 import PurchasedMapsCard, { PurchasedMap } from "./purchased-maps-card";
 import { useGetPurchasedMapsQuery } from "@/redux/features/map/mapApi";
-import { getImageUrl } from "@/lib/utils";
+import { getImageUrl, getLocalized } from "@/lib/utils";
 import Link from "next/link";
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function PurchasedMapsPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState("All Maps");
 
   const { data, isLoading } = useGetPurchasedMapsQuery();
@@ -28,14 +28,16 @@ export default function PurchasedMapsPage() {
 
   const formattedMaps = rawMaps.map((map: any) => ({
     id: map._id,
-    title: map.name,
-    badge: map.isActive ? "ACTIVE" : "INACTIVE",
+    title: getLocalized(map.name, language) || map.name,
+    badge: map.isActive
+      ? (t("purchased_maps_page.active") || "ACTIVE")
+      : (t("purchased_maps_page.inactive") || "INACTIVE"),
     badgeColor: map.isActive
       ? "bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400 border border-transparent dark:border-green-800/40"
       : "bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400",
     info: `${t("common.save")} ${new Date(map.createdAt).toLocaleDateString()}`,
     image: getImageUrl(map.images?.[0]),
-    status: map.isActive ? "Active" : "Inactive",
+    status: map.isActive ? (t("common.active") || "Active") : (t("common.inactive") || "Inactive"),
     icon: map.isActive ? ShieldCheck : Compass,
     iconColor: map.isActive ? "text-green-500 dark:text-green-400" : "text-gray-400 dark:text-slate-500",
     isActive: !!map.isActive,

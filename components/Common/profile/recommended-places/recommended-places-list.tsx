@@ -22,7 +22,7 @@ import {
 import Link from "next/link";
 
 export function RecommendedPlacesList() {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const isEs = language === "es";
 
   const [activeTab, setActiveTab] = useState<string>("all");
@@ -41,13 +41,14 @@ export function RecommendedPlacesList() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b dark:border-slate-800 pb-4">
         <div>
           <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-slate-100 uppercase tracking-wide">
-            {isEs ? "Lugares Recomendados" : "Recommended Spots"}{" "}
+            {t("recommend.recommended_spots") || (isEs ? "Lugares Recomendados" : "Recommended Spots")}{" "}
             {!isLoading && `(${places.length})`}
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400">
-            {isEs
-              ? "Lugares turísticos que has recomendado a la comunidad de Roadtripeado."
-              : "Tourist spots you have recommended to the Roadtripeado community."}
+            {t("recommend.recommended_desc") ||
+              (isEs
+                ? "Lugares turísticos que has recomendado a la comunidad de Roadtripeado."
+                : "Tourist spots you have recommended to the Roadtripeado community.")}
           </p>
         </div>
 
@@ -56,17 +57,17 @@ export function RecommendedPlacesList() {
           className="bg-amber-400 hover:bg-amber-500 text-black font-bold rounded-xl h-11 px-5 text-xs sm:text-sm shadow-md shadow-amber-500/20 shrink-0 cursor-pointer inline-flex items-center gap-1.5"
         >
           <Plus size={16} />
-          <span>{isEs ? "Recomendar Lugar" : "Recommend Spot"}</span>
+          <span>{t("recommend.recommend_spot") || (isEs ? "Recomendar Lugar" : "Recommend Spot")}</span>
         </Button>
       </div>
 
       {/* Filter Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-1">
         {[
-          { id: "all", label: isEs ? "Todos" : "All" },
-          { id: "Pending", label: isEs ? "En Revisión" : "Pending Review" },
-          { id: "Published", label: isEs ? "Aprobados" : "Approved" },
-          { id: "Rejected", label: isEs ? "No Aprobados" : "Rejected" },
+          { id: "all", label: t("recommend.tabs_all") || (isEs ? "Todos" : "All") },
+          { id: "Pending", label: t("recommend.tabs_pending") || (isEs ? "En Revisión" : "Pending Review") },
+          { id: "Published", label: t("recommend.tabs_approved") || (isEs ? "Aprobados" : "Approved") },
+          { id: "Rejected", label: t("recommend.tabs_rejected") || (isEs ? "No Aprobados" : "Rejected") },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -99,21 +100,23 @@ export function RecommendedPlacesList() {
             <Sparkles size={22} />
           </div>
           <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">
-            {isEs
-              ? "Aún no has recomendado ningún lugar"
-              : "No spots recommended yet"}
+            {t("recommend.no_spots") ||
+              (isEs
+                ? "Aún no has recomendado ningún lugar"
+                : "No spots recommended yet")}
           </h3>
           <p className="text-xs text-gray-500 dark:text-slate-400 max-w-sm mx-auto">
-            {isEs
-              ? "¿Conoces un rincón increíble que debería estar en Roadtripeado? Recomiéndalo y gana puntos extra."
-              : "Know an amazing hidden gem that should be on Roadtripeado? Recommend it to earn extra points and discoverer credit!"}
+            {t("recommend.no_spots_desc") ||
+              (isEs
+                ? "¿Conoces un rincón increíble que debería estar en Roadtripeado? Recomiéndalo y gana puntos extra."
+                : "Know an amazing hidden gem that should be on Roadtripeado? Recommend it to earn extra points and discoverer credit!")}
           </p>
           <div className="pt-2">
             <Button
               onClick={() => setIsModalOpen(true)}
               className="bg-amber-400 hover:bg-amber-500 text-black font-bold rounded-xl h-10 px-5 text-xs shadow-xs cursor-pointer"
             >
-              {isEs ? "Recomendar mi primer lugar" : "Recommend my first spot"}
+              {t("recommend.recommend_spot") || (isEs ? "Recomendar mi primer lugar" : "Recommend my first spot")}
             </Button>
           </div>
         </div>

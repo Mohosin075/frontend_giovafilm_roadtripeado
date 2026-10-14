@@ -27,7 +27,7 @@ export function AwardCard({
   coverPhoto,
   onClick,
 }: AwardCardProps) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <Card
@@ -71,7 +71,7 @@ export function AwardCard({
             {/* Progress Text */}
             <div className="flex justify-between w-full text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-bold">
               <span>
-                {language === "es" ? "PROGRESO" : "PROGRESS"}: {current.toLocaleString()} / {total.toLocaleString()}
+                {(t("awards.progress") || (language === "es" ? "PROGRESO" : "PROGRESS")).toUpperCase()}: {current.toLocaleString()} / {total.toLocaleString()}
               </span>
               <span className="text-amber-600 dark:text-amber-400 font-extrabold">{progress}%</span>
             </div>
@@ -88,7 +88,7 @@ export function AwardCard({
             className="w-full border-slate-200 dark:border-slate-700 hover:border-amber-400 dark:hover:border-amber-500 text-slate-700 dark:text-slate-200 hover:text-amber-700 dark:hover:text-amber-400 bg-slate-50 dark:bg-slate-800/60 hover:bg-amber-50/50 dark:hover:bg-slate-800 font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs transition-all"
           >
             <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 group-hover:text-amber-500 transition-colors" />
-            {language === "es" ? "Ver más detalles" : "View more details"}
+            {t("awards.view_details") || (language === "es" ? "Ver más detalles" : "View more details")}
           </Button>
         </div>
       </CardFooter>

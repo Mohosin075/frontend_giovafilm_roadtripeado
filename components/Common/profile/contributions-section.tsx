@@ -61,7 +61,7 @@ export function ContributionsSection() {
           className="bg-amber-400 hover:bg-amber-500 text-black font-bold rounded-xl h-11 px-4 text-xs sm:text-sm shrink-0 cursor-pointer shadow-md shadow-amber-500/20 inline-flex items-center gap-1.5"
         >
           <Plus size={16} />
-          <span>{isEs ? "Recomendar Lugar" : "Recommend Spot"}</span>
+          <span>{t("recommend.recommend_spot") || "Recommend Spot"}</span>
         </Button>
       </div>
 
@@ -99,7 +99,7 @@ export function ContributionsSection() {
             className="bg-gray-50 dark:bg-[#0e1424] hover:bg-amber-500/10 dark:hover:bg-amber-500/10 transition-colors rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center cursor-pointer group"
           >
             <p className="text-gray-500 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
-              Visited Places
+              {t("nav.visited_places") || "Visited Places"}
             </p>
             <p className="text-lg sm:text-4xl font-extrabold text-amber-500">
               {user?.visitedPlacesCount || 0}

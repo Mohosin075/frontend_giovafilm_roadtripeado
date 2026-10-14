@@ -96,9 +96,7 @@ export default function AwardsPage() {
     try {
       await downloadFileWithCustomName(downloadTarget, downloadFileName);
       toast.success(
-        language === "es"
-          ? "Descarga iniciada..."
-          : "Download started..."
+        t("awards.download_started") || "Download started..."
       );
     } catch {
       if (award.config?.fileUrl) {
@@ -156,7 +154,7 @@ export default function AwardsPage() {
       <div className="max-w-360 mx-auto px-3 md:px-6 font-public-sans">
         {/* Page Title */}
         <h1 className="text-lg md:text-2xl font-bold mb-2 md:mb-5 uppercase tracking-wide text-gray-900 dark:text-slate-100">
-          {language === "es" ? "PREMIOS Y LOGROS" : "Awards & Achievements"}
+          {t("awards.page_title") || "Awards & Achievements"}
         </h1>
 
         <div className="bg-amber-500/10 dark:bg-amber-950/20 p-2.5 md:p-6 rounded-xl md:rounded-3xl flex flex-row items-center justify-between border border-amber-500/15 dark:border-amber-800/40 mb-4 md:mb-8 shadow-sm">
@@ -190,7 +188,7 @@ export default function AwardsPage() {
                 <>
                   <div className="mx-auto h-3 w-10 bg-gray-200 dark:bg-slate-800 animate-pulse rounded" />
                   <p className="text-[6px] md:text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
-                    {language === "es" ? "PUNTOS XP" : "XP POINTS"}
+                    {t("awards.xp_points") || "XP POINTS"}
                   </p>
                 </>
               ) : (
@@ -199,7 +197,7 @@ export default function AwardsPage() {
                     {points.toLocaleString()}
                   </p>
                   <p className="text-[6px] md:text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5 leading-none">
-                    {language === "es" ? "PUNTOS XP" : "XP POINTS"}
+                    {t("awards.xp_points") || "XP POINTS"}
                   </p>
                 </>
               )}
@@ -211,8 +209,8 @@ export default function AwardsPage() {
             {/* Level badge */}
             <span className="inline-block bg-amber-500/20 text-amber-800 dark:text-amber-300 px-2 py-0.5 md:px-4 md:py-1 rounded-full text-[8px] md:text-xs font-bold mb-0.5 md:mb-2 uppercase tracking-wider">
               {isProfileLoading
-                ? (language === "es" ? "Cargando..." : "Loading...")
-                : `🏆 ${language === "es" ? "Nivel" : "Level"} ${currentLevel} · ${getUserLevelName(currentLevel)}`}
+                ? (t("common.loading") || "Loading...")
+                : `🏆 ${t("awards.level") || "Level"} ${currentLevel} · ${getUserLevelName(currentLevel)}`}
             </span>
 
             {/* Name */}
@@ -226,13 +224,11 @@ export default function AwardsPage() {
 
             {/* Description */}
             <p className="hidden md:block text-gray-500 dark:text-slate-400 mt-1.5 text-sm leading-relaxed max-w-xl">
-              {language === "es" ? "¡Estás haciendo un progreso increíble! Gana " : "You're making incredible progress! Earn "}
+              {t("awards.progress_msg_prefix") || "You're making incredible progress! Earn "}
               <span className="font-bold text-gray-900 dark:text-slate-200">
-                {pointsNeededForNext.toLocaleString()} {language === "es" ? "XP más" : "more XP"}
+                {pointsNeededForNext.toLocaleString()} {t("awards.more_xp") || "more XP"}
               </span>{" "}
-              {language === "es"
-                ? "para desbloquear el siguiente nivel y acceder a nuevas recompensas premium."
-                : "to unlock the next level and access new premium rewards."}
+              {t("awards.to_reach") || "to reach"} {t("awards.level") || "Level"} {nextLevelData.level}.
             </p>
 
             {/* Cards */}
@@ -240,13 +236,13 @@ export default function AwardsPage() {
               <div className="bg-white/80 dark:bg-[#131b2e]/80 border border-gray-100 dark:border-slate-800 px-2 py-1 md:px-4 md:py-2.5 rounded-lg md:rounded-xl flex-1 md:flex-none md:w-36 shadow-sm">
                 <p className="text-[6px] md:text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest leading-none">{t("common.next_level")}</p>
                 <p className="font-extrabold text-gray-800 dark:text-slate-200 mt-0.5 text-[9px] md:text-xs leading-none">
-                  {currentLevel >= 14 ? (language === "es" ? "Nivel Máximo" : "Max Level") : `${language === "es" ? "Nivel" : "Level"} ${nextLevelData.level} · ${getUserLevelName(nextLevelIndex)}`}
+                  {currentLevel >= 14 ? (t("awards.max_level") || "Max Level") : `${t("awards.level") || "Level"} ${nextLevelData.level} · ${getUserLevelName(nextLevelIndex)}`}
                 </p>
               </div>
 
               <div className="bg-white/80 dark:bg-[#131b2e]/80 border border-gray-100 dark:border-slate-800 px-2 py-1 md:px-4 md:py-2.5 rounded-lg md:rounded-xl flex-1 md:flex-none md:w-36 shadow-sm">
                 <p className="text-[6px] md:text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest leading-none">
-                  {language === "es" ? "PROGRESO DEL NIVEL" : "LEVEL PROGRESS"}
+                  {t("awards.level_progress") || "LEVEL PROGRESS"}
                 </p>
                 <p className="font-extrabold text-amber-600 dark:text-amber-400 mt-0.5 text-[9px] md:text-xs leading-none">{Math.round(percent)}%</p>
               </div>
@@ -258,12 +254,10 @@ export default function AwardsPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-200 dark:border-slate-800 pb-3 md:pb-4 mb-4 md:mb-8 gap-3">
             <div>
               <h2 className="text-lg md:text-xl font-bold uppercase tracking-wide text-gray-900 dark:text-slate-100">
-                {language === "es" ? "Bóveda de Logros" : "Achievement Vault"}
+                {t("awards.vault_title") || "Achievement Vault"}
               </h2>
               <p className="text-gray-500 dark:text-slate-400 text-[11px] md:text-xs mt-0.5">
-                {language === "es"
-                  ? "Colecciona trofeos y desbloquea beneficios de viaje exclusivos."
-                  : "Collect trophies and unlock premium travel perks."}
+                {t("awards.vault_subtitle") || "Earn XP by discovering and reviewing places to unlock exclusive rewards."}
               </p>
             </div>
 
@@ -276,7 +270,7 @@ export default function AwardsPage() {
                     : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"
                   }`}
               >
-                {language === "es" ? "Todos los Trofeos" : "All Trophies"}
+                {t("awards.all_trophies") || "All Trophies"}
               </button>
               <button
                 onClick={() => setActiveFilter("unlocked")}
@@ -285,7 +279,7 @@ export default function AwardsPage() {
                     : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"
                   }`}
               >
-                {language === "es" ? `Desbloqueados (${unlockedAwards.length})` : `Unlocked (${unlockedAwards.length})`}
+                {(t("awards.unlocked_count") || "Unlocked ({count})").replace("{count}", String(unlockedAwards.length))}
               </button>
               <button
                 onClick={() => setActiveFilter("locked")}
@@ -294,7 +288,7 @@ export default function AwardsPage() {
                     : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100"
                   }`}
               >
-                {language === "es" ? `En Progreso (${lockedAwards.length})` : `In Progress (${lockedAwards.length})`}
+                {(t("awards.in_progress_count") || "In Progress ({count})").replace("{count}", String(lockedAwards.length))}
               </button>
             </div>
           </div>
@@ -330,11 +324,11 @@ export default function AwardsPage() {
                             <div className="pt-1.5">
                               {isProfileLoading ? (
                                 <Button className="w-full bg-gray-200 text-gray-400 font-bold cursor-default text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none" disabled>
-                                  {language === "es" ? "Cargando..." : "Loading..."}
+                                  {t("common.loading") || "Loading..."}
                                 </Button>
                               ) : hasRedeemed ? (
                                 <Button className="w-full bg-gray-300 text-gray-500 font-bold cursor-default text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none" disabled>
-                                  {language === "es" ? "Canjeado" : "Used"}
+                                  {t("awards.used") || "Used"}
                                 </Button>
                               ) : (
                                 <Link
@@ -343,7 +337,7 @@ export default function AwardsPage() {
                                   onClick={(e) => e.stopPropagation()}
                                 >
                                   <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-amber-200/50 cursor-pointer">
-                                    {language === "es" ? "Canjear Ahora" : "Redeem Now"}
+                                    {t("awards.redeem_now") || "Redeem Now"}
                                   </Button>
                                 </Link>
                               )}
@@ -356,8 +350,8 @@ export default function AwardsPage() {
                                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-emerald-200/50 cursor-pointer"
                               >
                                 {downloadingAwardId === award._id
-                                  ? (language === "es" ? "Descargando..." : "Downloading...")
-                                  : (language === "es" ? "Descargar PDF" : "Download PDF")}
+                                  ? (t("awards.downloading") || "Downloading...")
+                                  : (t("awards.download_pdf") || "Download PDF")}
                               </Button>
                             </div>
                           ) : award.type?.includes("Discount") || award.type?.includes("10%") || award.config?.discountPercentage ? (
@@ -369,7 +363,7 @@ export default function AwardsPage() {
                                 }}
                                 className="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-amber-200/50 cursor-pointer"
                               >
-                                {language === "es" ? "Usar Descuento" : "Use Discount"}
+                                {t("awards.use_discount") || "Use Discount"}
                               </Button>
                             </div>
                           ) : null}
@@ -403,15 +397,15 @@ export default function AwardsPage() {
               {/* Empty States */}
               {awardsData.length === 0 ? (
                 <div className="text-center py-20 text-gray-500 font-medium">
-                  No awards found. Check back later!
+                  {t("awards.no_awards_found") || "No awards found. Check back later!"}
                 </div>
               ) : activeFilter === "unlocked" && unlockedAwards.length === 0 ? (
                 <div className="text-center py-20 text-gray-500 font-medium">
-                  No unlocked awards yet. Keep exploring to earn rewards!
+                  {t("awards.no_unlocked_yet") || "No unlocked awards yet. Keep exploring to earn rewards!"}
                 </div>
               ) : activeFilter === "locked" && lockedAwards.length === 0 ? (
                 <div className="text-center py-20 text-gray-500 font-medium">
-                  No awards in progress right now.
+                  {t("awards.no_awards_in_progress") || "No awards in progress right now."}
                 </div>
               ) : null}
 
@@ -424,10 +418,10 @@ export default function AwardsPage() {
                     disabled={page === 1}
                     className="bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700"
                   >
-                    Previous
+                    {t("common.previous") || "Previous"}
                   </Button>
                   <span className="text-gray-600 dark:text-slate-300 font-bold px-4">
-                    Page {page} of {totalPages}
+                    {t("visited.page") || "Page"} {page} {t("visited.of") || "of"} {totalPages}
                   </span>
                   <Button
                     variant="outline"
@@ -437,7 +431,7 @@ export default function AwardsPage() {
                     disabled={page === totalPages}
                     className="bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700"
                   >
-                    Next
+                    {t("common.next") || "Next"}
                   </Button>
                 </div>
               )}

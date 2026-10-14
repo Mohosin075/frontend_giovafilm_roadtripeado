@@ -113,7 +113,7 @@ export default function NotificationBellDropdown({
         toast.info(titleStr, {
           description: contentStr,
           action: {
-            label: language === "es" ? "Ver" : "View",
+            label: t("common.view") || "View",
             onClick: () => {
               if (notif.actionUrl) {
                 router.push(notif.actionUrl);
@@ -228,16 +228,14 @@ export default function NotificationBellDropdown({
     try {
       await markAllAsRead().unwrap();
       toast.success(
-        t("notifications_page.notifications_updated") ||
-          (language === "es"
-            ? "Todas las notificaciones marcadas como leídas"
-            : "All notifications marked as read")
+        t("notifications_page.all_marked_read") ||
+          t("notifications_page.notifications_updated") ||
+          "All notifications marked as read"
       );
     } catch {
       toast.error(
-        language === "es"
-          ? "Error al marcar las notificaciones como leídas"
-          : "Failed to mark notifications as read"
+        t("notifications_page.mark_read_error") ||
+          "Failed to mark notifications as read"
       );
     }
   };

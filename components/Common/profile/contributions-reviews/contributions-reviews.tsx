@@ -61,7 +61,7 @@ export default function ContributionsReviews() {
           >
             <MapPin size={16} className={activeTab === "spots" ? "text-amber-500" : ""} />
             <span>
-              {isEs ? "Lugares Recomendados" : "Recommended Spots"} ({totalRecommendedSpots})
+              {t("recommend.recommended_spots") || "Recommended Spots"} ({totalRecommendedSpots})
             </span>
           </button>
         </div>
