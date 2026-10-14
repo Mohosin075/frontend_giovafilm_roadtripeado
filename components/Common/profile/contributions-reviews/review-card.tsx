@@ -29,31 +29,33 @@ export function ReviewCard({ review }: any) {
     : `/maps/${target?._id}`;
 
   return (
-    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 flex flex-col md:flex-row gap-3 md:gap-6 hover:shadow-md transition-all duration-200 overflow-hidden">
+    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 flex flex-col md:flex-row hover:shadow-md transition-all duration-200 overflow-hidden">
       {coverImage ? (
-        <div className="shrink-0 w-full md:w-64 lg:w-72 h-40 sm:h-52 md:h-auto relative overflow-hidden bg-gray-100 dark:bg-slate-900">
+        <div className="shrink-0 w-full md:w-48 lg:w-56 h-36 sm:h-40 md:h-auto md:self-stretch min-h-[140px] md:max-h-[190px] relative overflow-hidden bg-gray-100 dark:bg-slate-900">
           <Image
             src={getImageUrl(coverImage)}
             alt={targetName}
-            width={300}
-            height={200}
+            fill
+            sizes="(max-width: 768px) 100vw, 240px"
             unoptimized
-            className="w-full h-full object-cover"
+            className="object-cover"
           />
         </div>
       ) : (
-        <div className="shrink-0 w-full md:w-64 lg:w-72 h-40 sm:h-52 md:h-auto overflow-hidden bg-gray-100 dark:bg-slate-900">
+        <div className="shrink-0 w-full md:w-48 lg:w-56 h-36 sm:h-40 md:h-auto md:self-stretch min-h-[140px] md:max-h-[190px] overflow-hidden bg-gray-100 dark:bg-slate-900 flex items-center justify-center">
           <NoImage />
         </div>
       )}
 
-      <div className="flex-1 flex flex-col justify-between font-public-sans p-3.5 sm:p-5">
+      <div className="flex-1 flex flex-col justify-between font-public-sans p-3 sm:p-4 gap-2">
         <div>
-          <div className="flex flex-wrap items-start justify-between gap-2 mb-1.5">
-            <h3 className="text-base sm:text-xl font-bold text-gray-900 dark:text-slate-100 leading-snug">{targetName}</h3>
+          <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+            <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100 leading-snug truncate max-w-md">
+              {targetName}
+            </h3>
             {review?.status && (
               <span
-                className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full capitalize shrink-0 ${
+                className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize shrink-0 ${
                   review.status === "Approved"
                     ? "bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800/40"
                     : review.status === "Rejected"
@@ -66,37 +68,37 @@ export function ReviewCard({ review }: any) {
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 mb-2.5">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <div className="flex gap-0.5">
               {[...Array(5)].map((_, i) => (
                 <div key={i}>
                   {i < fullStars ? (
                     <Star
-                      size={16}
+                      size={14}
                       className="fill-amber-400 text-amber-400"
                     />
                   ) : i === fullStars && hasHalfStar ? (
-                    <div className="relative w-4 h-4">
-                      <Star size={16} className="fill-gray-300 dark:fill-slate-700 text-gray-300 dark:text-slate-700" />
-                      <div className="absolute top-0 left-0 overflow-hidden w-2">
+                    <div className="relative w-3.5 h-3.5">
+                      <Star size={14} className="fill-gray-300 dark:fill-slate-700 text-gray-300 dark:text-slate-700" />
+                      <div className="absolute top-0 left-0 overflow-hidden w-1.5">
                         <Star
-                          size={16}
+                          size={14}
                           className="fill-amber-400 text-amber-400"
                         />
                       </div>
                     </div>
                   ) : (
-                    <Star size={16} className="fill-gray-300 dark:fill-slate-700 text-gray-300 dark:text-slate-700" />
+                    <Star size={14} className="fill-gray-300 dark:fill-slate-700 text-gray-300 dark:text-slate-700" />
                   )}
                 </div>
               ))}
             </div>
-            <span className="text-[11px] sm:text-xs text-gray-500 dark:text-slate-400">
+            <span className="text-[10px] sm:text-[11px] text-gray-500 dark:text-slate-400">
               {t("reviews.reviewed_on")} {formatDate(review?.createdAt)}
             </span>
           </div>
 
-          <p className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 leading-relaxed mb-3 line-clamp-3 sm:line-clamp-4">
+          <p className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 leading-relaxed line-clamp-2 sm:line-clamp-3">
             {getLocalized(review?.review, language)}
           </p>
         </div>
@@ -104,14 +106,16 @@ export function ReviewCard({ review }: any) {
         <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-slate-800 sm:border-none sm:pt-0">
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="flex-1 sm:flex-none bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-5 rounded-lg cursor-pointer"
+            size="sm"
+            className="flex-1 sm:flex-none h-8 sm:h-8.5 bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold text-xs px-3 sm:px-4 rounded-lg cursor-pointer"
           >
             ✎ {t("reviews.edit_review")}
           </Button>
           <Link href={detailsHref} className="flex-1 sm:flex-none">
             <Button
               variant="outline"
-              className="w-full border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/80 text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 font-bold text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-5 rounded-lg cursor-pointer"
+              size="sm"
+              className="w-full h-8 sm:h-8.5 border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/80 text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 font-bold text-xs px-3 sm:px-4 rounded-lg cursor-pointer"
             >
               {t("place.view_details")}
             </Button>
