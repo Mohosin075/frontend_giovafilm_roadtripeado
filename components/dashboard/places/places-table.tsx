@@ -70,6 +70,8 @@ interface Place {
     level?: number;
   } | null;
   adminFeedback?: string;
+  pointsAwarded?: number;
+  isApproved?: boolean;
 }
 
 export function PlacesTable() {
@@ -122,14 +124,25 @@ export function PlacesTable() {
   const [reviewRecommendedPlace, { isLoading: isReviewing }] =
     useReviewRecommendedPlaceMutation();
 
-  const handleToggleStatus = async (id: string, currentStatus: string) => {
-    const nextStatus = currentStatus === "Published" ? "Draft" : "Published";
+  const handleToggleStatus = async (place: Place) => {
+    // If place is Pending, it CANNOT be directly published with eye toggle — it must be approved first!
+    if (place.status === "Pending") {
+      toast.info(
+        language === "es"
+          ? "Este lugar está pendiente de revisión. Debe ser aprobado primero con el botón (✓) para otorgar +50 pts."
+          : "This spot is pending review. It must be approved first with the (✓) button to award +50 pts."
+      );
+      handleApprovePlace(place);
+      return;
+    }
+
+    const nextStatus = place.status === "Published" ? "Draft" : "Published";
     try {
-      await updatePlace({ id, data: { status: nextStatus } }).unwrap();
+      await updatePlace({ id: place._id, data: { status: nextStatus } }).unwrap();
       toast.success(
         nextStatus === "Draft"
-          ? (t("places_admin.set_to_draft") || "Place set to Draft")
-          : (t("places_admin.published_successfully") || "Place published successfully")
+          ? (language === "es" ? "Lugar cambiado a borrador (oculto del mapa)" : "Place set to Draft (hidden from map)")
+          : (t("places_admin.published_successfully") || "Place published successfully (Live on map)")
       );
     } catch (error: any) {
       toast.error(
@@ -242,7 +255,7 @@ export function PlacesTable() {
     });
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string, isApprovedPlace: boolean = false) => {
     switch (status) {
       case "Active":
       case "Published":
@@ -251,6 +264,11 @@ export function PlacesTable() {
         return "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400 font-semibold border border-amber-300 dark:border-amber-700/50";
       case "Rejected":
         return "bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-400 font-semibold border border-rose-300 dark:border-rose-700/50";
+      case "Draft":
+        if (isApprovedPlace) {
+          return "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-400 font-semibold border border-blue-300 dark:border-blue-700/50";
+        }
+        return "bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-300";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-300";
     }
@@ -455,24 +473,32 @@ export function PlacesTable() {
                     {getSafeString(place.map?.name, language) || "N/A"}
                   </td>
                   <td className="px-6 py-4 text-sm">
-                    <span
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                        place.status,
-                      )}`}
-                    >
-                      {place.status === "Pending" && (
-                        <Clock size={12} className="shrink-0" />
-                      )}
-                      {place.status === "Published"
-                        ? (t("places_admin.published") || "Published")
-                        : place.status === "Draft"
-                        ? (t("places_admin.draft") || "Draft")
-                        : place.status === "Pending"
-                        ? (language === "es" ? "Pendiente" : "Pending")
-                        : place.status === "Rejected"
-                        ? (language === "es" ? "Rechazado" : "Rejected")
-                        : place.status}
-                    </span>
+                    {(() => {
+                      const isApprovedPlace = !!(place.isApproved || (place.pointsAwarded && place.pointsAwarded > 0));
+                      return (
+                        <span
+                          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                            place.status,
+                            isApprovedPlace
+                          )}`}
+                        >
+                          {place.status === "Pending" && (
+                            <Clock size={12} className="shrink-0" />
+                          )}
+                          {place.status === "Published"
+                            ? (t("places_admin.published") || "Published")
+                            : place.status === "Draft"
+                            ? (isApprovedPlace
+                                ? (language === "es" ? "Aceptado (Borrador)" : "Accepted (Draft)")
+                                : (t("places_admin.draft") || "Draft"))
+                            : place.status === "Pending"
+                            ? (language === "es" ? "Pendiente" : "Pending")
+                            : place.status === "Rejected"
+                            ? (language === "es" ? "Rechazado" : "Rejected")
+                            : place.status}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                     <div className="flex items-center gap-1">
@@ -528,12 +554,21 @@ export function PlacesTable() {
                         <Edit size={18} />
                       </button>
                       <button
-                        onClick={() => handleToggleStatus(place._id, place.status)}
+                        onClick={() => handleToggleStatus(place)}
                         className={`${
                           place.status === "Published"
                             ? "text-green-500 hover:text-green-700"
+                            : place.status === "Pending"
+                            ? "text-amber-500 hover:text-amber-700 opacity-60 hover:opacity-100"
                             : "text-amber-500 hover:text-amber-700"
                         } transition-colors`}
+                        title={
+                          place.status === "Pending"
+                            ? (language === "es" ? "Pendiente de revisión (Aprobar primero)" : "Pending review (Approve first)")
+                            : place.status === "Published"
+                            ? (t("places_admin.set_to_draft") || "Set to draft")
+                            : (t("places_admin.published_successfully") || "Publish place")
+                        }
                         aria-label={
                           place.status === "Published"
                             ? "Set to draft"

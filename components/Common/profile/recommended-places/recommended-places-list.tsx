@@ -17,6 +17,7 @@ import {
   Plus,
   AlertCircle,
   ExternalLink,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -150,25 +151,45 @@ export function RecommendedPlacesList() {
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {/* Status Badge */}
-                      {place.status === "Published" ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40">
-                          <CheckCircle2 size={11} />
-                          <span>
-                            {isEs ? "Publicado" : "Published"}
-                            {place.pointsAwarded ? ` (+${place.pointsAwarded} pts)` : ""}
+                      {(() => {
+                        const isApprovedSpot = place.isApproved || (place.pointsAwarded && place.pointsAwarded > 0);
+                        if (place.status === "Published") {
+                          return (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40">
+                              <CheckCircle2 size={11} />
+                              <span>
+                                {isEs ? "Publicado" : "Published"}
+                                {place.pointsAwarded ? ` (+${place.pointsAwarded} pts)` : ""}
+                              </span>
+                            </span>
+                          );
+                        }
+                        if (place.status === "Draft" && isApprovedSpot) {
+                          return (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/40">
+                              <CheckCircle2 size={11} />
+                              <span>
+                                {isEs ? "Aceptado (Borrador por Admin)" : "Accepted (Draft by Admin)"}
+                                {place.pointsAwarded ? ` (+${place.pointsAwarded} pts)` : ""}
+                              </span>
+                            </span>
+                          );
+                        }
+                        if (place.status === "Rejected") {
+                          return (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/40">
+                              <XCircle size={11} />
+                              <span>{isEs ? "No Aprobado" : "Rejected"}</span>
+                            </span>
+                          );
+                        }
+                        return (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40">
+                            <Clock size={11} />
+                            <span>{isEs ? "En Revisión" : "Pending Review"}</span>
                           </span>
-                        </span>
-                      ) : place.status === "Rejected" ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/40">
-                          <XCircle size={11} />
-                          <span>{isEs ? "No Aprobado" : "Rejected"}</span>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40">
-                          <Clock size={11} />
-                          <span>{isEs ? "En Revisión" : "Pending Review"}</span>
-                        </span>
-                      )}
+                        );
+                      })()}
 
                       {place.category && (
                         <span className="text-[10px] font-semibold text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
@@ -193,6 +214,18 @@ export function RecommendedPlacesList() {
                       {isEs ? "Enviado:" : "Submitted:"}{" "}
                       {formatDate(place.createdAt)}
                     </p>
+
+                    {/* Admin Draft notice if accepted but temporarily hidden */}
+                    {place.status === "Draft" && (place.isApproved || (place.pointsAwarded && place.pointsAwarded > 0)) && (
+                      <div className="bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 rounded-xl p-2 text-[11px] text-blue-800 dark:text-blue-300 flex items-center gap-1.5 mt-1">
+                        <Info size={12} className="shrink-0 text-blue-500" />
+                        <span>
+                          {isEs
+                            ? "¡Tu lugar fue aceptado y recibiste +50 pts! El administrador lo tiene temporalmente en borrador."
+                            : "Your spot was accepted and you earned +50 pts! The admin currently has it in draft."}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
