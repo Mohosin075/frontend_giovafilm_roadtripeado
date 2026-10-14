@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +46,167 @@ import { toast } from "sonner";
 import { buildPlaceRequestBody } from "@/components/dashboard/places/place-payload";
 import { getLocalized } from "@/lib/utils";
 import Link from "next/link";
+import {
+  APIProvider,
+  Map,
+  MapMouseEvent,
+  useMap,
+} from "@vis.gl/react-google-maps";
+import { AnimatedMapPin } from "@/components/shared/maps/animated-map-pin";
+import { CustomLocationButton } from "@/components/shared/maps/CustomLocationButton";
+import { useTheme } from "next-themes";
+
+function SpotLocationMapInner({
+  position,
+  onPick,
+  defaultCenter,
+  isDark,
+}: {
+  position: { lat: number; lng: number } | null;
+  onPick: (pos: { lat: number; lng: number }) => void;
+  defaultCenter: { lat: number; lng: number };
+  isDark: boolean;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+    if (position) {
+      map.panTo(position);
+      const zoom = map.getZoom() ?? 10;
+      if (zoom < 13) {
+        map.setZoom(15);
+      }
+    }
+  }, [map, position?.lat, position?.lng]);
+
+  useEffect(() => {
+    if (map) {
+      map.setOptions({ draggableCursor: "crosshair" });
+    }
+  }, [map]);
+
+  const handleMapClick = (e: MapMouseEvent) => {
+    if (e.detail?.latLng) {
+      onPick({ lat: e.detail.latLng.lat, lng: e.detail.latLng.lng });
+    }
+  };
+
+  return (
+    <Map
+      colorScheme={isDark ? "DARK" : "LIGHT"}
+      style={{ width: "100%", height: "100%" }}
+      defaultCenter={position || defaultCenter}
+      defaultZoom={position ? 15 : 9}
+      minZoom={3}
+      maxZoom={19}
+      renderingType="RASTER"
+      gestureHandling="greedy"
+      disableDefaultUI={false}
+      streetViewControl={false}
+      mapTypeControl={true}
+      mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID || "DEMO_MAP_ID"}
+      onClick={handleMapClick}
+    >
+      <CustomLocationButton
+        onLocated={(lat, lng) => {
+          onPick({ lat, lng });
+        }}
+      />
+      {position && (
+        <AnimatedMapPin
+          position={position}
+          draggable={true}
+          onDragEnd={(lat, lng) => {
+            onPick({ lat, lng });
+          }}
+        />
+      )}
+    </Map>
+  );
+}
+
+function SpotLocationPicker({
+  latitude,
+  longitude,
+  onLocationSelect,
+  isEs,
+}: {
+  latitude: string;
+  longitude: string;
+  onLocationSelect: (pos: { lat: number; lng: number }) => void;
+  isEs: boolean;
+}) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
+
+  const numLat = parseFloat(latitude);
+  const numLng = parseFloat(longitude);
+  const hasValidPosition =
+    !isNaN(numLat) && !isNaN(numLng) && isFinite(numLat) && isFinite(numLng);
+  const position = hasValidPosition ? { lat: numLat, lng: numLng } : null;
+
+  const defaultCenter = { lat: 18.2208, lng: -66.5901 };
+  const apiKey = (process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || "").trim();
+
+  return (
+    <div className="space-y-2">
+      <div className="h-60 sm:h-64 w-full rounded-2xl overflow-hidden relative border border-gray-200 dark:border-slate-800 shadow-inner bg-slate-100 dark:bg-slate-900">
+        {apiKey ? (
+          <APIProvider apiKey={apiKey}>
+            <SpotLocationMapInner
+              position={position}
+              onPick={onLocationSelect}
+              defaultCenter={defaultCenter}
+              isDark={isDark}
+            />
+          </APIProvider>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
+            {isEs
+              ? "Clave de Google Maps no configurada"
+              : "Google Maps API Key not configured"}
+          </div>
+        )}
+
+        {/* Floating guidance overlay badge */}
+        <div className="absolute top-2.5 left-2.5 pointer-events-none z-10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md text-white text-[11px] font-bold shadow-md border border-white/10">
+            <MapPin size={12} className="text-amber-400" />
+            {position
+              ? isEs
+                ? "Arrastra el pin para ajustar"
+                : "Drag pin to adjust"
+              : isEs
+              ? "Haz clic en el mapa para fijar el punto"
+              : "Click on map to place pin"}
+          </span>
+        </div>
+      </div>
+
+      {position ? (
+        <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold px-1">
+          <span className="flex items-center gap-1">
+            <CheckCircle2 size={13} />
+            {isEs ? "Ubicación fijada en el mapa" : "Location pinned on map"}
+          </span>
+          <span className="font-mono text-gray-500 dark:text-slate-400">
+            {position.lat.toFixed(6)}, {position.lng.toFixed(6)}
+          </span>
+        </div>
+      ) : (
+        <p className="text-[11px] text-amber-700 dark:text-amber-400 px-1 font-medium flex items-center gap-1">
+          <AlertCircle size={12} />
+          {isEs
+            ? "Haz clic directamente en el mapa para seleccionar la ubicación exacta."
+            : "Click directly on the map to choose the exact location."}
+        </p>
+      )}
+    </div>
+  );
+}
 
 interface RecommendSpotModalProps {
   open: boolean;
@@ -225,6 +386,13 @@ export function RecommendSpotModal({
     );
   };
 
+  const handleLocationPick = (pos: { lat: number; lng: number }) => {
+    setLatitude(pos.lat.toFixed(6));
+    setLongitude(pos.lng.toFixed(6));
+    clearError("latitude");
+    clearError("longitude");
+  };
+
   const resetForm = () => {
     imagePreviews.forEach((url) => URL.revokeObjectURL(url));
     setName("");
@@ -282,7 +450,9 @@ export function RecommendSpotModal({
     const lngNum = parseFloat(longitude);
 
     if (!latitude.trim() || isNaN(latNum)) {
-      newErrors.latitude = isEs ? "Latitud requerida" : "Latitude required";
+      newErrors.latitude = isEs
+        ? "Selecciona la ubicación en el mapa"
+        : "Please select location on map";
     } else if (latNum < -90 || latNum > 90) {
       newErrors.latitude = isEs
         ? "Latitud debe estar entre -90 y 90"
@@ -290,7 +460,9 @@ export function RecommendSpotModal({
     }
 
     if (!longitude.trim() || isNaN(lngNum)) {
-      newErrors.longitude = isEs ? "Longitud requerida" : "Longitude required";
+      newErrors.longitude = isEs
+        ? "Selecciona la ubicación en el mapa"
+        : "Please select location on map";
     } else if (lngNum < -180 || lngNum > 180) {
       newErrors.longitude = isEs
         ? "Longitud debe estar entre -180 y 180"
@@ -649,10 +821,10 @@ export function RecommendSpotModal({
                   </div>
 
                   {/* Coordinates Section */}
-                  <div className="space-y-3 p-4 rounded-2xl bg-gray-50 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800">
+                  <div className="space-y-3.5 p-4 sm:p-5 rounded-2xl bg-gray-50 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <Label className="text-xs font-bold text-gray-800 dark:text-slate-200">
-                        {isEs ? "Coordenadas (Lat / Lng) *" : "Coordinates (Lat / Lng) *"}
+                        {isEs ? "Ubicación en el Mapa y Coordenadas *" : "Map Location & Coordinates *"}
                       </Label>
                       <div className="flex items-center gap-3">
                         <button
@@ -706,23 +878,35 @@ export function RecommendSpotModal({
                       </div>
                     )}
 
-                    {/* Coordinates Inputs - Ample space so placeholders never truncate */}
+                    {/* Interactive Google Map Location Picker */}
+                    <SpotLocationPicker
+                      latitude={latitude}
+                      longitude={longitude}
+                      onLocationSelect={handleLocationPick}
+                      isEs={isEs}
+                    />
+
+                    {/* Coordinates Inputs - Disabled as requested */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-0.5">
                       <div>
-                        <Label className="text-[11px] font-bold text-gray-600 dark:text-slate-400 block mb-1">
-                          {isEs ? "Latitud *" : "Latitude *"}
+                        <Label className="text-[11px] font-bold text-gray-600 dark:text-slate-400 flex items-center justify-between mb-1">
+                          <span>{isEs ? "Latitud *" : "Latitude *"}</span>
+                          <span className="text-[10px] text-gray-400 dark:text-slate-500 font-normal">
+                            {isEs ? "(Fijado desde el mapa)" : "(Auto from map)"}
+                          </span>
                         </Label>
                         <Input
-                          type="number"
-                          step="any"
+                          type="text"
+                          readOnly
+                          disabled
                           value={latitude}
-                          onChange={(e) => {
-                            setLatitude(e.target.value);
-                            clearError("latitude");
-                          }}
-                          placeholder={isEs ? "Latitud (ej: 18.2208)" : "Latitude (e.g. 18.2208)"}
-                          className={`h-11 rounded-xl bg-white dark:bg-slate-900 text-sm font-mono ${
-                            errors.latitude ? "border-rose-500 focus-visible:ring-rose-500" : ""
+                          placeholder={
+                            isEs
+                              ? "Selecciona en el mapa"
+                              : "Select location on map"
+                          }
+                          className={`h-11 rounded-xl bg-gray-100 dark:bg-slate-800/80 text-gray-700 dark:text-slate-300 text-sm font-mono cursor-not-allowed border-gray-200 dark:border-slate-800 select-all ${
+                            errors.latitude ? "border-rose-500" : ""
                           }`}
                         />
                         {errors.latitude && (
@@ -733,20 +917,24 @@ export function RecommendSpotModal({
                       </div>
 
                       <div>
-                        <Label className="text-[11px] font-bold text-gray-600 dark:text-slate-400 block mb-1">
-                          {isEs ? "Longitud *" : "Longitude *"}
+                        <Label className="text-[11px] font-bold text-gray-600 dark:text-slate-400 flex items-center justify-between mb-1">
+                          <span>{isEs ? "Longitud *" : "Longitude *"}</span>
+                          <span className="text-[10px] text-gray-400 dark:text-slate-500 font-normal">
+                            {isEs ? "(Fijado desde el mapa)" : "(Auto from map)"}
+                          </span>
                         </Label>
                         <Input
-                          type="number"
-                          step="any"
+                          type="text"
+                          readOnly
+                          disabled
                           value={longitude}
-                          onChange={(e) => {
-                            setLongitude(e.target.value);
-                            clearError("longitude");
-                          }}
-                          placeholder={isEs ? "Longitud (ej: -66.5901)" : "Longitude (e.g. -66.5901)"}
-                          className={`h-11 rounded-xl bg-white dark:bg-slate-900 text-sm font-mono ${
-                            errors.longitude ? "border-rose-500 focus-visible:ring-rose-500" : ""
+                          placeholder={
+                            isEs
+                              ? "Selecciona en el mapa"
+                              : "Select location on map"
+                          }
+                          className={`h-11 rounded-xl bg-gray-100 dark:bg-slate-800/80 text-gray-700 dark:text-slate-300 text-sm font-mono cursor-not-allowed border-gray-200 dark:border-slate-800 select-all ${
+                            errors.longitude ? "border-rose-500" : ""
                           }`}
                         />
                         {errors.longitude && (
