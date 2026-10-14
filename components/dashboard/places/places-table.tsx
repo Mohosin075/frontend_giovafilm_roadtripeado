@@ -17,6 +17,7 @@ import {
   useReviewRecommendedPlaceMutation,
 } from "@/redux/features/place/placeApi";
 import {
+  ArrowRight,
   Check,
   Clock,
   Edit,
@@ -25,10 +26,12 @@ import {
   FileText,
   MessageSquare,
   Search,
+  ShieldCheck,
   Sparkles,
   Trash2,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
@@ -108,7 +111,8 @@ export function PlacesTable() {
     page,
     limit,
     searchTerm: debouncedSearch,
-    status,
+    status: status || undefined,
+    excludeStatus: status ? undefined : "Pending",
     category,
     country,
     type,
@@ -125,17 +129,6 @@ export function PlacesTable() {
     useReviewRecommendedPlaceMutation();
 
   const handleToggleStatus = async (place: Place) => {
-    // If place is Pending, it CANNOT be directly published with eye toggle — it must be approved first!
-    if (place.status === "Pending") {
-      toast.info(
-        language === "es"
-          ? "Este lugar está pendiente de revisión. Debe ser aprobado primero con el botón (✓) para otorgar +50 pts."
-          : "This spot is pending review. It must be approved first with the (✓) button to award +50 pts."
-      );
-      handleApprovePlace(place);
-      return;
-    }
-
     const nextStatus = place.status === "Published" ? "Draft" : "Published";
     try {
       await updatePlace({ id: place._id, data: { status: nextStatus } }).unwrap();
@@ -218,7 +211,9 @@ export function PlacesTable() {
     }
   };
 
-  const places: Place[] = response?.data || [];
+  const places: Place[] = (response?.data || []).filter(
+    (place: any) => place.status !== "Pending"
+  );
   const meta = response?.meta;
 
   const displayedPlaces =
@@ -312,45 +307,30 @@ export function PlacesTable() {
             <option value="">{t("places_admin.all_status")}</option>
             <option value="Published">{t("places_admin.published")}</option>
             <option value="Draft">{t("places_admin.draft")}</option>
-            <option value="Pending">
-              {language === "es" ? "Pendiente de revisión" : "Pending Review"}
-              {pendingCount > 0 ? ` (${pendingCount})` : ""}
-            </option>
             <option value="Rejected">
               {language === "es" ? "Rechazado" : "Rejected"}
             </option>
           </select>
 
           {pendingCount > 0 && (
-            <button
-              type="button"
-              onClick={() => {
-                setStatus(status === "Pending" ? "" : "Pending");
-                setPage(1);
-              }}
-              className={`inline-flex items-center gap-1.5 px-3 h-10 rounded-lg text-xs font-semibold transition-all border cursor-pointer ${
-                status === "Pending"
-                  ? "bg-amber-500 text-white border-amber-500 shadow-xs"
-                  : "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700/60 hover:bg-amber-100 dark:hover:bg-amber-900/40"
-              }`}
+            <Link
+              href="/dashboard/reviews-verification"
+              className="inline-flex items-center gap-2 px-3.5 h-10 rounded-lg text-xs font-bold transition-all border cursor-pointer bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700/60 shadow-xs"
+              title={
+                language === "es"
+                  ? "Ir a Verificación y Moderación para revisar lugares pendientes"
+                  : "Go to Moderation to review pending tourist spots"
+              }
             >
-              <Clock
-                size={14}
-                className={status === "Pending" ? "text-white" : "text-amber-500"}
-              />
+              <ShieldCheck size={15} className="text-amber-500" />
               <span>
-                {language === "es" ? "Pendientes:" : "Pending:"}
+                {language === "es" ? "Moderación Pendiente:" : "Pending Moderation:"}
               </span>
-              <span
-                className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                  status === "Pending"
-                    ? "bg-black/20 text-white"
-                    : "bg-amber-500/20 text-amber-800 dark:text-amber-200"
-                }`}
-              >
+              <span className="px-1.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500 text-black">
                 {pendingCount}
               </span>
-            </button>
+              <ArrowRight size={13} className="text-amber-600 dark:text-amber-400" />
+            </Link>
           )}
 
           <select
@@ -510,39 +490,6 @@ export function PlacesTable() {
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <div className="flex items-center gap-2.5">
-                      {place.status === "Pending" && (
-                        <>
-                          <button
-                            onClick={() => handleApprovePlace(place)}
-                            disabled={isReviewing}
-                            className="p-1 rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition-colors"
-                            title={
-                              language === "es"
-                                ? "Aprobar lugar (+50 pts)"
-                                : "Approve spot (+50 pts)"
-                            }
-                            aria-label="Approve spot"
-                          >
-                            <Check size={18} className="stroke-[2.5]" />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setRejectTargetPlace(place);
-                              setRejectFeedback("");
-                            }}
-                            disabled={isReviewing}
-                            className="p-1 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 transition-colors"
-                            title={
-                              language === "es"
-                                ? "Rechazar lugar"
-                                : "Reject spot"
-                            }
-                            aria-label="Reject spot"
-                          >
-                            <X size={18} className="stroke-[2.5]" />
-                          </button>
-                        </>
-                      )}
                       <button
                         onClick={() => {
                           setSelectedPlaceId(place._id);
@@ -558,14 +505,10 @@ export function PlacesTable() {
                         className={`${
                           place.status === "Published"
                             ? "text-green-500 hover:text-green-700"
-                            : place.status === "Pending"
-                            ? "text-amber-500 hover:text-amber-700 opacity-60 hover:opacity-100"
                             : "text-amber-500 hover:text-amber-700"
                         } transition-colors`}
                         title={
-                          place.status === "Pending"
-                            ? (language === "es" ? "Pendiente de revisión (Aprobar primero)" : "Pending review (Approve first)")
-                            : place.status === "Published"
+                          place.status === "Published"
                             ? (t("places_admin.set_to_draft") || "Set to draft")
                             : (t("places_admin.published_successfully") || "Publish place")
                         }

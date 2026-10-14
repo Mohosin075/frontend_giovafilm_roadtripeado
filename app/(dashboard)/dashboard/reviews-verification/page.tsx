@@ -446,15 +446,28 @@ export default function ReviewsVerificationPage() {
                 return (
                   <Card
                     key={spot._id}
-                    className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col justify-between hover:border-gray-300 dark:hover:border-slate-700 transition-all p-0"
+                    className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col justify-between hover:border-amber-400/50 dark:hover:border-amber-500/40 hover:shadow-md transition-all p-0"
                   >
-                    {/* Top Image Banner */}
-                    <div className="relative h-44 w-full bg-slate-900 overflow-hidden">
+                    {/* Top Image Banner - Clickable to open full details & map */}
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        setModalPlaceId(spot._id);
+                        setIsPlaceModalOpen(true);
+                      }}
+                      className="relative h-48 w-full bg-slate-900 overflow-hidden cursor-pointer group select-none"
+                      title={
+                        isEs
+                          ? "Haz clic para ver mapa interactivo y detalles completos"
+                          : "Click to view interactive map and full details"
+                      }
+                    >
                       {thumbnail ? (
                         <img
                           src={getImageUrl(thumbnail)}
                           alt={getSafeString(spot.name, language)}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center text-amber-400 bg-slate-800">
@@ -464,12 +477,12 @@ export default function ReviewsVerificationPage() {
                           </span>
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/20 group-hover:from-black/90 transition-all" />
 
                       {/* Map & Category Badges */}
-                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
                         {spot.map?.name ? (
-                          <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-black/60 text-white backdrop-blur-md">
+                          <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-black/70 text-white backdrop-blur-md border border-white/10 shadow-xs">
                             🗺️ {getSafeString(spot.map.name, language)}
                           </span>
                         ) : <div />}
@@ -481,12 +494,23 @@ export default function ReviewsVerificationPage() {
                         )}
                       </div>
 
+                      {/* Hover Overlay Hint */}
+                      <div className="absolute top-12 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                        <span className="px-3 py-1 rounded-full bg-amber-400 text-black text-xs font-black shadow-lg flex items-center gap-1.5">
+                          <Eye size={13} />
+                          {isEs ? "Inspeccionar Lugar y Mapa" : "Inspect Spot & Map"}
+                        </span>
+                      </div>
+
                       {/* Spot Title inside banner */}
-                      <div className="absolute bottom-3 left-3 right-3 text-white">
-                        <h3 className="text-base font-black truncate drop-shadow-md">
-                          {getSafeString(spot.name, language)}
+                      <div className="absolute bottom-3 left-3 right-3 text-white pointer-events-none">
+                        <h3 className="text-base font-black truncate drop-shadow-md group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                          <span>{getSafeString(spot.name, language)}</span>
+                          <span className="text-[10px] bg-black/60 px-2 py-0.5 rounded-full border border-white/20 text-white/90">
+                            {isEs ? "Ver detalles ↗" : "View details ↗"}
+                          </span>
                         </h3>
-                        <p className="text-xs text-white/80 truncate flex items-center gap-1 mt-0.5">
+                        <p className="text-xs text-white/80 truncate flex items-center gap-1.5 mt-0.5">
                           <MapPin size={12} className="text-amber-400 shrink-0" />
                           <span>{spot.address || (isEs ? "Sin dirección" : "No address")}</span>
                         </p>
@@ -515,16 +539,20 @@ export default function ReviewsVerificationPage() {
                           </span>
                         </div>
 
-                        {/* Geographic Coordinates & Google Maps Link */}
+                        {/* Geographic Coordinates & Direct Map Inspection Box */}
                         {lat !== undefined && lng !== undefined && (
-                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 space-y-2">
+                          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-gray-200 dark:border-slate-800 space-y-2.5">
                             <div className="flex items-center justify-between text-[11px] font-mono text-gray-700 dark:text-slate-300">
-                              <span>
+                              <span className="flex items-center gap-1 font-semibold">
+                                <MapPin size={12} className="text-amber-500" />
                                 Lat: {Number(lat).toFixed(4)}, Lng: {Number(lng).toFixed(4)}
                               </span>
                               <button
                                 type="button"
-                                onClick={() => handleCopyCoords(lat, lng, spot._id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCopyCoords(lat, lng, spot._id);
+                                }}
                                 className="text-gray-500 hover:text-amber-500 cursor-pointer p-0.5"
                                 title={isEs ? "Copiar coordenadas" : "Copy coordinates"}
                               >
@@ -536,41 +564,97 @@ export default function ReviewsVerificationPage() {
                               </button>
                             </div>
 
-                            <a
-                              href={`https://www.google.com/maps?q=${lat},${lng}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
-                            >
-                              <ExternalLink size={12} />
-                              <span>{isEs ? "Ver en Google Maps" : "View on Google Maps"}</span>
-                            </a>
+                            {/* Direct Map Action Buttons */}
+                            <div className="grid grid-cols-2 gap-2 pt-0.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setModalPlaceId(spot._id);
+                                  setIsPlaceModalOpen(true);
+                                }}
+                                className="inline-flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 text-[11px] font-bold border border-amber-500/30 transition-all cursor-pointer"
+                                title={isEs ? "Abrir mapa y vista satelital" : "Open map and satellite view"}
+                              >
+                                <Compass size={13} className="text-amber-500" />
+                                <span>{isEs ? "Ver Mapa y Datos" : "View Map & Info"}</span>
+                              </button>
+                              <a
+                                href={`https://www.google.com/maps?q=${lat},${lng}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-[11px] font-bold border border-blue-200 dark:border-blue-800 transition-all cursor-pointer"
+                              >
+                                <ExternalLink size={13} />
+                                <span>{isEs ? "Google Maps ↗" : "Google Maps ↗"}</span>
+                              </a>
+                            </div>
                           </div>
                         )}
 
-                        {/* Description snippet */}
+                        {/* Description snippet - Clickable to open full modal */}
                         {spot.description && (
-                          <p className="text-xs text-gray-600 dark:text-slate-400 line-clamp-2 italic border-l-2 border-amber-400 pl-2">
-                            "{spot.description}"
-                          </p>
+                          <div
+                            onClick={() => {
+                              setModalPlaceId(spot._id);
+                              setIsPlaceModalOpen(true);
+                            }}
+                            className="p-2.5 rounded-xl bg-amber-500/5 hover:bg-amber-500/10 border border-amber-500/15 cursor-pointer transition-colors group/desc"
+                            title={isEs ? "Haz clic para ver descripción completa" : "Click to view full description"}
+                          >
+                            <div className="text-[10px] uppercase font-bold text-amber-700 dark:text-amber-400 mb-0.5 flex items-center justify-between">
+                              <span className="flex items-center gap-1">
+                                <MessageSquare size={11} />
+                                {isEs ? "Nota del Viajero" : "Traveler Note"}
+                              </span>
+                              <span className="text-[10px] text-gray-400 group-hover/desc:text-amber-500">
+                                ↗
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-700 dark:text-slate-300 line-clamp-2 italic font-normal">
+                              "{spot.description}"
+                            </p>
+                          </div>
                         )}
 
-                        {/* Additional Photos Count */}
+                        {/* Additional Photos Count - Clickable */}
                         {spot.media && spot.media.length > 1 && (
-                          <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-                            {spot.media.slice(1, 5).map((img: string, idx: number) => (
-                              <img
-                                key={idx}
-                                src={getImageUrl(img)}
-                                alt="Gallery thumb"
-                                className="w-12 h-12 object-cover rounded-lg border border-gray-200 dark:border-slate-800 shrink-0"
-                              />
-                            ))}
-                            {spot.media.length > 5 && (
-                              <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-gray-500 shrink-0">
-                                +{spot.media.length - 5}
-                              </div>
-                            )}
+                          <div className="space-y-1">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500">
+                              {isEs ? `Fotos adjuntas (${spot.media.length})` : `Attached Photos (${spot.media.length})`}
+                            </span>
+                            <div className="flex items-center gap-1.5 overflow-x-auto py-1">
+                              {spot.media.slice(1, 5).map((img: string, idx: number) => (
+                                <button
+                                  key={idx}
+                                  type="button"
+                                  onClick={() => {
+                                    setModalPlaceId(spot._id);
+                                    setIsPlaceModalOpen(true);
+                                  }}
+                                  className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-800 shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+                                  title={isEs ? "Ver fotos en detalle" : "View photos in detail"}
+                                >
+                                  <img
+                                    src={getImageUrl(img)}
+                                    alt="Gallery thumb"
+                                    className="w-full h-full object-cover"
+                                  />
+                                </button>
+                              ))}
+                              {spot.media.length > 5 && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setModalPlaceId(spot._id);
+                                    setIsPlaceModalOpen(true);
+                                  }}
+                                  className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shrink-0 cursor-pointer"
+                                  title={isEs ? "Ver más fotos" : "View more photos"}
+                                >
+                                  +{spot.media.length - 5}
+                                </button>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -578,16 +662,16 @@ export default function ReviewsVerificationPage() {
                       {/* Action Buttons */}
                       <div className="pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-2 mt-auto">
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
                           onClick={() => {
                             setModalPlaceId(spot._id);
                             setIsPlaceModalOpen(true);
                           }}
-                          className="text-xs font-bold gap-1 text-slate-700 dark:text-slate-300 cursor-pointer h-9 px-2.5"
+                          className="h-9 px-3 rounded-xl border-amber-300 dark:border-amber-700/60 text-amber-800 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-xs font-bold gap-1.5 cursor-pointer shadow-2xs"
                         >
-                          <Eye size={14} />
-                          <span>{isEs ? "Detalles" : "Details"}</span>
+                          <Eye size={15} className="text-amber-500" />
+                          <span>{isEs ? "Ver Mapa y Datos" : "View Map & Info"}</span>
                         </Button>
 
                         <div className="flex items-center gap-2">
@@ -665,13 +749,20 @@ export default function ReviewsVerificationPage() {
                           className="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors"
                         >
                           <td className="px-5 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-900 shrink-0 border border-gray-200 dark:border-slate-800">
+                            <div
+                              onClick={() => {
+                                setModalPlaceId(spot._id);
+                                setIsPlaceModalOpen(true);
+                              }}
+                              className="flex items-center gap-3 cursor-pointer group"
+                              title={isEs ? "Haz clic para ver detalles y mapa" : "Click to view details and map"}
+                            >
+                              <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-900 shrink-0 border border-gray-200 dark:border-slate-800 group-hover:border-amber-400 transition-colors">
                                 {thumbnail ? (
                                   <img
                                     src={getImageUrl(thumbnail)}
                                     alt={getSafeString(spot.name, language)}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                                   />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center text-amber-500 bg-slate-800">
@@ -680,8 +771,9 @@ export default function ReviewsVerificationPage() {
                                 )}
                               </div>
                               <div className="min-w-0">
-                                <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate max-w-xs">
-                                  {getSafeString(spot.name, language)}
+                                <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 group-hover:text-amber-500 transition-colors truncate max-w-xs flex items-center gap-1">
+                                  <span>{getSafeString(spot.name, language)}</span>
+                                  <span className="text-[10px] text-gray-400 group-hover:text-amber-500">↗</span>
                                 </h4>
                                 <p className="text-xs text-gray-500 dark:text-slate-400 truncate max-w-xs">
                                   {spot.address || "N/A"}
@@ -708,7 +800,7 @@ export default function ReviewsVerificationPage() {
                                   href={`https://www.google.com/maps?q=${lat},${lng}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-blue-600 hover:text-blue-700"
+                                  className="text-blue-600 hover:text-blue-700 p-1"
                                   title="Google Maps"
                                 >
                                   <ExternalLink size={13} />
@@ -721,15 +813,17 @@ export default function ReviewsVerificationPage() {
                           <td className="px-5 py-4 text-right">
                             <div className="flex items-center justify-end gap-1.5">
                               <Button
-                                variant="ghost"
+                                variant="outline"
                                 size="sm"
                                 onClick={() => {
                                   setModalPlaceId(spot._id);
                                   setIsPlaceModalOpen(true);
                                 }}
-                                className="h-8 w-8 p-0 cursor-pointer"
+                                className="h-8 px-2.5 text-xs font-bold gap-1 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800 hover:bg-amber-50 dark:hover:bg-amber-950/30 cursor-pointer"
+                                title={isEs ? "Ver Mapa y Detalles" : "View Map & Details"}
                               >
-                                <Eye size={15} />
+                                <Eye size={14} />
+                                <span>{isEs ? "Detalles" : "Details"}</span>
                               </Button>
                               <Button
                                 variant="outline"

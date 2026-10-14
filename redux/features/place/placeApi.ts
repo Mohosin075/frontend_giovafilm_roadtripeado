@@ -5,6 +5,7 @@ type GetPlacesArgs = {
   limit?: number;
   searchTerm?: string;
   status?: string;
+  excludeStatus?: string;
   map?: string;
   sort?: string;
   country?: string;
@@ -22,6 +23,7 @@ const placeApi = baseApi.injectEndpoints({
         limit = 10,
         searchTerm = "",
         status = "",
+        excludeStatus = "",
         map = "",
         sort = "",
         country = "",
@@ -35,6 +37,7 @@ const placeApi = baseApi.injectEndpoints({
         params.set("limit", String(limit));
         if (searchTerm) params.set("searchTerm", searchTerm);
         if (status) params.set("status", status);
+        if (excludeStatus) params.set("excludeStatus", excludeStatus);
         if (map) params.set("map", map);
         if (sort) params.set("sort", sort);
         if (country) params.set("country", country);
