@@ -614,6 +614,69 @@ export function ViewPlaceModal({
                       )
                     )}
 
+                    {/* Interactive Location Verification Card */}
+                    {(place?.location?.coordinates || place?.address) && (
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-2xl shadow-2xs space-y-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                            <MapPin size={15} className="text-amber-600 dark:text-amber-400" />
+                            <span>
+                              {language === "es"
+                                ? "Ubicación Geográfica y Mapa"
+                                : "Location & Map Verification"}
+                            </span>
+                          </div>
+
+                          {place?.location?.coordinates?.[1] !== undefined &&
+                            place?.location?.coordinates?.[0] !== undefined && (
+                              <a
+                                href={`https://www.google.com/maps?q=${place.location.coordinates[1]},${place.location.coordinates[0]}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-semibold transition-colors"
+                              >
+                                <ExternalLink size={13} />
+                                <span>
+                                  {language === "es"
+                                    ? "Abrir en Google Maps"
+                                    : "Open in Google Maps"}
+                                </span>
+                              </a>
+                            )}
+                        </div>
+
+                        {place.address && (
+                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800 text-xs flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                              <span className="font-semibold text-gray-500 dark:text-slate-400">
+                                {language === "es" ? "Dirección:" : "Address:"}{" "}
+                              </span>
+                              <span className="text-gray-900 dark:text-slate-100 font-bold">
+                                {place.address}
+                              </span>
+                            </div>
+                            {place?.location?.coordinates && (
+                              <span className="text-xs font-mono font-bold text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 px-2 py-0.5 rounded border border-gray-200 dark:border-slate-700">
+                                Lat: {place.location.coordinates[1]} | Lng: {place.location.coordinates[0]}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {place?.location?.coordinates?.[1] !== undefined &&
+                          place?.location?.coordinates?.[0] !== undefined && (
+                            <div className="h-56 sm:h-64 w-full rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800 shadow-inner">
+                              <iframe
+                                title="Google Map Location Embed"
+                                src={`https://maps.google.com/maps?q=${place.location.coordinates[1]},${place.location.coordinates[0]}&z=15&output=embed`}
+                                className="w-full h-full border-0"
+                                loading="lazy"
+                              />
+                            </div>
+                          )}
+                      </div>
+                    )}
+
                     {/* Key Specifications Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {/* Coordinates */}

@@ -1,8 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   useGetPendingReviewsQuery,
   useApproveReviewMutation,
@@ -21,8 +34,17 @@ import {
   MapPin,
   MessageSquare,
   Eye,
-  Clock,
+  ExternalLink,
+  ShieldCheck,
+  Search,
+  LayoutGrid,
+  LayoutList,
+  RefreshCw,
+  Copy,
+  CheckCheck,
+  AlertTriangle,
   Compass,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
@@ -39,12 +61,30 @@ const getSafeString = (val: any, lang: string = "es"): string => {
 };
 
 export default function ReviewsVerificationPage() {
-  const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<"reviews" | "spots">("reviews");
+  const { language } = useLanguage();
+  const isEs = language === "es";
 
-  // User reviews query & mutations
+  // Active Tab: 'spots' (Tourist Spots) | 'reviews' (User Reviews)
+  const [activeTab, setActiveTab] = useState<"spots" | "reviews">("spots");
+  // Display mode: 'grid' | 'table'
+  const [displayMode, setDisplayMode] = useState<"grid" | "table">("grid");
+  // Search Query
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Rejection modal state for spots
+  const [rejectSpotTarget, setRejectSpotTarget] = useState<any>(null);
+  const [rejectFeedback, setRejectFeedback] = useState("");
+
+  // Place full details modal
+  const [modalPlaceId, setModalPlaceId] = useState<string | null>(null);
+  const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
+
+  // Copied coordinates state
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Queries
   const {
-    data: reviews,
+    data: reviewsResp,
     isLoading: isReviewsLoading,
     refetch: refetchReviews,
   } = useGetPendingReviewsQuery({});
@@ -53,84 +93,93 @@ export default function ReviewsVerificationPage() {
   const [rejectReview, { isLoading: isRejectingReview }] =
     useRejectReviewMutation();
 
-  // Pending tourist spots query & mutation
   const {
     data: pendingPlacesResp,
     isLoading: isPlacesLoading,
     refetch: refetchPlaces,
   } = useGetPlacesQuery({
     status: "Pending",
-    limit: 50,
+    limit: 100,
   });
   const [reviewRecommendedPlace, { isLoading: isReviewingPlace }] =
     useReviewRecommendedPlaceMutation();
 
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const pendingSpotsList: any[] = pendingPlacesResp?.data || [];
+  const pendingReviewsList: any[] = reviewsResp?.data || [];
 
-  const handleApproveReview = async (id: string) => {
-    try {
-      await approveReview(id).unwrap();
-      toast.success(
-        t("reviews_admin.approved_successfully") ||
-          "Review approved successfully"
-      );
-      refetchReviews();
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to approve review");
-    }
+  // Filtered spots based on search
+  const filteredSpots = useMemo(() => {
+    if (!searchQuery.trim()) return pendingSpotsList;
+    const q = searchQuery.toLowerCase().trim();
+    return pendingSpotsList.filter((s) => {
+      const name = getSafeString(s.name, language).toLowerCase();
+      const addr = (s.address || "").toLowerCase();
+      const user = (
+        s.discoveredByName ||
+        s.discoveredBy?.name ||
+        ""
+      ).toLowerCase();
+      return name.includes(q) || addr.includes(q) || user.includes(q);
+    });
+  }, [pendingSpotsList, searchQuery, language]);
+
+  // Filtered reviews based on search
+  const filteredReviews = useMemo(() => {
+    if (!searchQuery.trim()) return pendingReviewsList;
+    const q = searchQuery.toLowerCase().trim();
+    return pendingReviewsList.filter((r) => {
+      const target = (
+        r.businessId ? r.businessId?.name : r.placeId?.name || ""
+      ).toLowerCase();
+      const text = getSafeString(r.review, language).toLowerCase();
+      const reviewer = (r.reviewer?.name || "").toLowerCase();
+      return target.includes(q) || text.includes(q) || reviewer.includes(q);
+    });
+  }, [pendingReviewsList, searchQuery, language]);
+
+  // Copy coordinates helper
+  const handleCopyCoords = (lat: number, lng: number, id: string) => {
+    navigator.clipboard.writeText(`${lat}, ${lng}`);
+    setCopiedId(id);
+    toast.success(
+      isEs ? "Coordenadas copiadas al portapapeles" : "Coordinates copied to clipboard"
+    );
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleRejectReview = async (id: string) => {
-    try {
-      await rejectReview(id).unwrap();
-      toast.success(
-        t("reviews_admin.rejected_successfully") ||
-          "Review rejected successfully"
-      );
-      refetchReviews();
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to reject review");
-    }
-  };
-
-  const handleApprovePlace = async (place: any) => {
+  // Handle Approve Spot
+  const handleApproveSpot = async (spot: any) => {
     const contributor =
-      place.discoveredByName || place.discoveredBy?.name || "el usuario";
+      spot.discoveredByName || spot.discoveredBy?.name || "el usuario";
     appAlert
       .fire({
-        title:
-          language === "es"
-            ? "¿Aprobar lugar recomendado?"
-            : "Approve recommended spot?",
-        text:
-          language === "es"
-            ? `¿Deseas aprobar "${getSafeString(
-                place.name,
-                language
-              )}" y otorgar 50 puntos a ${contributor}?`
-            : `Do you want to approve "${getSafeString(
-                place.name,
-                language
-              )}" and award 50 points to ${contributor}?`,
+        title: isEs ? "¿Aprobar lugar recomendado?" : "Approve tourist spot?",
+        text: isEs
+          ? `¿Deseas aprobar "${getSafeString(
+              spot.name,
+              language
+            )}" y otorgar 50 puntos a ${contributor}? Se publicará en el mapa oficial de inmediato.`
+          : `Approve "${getSafeString(
+              spot.name,
+              language
+            )}" and award 50 points to ${contributor}? It will go live immediately.`,
         icon: "question",
         showCancelButton: true,
-        confirmButtonText:
-          language === "es" ? "Sí, aprobar (+50 pts)" : "Yes, approve (+50 pts)",
-        cancelButtonText: language === "es" ? "Cancelar" : "Cancel",
+        confirmButtonText: isEs ? "Sí, aprobar (+50 pts)" : "Yes, approve (+50 pts)",
+        cancelButtonText: isEs ? "Cancelar" : "Cancel",
         confirmButtonColor: "#10B981",
       })
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
             await reviewRecommendedPlace({
-              id: place._id,
+              id: spot._id,
               data: { status: "Published", pointsAwarded: 50 },
             }).unwrap();
             toast.success(
-              language === "es"
-                ? "Lugar aprobado y 50 puntos otorgados al usuario."
-                : "Spot approved, published, and 50 points awarded!"
+              isEs
+                ? "Lugar aprobado y 50 puntos otorgados con éxito."
+                : "Spot approved and 50 points awarded!"
             );
             refetchPlaces();
           } catch (err: any) {
@@ -140,116 +189,581 @@ export default function ReviewsVerificationPage() {
       });
   };
 
-  const handleRejectPlace = async (place: any) => {
-    appAlert
-      .fire({
-        title:
-          language === "es"
-            ? "¿Rechazar lugar recomendado?"
-            : "Reject recommended spot?",
-        text:
-          language === "es"
-            ? "¿Estás seguro de que deseas rechazar este lugar?"
-            : "Are you sure you want to reject this place recommendation?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: language === "es" ? "Rechazar" : "Reject",
-        cancelButtonText: language === "es" ? "Cancelar" : "Cancel",
-        confirmButtonColor: "#EF4444",
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            await reviewRecommendedPlace({
-              id: place._id,
-              data: { status: "Rejected" },
-            }).unwrap();
-            toast.success(
-              language === "es"
-                ? "Lugar rechazado exitosamente."
-                : "Spot rejected successfully."
-            );
-            refetchPlaces();
-          } catch (err: any) {
-            toast.error(err?.data?.message || "Failed to reject spot");
-          }
-        }
-      });
+  // Handle Reject Spot Confirmation
+  const handleConfirmRejectSpot = async () => {
+    if (!rejectSpotTarget) return;
+    try {
+      await reviewRecommendedPlace({
+        id: rejectSpotTarget._id,
+        data: {
+          status: "Rejected",
+          adminFeedback: rejectFeedback.trim(),
+        },
+      }).unwrap();
+      toast.success(
+        isEs
+          ? "Lugar rechazado exitosamente."
+          : "Place rejected successfully."
+      );
+      setRejectSpotTarget(null);
+      setRejectFeedback("");
+      refetchPlaces();
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to reject place");
+    }
   };
 
-  const reviewList = reviews?.data || [];
-  const pendingSpotsList = pendingPlacesResp?.data || [];
+  // Handle Approve Review
+  const handleApproveReviewItem = async (revId: string) => {
+    try {
+      await approveReview(revId).unwrap();
+      toast.success(
+        isEs ? "Reseña aprobada con éxito." : "Review approved successfully."
+      );
+      refetchReviews();
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to approve review");
+    }
+  };
+
+  // Handle Reject Review
+  const handleRejectReviewItem = async (revId: string) => {
+    try {
+      await rejectReview(revId).unwrap();
+      toast.success(
+        isEs ? "Reseña rechazada." : "Review rejected."
+      );
+      refetchReviews();
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to reject review");
+    }
+  };
+
+  const quickRejectionReasons = [
+    {
+      label: isEs ? "📍 Ubicación errónea" : "📍 Incorrect location",
+      text: isEs
+        ? "Las coordenadas o dirección no corresponden a la ubicación real."
+        : "The coordinates or address provided do not match the real location.",
+    },
+    {
+      label: isEs ? "📷 Fotos no válidas" : "📷 Blurry/invalid photos",
+      text: isEs
+        ? "Las fotos adjuntas son de baja resolución o no corresponden al lugar."
+        : "The photos attached are unclear or unrelated.",
+    },
+    {
+      label: isEs ? "🔁 Lugar duplicado" : "🔁 Duplicate spot",
+      text: isEs
+        ? "Este lugar ya se encuentra publicado en el mapa."
+        : "This spot is already live on the map.",
+    },
+    {
+      label: isEs ? "⚠️ Info incompleta" : "⚠️ Incomplete details",
+      text: isEs
+        ? "La información suministrada es insuficiente para los viajeros."
+        : "The information provided is incomplete.",
+    },
+  ];
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
-          {t("reviews_admin.title") || "Verification & Moderation"}
-        </h1>
-        <p className="text-muted-foreground dark:text-slate-400 mt-2">
-          {language === "es"
-            ? "Revisa y aprueba reseñas de usuarios y nuevos lugares turísticos recomendados."
-            : "Review and approve user reviews and newly recommended tourist spots."}
-        </p>
+    <div className="space-y-6">
+      {/* Standard Dashboard Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2.5">
+            <ShieldCheck className="w-8 h-8 text-amber-500" />
+            <span>
+              {isEs ? "Verificación y Moderación" : "Verification & Moderation"}
+            </span>
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+            {isEs
+              ? "Revisa y aprueba nuevos lugares turísticos recomendados y reseñas de la comunidad."
+              : "Review and approve recommended tourist spots and community reviews."}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => {
+              refetchPlaces();
+              refetchReviews();
+            }}
+            variant="outline"
+            className="flex items-center gap-2 border-gray-300 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800 dark:text-slate-200 rounded-xl h-10 px-4 text-xs font-semibold cursor-pointer"
+          >
+            <RefreshCw
+              size={14}
+              className={isPlacesLoading || isReviewsLoading ? "animate-spin" : ""}
+            />
+            <span>{isEs ? "Actualizar" : "Refresh"}</span>
+          </Button>
+        </div>
       </div>
 
-      {/* Verification Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 dark:border-slate-800 pb-3">
-        <button
-          type="button"
-          onClick={() => setActiveTab("reviews")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-            activeTab === "reviews"
-              ? "bg-primary text-black shadow-xs font-bold"
-              : "text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800"
-          }`}
-        >
-          <MessageSquare className="w-4 h-4" />
-          <span>{t("reviews_admin.title") || "User Reviews"}</span>
-          {reviewList.length > 0 && (
-            <span
-              className={`px-1.5 py-0.2 rounded-full text-xs font-bold ${
-                activeTab === "reviews"
-                  ? "bg-black/20 text-black"
-                  : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
-              }`}
-            >
-              {reviewList.length}
-            </span>
-          )}
-        </button>
-
+      {/* Two Verification Types Tabs */}
+      <div className="flex items-center gap-3 border-b border-gray-200 dark:border-slate-800 pb-2">
         <button
           type="button"
           onClick={() => setActiveTab("spots")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
             activeTab === "spots"
-              ? "bg-primary text-black shadow-xs font-bold"
+              ? "bg-amber-400 text-black shadow-xs font-black"
               : "text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800"
           }`}
         >
-          <Sparkles className="w-4 h-4" />
-          <span>
-            {language === "es"
-              ? "Lugares Recomendados"
-              : "Recommended Spots"}
+          <Sparkles size={16} />
+          <span>{isEs ? "Lugares Turísticos" : "Tourist Spots"}</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === "spots"
+                ? "bg-black/15 text-black"
+                : "bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-slate-300"
+            }`}
+          >
+            {pendingSpotsList.length}
           </span>
-          {pendingSpotsList.length > 0 && (
-            <span
-              className={`px-1.5 py-0.2 rounded-full text-xs font-bold ${
-                activeTab === "spots"
-                  ? "bg-black/20 text-black"
-                  : "bg-amber-500 text-white"
-              }`}
-            >
-              {pendingSpotsList.length}
-            </span>
-          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("reviews")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+            activeTab === "reviews"
+              ? "bg-blue-600 text-white shadow-xs font-black"
+              : "text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800"
+          }`}
+        >
+          <MessageSquare size={16} />
+          <span>{isEs ? "Reseñas de Usuarios" : "User Reviews"}</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === "reviews"
+                ? "bg-white/20 text-white"
+                : "bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-slate-300"
+            }`}
+          >
+            {pendingReviewsList.length}
+          </span>
         </button>
       </div>
 
-      {/* Tab 1: User Reviews */}
+      {/* Search and Display Toggle Toolbar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
+          <Input
+            placeholder={
+              activeTab === "spots"
+                ? isEs
+                  ? "Buscar lugares pendientes..."
+                  : "Search pending spots..."
+                : isEs
+                ? "Buscar reseñas pendientes..."
+                : "Search pending reviews..."
+            }
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 h-10 w-full bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 rounded-xl text-sm"
+          />
+        </div>
+
+        <div className="flex items-center gap-1.5 self-end sm:self-auto bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setDisplayMode("grid")}
+            className={`p-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              displayMode === "grid"
+                ? "bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-xs"
+                : "text-gray-500 hover:text-gray-900 dark:hover:text-white"
+            }`}
+            title={isEs ? "Vista de Tarjetas" : "Card Grid View"}
+          >
+            <LayoutGrid size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setDisplayMode("table")}
+            className={`p-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              displayMode === "table"
+                ? "bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-xs"
+                : "text-gray-500 hover:text-gray-900 dark:hover:text-white"
+            }`}
+            title={isEs ? "Vista de Tabla" : "Table View"}
+          >
+            <LayoutList size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* ================= SECTION 1: TOURIST SPOTS VERIFICATION ================= */}
+      {activeTab === "spots" && (
+        <>
+          {isPlacesLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="h-72 bg-gray-200 dark:bg-slate-800 animate-pulse rounded-2xl"
+                />
+              ))}
+            </div>
+          ) : filteredSpots.length === 0 ? (
+            <Card className="rounded-2xl border-dashed bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800">
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <CheckCircle2 size={40} className="text-emerald-500 mb-2 opacity-80" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">
+                  {isEs
+                    ? "No hay lugares turísticos pendientes"
+                    : "No pending tourist spots"}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 max-w-sm">
+                  {isEs
+                    ? "Todos los lugares recomendados por los viajeros han sido revisados y procesados."
+                    : "All recommended spots from travelers have been verified."}
+                </p>
+              </CardContent>
+            </Card>
+          ) : displayMode === "grid" ? (
+            /* Spots Cards Grid */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredSpots.map((spot) => {
+                const contributor =
+                  spot.discoveredByName ||
+                  (typeof spot.discoveredBy === "object"
+                    ? spot.discoveredBy?.name
+                    : spot.discoveredBy) ||
+                  "Usuario";
+                const userLevel =
+                  typeof spot.discoveredBy === "object"
+                    ? spot.discoveredBy?.level
+                    : null;
+                const lat = spot.location?.coordinates?.[1];
+                const lng = spot.location?.coordinates?.[0];
+                const thumbnail = spot.media?.[0];
+
+                return (
+                  <Card
+                    key={spot._id}
+                    className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col justify-between hover:border-gray-300 dark:hover:border-slate-700 transition-all p-0"
+                  >
+                    {/* Top Image Banner */}
+                    <div className="relative h-44 w-full bg-slate-900 overflow-hidden">
+                      {thumbnail ? (
+                        <img
+                          src={getImageUrl(thumbnail)}
+                          alt={getSafeString(spot.name, language)}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-amber-400 bg-slate-800">
+                          <Compass size={36} className="opacity-70 mb-1" />
+                          <span className="text-[11px] text-gray-400">
+                            {isEs ? "Sin foto" : "No photo"}
+                          </span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                      {/* Map & Category Badges */}
+                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+                        {spot.map?.name ? (
+                          <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-black/60 text-white backdrop-blur-md">
+                            🗺️ {getSafeString(spot.map.name, language)}
+                          </span>
+                        ) : <div />}
+
+                        {spot.category?.name && (
+                          <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-amber-400 text-black shadow-xs">
+                            {getSafeString(spot.category.name, language)}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Spot Title inside banner */}
+                      <div className="absolute bottom-3 left-3 right-3 text-white">
+                        <h3 className="text-base font-black truncate drop-shadow-md">
+                          {getSafeString(spot.name, language)}
+                        </h3>
+                        <p className="text-xs text-white/80 truncate flex items-center gap-1 mt-0.5">
+                          <MapPin size={12} className="text-amber-400 shrink-0" />
+                          <span>{spot.address || (isEs ? "Sin dirección" : "No address")}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <CardContent className="p-4 sm:p-5 space-y-4 flex-1 flex flex-col justify-between">
+                      <div className="space-y-3">
+                        {/* Contributor Pill */}
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20 font-semibold">
+                            <Sparkles size={11} className="text-amber-500" />
+                            <span>
+                              {isEs ? "Descubierto por:" : "Discovered by:"}{" "}
+                              <strong>{contributor}</strong>
+                            </span>
+                            {userLevel !== null && (
+                              <span className="px-1.5 py-0.2 rounded bg-amber-400 text-black font-extrabold text-[10px]">
+                                Lv {userLevel}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                            +50 pts
+                          </span>
+                        </div>
+
+                        {/* Geographic Coordinates & Google Maps Link */}
+                        {lat !== undefined && lng !== undefined && (
+                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-slate-900/60 border border-gray-200 dark:border-slate-800 space-y-2">
+                            <div className="flex items-center justify-between text-[11px] font-mono text-gray-700 dark:text-slate-300">
+                              <span>
+                                Lat: {Number(lat).toFixed(4)}, Lng: {Number(lng).toFixed(4)}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleCopyCoords(lat, lng, spot._id)}
+                                className="text-gray-500 hover:text-amber-500 cursor-pointer p-0.5"
+                                title={isEs ? "Copiar coordenadas" : "Copy coordinates"}
+                              >
+                                {copiedId === spot._id ? (
+                                  <CheckCheck size={13} className="text-emerald-500" />
+                                ) : (
+                                  <Copy size={13} />
+                                )}
+                              </button>
+                            </div>
+
+                            <a
+                              href={`https://www.google.com/maps?q=${lat},${lng}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                              <ExternalLink size={12} />
+                              <span>{isEs ? "Ver en Google Maps" : "View on Google Maps"}</span>
+                            </a>
+                          </div>
+                        )}
+
+                        {/* Description snippet */}
+                        {spot.description && (
+                          <p className="text-xs text-gray-600 dark:text-slate-400 line-clamp-2 italic border-l-2 border-amber-400 pl-2">
+                            "{spot.description}"
+                          </p>
+                        )}
+
+                        {/* Additional Photos Count */}
+                        {spot.media && spot.media.length > 1 && (
+                          <div className="flex items-center gap-1.5 overflow-x-auto py-1">
+                            {spot.media.slice(1, 5).map((img: string, idx: number) => (
+                              <img
+                                key={idx}
+                                src={getImageUrl(img)}
+                                alt="Gallery thumb"
+                                className="w-12 h-12 object-cover rounded-lg border border-gray-200 dark:border-slate-800 shrink-0"
+                              />
+                            ))}
+                            {spot.media.length > 5 && (
+                              <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-gray-500 shrink-0">
+                                +{spot.media.length - 5}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-2 mt-auto">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setModalPlaceId(spot._id);
+                            setIsPlaceModalOpen(true);
+                          }}
+                          className="text-xs font-bold gap-1 text-slate-700 dark:text-slate-300 cursor-pointer h-9 px-2.5"
+                        >
+                          <Eye size={14} />
+                          <span>{isEs ? "Detalles" : "Details"}</span>
+                        </Button>
+
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setRejectSpotTarget(spot);
+                              setRejectFeedback("");
+                            }}
+                            disabled={isReviewingPlace}
+                            className="h-9 px-3 rounded-xl border-rose-300 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold cursor-pointer"
+                          >
+                            <X size={14} className="mr-1" />
+                            {isEs ? "Rechazar" : "Reject"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleApproveSpot(spot)}
+                            disabled={isReviewingPlace}
+                            className="h-9 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs cursor-pointer"
+                          >
+                            <Check size={15} className="mr-1" />
+                            {isEs ? "Aprobar (+50)" : "Approve (+50)"}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          ) : (
+            /* Spots Table View matching PlacesTable */
+            <div className="bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-200 dark:border-slate-800 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-slate-900/60 border-b border-gray-200 dark:border-slate-800">
+                      <th className="px-5 py-3 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                        {isEs ? "Lugar Turístico" : "Tourist Spot"}
+                      </th>
+                      <th className="px-5 py-3 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                        {isEs ? "Categoría" : "Category"}
+                      </th>
+                      <th className="px-5 py-3 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                        {isEs ? "Mapa" : "Map"}
+                      </th>
+                      <th className="px-5 py-3 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                        {isEs ? "Descubierto por" : "Discovered by"}
+                      </th>
+                      <th className="px-5 py-3 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                        {isEs ? "Coordenadas" : "Coordinates"}
+                      </th>
+                      <th className="px-5 py-3 text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-right">
+                        {isEs ? "Acciones" : "Actions"}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-slate-800/60">
+                    {filteredSpots.map((spot) => {
+                      const contributor =
+                        spot.discoveredByName ||
+                        (typeof spot.discoveredBy === "object"
+                          ? spot.discoveredBy?.name
+                          : spot.discoveredBy) ||
+                        "Usuario";
+                      const lat = spot.location?.coordinates?.[1];
+                      const lng = spot.location?.coordinates?.[0];
+                      const thumbnail = spot.media?.[0];
+
+                      return (
+                        <tr
+                          key={spot._id}
+                          className="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors"
+                        >
+                          <td className="px-5 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-900 shrink-0 border border-gray-200 dark:border-slate-800">
+                                {thumbnail ? (
+                                  <img
+                                    src={getImageUrl(thumbnail)}
+                                    alt={getSafeString(spot.name, language)}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-amber-500 bg-slate-800">
+                                    <Compass size={18} />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="min-w-0">
+                                <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate max-w-xs">
+                                  {getSafeString(spot.name, language)}
+                                </h4>
+                                <p className="text-xs text-gray-500 dark:text-slate-400 truncate max-w-xs">
+                                  {spot.address || "N/A"}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-5 py-4 text-xs font-semibold text-gray-700 dark:text-slate-300">
+                            {getSafeString(spot.category?.name, language) || "N/A"}
+                          </td>
+                          <td className="px-5 py-4 text-xs font-semibold text-gray-700 dark:text-slate-300">
+                            {getSafeString(spot.map?.name, language) || "N/A"}
+                          </td>
+                          <td className="px-5 py-4 text-xs font-medium text-gray-700 dark:text-slate-300">
+                            <span className="font-bold">{contributor}</span>
+                          </td>
+                          <td className="px-5 py-4 text-xs font-mono text-gray-600 dark:text-slate-400">
+                            {lat !== undefined && lng !== undefined ? (
+                              <div className="flex items-center gap-2">
+                                <span>
+                                  {Number(lat).toFixed(3)}, {Number(lng).toFixed(3)}
+                                </span>
+                                <a
+                                  href={`https://www.google.com/maps?q=${lat},${lng}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-700"
+                                  title="Google Maps"
+                                >
+                                  <ExternalLink size={13} />
+                                </a>
+                              </div>
+                            ) : (
+                              "N/A"
+                            )}
+                          </td>
+                          <td className="px-5 py-4 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setModalPlaceId(spot._id);
+                                  setIsPlaceModalOpen(true);
+                                }}
+                                className="h-8 w-8 p-0 cursor-pointer"
+                              >
+                                <Eye size={15} />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setRejectSpotTarget(spot);
+                                  setRejectFeedback("");
+                                }}
+                                className="h-8 px-2.5 text-xs text-rose-600 border-rose-200 dark:border-rose-900 cursor-pointer font-bold"
+                              >
+                                <X size={14} />
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={() => handleApproveSpot(spot)}
+                                className="h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer"
+                              >
+                                <Check size={14} className="mr-1" />
+                                +50 pts
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ================= SECTION 2: USER REVIEWS VERIFICATION ================= */}
       {activeTab === "reviews" && (
         <>
           {isReviewsLoading ? (
@@ -261,30 +775,30 @@ export default function ReviewsVerificationPage() {
                 />
               ))}
             </div>
-          ) : reviewList.length === 0 ? (
+          ) : filteredReviews.length === 0 ? (
             <Card className="rounded-2xl border-dashed bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800">
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <p className="text-lg font-medium text-muted-foreground dark:text-slate-400">
-                  {t("reviews_admin.no_pending_reviews") ||
-                    "No pending reviews to approve."}
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <CheckCircle2 size={40} className="text-emerald-500 mb-2 opacity-80" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">
+                  {isEs ? "No hay reseñas pendientes" : "No pending reviews"}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 max-w-sm">
+                  {isEs
+                    ? "Todas las reseñas de la comunidad han sido moderadas."
+                    : "All community reviews have been verified."}
                 </p>
               </CardContent>
             </Card>
           ) : (
+            /* Reviews Cards matching original Dashboard Card design */
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {reviewList.map((review: any) => {
+              {filteredReviews.map((review: any) => {
                 const isBusiness = !!review.businessId;
-                const businessLabel = t("business_admin.business");
-                const placeLabel = t("places_admin.place");
                 const targetType = isBusiness
-                  ? businessLabel && businessLabel !== "business_admin.business"
-                    ? businessLabel
-                    : language === "es"
+                  ? isEs
                     ? "Negocio"
                     : "Business"
-                  : placeLabel && placeLabel !== "places_admin.place"
-                  ? placeLabel
-                  : language === "es"
+                  : isEs
                   ? "Lugar"
                   : "Place";
                 const rawTargetName = isBusiness
@@ -294,46 +808,42 @@ export default function ReviewsVerificationPage() {
                   getSafeString(rawTargetName, language) ||
                   (isBusiness ? "Unknown Business" : "Unknown Place");
 
-                const byLabel = t("reviews.by");
-                const safeByLabel =
-                  byLabel && byLabel !== "reviews.by"
-                    ? byLabel
-                    : language === "es"
-                    ? "Por"
-                    : "By";
                 const reviewerName =
                   getSafeString(review.reviewer?.name, language) ||
-                  "Anonymous";
+                  (isEs ? "Anónimo" : "Anonymous");
                 const reviewContent = getSafeString(review.review, language);
 
                 return (
                   <Card
                     key={review._id}
-                    className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-150 dark:border-slate-800 overflow-hidden flex flex-col justify-between"
+                    className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col justify-between"
                   >
                     <CardHeader className="pb-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl font-semibold mb-1 line-clamp-1 text-gray-900 dark:text-slate-100">
-                            {targetType}: {targetName}
+                      <div className="flex justify-between items-start gap-3">
+                        <div className="min-w-0">
+                          <CardTitle className="text-lg font-bold line-clamp-1 text-gray-900 dark:text-slate-100">
+                            <span className="text-xs uppercase font-extrabold text-blue-600 dark:text-blue-400 block mb-0.5">
+                              {targetType}
+                            </span>
+                            {targetName}
                           </CardTitle>
-                          <p className="text-sm text-muted-foreground dark:text-slate-400">
-                            {safeByLabel}:{" "}
-                            <span className="font-medium text-foreground dark:text-slate-200">
+                          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                            {isEs ? "Por:" : "By:"}{" "}
+                            <span className="font-semibold text-gray-800 dark:text-slate-200">
                               {reviewerName}
                             </span>
                           </p>
                         </div>
-                        <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-950/40 text-yellow-700 dark:text-yellow-300 border border-yellow-200/60 dark:border-yellow-900/40 px-2.5 py-1 rounded-full text-sm font-semibold">
-                          <Star className="w-4 h-4 fill-yellow-500 stroke-yellow-500" />
+                        <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/40 px-2.5 py-1 rounded-full text-xs font-bold shrink-0">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400" />
                           <span>{review.rating || 0}.0</span>
                         </div>
                       </div>
                     </CardHeader>
+
                     <CardContent className="space-y-4 flex-1 flex flex-col justify-between">
-                      <p className="text-gray-700 dark:text-slate-300 italic border-l-4 border-primary pl-3 py-1">
-                        "{reviewContent ||
-                          "No review content provided (Star rating only)"}"
+                      <p className="text-sm text-gray-700 dark:text-slate-300 italic border-l-4 border-amber-400 pl-3 py-1">
+                        "{reviewContent || (isEs ? "Sin comentario escrito (solo calificación)" : "No review content provided")}"
                       </p>
 
                       {review.media && review.media.length > 0 && (
@@ -343,187 +853,32 @@ export default function ReviewsVerificationPage() {
                               key={idx}
                               src={getImageUrl(img)}
                               alt="Review upload"
-                              className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-slate-800"
+                              className="w-16 h-16 object-cover rounded-xl border border-gray-200 dark:border-slate-800 shrink-0"
                             />
                           ))}
                         </div>
                       )}
 
-                      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-slate-800 mt-auto">
+                      <div className="flex justify-end items-center gap-2.5 pt-4 border-t border-gray-150 dark:border-slate-800 mt-auto">
                         <Button
                           variant="outline"
-                          onClick={() => handleRejectReview(review._id)}
-                          disabled={isApprovingReview || isRejectingReview}
-                          className="flex items-center gap-1.5 border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-700 rounded-full"
-                        >
-                          <X className="w-4 h-4" />{" "}
-                          {t("business_admin.reject") || "Reject"}
-                        </Button>
-                        <Button
-                          onClick={() => handleApproveReview(review._id)}
-                          disabled={isApprovingReview || isRejectingReview}
-                          className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white rounded-full border-none shadow-sm"
-                        >
-                          <Check className="w-4 h-4" />{" "}
-                          {t("business_admin.approve") || "Approve"}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Tab 2: Tourist Spot Recommendations */}
-      {activeTab === "spots" && (
-        <>
-          {isPlacesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-64 bg-gray-200 dark:bg-slate-800 animate-pulse rounded-2xl"
-                />
-              ))}
-            </div>
-          ) : pendingSpotsList.length === 0 ? (
-            <Card className="rounded-2xl border-dashed bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800">
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <Compass className="w-12 h-12 text-gray-400 mb-3" />
-                <p className="text-lg font-medium text-muted-foreground dark:text-slate-400">
-                  {language === "es"
-                    ? "No hay lugares recomendados pendientes de revisión."
-                    : "No pending tourist spot recommendations to review."}
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {pendingSpotsList.map((spot: any) => {
-                const contributor =
-                  spot.discoveredByName ||
-                  (typeof spot.discoveredBy === "object"
-                    ? spot.discoveredBy?.name
-                    : spot.discoveredBy) ||
-                  "User";
-                const firstMedia = spot.media?.[0];
-
-                return (
-                  <Card
-                    key={spot._id}
-                    className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-150 dark:border-slate-800 overflow-hidden flex flex-col justify-between"
-                  >
-                    {/* Spot Card Image & Header */}
-                    <div className="relative h-44 w-full bg-slate-900 overflow-hidden">
-                      {firstMedia ? (
-                        <img
-                          src={getImageUrl(firstMedia)}
-                          alt={getSafeString(spot.name, language)}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-amber-400">
-                          <Compass className="w-12 h-12 opacity-50" />
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-
-                      <div className="absolute top-3 left-3 flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/90 text-black">
-                          <Clock size={12} />
-                          {language === "es"
-                            ? "Pendiente de revisión"
-                            : "Pending Review"}
-                        </span>
-                      </div>
-
-                      <div className="absolute bottom-3 left-3 right-3">
-                        <h3 className="text-lg font-bold text-white drop-shadow-sm truncate">
-                          {getSafeString(spot.name, language)}
-                        </h3>
-                        <div className="flex items-center gap-1.5 text-xs text-white/80 mt-0.5">
-                          <MapPin size={12} className="text-amber-400 shrink-0" />
-                          <span className="truncate">{spot.address}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <CardContent className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                      <div className="space-y-2">
-                        {/* Contributor badge */}
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
-                          <Sparkles size={12} className="text-amber-500" />
-                          <span>
-                            {language === "es"
-                              ? "Recomendado por:"
-                              : "Recommended by:"}{" "}
-                            <strong>{contributor}</strong>
-                          </span>
-                        </div>
-
-                        {/* Category & Map tags */}
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-slate-400">
-                          {spot.category?.name && (
-                            <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-slate-800 font-medium text-gray-700 dark:text-slate-300">
-                              {getSafeString(spot.category.name, language)}
-                            </span>
-                          )}
-                          {spot.map?.name && (
-                            <span className="px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium">
-                              🗺️ {getSafeString(spot.map.name, language)}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Description Preview */}
-                        {spot.description && (
-                          <p className="text-xs text-gray-600 dark:text-slate-300 line-clamp-2">
-                            {getSafeString(spot.description, language)}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Action buttons */}
-                      <div className="flex items-center justify-between gap-2 pt-3 border-t border-gray-100 dark:border-slate-800 mt-auto">
-                        <Button
-                          variant="ghost"
                           size="sm"
-                          onClick={() => {
-                            setSelectedPlaceId(spot._id);
-                            setIsViewModalOpen(true);
-                          }}
-                          className="text-xs gap-1.5 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white"
+                          onClick={() => handleRejectReviewItem(review._id)}
+                          disabled={isApprovingReview || isRejectingReview}
+                          className="h-9 px-4 rounded-xl border-rose-300 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold cursor-pointer"
                         >
-                          <Eye size={14} />
-                          {language === "es" ? "Ver detalles" : "View Details"}
+                          <X className="w-3.5 h-3.5 mr-1" />
+                          {isEs ? "Rechazar" : "Reject"}
                         </Button>
-
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRejectPlace(spot)}
-                            disabled={isReviewingPlace}
-                            className="text-xs gap-1 border-rose-300 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-full"
-                          >
-                            <X size={13} />
-                            {language === "es" ? "Rechazar" : "Reject"}
-                          </Button>
-                          <Button
-                            size="sm"
-                            onClick={() => handleApprovePlace(spot)}
-                            disabled={isReviewingPlace}
-                            className="text-xs gap-1 bg-green-600 hover:bg-green-700 text-white rounded-full border-none shadow-sm cursor-pointer"
-                          >
-                            <Check size={13} />
-                            {language === "es"
-                              ? "Aprobar (+50 pts)"
-                              : "Approve (+50 pts)"}
-                          </Button>
-                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() => handleApproveReviewItem(review._id)}
+                          disabled={isApprovingReview || isRejectingReview}
+                          className="h-9 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs cursor-pointer"
+                        >
+                          <Check className="w-3.5 h-3.5 mr-1" />
+                          {isEs ? "Aprobar" : "Approve"}
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -534,11 +889,97 @@ export default function ReviewsVerificationPage() {
         </>
       )}
 
-      {/* Place Details Modal */}
+      {/* QUICK-REASON REJECTION DIALOG */}
+      <Dialog
+        open={!!rejectSpotTarget}
+        onOpenChange={(open) => !open && setRejectSpotTarget(null)}
+      >
+        <DialogContent className="max-w-lg bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 p-6 rounded-3xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black text-gray-900 dark:text-slate-100 flex items-center gap-2">
+              <AlertTriangle className="text-rose-500 w-5 h-5" />
+              {isEs ? "Rechazar Lugar Recomendado" : "Reject Tourist Spot"}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400">
+              {isEs
+                ? `Selecciona un motivo rápido o escribe feedback para el usuario sobre "${getSafeString(
+                    rejectSpotTarget?.name,
+                    language
+                  )}":`
+                : `Select a quick reason or enter custom feedback for "${getSafeString(
+                    rejectSpotTarget?.name,
+                    language
+                  )}":`}
+            </p>
+
+            {/* Quick Reason Chips */}
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                {isEs ? "Motivos rápidos frecuentes:" : "Frequent quick reasons:"}
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {quickRejectionReasons.map((qr, qIdx) => (
+                  <button
+                    key={qIdx}
+                    type="button"
+                    onClick={() => setRejectFeedback(qr.text)}
+                    className="text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-amber-950/40 text-gray-700 dark:text-slate-300 font-medium transition-colors text-left cursor-pointer border border-gray-200 dark:border-slate-700"
+                  >
+                    {qr.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <textarea
+              value={rejectFeedback}
+              onChange={(e) => setRejectFeedback(e.target.value)}
+              rows={4}
+              placeholder={
+                isEs
+                  ? "Escribe el motivo detallado de rechazo..."
+                  : "Write detailed rejection feedback for the user..."
+              }
+              className="w-full rounded-2xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 p-3 text-xs sm:text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none"
+            />
+          </div>
+
+          <DialogFooter className="flex gap-2 justify-end pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setRejectSpotTarget(null)}
+              className="rounded-xl font-semibold dark:border-slate-700"
+            >
+              {isEs ? "Cancelar" : "Cancel"}
+            </Button>
+            <Button
+              onClick={handleConfirmRejectSpot}
+              disabled={isReviewingPlace}
+              className="bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl cursor-pointer"
+            >
+              {isReviewingPlace ? (
+                <>
+                  <RefreshCw size={14} className="animate-spin mr-1.5" />
+                  {isEs ? "Rechazando..." : "Rejecting..."}
+                </>
+              ) : isEs ? (
+                "Confirmar Rechazo"
+              ) : (
+                "Confirm Rejection"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Place Full Modal */}
       <ViewPlaceModal
-        open={isViewModalOpen}
-        onOpenChange={setIsViewModalOpen}
-        placeId={selectedPlaceId}
+        open={isPlaceModalOpen}
+        onOpenChange={setIsPlaceModalOpen}
+        placeId={modalPlaceId}
       />
     </div>
   );
