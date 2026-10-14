@@ -110,14 +110,8 @@ async function generateAuthenticIcons() {
   fs.writeFileSync(path.join(appDir, "apple-icon.png"), png180);
   fs.writeFileSync(path.join(appDir, "favicon.ico"), icoBuffer);
 
-  // Write Public directory icons
-  fs.writeFileSync(path.join(publicDir, "icon.png"), png32);
-  fs.writeFileSync(path.join(publicDir, "favicon.png"), png32);
+  // Write Public directory fallback
   fs.writeFileSync(path.join(publicDir, "favicon.ico"), icoBuffer);
-  fs.writeFileSync(path.join(publicDir, "apple-icon.png"), png180);
-  fs.writeFileSync(path.join(publicDir, "icon-192.png"), png192);
-  fs.writeFileSync(path.join(publicDir, "icon-512.png"), png512);
-  fs.writeFileSync(path.join(publicDir, "rt-icon-rounded.png"), png512);
 
   console.log("All authentic icons generated successfully from original RT-Logo.png!");
 }
