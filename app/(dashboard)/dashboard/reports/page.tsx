@@ -3,12 +3,27 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { UsageStatistics } from "@/components/dashboard/reports/usage-statistics";
 import {
+  UserActivityOverview,
+  RecentUserActivityLog,
+} from "@/components/dashboard/reports/user-activity";
+import {
   useGetReportsQuery,
   useSearchReportEntitiesQuery,
 } from "@/redux/features/stats/statsApi";
 import { useGetCategoriesQuery } from "@/redux/features/category/categoryApi";
 import { useGetAvailableCountriesQuery } from "@/redux/features/map/mapApi";
-import { Loader2, ArrowLeft, RefreshCw, Search, MapPin, Store, Map, Ticket, X, Download } from "lucide-react";
+import {
+  Loader2,
+  ArrowLeft,
+  RefreshCw,
+  Search,
+  MapPin,
+  Store,
+  Map,
+  Ticket,
+  X,
+  Download,
+} from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -83,7 +98,13 @@ export default function ReportsPage() {
   }, [suggestions]);
 
   // Fetch reports stats with applied filters
-  const { data: response, isLoading, isError, refetch, isFetching } = useGetReportsQuery(
+  const {
+    data: response,
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+  } = useGetReportsQuery(
     {
       timeFilter,
       country,
@@ -97,8 +118,7 @@ export default function ReportsPage() {
 
   const reportData = response?.data;
   const categoryLabel =
-    categoriesResponse?.data?.find((cat: any) => cat._id === category)?.name ||
-    "";
+    categoriesResponse?.data?.find((cat: any) => cat._id === category)?.name || "";
 
   const handleSelectEntity = (item: ReportEntity) => {
     setSelectedEntity(item);
@@ -127,11 +147,23 @@ export default function ReportsPage() {
 
     let csvContent = "";
 
+    // User Activity Metrics
+    if (reportData.userActivity) {
+      csvContent += "USER ACTIVITY & ENGAGEMENT METRICS\n";
+      csvContent += `Active Users Today,${reportData.userActivity.activeUsersToday || 0}\n`;
+      csvContent += `Active Users This Week,${reportData.userActivity.activeUsersThisWeek || 0}\n`;
+      csvContent += `Active Users This Month,${reportData.userActivity.activeUsersThisMonth || 0}\n`;
+      csvContent += `Total Registered Users,${reportData.userActivity.totalRegisteredUsers || 0}\n`;
+      csvContent += `Total Places Visited,${reportData.userActivity.totalPlacesVisited || 0}\n`;
+      csvContent += `Total Offers Redeemed,${reportData.userActivity.totalOffersRedeemed || 0}\n`;
+      csvContent += `Total Reviews Submitted,${reportData.userActivity.totalReviews || 0}\n\n`;
+    }
+
     // Usage Lists
     csvContent += "USAGE STATISTICS - TOP VIEWED MAPS\n";
-    csvContent += "Map Name,Views\n";
+    csvContent += "Map Name,Spots,Views\n";
     reportData.usage?.mostViewedMaps?.forEach((item: any) => {
-      csvContent += `"${item.name}","${item.count}"\n`;
+      csvContent += `"${item.name}","${item.placesCount ?? 0}","${item.count}"\n`;
     });
     csvContent += "\n";
 
@@ -148,11 +180,14 @@ export default function ReportsPage() {
       csvContent += `"${item.name}","${item.businessName || ''}","${item.count}"\n`;
     });
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `usage_statistics_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute(
+      "download",
+      `reports_and_activity_${new Date().toISOString().split("T")[0]}.csv`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -167,7 +202,7 @@ export default function ReportsPage() {
     const htmlContent = `
       <html>
         <head>
-          <title>Usage Statistics & Insights - ${new Date().toLocaleDateString()}</title>
+          <title>Reports, User Activity & Insights - ${new Date().toLocaleDateString()}</title>
           <style>
             body { font-family: sans-serif; color: #333; padding: 40px; line-height: 1.6; }
             h1 { font-size: 24px; color: #111; margin-bottom: 5px; }
@@ -175,7 +210,7 @@ export default function ReportsPage() {
             .section { margin-bottom: 40px; }
             .section-title { font-size: 18px; font-weight: bold; border-bottom: 2px solid #eaeaea; padding-bottom: 8px; margin-bottom: 20px; color: #1e3a8a; }
             table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-            th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; font-size: 14px; }
+            th, td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: left; font-size: 13px; }
             th { background-color: #f1f5f9; color: #475569; font-weight: bold; }
             .row-flex { display: flex; gap: 30px; }
             .col { flex: 1; }
@@ -186,8 +221,36 @@ export default function ReportsPage() {
           </style>
         </head>
         <body>
-          <h1>Platform Usage Statistics & Insights</h1>
+          <h1>Platform Reports, User Activity & Insights</h1>
           <div class="subtitle">Generated on ${new Date().toLocaleString()}</div>
+
+          <div class="section">
+            <div class="section-title">User Activity & Engagement Overview</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Active Users (Today)</th>
+                  <th>Active Users (This Week)</th>
+                  <th>Active Users (This Month)</th>
+                  <th>Total Registered</th>
+                  <th>Places Visited</th>
+                  <th>Offers Redeemed</th>
+                  <th>Reviews</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>${reportData.userActivity?.activeUsersToday?.toLocaleString() || 0}</b></td>
+                  <td><b>${reportData.userActivity?.activeUsersThisWeek?.toLocaleString() || 0}</b></td>
+                  <td><b>${reportData.userActivity?.activeUsersThisMonth?.toLocaleString() || 0}</b></td>
+                  <td><b>${reportData.userActivity?.totalRegisteredUsers?.toLocaleString() || 0}</b></td>
+                  <td>${reportData.userActivity?.totalPlacesVisited?.toLocaleString() || 0}</td>
+                  <td>${reportData.userActivity?.totalOffersRedeemed?.toLocaleString() || 0}</td>
+                  <td>${reportData.userActivity?.totalReviews?.toLocaleString() || 0}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <div class="section">
             <div class="section-title">Usage Statistics Overview</div>
@@ -198,16 +261,22 @@ export default function ReportsPage() {
                   <thead>
                     <tr>
                       <th>Map Name</th>
+                      <th>Spots</th>
                       <th>Views</th>
                     </tr>
                   </thead>
                   <tbody>
-                    ${reportData.usage?.mostViewedMaps?.map((item: any) => `
-                      <tr>
-                        <td>${item.name}</td>
-                        <td>${item.count?.toLocaleString()}</td>
-                      </tr>
-                    `).join('') || '<tr><td colspan="2">No data</td></tr>'}
+                    ${
+                      reportData.usage?.mostViewedMaps?.map(
+                        (item: any) => `
+                        <tr>
+                          <td>${item.name}</td>
+                          <td>${item.placesCount ?? 0} spots</td>
+                          <td>${item.count?.toLocaleString()}</td>
+                        </tr>
+                      `
+                      ).join("") || '<tr><td colspan="3">No data</td></tr>'
+                    }
                   </tbody>
                 </table>
               </div>
@@ -222,12 +291,16 @@ export default function ReportsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    ${reportData.usage?.mostOpenedPlaces?.map((item: any) => `
-                      <tr>
-                        <td>${item.name}</td>
-                        <td>${item.count?.toLocaleString()}</td>
-                      </tr>
-                    `).join('') || '<tr><td colspan="2">No data</td></tr>'}
+                    ${
+                      reportData.usage?.mostOpenedPlaces?.map(
+                        (item: any) => `
+                        <tr>
+                          <td>${item.name}</td>
+                          <td>${item.count?.toLocaleString()}</td>
+                        </tr>
+                      `
+                      ).join("") || '<tr><td colspan="2">No data</td></tr>'
+                    }
                   </tbody>
                 </table>
               </div>
@@ -243,25 +316,22 @@ export default function ReportsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    ${reportData.usage?.mostRedeemedOffers?.map((item: any) => `
-                      <tr>
-                        <td>${item.name}</td>
-                        <td>${item.businessName || '-'}</td>
-                        <td>${item.count?.toLocaleString()}</td>
-                      </tr>
-                    `).join('') || '<tr><td colspan="3">No data</td></tr>'}
+                    ${
+                      reportData.usage?.mostRedeemedOffers?.map(
+                        (item: any) => `
+                        <tr>
+                          <td>${item.name}</td>
+                          <td>${item.businessName || "-"}</td>
+                          <td>${item.count?.toLocaleString()}</td>
+                        </tr>
+                      `
+                      ).join("") || '<tr><td colspan="3">No data</td></tr>'
+                    }
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-
-          <script>
-            window.onload = function() {
-              window.print();
-              setTimeout(function() { window.close(); }, 500);
-            };
-          </script>
         </body>
       </html>
     `;
@@ -273,7 +343,7 @@ export default function ReportsPage() {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+        <Loader2 className="w-10 h-10 text-amber-600 animate-spin" />
       </div>
     );
   }
@@ -281,8 +351,11 @@ export default function ReportsPage() {
   if (isError) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-red-500 font-medium text-center p-6">
-        <p>{t("reports.failed_load")}</p>
-        <Link href="/dashboard" className="text-blue-600 hover:underline flex items-center gap-2 font-medium">
+        <p>{t("reports.failed_load") || "Failed to load reports data."}</p>
+        <Link
+          href="/dashboard"
+          className="text-amber-600 hover:underline flex items-center gap-2 font-medium"
+        >
           <ArrowLeft size={16} /> Back to dashboard
         </Link>
       </div>
@@ -290,16 +363,20 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="bg-gray-50/50 dark:bg-[#0b0f19] min-h-screen pb-12 font-geist">
+    <div className="bg-gray-50/50 dark:bg-[#0b0f19] min-h-screen pb-16 font-geist">
+      {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">
-            {t("reports_admin.title") || "Reports & Insights"}
+            {t("reports_admin.title") || "Reports & Statistics"}
           </h1>
           <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">
-            {t("reports_admin.subtitle") || "Comprehensive view of platform statistics: location visits, redeemed offers, and map usage."}
+            {t("reports_admin.subtitle") ||
+              "Real-time platform statistics: location visits, active users, redeemed offers, and map usage."}
           </p>
         </div>
+
+        {/* Action Buttons */}
         <div className="flex items-center gap-3 self-start md:self-auto">
           <button
             onClick={handleExportCSV}
@@ -310,7 +387,7 @@ export default function ReportsPage() {
           </button>
           <button
             onClick={handleExportPDF}
-            className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all cursor-pointer"
           >
             <Download size={14} />
             {t("reports_admin.export_pdf") || "Export PDF"}
@@ -320,15 +397,15 @@ export default function ReportsPage() {
             disabled={isFetching}
             className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200 text-xs font-semibold rounded-lg shadow-sm transition-all cursor-pointer disabled:opacity-50"
           >
-            <RefreshCw size={14} className={isFetching ? "animate-spin" : ""} />
+            <RefreshCw size={14} className={isFetching ? "animate-spin text-amber-600" : ""} />
             {t("common.refresh") || "Refresh"}
           </button>
         </div>
       </div>
 
-      {/* FILTER TOOLBAR */}
-      <div className="bg-white dark:bg-[#131b2e] p-4 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm mb-6 flex flex-wrap gap-4 items-center">
-
+      {/* 1. FILTER TOOLBAR (Matches Dashboard filter style) */}
+      <div className="bg-white dark:bg-[#131b2e] p-4 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm mb-8 flex flex-wrap gap-4 items-center">
+        {/* Search place, business, map, or offer */}
         <div ref={searchBoxRef} className="relative min-w-[260px] flex-1 max-w-md">
           {selectedEntity ? (
             <div className="flex h-10 items-center gap-2 rounded-lg border border-amber-300 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-950/40 px-3">
@@ -368,8 +445,10 @@ export default function ReportsPage() {
                 onKeyDown={(e) => {
                   if (e.key === "Escape") setShowSuggestions(false);
                 }}
-                placeholder={t("reports_admin.search_placeholder") || "Search place or business..."}
-                className="h-10 w-full rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-9 pr-3 text-xs font-semibold text-gray-700 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none transition focus:ring-2 focus:ring-blue-400/40"
+                placeholder={
+                  t("reports_admin.search_placeholder") || "Search place, business, map, or offer..."
+                }
+                className="h-10 w-full rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-9 pr-3 text-xs font-semibold text-gray-700 dark:text-slate-100 placeholder:text-gray-400 outline-none transition focus:ring-2 focus:ring-amber-500/30"
               />
             </>
           )}
@@ -382,7 +461,7 @@ export default function ReportsPage() {
                   {t("common.loading") || "Searching..."}
                 </div>
               ) : groupedSuggestions.length === 0 ? (
-                <p className="p-4 text-sm text-gray-500 dark:text-slate-400">
+                <p className="p-4 text-sm text-gray-500 dark:text-slate-400 text-center">
                   {t("reports_admin.no_results") || "No place or business found."}
                 </p>
               ) : (
@@ -427,22 +506,22 @@ export default function ReportsPage() {
         <select
           value={timeFilter}
           onChange={(e) => setTimeFilter(e.target.value)}
-          className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/40 text-xs font-semibold bg-white dark:bg-slate-900 min-w-[140px] text-gray-700 dark:text-slate-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+          className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/30 text-xs font-semibold bg-white dark:bg-slate-900 min-w-[140px] text-gray-700 dark:text-slate-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
         >
-          <option value="">{t("reports_admin.all_time")}</option>
-          <option value="today">{t("reports_admin.today")}</option>
-          <option value="this_week">{t("reports_admin.this_week")}</option>
-          <option value="this_month">{t("reports_admin.this_month")}</option>
-          <option value="last_month">{t("reports_admin.last_month")}</option>
+          <option value="">{t("reports_admin.all_time") || "All Time"}</option>
+          <option value="today">{t("reports_admin.today") || "Today"}</option>
+          <option value="this_week">{t("reports_admin.this_week") || "This Week"}</option>
+          <option value="this_month">{t("reports_admin.this_month") || "This Month"}</option>
+          <option value="last_month">{t("reports_admin.last_month") || "Last Month"}</option>
         </select>
 
         {/* Country Filter Dropdown */}
         <select
           value={country}
           onChange={(e) => setCountry(e.target.value)}
-          className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/40 text-xs font-semibold bg-white dark:bg-slate-900 min-w-[140px] text-gray-700 dark:text-slate-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+          className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/30 text-xs font-semibold bg-white dark:bg-slate-900 min-w-[140px] text-gray-700 dark:text-slate-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
         >
-          <option value="">{t("filters.all_countries")}</option>
+          <option value="">{t("filters.all_countries") || "All Countries"}</option>
           {countriesResponse?.map((c: string) => (
             <option key={c} value={c}>
               {c}
@@ -454,9 +533,9 @@ export default function ReportsPage() {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/40 text-xs font-semibold bg-white dark:bg-slate-900 min-w-[140px] text-gray-700 dark:text-slate-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+          className="h-10 px-3 border border-gray-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/30 text-xs font-semibold bg-white dark:bg-slate-900 min-w-[140px] text-gray-700 dark:text-slate-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
         >
-          <option value="">{t("filters.all_categories")}</option>
+          <option value="">{t("filters.all_categories") || "All Categories"}</option>
           {categoriesResponse?.data?.map((cat: any) => (
             <option key={cat._id} value={cat._id}>
               {cat.name}
@@ -464,21 +543,22 @@ export default function ReportsPage() {
           ))}
         </select>
 
-        {/* Reset Filters */}
+        {/* Clear Filters */}
         {(timeFilter || country || category || selectedEntity) && (
           <button
             onClick={handleResetFilters}
-            className="text-xs text-red-500 hover:text-red-600 dark:text-rose-400 dark:hover:text-rose-300 font-bold transition-all px-3 py-2 hover:bg-red-50 dark:hover:bg-rose-950/30 rounded-lg cursor-pointer"
+            className="text-xs text-red-500 hover:text-red-600 dark:text-rose-400 font-bold transition-all px-3 py-2 hover:bg-red-50 dark:hover:bg-rose-950/30 rounded-lg cursor-pointer"
           >
-            {t("business_admin.clear_filters")}
+            {t("business_admin.clear_filters") || "Clear Filters"}
           </button>
         )}
       </div>
 
+      {/* Selected Entity Banner */}
       {selectedEntity && (
-        <div className="mb-6 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/30 px-4 py-3">
+        <div className="mb-8 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/30 px-4 py-3">
           <p className="text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300">
-            Showing reports for
+            {t("reports_admin.filtering_by") || "Showing reports for"}
           </p>
           <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-slate-100">
             {ENTITY_META[selectedEntity.type].label}: {selectedEntity.name}
@@ -486,15 +566,15 @@ export default function ReportsPage() {
             {country ? ` · ${country}` : ""}
             {categoryLabel ? ` · ${categoryLabel}` : ""}
           </p>
-          {selectedEntity.type === "business" && (
-            <p className="mt-1 text-xs text-amber-800 dark:text-amber-400">
-              Visit and offer stats below are for this business.
-            </p>
-          )}
         </div>
       )}
 
+      {/* MAIN SECTIONS FLOW (Natural UX Hierarchy) */}
       <div className="space-y-8">
+        {/* 2. USER ACTIVITY & ACTIVE USERS KPI CARDS */}
+        <UserActivityOverview data={reportData?.userActivity} />
+
+        {/* 3. CORE USAGE STATISTICS (Maps with spots count, Places, and Offers with View More) */}
         <UsageStatistics
           data={reportData?.usage}
           timeFilterActive={!!timeFilter}
@@ -504,6 +584,9 @@ export default function ReportsPage() {
               : "Most Opened Places"
           }
         />
+
+        {/* 4. RECENT USER ACTIVITY LOG (Live actions stream with View More & Profile details) */}
+        <RecentUserActivityLog activities={reportData?.userActivity?.recentActivities} />
       </div>
     </div>
   );
