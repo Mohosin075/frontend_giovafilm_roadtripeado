@@ -43,50 +43,85 @@ export function PlaceCard({ data }: { data: TPlace }) {
     <Link href={`/places/${data?._id || data?.id}`} onClick={handleClick} className="group block">
       <div className="rounded-2xl overflow-hidden bg-white dark:bg-[#131b2e]/90 border border-gray-100 dark:border-slate-800/80 hover:dark:border-amber-400/40 hover:shadow-2xl dark:shadow-xl transition-all duration-300 backdrop-blur-md">
         {/* Image Section */}
-        <div className="relative h-36 sm:h-48 md:h-64 w-full">
+        <div className="relative h-36 sm:h-48 md:h-64 w-full overflow-hidden bg-slate-100 dark:bg-slate-900">
           {coverImage ? (
-            <SafeImage
-              src={coverImage}
-              alt={data?.isLocked ? "Premium Location" : getLocalized(data?.name, language)}
-              fill
-              className="hover:scale-105 transition-all duration-500"
-            />
+            <div
+              className={`w-full h-full relative transition-all duration-500 overflow-hidden ${
+                data?.isLocked
+                  ? "select-none pointer-events-none"
+                  : "group-hover:scale-105"
+              }`}
+              style={
+                data?.isLocked
+                  ? {
+                      filter: "blur(3.5px)",
+                      WebkitFilter: "blur(3.5px)",
+                      transform: "scale(1.06)",
+                    }
+                  : undefined
+              }
+            >
+              <SafeImage
+                src={coverImage}
+                alt={data?.isLocked ? t("map.premium_location", "Premium Location") : getLocalized(data?.name, language)}
+                fill
+                priority={false}
+              />
+            </div>
           ) : (
             <NoImage />
           )}
- 
+
+          {/* Locked Subtle Ambient Shade */}
+          {data?.isLocked && (
+            <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+          )}
+
           {/* Rating Badge */}
           <div className="absolute top-3 right-3 bg-white/95 dark:bg-[#0b0f19]/90 text-gray-900 dark:text-slate-100 border border-gray-100/50 dark:border-slate-800/80 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-bold shadow-md backdrop-blur-md">
             <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
             {data?.isLocked ? "—" : parseFloat(data?.rating?.toFixed(1))}
           </div>
- 
-          {/* Lock Badge */}
+
+          {/* Lock Badge on top of image */}
           {data?.isLocked && (
-            <div className="absolute top-3 left-3 bg-red-500 text-white px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-bold shadow-lg">
-              <Lock className="w-3.5 h-3.5" />
-              {t("map.unlock_full_map")}
+            <div className="absolute top-3 left-3 bg-black/75 backdrop-blur-md text-white border border-white/20 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-bold shadow-lg">
+              <Lock className="w-3.5 h-3.5 text-[#fabf13]" />
+              <span>{t("map.unlock_full_map")}</span>
             </div>
           )}
         </div>
- 
+
         {/* Content */}
         <div className="p-3 md:p-4 font-inter">
           <h3 className="font-bold text-sm md:text-lg text-gray-900 dark:text-slate-100 group-hover:text-[#fabf13] transition-colors line-clamp-2">
-            {data?.isLocked ? `🔒 ${t("map.unlock_full_map")}` : getLocalized(data?.name, language)}
+            {data?.isLocked ? (
+              <span className="flex items-center gap-1.5">
+                <Lock className="w-4 h-4 text-[#fabf13] shrink-0" />
+                <span>{t("map.premium_location", "Premium Location")}</span>
+              </span>
+            ) : (
+              getLocalized(data?.name, language)
+            )}
           </h3>
- 
+
           <div className="flex items-start text-gray-500 dark:text-slate-400 text-xs md:text-sm mt-1.5 gap-1.5">
             <MapPin size={14} className="shrink-0 mt-0.5 text-amber-500" />
             <span className="line-clamp-2">
-              {data?.isLocked ? t("map.unlock_full_map") : getLocalized(data?.address, language)}
+              {data?.isLocked
+                ? (typeof data?.map === "object" ? getLocalized(data?.map?.name, language) : "") || (data as any)?.country || getLocalized(data?.address, language)
+                : getLocalized(data?.address, language)}
             </span>
           </div>
- 
+
           <p className="text-gray-400 dark:text-slate-500 text-xs md:text-sm mt-1.5 line-clamp-1">
-            {data?.isLocked
-              ? t("map.unlock_full_map")
-              : `${data?.totalReview} ${t("place.reviews")} • ${getLocalized(data?.category?.name, language)}`}
+            {data?.isLocked ? (
+              <span className="font-semibold text-amber-500/90 dark:text-[#fabf13]">
+                {getLocalized(data?.category?.name, language)}
+              </span>
+            ) : (
+              `${data?.totalReview} ${t("place.reviews")} • ${getLocalized(data?.category?.name, language)}`
+            )}
           </p>
         </div>
       </div>

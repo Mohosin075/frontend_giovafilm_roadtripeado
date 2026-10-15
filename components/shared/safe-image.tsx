@@ -78,7 +78,7 @@ export function SafeImage({
         className={`relative z-[1] ${
           fill ? "absolute inset-0 h-full w-full object-cover" : "h-full w-full object-cover"
         } transition-all duration-500 ease-out ${
-          loaded ? "opacity-100 scale-100 filter-none" : "opacity-0 scale-[1.01] blur-[2px]"
+          loaded ? "opacity-100 scale-100" : "opacity-0 scale-[1.01] blur-[2px]"
         } ${className}`}
       />
     </div>

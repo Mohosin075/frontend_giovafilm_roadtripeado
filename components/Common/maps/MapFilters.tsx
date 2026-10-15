@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ChevronDown, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, Lock } from "lucide-react";
 import { normalizePinType } from "@/lib/record-visit";
 import { getUsableMediaUrl, getLocalized } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -233,7 +233,7 @@ export function MapFilters({
                             <div className="pr-3 pl-1 py-2 shrink-0 flex items-center justify-center">
                               <Switch
                                 checked={enabled}
-                                onCheckedChange={(val) =>
+                                onCheckedChange={(val: boolean) =>
                                   handleToggle(String(cat._id), val)
                                 }
                                 className={`${enabled ? "bg-primary" : "bg-gray-300"} data-[state=checked]:bg-amber-400 data-[state=unchecked]:bg-gray-300 scale-75 shrink-0`}
@@ -271,8 +271,15 @@ export function MapFilters({
                                           className={`w-1.5 h-1.5 rounded-full ${selectedLocation?.id === place._id ? "bg-black" : "bg-amber-400"}`}
                                         />
                                         <div className="flex flex-col min-w-0">
-                                          <span className="truncate">
-                                            {place.isLocked ? "🔒 Premium Location" : getSafeString(place.name, language)}
+                                          <span className="truncate flex items-center gap-1.5">
+                                            {place.isLocked ? (
+                                              <>
+                                                <Lock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                                                <span>{t("map.premium_location", "Premium Location")}</span>
+                                              </>
+                                            ) : (
+                                              getSafeString(place.name, language)
+                                            )}
                                           </span>
                                         </div>
                                       </button>
