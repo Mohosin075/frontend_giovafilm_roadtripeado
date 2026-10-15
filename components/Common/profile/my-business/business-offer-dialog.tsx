@@ -251,336 +251,356 @@ export function BusinessOfferDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#131b2e] border dark:border-slate-800 text-slate-900 dark:text-slate-100">
-        <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-slate-100">
+      <DialogContent className="max-w-4xl lg:max-w-5xl w-full max-h-[92vh] overflow-y-auto rounded-3xl p-6 sm:p-8 lg:p-10 bg-white dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-2xl">
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
             {isEdit
               ? t("business.edit_offer") || "Edit Offer"
               : t("business.add_offer") || "Add Offer"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2 block">
-              {t("business.offer_photo") || "Offer Photo"}
-            </Label>
-            <div
-              onClick={() => fileRef.current?.click()}
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsDragging(true);
-              }}
-              onDragEnter={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsDragging(true);
-              }}
-              onDragLeave={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsDragging(false);
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsDragging(false);
-                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                  const droppedFile = e.dataTransfer.files[0];
-                  if (droppedFile.type.startsWith("image/")) {
-                    handlePhotoChange(droppedFile);
-                  } else {
-                    toast.error(t("offers.upload_image_file"));
-                  }
-                }
-              }}
-              className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors cursor-pointer bg-gray-50 dark:bg-slate-900/60 ${
-                isDragging
-                  ? "border-yellow-500 bg-yellow-50/60 dark:bg-yellow-950/30 ring-2 ring-yellow-400/30 scale-[1.01]"
-                  : "border-gray-300 dark:border-slate-700 hover:border-yellow-400 dark:hover:border-yellow-500"
-              }`}
-            >
-              {preview ? (
-                <div className="relative inline-block">
-                  <img
-                    src={preview}
-                    alt="Offer preview"
-                    className="max-h-40 rounded-lg object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePhotoChange(null);
-                    }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow cursor-pointer"
-                    aria-label="Remove offer photo"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <Upload className="mx-auto mb-2 text-gray-400 dark:text-slate-500" size={28} />
-                  <p className="text-sm font-medium text-gray-700 dark:text-slate-300">
-                    {t("business.upload_offer_photo") || "Upload offer photo"}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">
-                    {t("business.photo_hint") || "PNG or JPG, up to 10MB"}
-                  </p>
-                </>
-              )}
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/png,image/jpeg,image/jpg"
-                className="hidden"
-                onChange={(e) => handlePhotoChange(e.target.files?.[0] || null)}
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="offer-title" className="text-gray-700 dark:text-slate-300">{t("offers_admin.title_label") || "Offer Title"}</Label>
-            <Input
-              id="offer-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., 20% off Coffee"
-              className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="offer-description" className="text-gray-700 dark:text-slate-300">{t("offers_admin.description_label") || "Description"}</Label>
-            <textarea
-              id="offer-description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={t("offers.describe_offer_placeholder")}
-              rows={4}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="offer-discount-type" className="text-gray-700 dark:text-slate-300">{t("offers_admin.discount_type_label") || "Discount Type"}</Label>
-            <select
-              id="offer-discount-type"
-              value={discountType}
-              onChange={(e) => {
-                setDiscountType(e.target.value);
-                setBogoSecondType("");
-                if (e.target.value === "BOGO" || e.target.value === "Free item") {
-                  setDiscountValue("");
-                }
-              }}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
-            >
-              <option value="">{t("offers_admin.select_type") || "Select type"}</option>
-              <option value="Percentage">{t("business.percentage") || "Percentage"}</option>
-              <option value="Flat">{t("business.flat_amount") || "Flat Amount"}</option>
-              <option value="BOGO">{t("business.bogo") || "Buy One Get One (BOGO)"}</option>
-              <option value="Free item">{t("business.free_item") || t("offers_admin.free_item") || "Free Item"}</option>
-            </select>
-          </div>
-
-          {discountType === "BOGO" && (
-            <div className="space-y-3 rounded-xl border border-yellow-200 dark:border-yellow-900/40 bg-yellow-50/70 dark:bg-yellow-950/20 p-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Column: Photo, Title, Description */}
+            <div className="lg:col-span-6 space-y-4">
               <div>
-                <Label htmlFor="offer-bogo-type" className="text-gray-700 dark:text-slate-300">
-                  {t("business.second_item") || "Second item"}
+                <Label className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                  {t("business.offer_photo") || "Offer Photo"}
+                </Label>
+                <div
+                  onClick={() => fileRef.current?.click()}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(true);
+                  }}
+                  onDragEnter={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(false);
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(false);
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                      const droppedFile = e.dataTransfer.files[0];
+                      if (droppedFile.type.startsWith("image/")) {
+                        handlePhotoChange(droppedFile);
+                      } else {
+                        toast.error(t("offers.upload_image_file"));
+                      }
+                    }
+                  }}
+                  className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer bg-slate-50/70 dark:bg-slate-900/60 ${
+                    isDragging
+                      ? "border-primary bg-primary/10 ring-2 ring-primary/30 scale-[1.01]"
+                      : "border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary"
+                  }`}
+                >
+                  {preview ? (
+                    <div className="relative inline-block">
+                      <img
+                        src={preview}
+                        alt="Offer preview"
+                        className="max-h-48 rounded-xl object-cover shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePhotoChange(null);
+                        }}
+                        className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-md cursor-pointer transition-colors"
+                        aria-label="Remove offer photo"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload className="mx-auto mb-2 text-slate-400 dark:text-slate-500" size={32} />
+                      <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                        {t("business.upload_offer_photo") || "Upload offer photo"}
+                      </p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                        {t("business.photo_hint") || "PNG or JPG, up to 10MB"}
+                      </p>
+                    </>
+                  )}
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg"
+                    className="hidden"
+                    onChange={(e) => handlePhotoChange(e.target.files?.[0] || null)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="offer-title" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                  {t("offers_admin.title_label") || "Offer Title"} *
+                </Label>
+                <Input
+                  id="offer-title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g., 20% off Coffee"
+                  required
+                  className="h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-sm font-semibold"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="offer-description" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                  {t("offers_admin.description_label") || "Description"}
+                </Label>
+                <textarea
+                  id="offer-description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder={t("offers.describe_offer_placeholder")}
+                  rows={4}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/40 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm font-medium resize-y"
+                />
+              </div>
+            </div>
+
+            {/* Right Column: Discount details, usage rules, validity */}
+            <div className="lg:col-span-6 space-y-4">
+              <div>
+                <Label htmlFor="offer-discount-type" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                  {t("offers_admin.discount_type_label") || "Discount Type"}
                 </Label>
                 <select
-                  id="offer-bogo-type"
-                  value={bogoSecondType}
-                  onChange={(e) => setBogoSecondType(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  id="offer-discount-type"
+                  value={discountType}
+                  onChange={(e) => {
+                    setDiscountType(e.target.value);
+                    setBogoSecondType("");
+                    if (e.target.value === "BOGO" || e.target.value === "Free item") {
+                      setDiscountValue("");
+                    }
+                  }}
+                  className="w-full h-11 px-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/40"
                 >
-                  <option value="">{t("offers.choose_second_item_type")}</option>
-                  <option value="free">{t("offers.second_item_free")}</option>
-                  <option value="percentage">{t("business.second_item_pct") || "Second item has a % discount"}</option>
+                  <option value="">{t("offers_admin.select_type") || "Select type"}</option>
+                  <option value="Percentage">{t("business.percentage") || "Percentage"}</option>
+                  <option value="Flat">{t("business.flat_amount") || "Flat Amount"}</option>
+                  <option value="BOGO">{t("business.bogo") || "Buy One Get One (BOGO)"}</option>
+                  <option value="Free item">{t("business.free_item") || t("offers_admin.free_item") || "Free Item"}</option>
                 </select>
               </div>
-              {bogoSecondType === "percentage" && (
+
+              {discountType === "BOGO" && (
+                <div className="space-y-3 rounded-2xl border border-yellow-200 dark:border-yellow-900/40 bg-yellow-50/70 dark:bg-yellow-950/20 p-4">
+                  <div>
+                    <Label htmlFor="offer-bogo-type" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                      {t("business.second_item") || "Second item"}
+                    </Label>
+                    <select
+                      id="offer-bogo-type"
+                      value={bogoSecondType}
+                      onChange={(e) => setBogoSecondType(e.target.value)}
+                      className="w-full h-10 px-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm font-semibold"
+                    >
+                      <option value="">{t("offers.choose_second_item_type")}</option>
+                      <option value="free">{t("offers.second_item_free")}</option>
+                      <option value="percentage">{t("business.second_item_pct") || "Second item has a % discount"}</option>
+                    </select>
+                  </div>
+                  {bogoSecondType === "percentage" && (
+                    <div>
+                      <Label htmlFor="offer-discount-value" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                        {t("business.pct_off_second") || "% off second item"}
+                      </Label>
+                      <Input
+                        id="offer-discount-value"
+                        type="number"
+                        min={1}
+                        max={100}
+                        value={discountValue}
+                        onChange={(e) => setDiscountValue(e.target.value)}
+                        placeholder="e.g., 50"
+                        className="h-10 rounded-xl bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {discountType !== "BOGO" && discountType !== "Free item" && discountType && (
                 <div>
-                  <Label htmlFor="offer-discount-value" className="text-gray-700 dark:text-slate-300">
-                    {t("business.pct_off_second") || "% off second item"}
+                  <Label htmlFor="offer-discount-value" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                    {t("offers_admin.discount_value_label") || "Discount Value"}
                   </Label>
                   <Input
                     id="offer-discount-value"
                     type="number"
-                    min={1}
-                    max={100}
+                    min={0}
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
-                    placeholder="e.g., 50"
-                    className="mt-1 bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
+                    placeholder="e.g., 10"
+                    className="h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-sm font-semibold"
                   />
                 </div>
               )}
-            </div>
-          )}
 
-          {discountType !== "BOGO" && discountType !== "Free item" && discountType && (
-            <div>
-              <Label htmlFor="offer-discount-value" className="text-gray-700 dark:text-slate-300">{t("offers_admin.discount_value_label") || "Discount Value"}</Label>
-              <Input
-                id="offer-discount-value"
-                type="number"
-                min={0}
-                value={discountValue}
-                onChange={(e) => setDiscountValue(e.target.value)}
-                placeholder="e.g., 10"
-                className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-              />
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="offer-max" className="text-gray-700 dark:text-slate-300">{t("offers_admin.redemptions_per_user") || "Redemptions Per User"}</Label>
-              <Input
-                id="offer-max"
-                type="number"
-                min={0}
-                value={maxRedemptions}
-                onChange={(e) => setMaxRedemptions(e.target.value)}
-                placeholder="e.g., 1"
-                className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-              />
-              <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
-                {t("business.redemptions_help") || "How many times one customer can use this offer"}
-              </p>
-            </div>
-            <div>
-              <Label htmlFor="offer-frequency" className="text-sm font-medium text-gray-700 dark:text-slate-300">
-                {t("business.redemption_frequency") || "Redemption Frequency"}
-              </Label>
-              <select
-                id="offer-frequency"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
-                value={redemptionFrequency}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setRedemptionFrequency(val);
-                  if (val === "daily") setRedemptionDuration("1440");
-                  else if (val === "weekly") setRedemptionDuration("10080");
-                  else if (val === "monthly") setRedemptionDuration("43200");
-                  else if (val === "once") setRedemptionDuration("525600");
-                }}
-              >
-                <option value="daily">{t("business.freq_daily") || "Daily (Once per 24 hours)"}</option>
-                <option value="weekly">{t("business.freq_weekly") || "Weekly (Once per 7 days)"}</option>
-                <option value="monthly">{t("business.freq_monthly") || "Monthly (Once per 30 days)"}</option>
-                <option value="once">{t("business.freq_once") || t("offers.one_time_only") || "One-time only"}</option>
-                <option value="custom">{t("business.freq_custom") || "Custom Duration"}</option>
-              </select>
-
-              {redemptionFrequency === "daily" && (
-                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  {t("business.redeem_daily_hint") || "Customers can redeem this offer once every 24 hours"}
-                </p>
-              )}
-              {redemptionFrequency === "weekly" && (
-                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  {t("business.redeem_weekly_hint") || "Customers can redeem this offer once every 7 days"}
-                </p>
-              )}
-              {redemptionFrequency === "monthly" && (
-                <p className="mt-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  {t("business.redeem_monthly_hint") || "Customers can redeem this offer once every 30 days"}
-                </p>
-              )}
-              {redemptionFrequency === "once" && (
-                <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium">
-                  {t("business.redeem_once_hint") || "Each customer can only redeem this offer once"}
-                </p>
-              )}
-
-              {redemptionFrequency === "custom" && (
-                <div className="mt-2">
-                  <Label htmlFor="offer-duration" className="text-xs text-gray-600 dark:text-slate-400">
-                    {t("business.duration_minutes") || "Duration in minutes"}
-                  </Label>
-                  <Input
-                    id="offer-duration"
-                    type="number"
-                    min={1}
-                    value={redemptionDuration}
-                    onChange={(e) => setRedemptionDuration(e.target.value)}
-                    placeholder="e.g., 1440 for 24 hours"
-                    className="mt-1 text-xs dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="offer-from" className="text-gray-700 dark:text-slate-300">
-                {t("business.valid_from") || "Valid From"}
-              </Label>
-              <Input
-                id="offer-from"
-                type="date"
-                value={validFrom}
-                onChange={(e) => setValidFrom(e.target.value)}
-                className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-              />
-            </div>
-            <div className="space-y-2">
-              {!noExpiration && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="offer-until" className="text-gray-700 dark:text-slate-300">
-                    {t("business.valid_until") || "Valid Until"}
+                  <Label htmlFor="offer-max" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                    {t("offers_admin.redemptions_per_user") || "Redemptions Per User"}
                   </Label>
                   <Input
-                    id="offer-until"
+                    id="offer-max"
+                    type="number"
+                    min={0}
+                    value={maxRedemptions}
+                    onChange={(e) => setMaxRedemptions(e.target.value)}
+                    placeholder="e.g., 1"
+                    className="h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-sm font-semibold"
+                  />
+                  <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">
+                    {t("business.redemptions_help") || "How many times one customer can use this offer"}
+                  </p>
+                </div>
+                <div>
+                  <Label htmlFor="offer-frequency" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                    {t("business.redemption_frequency") || "Redemption Frequency"}
+                  </Label>
+                  <select
+                    id="offer-frequency"
+                    className="w-full h-11 px-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 text-sm font-semibold bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                    value={redemptionFrequency}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setRedemptionFrequency(val);
+                      if (val === "daily") setRedemptionDuration("1440");
+                      else if (val === "weekly") setRedemptionDuration("10080");
+                      else if (val === "monthly") setRedemptionDuration("43200");
+                      else if (val === "once") setRedemptionDuration("525600");
+                    }}
+                  >
+                    <option value="daily">{t("business.freq_daily") || "Daily (Once per 24 hours)"}</option>
+                    <option value="weekly">{t("business.freq_weekly") || "Weekly (Once per 7 days)"}</option>
+                    <option value="monthly">{t("business.freq_monthly") || "Monthly (Once per 30 days)"}</option>
+                    <option value="once">{t("business.freq_once") || t("offers.one_time_only") || "One-time only"}</option>
+                    <option value="custom">{t("business.freq_custom") || "Custom Duration"}</option>
+                  </select>
+
+                  {redemptionFrequency === "daily" && (
+                    <p className="mt-1.5 text-[11px] text-blue-600 dark:text-blue-400 font-medium">
+                      {t("business.redeem_daily_hint") || "Customers can redeem this offer once every 24 hours"}
+                    </p>
+                  )}
+                  {redemptionFrequency === "weekly" && (
+                    <p className="mt-1.5 text-[11px] text-blue-600 dark:text-blue-400 font-medium">
+                      {t("business.redeem_weekly_hint") || "Customers can redeem this offer once every 7 days"}
+                    </p>
+                  )}
+                  {redemptionFrequency === "monthly" && (
+                    <p className="mt-1.5 text-[11px] text-blue-600 dark:text-blue-400 font-medium">
+                      {t("business.redeem_monthly_hint") || "Customers can redeem this offer once every 30 days"}
+                    </p>
+                  )}
+                  {redemptionFrequency === "once" && (
+                    <p className="mt-1.5 text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                      {t("business.redeem_once_hint") || "Each customer can only redeem this offer once"}
+                    </p>
+                  )}
+
+                  {redemptionFrequency === "custom" && (
+                    <div className="mt-2">
+                      <Label htmlFor="offer-duration" className="text-xs text-slate-600 dark:text-slate-400">
+                        {t("business.duration_minutes") || "Duration in minutes"}
+                      </Label>
+                      <Input
+                        id="offer-duration"
+                        type="number"
+                        min={1}
+                        value={redemptionDuration}
+                        onChange={(e) => setRedemptionDuration(e.target.value)}
+                        placeholder="e.g., 1440 for 24 hours"
+                        className="mt-1 h-9 text-xs dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="offer-from" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                    {t("business.valid_from") || "Valid From"}
+                  </Label>
+                  <Input
+                    id="offer-from"
                     type="date"
-                    value={validUntil}
-                    onChange={(e) => setValidUntil(e.target.value)}
-                    className="mt-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
+                    value={validFrom}
+                    onChange={(e) => setValidFrom(e.target.value)}
+                    className="h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-sm font-semibold"
                   />
                 </div>
-              )}
-              <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-slate-300 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={noExpiration}
-                  onChange={(e) => setNoExpiration(e.target.checked)}
+                <div className="space-y-2">
+                  {!noExpiration && (
+                    <div>
+                      <Label htmlFor="offer-until" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                        {t("business.valid_until") || "Valid Until"}
+                      </Label>
+                      <Input
+                        id="offer-until"
+                        type="date"
+                        value={validUntil}
+                        onChange={(e) => setValidUntil(e.target.value)}
+                        className="h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-sm font-semibold"
+                      />
+                    </div>
+                  )}
+                  <label className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer pt-1">
+                    <input
+                      type="checkbox"
+                      checked={noExpiration}
+                      onChange={(e) => setNoExpiration(e.target.checked)}
+                      className="rounded accent-primary"
+                    />
+                    {t("business.no_expiration") || "No Expiration"}
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="offer-rules" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5 block">
+                  {t("business.redemption_rules") || "Redemption Rules"}
+                </Label>
+                <textarea
+                  id="offer-rules"
+                  value={redemptionRules}
+                  onChange={(e) => setRedemptionRules(e.target.value)}
+                  placeholder={t("business.one_rule_per_line") || "One rule per line"}
+                  rows={3}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/40 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm font-medium resize-y"
                 />
-                {t("business.no_expiration") || "No Expiration"}
-              </label>
+              </div>
             </div>
           </div>
 
-          <div>
-            <Label htmlFor="offer-rules" className="text-gray-700 dark:text-slate-300">
-              {t("business.redemption_rules") || "Redemption Rules"}
-            </Label>
-            <textarea
-              id="offer-rules"
-              value={redemptionRules}
-              onChange={(e) => setRedemptionRules(e.target.value)}
-              placeholder={t("business.one_rule_per_line") || "One rule per line"}
-              rows={3}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
-            />
-          </div>
-
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+              className="rounded-xl px-5 h-11 font-bold cursor-pointer"
             >
               {t("common.cancel") || "Cancel"}
             </Button>
-            <Button type="submit" disabled={isLoading} className="min-w-32 bg-[#fabf13] hover:bg-[#e0ac10] text-slate-950 font-bold">
+            <Button type="submit" disabled={isLoading} className="rounded-xl px-8 h-11 bg-primary hover:bg-primary/90 text-slate-950 font-bold shadow-md shadow-primary/20 cursor-pointer">
               {isLoading
                 ? t("business.saving") || "Saving..."
                 : isEdit

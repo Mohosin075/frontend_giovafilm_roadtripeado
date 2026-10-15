@@ -43,6 +43,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { BusinessOfferDialog } from "./business-offer-dialog";
+import { BusinessEditDialog } from "./business-edit-dialog";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 
@@ -60,6 +61,7 @@ export default function BusinessDetails() {
     : offersRes?.data || null;
   const offer = business?.offer || linkedOffer;
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
+  const [businessEditDialogOpen, setBusinessEditDialogOpen] = useState(false);
   const [redemptionHistoryOpen, setRedemptionHistoryOpen] = useState(false);
   const [statsTimeFilter, setStatsTimeFilter] = useState<string>("all_time");
 
@@ -191,6 +193,15 @@ export default function BusinessDetails() {
           </button>
 
           <div className="flex items-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setBusinessEditDialogOpen(true)}
+              className="bg-white dark:bg-[#131b2e] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-800 font-bold gap-2 h-10 rounded-xl cursor-pointer"
+            >
+              <Pencil size={15} />
+              {t("business.edit_business") || "Edit Business"}
+            </Button>
             <Badge
               className={`px-4 py-2 rounded-xl border flex items-center gap-2 text-xs font-black uppercase tracking-wider ${getStatusStyles(business.status)}`}
             >
@@ -255,10 +266,22 @@ export default function BusinessDetails() {
               </div>
 
               <div className="p-8">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-                  <Info className="text-primary" size={20} />
-                  {t("business_details.about_business")}
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                    <Info className="text-primary" size={20} />
+                    {t("business_details.about_business")}
+                  </h3>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setBusinessEditDialogOpen(true)}
+                    className="text-primary hover:text-primary hover:bg-primary/10 font-bold gap-1.5 h-8 text-xs cursor-pointer rounded-lg"
+                  >
+                    <Pencil size={13} />
+                    {t("business.edit_business") || "Edit Business"}
+                  </Button>
+                </div>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium whitespace-pre-wrap">
                   {business.description}
                 </p>
@@ -701,6 +724,12 @@ export default function BusinessDetails() {
         onOpenChange={setOfferDialogOpen}
         businessId={business._id}
         existingOffer={offer}
+      />
+
+      <BusinessEditDialog
+        open={businessEditDialogOpen}
+        onOpenChange={setBusinessEditDialogOpen}
+        business={business}
       />
 
       {/* Redemption History Dialog */}

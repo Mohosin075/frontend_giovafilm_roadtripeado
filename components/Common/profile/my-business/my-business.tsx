@@ -20,6 +20,9 @@ import {
   BarChart3,
   CheckCircle2,
   Filter,
+  Search,
+  Pencil,
+  X,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,31 +36,71 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { NoImage } from "@/lib/others/others";
 import { useCreateCheckoutSessionMutation } from "@/redux/features/subscription/subscriptionApi";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
-
+import { BusinessEditDialog } from "./business-edit-dialog";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function MyBusinessPage() {
   const { t } = useLanguage();
   const router = useRouter();
-  const [timeFilter, setTimeFilter] = useState<string>("all_time");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [editingBusiness, setEditingBusiness] = useState<any | null>(null);
 
-  const { data: response, isLoading, isFetching } = useGetMyBusinessesQuery({
-    timeFilter: timeFilter === "all_time" ? "" : timeFilter,
-  });
+  const { data: response, isLoading, isFetching } = useGetMyBusinessesQuery();
   const businesses = response?.data || [];
   const stats = response?.meta?.stats || {
     totalBusinesses: businesses.length,
     totalViews: 0,
     totalDiscountsRedeemed: 0,
     activeBusinesses: businesses.filter(
-      (b: any) => b.hasActiveSubscription && b.status === "Approved"
+      (b: any) => b.hasActiveSubscription && (b.status === "Approved" || b.status === "approved")
     ).length,
   };
+
+  const activeBusinessesCount = businesses.filter(
+    (b: any) => b.hasActiveSubscription && (b.status || "").toLowerCase() === "approved"
+  ).length;
+
+  const pendingBusinessesCount = businesses.filter(
+    (b: any) => (b.status || "").toLowerCase() === "pending"
+  ).length;
+
+  const inactiveBusinessesCount = businesses.filter(
+    (b: any) => !b.hasActiveSubscription
+  ).length;
+
+  const filteredBusinesses = businesses.filter((b: any) => {
+    // Status filter
+    if (statusFilter === "active") {
+      const isApproved = (b.status || "").toLowerCase() === "approved";
+      if (!isApproved || !b.hasActiveSubscription) return false;
+    } else if (statusFilter === "pending") {
+      if ((b.status || "").toLowerCase() !== "pending") return false;
+    } else if (statusFilter === "inactive") {
+      if (b.hasActiveSubscription) return false;
+    } else if (statusFilter === "rejected") {
+      if ((b.status || "").toLowerCase() !== "rejected") return false;
+    }
+
+    // Search term filter
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      const name = (typeof b.name === "object" ? `${b.name.en || ""} ${b.name.es || ""}` : (b.name || "")).toLowerCase();
+      const city = (b.location?.city || "").toLowerCase();
+      const address = (b.location?.address || "").toLowerCase();
+      const categoryName = (b.category?.name || "").toLowerCase();
+      const matches = name.includes(term) || city.includes(term) || address.includes(term) || categoryName.includes(term);
+      if (!matches) return false;
+    }
+
+    return true;
+  });
 
   const [createPayment, { isLoading: isPaymentLoading }] =
     useCreateCheckoutSessionMutation();
@@ -88,18 +131,16 @@ export default function MyBusinessPage() {
     });
   };
 
-  // ['Pending', 'Approved', 'Rejected']
-
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "Approved":
-        return "bg-emerald-500 text-emerald-600 border-emerald-500/20";
-      case "Pending":
-        return "bg-amber-500/10 text-amber-600 border-amber-500/20";
-      case "Rejected":
-        return "bg-rose-500/10 text-rose-600 border-rose-500/20";
+    switch ((status || "").toLowerCase()) {
+      case "approved":
+        return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
+      case "pending":
+        return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20";
+      case "rejected":
+        return "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20";
       default:
-        return "bg-slate-500/10 text-slate-600 border-slate-500/20";
+        return "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20";
     }
   };
 
@@ -164,37 +205,61 @@ export default function MyBusinessPage() {
 
         {businesses.length > 0 && (
           <div className="mb-10 space-y-6">
-            {/* Filter Bar */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-[#131b2e] p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-bold text-sm">
-                <Filter size={18} className="text-primary" />
-                <span>{t("business_details.filter_by_period") || "Filter statistics by time period"}:</span>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                {[
-                  { id: "all_time", label: t("business_details.period_all_time") || "All Time" },
-                  { id: "today", label: t("business_details.period_today") || "Today" },
-                  { id: "this_week", label: t("business_details.period_this_week") || "This Week" },
-                  { id: "this_month", label: t("business_details.period_this_month") || "This Month" },
-                  { id: "last_month", label: t("business_details.period_last_month") || "Last Month" },
-                ].map((tab) => {
-                  const isActive = timeFilter === tab.id;
-                  return (
+            {/* Search & Status Filters */}
+            <div className="bg-white dark:bg-[#131b2e] p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                {/* Search Input */}
+                <div className="relative flex-1">
+                  <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder={t("business.search_placeholder") || "Search businesses by name, city, or address..."}
+                    className="pl-10 pr-9 h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-sm font-semibold"
+                  />
+                  {searchTerm && (
                     <button
-                      key={tab.id}
                       type="button"
-                      onClick={() => setTimeFilter(tab.id)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                        isActive
-                          ? "bg-primary text-slate-950 shadow-sm shadow-primary/30"
-                          : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/70 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"
-                      }`}
+                      onClick={() => setSearchTerm("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer"
                     >
-                      {tab.label}
+                      <X size={15} />
                     </button>
-                  );
-                })}
+                  )}
+                </div>
+
+                {/* Status Filter Tabs */}
+                <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+                  {[
+                    { id: "all", label: t("common.all") || "All", count: businesses.length },
+                    { id: "active", label: t("business.status_active") || "Active", count: activeBusinessesCount },
+                    { id: "pending", label: t("business.status_pending") || "Pending", count: pendingBusinessesCount },
+                    { id: "inactive", label: t("business.status_inactive") || "Inactive / Unpaid", count: inactiveBusinessesCount },
+                  ].map((tab) => {
+                    const isActive = statusFilter === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setStatusFilter(tab.id)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                          isActive
+                            ? "bg-slate-900 dark:bg-primary text-white dark:text-slate-950 shadow-sm"
+                            : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/70 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"
+                        }`}
+                      >
+                        <span>{tab.label}</span>
+                        <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                          isActive
+                            ? "bg-white/20 dark:bg-black/20 text-current"
+                            : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                        }`}>
+                          {tab.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
@@ -283,9 +348,31 @@ export default function MyBusinessPage() {
               </Button>
             </Link>
           </motion.div>
+        ) : filteredBusinesses.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 px-6 bg-white dark:bg-[#131b2e] rounded-3xl border border-slate-200 dark:border-slate-800 text-center">
+            <div className="w-14 h-14 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 text-slate-400">
+              <Search size={26} />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1">
+              {t("business.no_matching_businesses") || "No matching businesses found"}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-6">
+              {t("business.try_adjusting_filters") || "Try adjusting your search query or status filter."}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("all");
+              }}
+              className="rounded-xl px-5 font-bold cursor-pointer"
+            >
+              {t("business.clear_filters") || "Clear Filters"}
+            </Button>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {businesses.map((business: any, index: number) => (
+            {filteredBusinesses.map((business: any, index: number) => (
               <motion.div
                 key={business._id}
                 initial={{ opacity: 0, y: 20 }}
@@ -367,6 +454,12 @@ export default function MyBusinessPage() {
                           <Link href={`/profile/my-business/${business._id}`}>
                             <Eye size={16} /> {t("business.view_details") || "View Details"}
                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => setEditingBusiness(business)}
+                          className="rounded-lg gap-2 font-medium focus:bg-slate-50 dark:focus:bg-slate-850 cursor-pointer"
+                        >
+                          <Pencil size={16} /> {t("business.edit_business") || "Edit Business"}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
@@ -520,6 +613,12 @@ export default function MyBusinessPage() {
           </div>
         )}
       </div>
+
+      <BusinessEditDialog
+        open={!!editingBusiness}
+        onOpenChange={(open) => !open && setEditingBusiness(null)}
+        business={editingBusiness}
+      />
     </div>
   );
 }
