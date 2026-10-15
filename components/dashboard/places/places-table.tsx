@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
 import { ReviewModal } from "../../Common/maps/review-modal";
@@ -79,10 +80,12 @@ interface Place {
 
 export function PlacesTable() {
   const { t, language } = useLanguage();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams?.get("search") || "";
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState(urlSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
   const [country, setCountry] = useState("");
@@ -90,6 +93,13 @@ export function PlacesTable() {
 
   const [rejectTargetPlace, setRejectTargetPlace] = useState<Place | null>(null);
   const [rejectFeedback, setRejectFeedback] = useState("");
+
+  useEffect(() => {
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+      setDebouncedSearch(urlSearch.trim());
+    }
+  }, [urlSearch]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

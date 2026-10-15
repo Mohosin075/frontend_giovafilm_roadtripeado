@@ -10,7 +10,8 @@ import {
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { editorCanAccessMap } from "@/lib/editor-access";
 import { Edit, Eye, EyeOff, Search, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
 
@@ -40,9 +41,17 @@ import { getLocalized } from "@/lib/utils";
 
 export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
   const { t, language } = useLanguage();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams?.get("search") || "";
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(urlSearch);
+
+  useEffect(() => {
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+    }
+  }, [urlSearch]);
 
   const { data: user } = useGetProfileQuery({});
 

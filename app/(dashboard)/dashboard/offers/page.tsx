@@ -5,7 +5,7 @@ import { OffersTable } from "@/components/dashboard/offers/offers-table";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
 export default function Page() {
   const { t } = useLanguage();
@@ -38,7 +38,9 @@ export default function Page() {
       </div>
 
       {/* Table */}
-      <OffersTable onEdit={handleOpenEdit} />
+      <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading offers...</div>}>
+        <OffersTable onEdit={handleOpenEdit} />
+      </Suspense>
 
       {/* Create / Edit Offer Dialog */}
       <CreateOfferDialog

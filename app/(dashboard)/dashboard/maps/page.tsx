@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Plus } from "lucide-react";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
 export default function Page() {
   const { t } = useLanguage();
@@ -43,7 +43,9 @@ export default function Page() {
       </div>
 
       {/* Table */}
-      <MapsTable onEditMap={handleEditMap} />
+      <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading maps...</div>}>
+        <MapsTable onEditMap={handleEditMap} />
+      </Suspense>
 
       <CreateMapModal 
         open={open} 

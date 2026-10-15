@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Search, MoreHorizontal, RotateCcw, Loader2 } from "lucide-react";
 import {
   useGetBusinessesQuery,
@@ -30,6 +30,8 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function BusinessTable() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams?.get("search") || "";
   const { t, language } = useLanguage();
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -44,11 +46,18 @@ export function BusinessTable() {
   ];
 
   // Params State
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState(urlSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
   const [status, setStatus] = useState("all");
   const [page, setPage] = useState(1);
   const limit = 10;
+
+  useEffect(() => {
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+      setDebouncedSearch(urlSearch.trim());
+    }
+  }, [urlSearch]);
 
   const [updateStatus, { isLoading: isUpdating }] =
     useUpdateBusinessStatusMutation();

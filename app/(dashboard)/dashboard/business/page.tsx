@@ -3,6 +3,7 @@
 import { BusinessStats } from "@/components/dashboard/business/business-stats";
 import { BusinessTable } from "@/components/dashboard/business/business-table";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { Suspense } from "react";
 
 export default function Page() {
   const { t } = useLanguage();
@@ -14,7 +15,9 @@ export default function Page() {
 
       <BusinessStats />
       {/* Table */}
-      <BusinessTable />
+      <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading businesses...</div>}>
+        <BusinessTable />
+      </Suspense>
     </div>
   );
 }

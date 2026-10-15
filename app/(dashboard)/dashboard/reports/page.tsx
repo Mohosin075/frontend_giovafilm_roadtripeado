@@ -143,9 +143,9 @@ export default function ReportsPage() {
     csvContent += "\n";
 
     csvContent += "USAGE STATISTICS - TOP REDEEMED OFFERS\n";
-    csvContent += "Offer Title,Redemptions\n";
+    csvContent += "Offer Title,Business,Redemptions\n";
     reportData.usage?.mostRedeemedOffers?.forEach((item: any) => {
-      csvContent += `"${item.name}","${item.count}"\n`;
+      csvContent += `"${item.name}","${item.businessName || ''}","${item.count}"\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -238,6 +238,7 @@ export default function ReportsPage() {
                   <thead>
                     <tr>
                       <th>Offer Title</th>
+                      <th>Business</th>
                       <th>Redemptions</th>
                     </tr>
                   </thead>
@@ -245,9 +246,10 @@ export default function ReportsPage() {
                     ${reportData.usage?.mostRedeemedOffers?.map((item: any) => `
                       <tr>
                         <td>${item.name}</td>
+                        <td>${item.businessName || '-'}</td>
                         <td>${item.count?.toLocaleString()}</td>
                       </tr>
-                    `).join('') || '<tr><td colspan="2">No data</td></tr>'}
+                    `).join('') || '<tr><td colspan="3">No data</td></tr>'}
                   </tbody>
                 </table>
               </div>

@@ -4,6 +4,7 @@ import { PlacesTable } from "@/components/dashboard/places/places-table";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default function Page() {
   const { t } = useLanguage();
@@ -24,7 +25,9 @@ export default function Page() {
       </div>
 
       {/* Table */}
-      <PlacesTable />
+      <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading places...</div>}>
+        <PlacesTable />
+      </Suspense>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   useDeleteOfferMutation,
   useGetOffersQuery,
@@ -26,11 +27,19 @@ import { getLocalized } from "@/lib/utils";
 
 export function OffersTable({ onEdit }: { onEdit?: (offer: any) => void }) {
   const { t, language } = useLanguage();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams?.get("search") || "";
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(urlSearch);
   const [country, setCountry] = useState("");
   const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+    }
+  }, [urlSearch]);
 
   const { data: user } = useGetProfileQuery({});
   const { data: mapsRes } = useGetMapsQuery({ limit: 100 });
