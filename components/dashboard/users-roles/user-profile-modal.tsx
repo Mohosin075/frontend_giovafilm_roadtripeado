@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -412,6 +413,11 @@ export function UserProfileModal({
                             vp.business?.location?.city ||
                             "";
                           const image = vp.place?.media?.[0];
+                          const targetId = vp.place?._id || vp.place?.id || vp.business?._id || vp.business?.id;
+                          const isBiz = !vp.place?._id && !!vp.business?._id;
+                          const targetHref = targetId
+                            ? (isBiz ? `/places/${targetId}?type=business` : `/places/${targetId}`)
+                            : null;
 
                           return (
                             <div
@@ -430,9 +436,20 @@ export function UserProfileModal({
                                 )}
                               </div>
                               <div className="min-w-0 flex-1">
-                                <p className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate">
-                                  {placeName}
-                                </p>
+                                {targetHref ? (
+                                  <Link
+                                    href={targetHref}
+                                    target="_blank"
+                                    className="text-xs font-bold text-gray-900 dark:text-slate-100 hover:text-amber-500 dark:hover:text-amber-400 hover:underline transition-colors block truncate"
+                                    title={placeName}
+                                  >
+                                    {placeName} ↗
+                                  </Link>
+                                ) : (
+                                  <p className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate">
+                                    {placeName}
+                                  </p>
+                                )}
                                 {placeAddress && (
                                   <p className="text-[10px] text-gray-400 dark:text-slate-500 truncate">
                                     {placeAddress}
@@ -481,9 +498,24 @@ export function UserProfileModal({
                                   {formatDate(act.timestamp)}
                                 </span>
                               </div>
-                              <p className="text-xs font-semibold text-gray-900 dark:text-slate-100 truncate">
-                                {act.name}
-                              </p>
+                              {act.targetId ? (
+                                <Link
+                                  href={
+                                    act.targetType === "business"
+                                      ? `/places/${act.targetId}?type=business`
+                                      : `/places/${act.targetId}`
+                                  }
+                                  target="_blank"
+                                  className="text-xs font-semibold text-gray-900 dark:text-slate-100 hover:text-amber-500 dark:hover:text-amber-400 hover:underline transition-colors block truncate"
+                                  title={act.name}
+                                >
+                                  {act.name} ↗
+                                </Link>
+                              ) : (
+                                <p className="text-xs font-semibold text-gray-900 dark:text-slate-100 truncate">
+                                  {act.name}
+                                </p>
+                              )}
                               {act.comment && (
                                 <p className="text-[11px] text-gray-500 dark:text-slate-400 italic line-clamp-1 mt-0.5">
                                   "{act.comment}"
@@ -671,23 +703,43 @@ export function UserProfileModal({
                     </div>
                   ) : (
                     <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
-                      {reviews.map((rev: any) => (
-                        <div
-                          key={rev._id}
-                          className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1.5"
-                        >
-                          <div className="flex items-center justify-between">
-                            <p className="text-xs font-bold text-gray-900 dark:text-slate-100">
-                              {rev.placeId?.name
-                                ? getLocalized(rev.placeId.name, language)
-                                : rev.businessId?.name
-                                  ? getLocalized(rev.businessId.name, language)
-                                  : "Location Review"}
-                            </p>
-                            <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium">
-                              {formatDate(rev.createdAt)}
-                            </span>
-                          </div>
+                      {reviews.map((rev: any) => {
+                        const targetId = rev.placeId?._id || rev.placeId?.id || (typeof rev.placeId === "string" ? rev.placeId : null) || rev.businessId?._id || rev.businessId?.id || (typeof rev.businessId === "string" ? rev.businessId : null);
+                        const isBiz = !rev.placeId && !!rev.businessId;
+                        const placeHref = targetId
+                          ? (isBiz ? `/places/${targetId}?type=business` : `/places/${targetId}`)
+                          : null;
+                        const placeName = rev.placeId?.name
+                          ? getLocalized(rev.placeId.name, language)
+                          : rev.businessId?.name
+                            ? getLocalized(rev.businessId.name, language)
+                            : "Location Review";
+
+                        return (
+                          <div
+                            key={rev._id}
+                            className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-4 rounded-2xl shadow-2xs space-y-1.5"
+                          >
+                            <div className="flex items-center justify-between">
+                              {placeHref ? (
+                                <Link
+                                  href={placeHref}
+                                  target="_blank"
+                                  className="text-xs font-bold text-gray-900 dark:text-slate-100 hover:text-amber-500 dark:hover:text-amber-400 hover:underline transition-colors flex items-center gap-1 group truncate"
+                                  title={placeName}
+                                >
+                                  <span className="truncate">{placeName}</span>
+                                  <span className="text-[10px] text-amber-500 opacity-60 group-hover:opacity-100 transition-opacity">↗</span>
+                                </Link>
+                              ) : (
+                                <p className="text-xs font-bold text-gray-900 dark:text-slate-100">
+                                  {placeName}
+                                </p>
+                              )}
+                              <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium shrink-0">
+                                {formatDate(rev.createdAt)}
+                              </span>
+                            </div>
                           {rev.review && (
                             <p className="text-xs text-gray-600 dark:text-slate-300 leading-relaxed italic">
                               "{rev.review?.en || rev.review?.es || rev.review}"
@@ -708,7 +760,8 @@ export function UserProfileModal({
                             </Badge>
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>

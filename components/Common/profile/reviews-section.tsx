@@ -68,40 +68,46 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
         {reviews?.map((review) => {
           const isBusinessReview = !!review.businessId;
           const target = isBusinessReview ? review.businessId : review.placeId;
+          const targetId = (target as any)?._id || (target as any)?.id || (typeof target === "string" ? target : "");
           const targetName = getLocalized(target?.name, language) || "Unknown";
           const coverImage = isBusinessReview
             ? review.businessId?.media?.photos?.[0]
             : review.placeId?.media?.[0];
-          const detailsHref = isBusinessReview
-            ? `/maps/${target?._id}?type=business`
-            : `/maps/${target?._id}`;
+          const detailsHref = targetId
+            ? (isBusinessReview ? `/places/${targetId}?type=business` : `/places/${targetId}`)
+            : "#";
 
           return (
           <div
             key={review._id}
-            className="bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-200 dark:border-slate-800/80 overflow-hidden hover:shadow-lg transition-all flex flex-col md:flex-row"
+            className="bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-200 dark:border-slate-800/80 overflow-hidden hover:shadow-lg transition-all flex flex-col md:flex-row group"
           >
             {/* Image Section */}
-            <div className="relative w-full md:w-56 h-56 shrink-0">
-              {coverImage ? (
-                <Image
-                  src={getImageUrl(coverImage)}
-                  alt={targetName}
-                  unoptimized
-                  width={500}
-                  height={500}
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <div className="w-full md:w-56 h-56">
-                  <NoImage />
-                </div>
-              )}
+            <div className="relative w-full md:w-56 h-56 shrink-0 overflow-hidden bg-gray-100 dark:bg-slate-900">
+              <Link href={detailsHref} className="block w-full h-full">
+                {coverImage ? (
+                  <Image
+                    src={getImageUrl(coverImage)}
+                    alt={targetName}
+                    unoptimized
+                    width={500}
+                    height={500}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full md:w-56 h-56">
+                    <NoImage />
+                  </div>
+                )}
+              </Link>
 
               {/* Location Badge */}
-              <div className="absolute bottom-3 left-1 bg-white/95 dark:bg-[#0b0f19]/95 px-2 py-1 rounded-md text-xs font-semibold text-gray-900 dark:text-slate-100 border border-transparent dark:border-slate-800 shadow-md flex items-center gap-1">
+              <Link
+                href={detailsHref}
+                className="absolute bottom-3 left-1 bg-white/95 dark:bg-[#0b0f19]/95 px-2 py-1 rounded-md text-xs font-semibold text-gray-900 dark:text-slate-100 border border-transparent dark:border-slate-800 shadow-md flex items-center gap-1 hover:text-amber-500 transition-colors"
+              >
                 <MapPin size={14} /> {targetName}
-              </div>
+              </Link>
             </div>
 
             {/* Content Section */}
@@ -109,9 +115,15 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
               {/* Title and Rating */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">
-                    {targetName}
-                  </h3>
+                  <Link
+                    href={detailsHref}
+                    className="hover:text-amber-500 dark:hover:text-amber-400 hover:underline transition-colors block"
+                    title={targetName}
+                  >
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+                      {targetName}
+                    </h3>
+                  </Link>
                   {/* Star Rating */}
                   <div className="flex gap-1">
                     {Array.from({ length: 5 }).map((_, i) => (

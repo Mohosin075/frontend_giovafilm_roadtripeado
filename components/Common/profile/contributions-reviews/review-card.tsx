@@ -20,39 +20,52 @@ export function ReviewCard({ review }: any) {
 
   const isBusinessReview = !!review?.businessId;
   const target = isBusinessReview ? review.businessId : review.placeId;
+  const targetId = target?._id || target?.id || (typeof target === "string" ? target : "");
   const targetName = getLocalized(target?.name, language) || t("common.unknown") || "Unknown";
   const coverImage = isBusinessReview
     ? target?.media?.photos?.[0]
     : target?.media?.[0];
-  const detailsHref = isBusinessReview
-    ? `/maps/${target?._id}?type=business`
-    : `/maps/${target?._id}`;
+  const detailsHref = targetId
+    ? (isBusinessReview ? `/places/${targetId}?type=business` : `/places/${targetId}`)
+    : "#";
 
   return (
-    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 flex flex-col md:flex-row hover:shadow-md transition-all duration-200 overflow-hidden">
+    <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 flex flex-col md:flex-row hover:shadow-md transition-all duration-200 overflow-hidden group">
       {coverImage ? (
-        <div className="shrink-0 w-full md:w-48 lg:w-56 h-36 sm:h-40 md:h-auto md:self-stretch min-h-[140px] md:max-h-[190px] relative overflow-hidden bg-gray-100 dark:bg-slate-900">
+        <Link
+          href={detailsHref}
+          className="shrink-0 w-full md:w-48 lg:w-56 h-36 sm:h-40 md:h-auto md:self-stretch min-h-[140px] md:max-h-[190px] relative overflow-hidden bg-gray-100 dark:bg-slate-900 block"
+        >
           <Image
             src={getImageUrl(coverImage)}
             alt={targetName}
             fill
             sizes="(max-width: 768px) 100vw, 240px"
             unoptimized
-            className="object-cover"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
-        </div>
+        </Link>
       ) : (
-        <div className="shrink-0 w-full md:w-48 lg:w-56 h-36 sm:h-40 md:h-auto md:self-stretch min-h-[140px] md:max-h-[190px] overflow-hidden bg-gray-100 dark:bg-slate-900 flex items-center justify-center">
+        <Link
+          href={detailsHref}
+          className="shrink-0 w-full md:w-48 lg:w-56 h-36 sm:h-40 md:h-auto md:self-stretch min-h-[140px] md:max-h-[190px] overflow-hidden bg-gray-100 dark:bg-slate-900 flex items-center justify-center block"
+        >
           <NoImage />
-        </div>
+        </Link>
       )}
 
       <div className="flex-1 flex flex-col justify-between font-public-sans p-3 sm:p-4 gap-2">
         <div>
           <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
-            <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100 leading-snug truncate max-w-md">
-              {targetName}
-            </h3>
+            <Link
+              href={detailsHref}
+              className="hover:text-amber-500 dark:hover:text-amber-400 hover:underline transition-colors max-w-md block truncate"
+              title={targetName}
+            >
+              <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100 leading-snug truncate hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+                {targetName}
+              </h3>
+            </Link>
             {review?.status && (
               <span
                 className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize shrink-0 ${

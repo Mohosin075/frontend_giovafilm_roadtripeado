@@ -211,6 +211,14 @@ export default function ExplorerProfilePage() {
                   language
                 ) || (language === "es" ? "Lugar Explorado" : "Explored Location");
 
+                const placeId = rev.placeId?._id || rev.placeId?.id || (typeof rev.placeId === "string" ? rev.placeId : null) || rev.place?._id || rev.place?.id;
+                const businessId = rev.businessId?._id || rev.businessId?.id || (typeof rev.businessId === "string" ? rev.businessId : null) || rev.business?._id || rev.business?.id;
+                const targetId = placeId || businessId;
+                const isBusiness = !placeId && !!businessId;
+                const placeHref = targetId
+                  ? (isBusiness ? `/places/${targetId}?type=business` : `/places/${targetId}`)
+                  : null;
+
                 const reviewText = typeof rev.review === "object"
                   ? getLocalized(rev.review, language)
                   : rev.review;
@@ -218,7 +226,20 @@ export default function ExplorerProfilePage() {
                 return (
                   <div key={rev._id || rev.id} className="bg-gray-50/80 dark:bg-[#0e1424] border border-gray-100 dark:border-slate-800/80 p-4 rounded-xl space-y-2">
                     <div className="flex justify-between items-center gap-2">
-                      <span className="font-bold text-sm text-gray-900 dark:text-slate-100 truncate">{targetName}</span>
+                      {placeHref ? (
+                        <Link
+                          href={placeHref}
+                          className="font-bold text-sm text-gray-900 dark:text-slate-100 hover:text-amber-500 dark:hover:text-amber-400 hover:underline transition-colors truncate flex items-center gap-1.5 group"
+                          title={targetName}
+                        >
+                          <span className="truncate">{targetName}</span>
+                          <span className="text-[10px] text-amber-500 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
+                            ↗
+                          </span>
+                        </Link>
+                      ) : (
+                        <span className="font-bold text-sm text-gray-900 dark:text-slate-100 truncate">{targetName}</span>
+                      )}
                       <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 px-2 py-0.5 rounded-lg text-amber-600 dark:text-amber-400 font-extrabold text-xs shrink-0">
                         <Star size={13} className="fill-amber-400 text-amber-400" />
                         {rev.rating || 5}
