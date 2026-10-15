@@ -5,7 +5,7 @@ import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { RecommendSpotModal } from "@/components/shared/recommend-spot-modal";
-import { Plus } from "lucide-react";
+import { Plus, Lock } from "lucide-react";
 import Link from "next/link";
 
 export function ContributionsSection() {
@@ -14,6 +14,10 @@ export function ContributionsSection() {
   const [isRecommendOpen, setIsRecommendOpen] = useState(false);
   const { data: user, isLoading } = useGetProfileQuery({});
   
+  const purchasedMaps = Array.isArray(user?.purchasedMaps) ? user.purchasedMaps : [];
+  const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");
+  const hasPurchasedMap = isAdminOrEditor || purchasedMaps.length > 0;
+
   const currentPoints = user?.points || 0;
   const currentLevel = user?.level || 0;
 
@@ -82,7 +86,13 @@ export function ContributionsSection() {
             <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
               {t("contributions.total_points")}
             </p>
-            <p className="text-lg sm:text-4xl font-extrabold text-amber-500">{currentPoints}</p>
+            {hasPurchasedMap ? (
+              <p className="text-lg sm:text-4xl font-extrabold text-amber-500">{currentPoints}</p>
+            ) : (
+              <p className="text-sm sm:text-2xl font-extrabold text-gray-400 dark:text-slate-500 flex items-center justify-center gap-1">
+                <Lock size={15} /> 0
+              </p>
+            )}
           </div>
 
           {/* Reviews */}
@@ -111,40 +121,70 @@ export function ContributionsSection() {
             <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
               {t("contributions.current_level")}
             </p>
-            <p className="text-lg sm:text-4xl font-extrabold text-amber-500">Lv {currentLevel}</p>
+            {hasPurchasedMap ? (
+              <p className="text-lg sm:text-4xl font-extrabold text-amber-500">Lv {currentLevel}</p>
+            ) : (
+              <p className="text-sm sm:text-2xl font-extrabold text-amber-500 flex items-center justify-center gap-1">
+                <Lock size={15} />
+                <span>{t("levels.locked_feature") || "Locked"}</span>
+              </p>
+            )}
           </div>
         </div>
       )}
 
       {/* Progress Section */}
-      <div className="space-y-2 pt-3 border-t border-gray-200 dark:border-slate-800">
-        <div>
-          <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1">
-            {t("contributions.progress_to_level")} {nextLevelIndex}: <span className="text-amber-600 dark:text-amber-400 font-bold">{nextLevel.name}</span>
-          </h3>
-          <p className="text-[11px] sm:text-xs text-gray-500 dark:text-slate-400 mb-2">
-            {pointsUntilNextLevel} {t("contributions.pts")} {t("contributions.and")} {Math.max(0, nextLevel.reviews - (user?.totalReviewsApproved || 0))} {t("contributions.reviews_until_next")}
+      {hasPurchasedMap ? (
+        <div className="space-y-2 pt-3 border-t border-gray-200 dark:border-slate-800">
+          <div>
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1">
+              {t("contributions.progress_to_level")} {nextLevelIndex}: <span className="text-amber-600 dark:text-amber-400 font-bold">{nextLevel.name}</span>
+            </h3>
+            <p className="text-[11px] sm:text-xs text-gray-500 dark:text-slate-400 mb-2">
+              {pointsUntilNextLevel} {t("contributions.pts")} {t("contributions.and")} {Math.max(0, nextLevel.reviews - (user?.totalReviewsApproved || 0))} {t("contributions.reviews_until_next")}
+            </p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+            <div
+              className="bg-green-600 h-full rounded-full transition-all duration-300"
+              style={{ width: `${progressToNextLevel}%` }}
+            />
+          </div>
+
+          {/* Progress Percentage */}
+          <p className="text-[11px] sm:text-xs text-right text-gray-600 dark:text-slate-400 font-medium">
+            {progressToNextLevel}%
+          </p>
+
+          {/* Help Text */}
+          <p className="text-[11px] sm:text-xs text-gray-400 dark:text-slate-500 pt-1">
+            {t("contributions.earn_points_help")}
           </p>
         </div>
-
-        {/* Progress Bar */}
-        <div className="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-          <div
-            className="bg-green-600 h-full rounded-full transition-all duration-300"
-            style={{ width: `${progressToNextLevel}%` }}
-          />
+      ) : (
+        <div className="p-4 sm:p-5 rounded-xl bg-amber-500/10 border border-amber-500/20 dark:border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200 dark:border-slate-800">
+          <div className="flex items-center gap-3 text-left">
+            <div className="w-10 h-10 rounded-full bg-amber-400/20 flex items-center justify-center shrink-0 text-amber-500">
+              <Lock size={20} />
+            </div>
+            <div>
+              <p className="font-bold text-xs sm:text-sm text-gray-900 dark:text-slate-100">
+                {t("levels.locked_title") || "Levels & Rewards are Locked"}
+              </p>
+              <p className="text-[11px] sm:text-xs text-gray-500 dark:text-slate-400 mt-0.5">
+                {t("levels.locked_contributions_desc") || "Levels and rewards are exclusively for users who have purchased maps. Purchase a map to level up and earn free rewards!"}
+              </p>
+            </div>
+          </div>
+          <Link href="/catalog" className="shrink-0 w-full sm:w-auto">
+            <Button className="w-full sm:w-auto bg-[#fabf13] hover:bg-[#e0ac10] text-black font-bold text-xs h-10 px-5 rounded-xl shadow-md cursor-pointer">
+              {t("map.buy_map") || "Buy Map"}
+            </Button>
+          </Link>
         </div>
-
-        {/* Progress Percentage */}
-        <p className="text-[11px] sm:text-xs text-right text-gray-600 dark:text-slate-400 font-medium">
-          {progressToNextLevel}%
-        </p>
-
-        {/* Help Text */}
-        <p className="text-[11px] sm:text-xs text-gray-400 dark:text-slate-500 pt-1">
-          {t("contributions.earn_points_help")}
-        </p>
-      </div>
+      )}
 
       <RecommendSpotModal
         open={isRecommendOpen}

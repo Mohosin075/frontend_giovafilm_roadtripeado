@@ -16,6 +16,7 @@ import {
   Trophy,
   MapPin,
   Compass,
+  Lock,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,6 +49,15 @@ export function ProfileSidebar({ data }: ProfileProps) {
   const [isSharing, setIsSharing] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const { t, language } = useLanguage();
+  const { data: profile } = useGetProfileQuery({});
+  const purchasedMaps = Array.isArray((data as any)?.purchasedMaps)
+    ? (data as any).purchasedMaps
+    : Array.isArray((profile as any)?.purchasedMaps)
+      ? (profile as any).purchasedMaps
+      : [];
+  const role = data?.role || (profile as any)?.role || "";
+  const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(role);
+  const hasPurchasedMap = isAdminOrEditor || purchasedMaps.length > 0;
 
   const allProfileLinks = [
     {
@@ -100,9 +110,6 @@ export function ProfileSidebar({ data }: ProfileProps) {
     },
   ];
 
-  const { data: profile } = useGetProfileQuery({});
-  const isAdminOrEditor = ["admin", "super_admin", "map_editor"].includes(profile?.role || "");
-
   // Admins/Editors: hide "Purchased Maps" (they don't buy maps)
   const profileLinks = allProfileLinks.filter((link) =>
     link.roles.includes("all") || (!isAdminOrEditor && link.roles.includes("user"))
@@ -141,9 +148,18 @@ export function ProfileSidebar({ data }: ProfileProps) {
               <NoImage />
             )}
 
-            <div className="absolute bottom-0 right-0 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-sm border-2 border-white dark:border-slate-900 shadow-sm">
-              L{data?.level ?? 0}
-            </div>
+            {hasPurchasedMap ? (
+              <div className="absolute bottom-0 right-0 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-sm border-2 border-white dark:border-slate-900 shadow-sm">
+                L{data?.level ?? 0}
+              </div>
+            ) : (
+              <div
+                className="absolute bottom-0 right-0 w-8 h-8 bg-amber-400 rounded-full flex items-center justify-center text-black font-bold text-xs border-2 border-white dark:border-slate-900 shadow-sm"
+                title={t("levels.locked_feature") || "Locked"}
+              >
+                <Lock size={12} strokeWidth={2.5} />
+              </div>
+            )}
           </div>
 
           {/* User Name */}
@@ -152,38 +168,55 @@ export function ProfileSidebar({ data }: ProfileProps) {
           </h2>
 
           {/* Points / XP display */}
-          <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-2 flex items-center justify-center gap-1">
-            ✨ {data?.points ?? 0} XP
-          </div>
+          {hasPurchasedMap ? (
+            <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-2 flex items-center justify-center gap-1">
+              ✨ {data?.points ?? 0} XP
+            </div>
+          ) : (
+            <div className="text-xs font-bold text-gray-400 dark:text-slate-500 mb-2 flex items-center justify-center gap-1">
+              <Lock size={12} />
+              <span>0 XP ({t("levels.locked_feature") || "Locked"})</span>
+            </div>
+          )}
 
           {/* Level Name Badge */}
-          {(() => {
-            const USER_LEVEL_KEYS = [
-              "levels.explorador",
-              "levels.aventurero",
-              "levels.tlacuilo",
-              "levels.expedicionario",
-              "levels.viajero",
-              "levels.chasqui",
-              "levels.cronista",
-              "levels.pochteca",
-              "levels.navegante",
-              "levels.cartografo",
-              "levels.gran_explorador",
-              "levels.conquistador",
-              "levels.gran_conquistador",
-              "levels.amauta",
-              "levels.leyenda",
-            ];
-            const levelName = t(USER_LEVEL_KEYS[data?.level ?? 0] || "levels.explorador");
-            return (
-              <div className="inline-block bg-yellow-400 text-black px-3.5 py-1 rounded-full mb-3 shadow-xs">
-                <span className="font-bold text-xs uppercase tracking-wider">
-                  ⭐ {levelName}
-                </span>
-              </div>
-            );
-          })()}
+          {hasPurchasedMap ? (
+            (() => {
+              const USER_LEVEL_KEYS = [
+                "levels.explorador",
+                "levels.aventurero",
+                "levels.tlacuilo",
+                "levels.expedicionario",
+                "levels.viajero",
+                "levels.chasqui",
+                "levels.cronista",
+                "levels.pochteca",
+                "levels.navegante",
+                "levels.cartografo",
+                "levels.gran_explorador",
+                "levels.conquistador",
+                "levels.gran_conquistador",
+                "levels.amauta",
+                "levels.leyenda",
+              ];
+              const levelName = t(USER_LEVEL_KEYS[data?.level ?? 0] || "levels.explorador");
+              return (
+                <div className="inline-block bg-yellow-400 text-black px-3.5 py-1 rounded-full mb-3 shadow-xs">
+                  <span className="font-bold text-xs uppercase tracking-wider">
+                    ⭐ {levelName}
+                  </span>
+                </div>
+              );
+            })()
+          ) : (
+            <Link
+              href="/catalog"
+              className="inline-flex items-center gap-1.5 bg-amber-400/20 text-amber-900 dark:text-amber-300 border border-amber-400/40 px-3.5 py-1 rounded-full mb-3 text-xs font-bold hover:bg-amber-400/30 transition-all shadow-xs"
+            >
+              <Lock size={12} />
+              <span>{t("levels.unlock_with_map") || "Unlock with Map"}</span>
+            </Link>
+          )}
 
           {/* Visited Places Counter Badge */}
           <div className="flex items-center justify-center mb-3">
@@ -254,18 +287,37 @@ export function ProfileSidebar({ data }: ProfileProps) {
       </div>
 
       {/* Milestones Card */}
-      <div className="bg-gray-900 dark:bg-[#0e1424] dark:border dark:border-slate-800 rounded-lg p-6 text-white overflow-hidden">
-        <h3 className="font-bold text-lg mb-4 tracking-widest text-gray-400 dark:text-slate-400">
-          {t("levels.progress").toUpperCase()}
-        </h3>
+      {hasPurchasedMap ? (
+        <div className="bg-gray-900 dark:bg-[#0e1424] dark:border dark:border-slate-800 rounded-lg p-6 text-white overflow-hidden">
+          <h3 className="font-bold text-lg mb-4 tracking-widest text-gray-400 dark:text-slate-400">
+            {t("levels.progress").toUpperCase()}
+          </h3>
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <p className="text-sm mb-1">{t("levels.level")} {data?.level ?? 0}</p>
-            <p className="text-yellow-400 font-bold">{data?.points ?? 0} {t("levels.points")}</p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm mb-1">{t("levels.level")} {data?.level ?? 0}</p>
+              <p className="text-yellow-400 font-bold">{data?.points ?? 0} {t("levels.points")}</p>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-gray-900 dark:bg-[#0e1424] dark:border dark:border-slate-800 rounded-xl p-5 text-white overflow-hidden text-left">
+          <div className="flex items-center gap-2 mb-1.5 text-yellow-400">
+            <Lock size={16} />
+            <h3 className="font-bold text-sm tracking-wide">
+              {t("levels.locked_title") || "Levels & Rewards Locked"}
+            </h3>
+          </div>
+          <p className="text-xs text-gray-400 leading-relaxed mb-3">
+            {t("levels.locked_sidebar_prompt") || "Purchase a map to level up and earn free rewards."}
+          </p>
+          <Link href="/catalog" className="block w-full">
+            <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-xs h-9 rounded-lg cursor-pointer">
+              {t("map.buy_map") || "Buy Map"}
+            </Button>
+          </Link>
+        </div>
+      )}
       <ProfileUpdateModal open={open} onOpenChange={setOpen} data={data} />
     </div>
   );

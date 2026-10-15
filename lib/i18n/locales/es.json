@@ -2144,5 +2144,30 @@
     "no_data": "No hay datos disponibles",
     "place_singular": "lugar",
     "places_plural": "lugares"
+  },
+  "levels": {
+    "locked_title": "Niveles y Recompensas Bloqueados",
+    "locked_hero_desc": "Los niveles y recompensas son exclusivos para usuarios que han comprado mapas. ¡Compra un mapa para subir de nivel, ganar puntos y desbloquear recompensas gratuitas como itinerarios en PDF, descuentos exclusivos y mapas gratis!",
+    "locked_sidebar_prompt": "Compra un mapa para subir de nivel y ganar recompensas gratuitas.",
+    "locked_contributions_desc": "Los niveles y recompensas son exclusivos para usuarios que han comprado mapas. ¡Compra un mapa para subir de nivel y ganar recompensas gratuitas!",
+    "locked_badge": "Bloqueado · Comprar Mapa",
+    "locked_feature": "Bloqueado",
+    "unlock_with_map": "Desbloquear con Mapa",
+    "purchase_map_cta": "Comprar un Mapa para Desbloquear",
+    "explorador": "Explorador",
+    "aventurero": "Aventurero",
+    "tlacuilo": "Tlacuilo",
+    "expedicionario": "Expedicionario",
+    "viajero": "Viajero",
+    "chasqui": "Chasqui",
+    "cronista": "Cronista",
+    "baquiano": "Baquiano",
+    "cartografo": "Cartógrafo",
+    "maestro_ruta": "Maestro Ruta",
+    "leyenda": "Leyenda",
+    "gran_leyenda": "Gran Leyenda",
+    "mitico": "Mítico",
+    "inmortal": "Inmortal",
+    "supremo": "Supremo"
   }
 }

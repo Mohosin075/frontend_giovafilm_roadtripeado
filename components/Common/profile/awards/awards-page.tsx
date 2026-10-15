@@ -9,7 +9,10 @@ import {
   FileText,
   Map as MapIcon,
   Compass,
+  Lock,
+  Ticket,
 } from "lucide-react";
+import { appAlert } from "@/lib/app-alert";
 import { AwardCard } from "./award-card";
 import { UnlockedAwardCard } from "./unlocked-award-card";
 import { AwardDetailModal } from "./award-detail-modal";
@@ -122,6 +125,29 @@ export default function AwardsPage() {
 
   const hasRedeemed = !!user?.redeemedFreeMap;
 
+  const purchasedMaps = Array.isArray(user?.purchasedMaps) ? user.purchasedMaps : [];
+  const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");
+  const hasPurchasedMap = isAdminOrEditor || purchasedMaps.length > 0;
+
+  const promptPurchaseMap = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    appAlert.fire({
+      title: t("levels.locked_title") || "Levels & Rewards Locked",
+      text: t("levels.locked_hero_desc") || "Levels and rewards are exclusively for users who have purchased maps. Purchase a map to level up and earn free rewards!",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: t("map.buy_map") || "Buy Map",
+      cancelButtonText: t("common.cancel") || "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/catalog";
+      }
+    });
+  };
+
   // Accurate Level progression math based on spec
   const points = user?.points || 0;
   const currentLevel = user?.level ?? 0;
@@ -157,98 +183,126 @@ export default function AwardsPage() {
           {t("awards.page_title") || "Awards & Achievements"}
         </h1>
 
-        <div className="bg-amber-500/10 dark:bg-amber-950/20 p-2.5 md:p-6 rounded-xl md:rounded-3xl flex flex-row items-center justify-between border border-amber-500/15 dark:border-amber-800/40 mb-4 md:mb-8 shadow-sm">
-          {/* LEFT: Progress Circle */}
-          <div className="relative w-14 h-14 md:w-36 md:h-36 flex items-center justify-center shrink-0">
-            <svg className="absolute w-full h-full -rotate-90" viewBox="0 0 160 160">
-              <circle
-                cx="80"
-                cy="80"
-                r="70"
-                stroke="#f3f4f6"
-                strokeWidth="10"
-                fill="none"
-              />
-              <circle
-                cx="80"
-                cy="80"
-                r="70"
-                stroke="#f59e0b"
-                strokeWidth="10"
-                fill="none"
-                strokeDasharray="440"
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                className="transition-all duration-1000 ease-out"
-              />
-            </svg>
-
-            <div className="text-center">
-              {isProfileLoading ? (
-                <>
-                  <div className="mx-auto h-3 w-10 bg-gray-200 dark:bg-slate-800 animate-pulse rounded" />
-                  <p className="text-[6px] md:text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
-                    {t("awards.xp_points") || "XP POINTS"}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="text-xs sm:text-base md:text-2xl font-extrabold text-gray-900 dark:text-slate-100 leading-none">
-                    {points.toLocaleString()}
-                  </p>
-                  <p className="text-[6px] md:text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5 leading-none">
-                    {t("awards.xp_points") || "XP POINTS"}
-                  </p>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* RIGHT CONTENT */}
-          <div className="flex-1 ml-2 md:ml-8 text-left w-full">
-            {/* Level badge */}
-            <span className="inline-block bg-amber-500/20 text-amber-800 dark:text-amber-300 px-2 py-0.5 md:px-4 md:py-1 rounded-full text-[8px] md:text-xs font-bold mb-0.5 md:mb-2 uppercase tracking-wider">
-              {isProfileLoading
-                ? (t("common.loading") || "Loading...")
-                : `🏆 ${t("awards.level") || "Level"} ${currentLevel} · ${getUserLevelName(currentLevel)}`}
-            </span>
-
-            {/* Name */}
-            <h2 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 dark:text-slate-100 capitalize leading-tight">
-              {isProfileLoading ? (
-                <span className="inline-block h-4 w-20 bg-gray-200 dark:bg-slate-800 animate-pulse rounded" />
-              ) : (
-                user?.name || "Explorer"
-              )}
-            </h2>
-
-            {/* Description */}
-            <p className="hidden md:block text-gray-500 dark:text-slate-400 mt-1.5 text-sm leading-relaxed max-w-xl">
-              {t("awards.progress_msg_prefix") || "You're making incredible progress! Earn "}
-              <span className="font-bold text-gray-900 dark:text-slate-200">
-                {pointsNeededForNext.toLocaleString()} {t("awards.more_xp") || "more XP"}
-              </span>{" "}
-              {t("awards.to_reach") || "to reach"} {t("awards.level") || "Level"} {nextLevelData.level}.
-            </p>
-
-            {/* Cards */}
-            <div className="flex gap-1.5 md:gap-3 mt-1 md:mt-3 w-full">
-              <div className="bg-white/80 dark:bg-[#131b2e]/80 border border-gray-100 dark:border-slate-800 px-2 py-1 md:px-4 md:py-2.5 rounded-lg md:rounded-xl flex-1 md:flex-none md:w-36 shadow-sm">
-                <p className="text-[6px] md:text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest leading-none">{t("common.next_level")}</p>
-                <p className="font-extrabold text-gray-800 dark:text-slate-200 mt-0.5 text-[9px] md:text-xs leading-none">
-                  {currentLevel >= 14 ? (t("awards.max_level") || "Max Level") : `${t("awards.level") || "Level"} ${nextLevelData.level} · ${getUserLevelName(nextLevelIndex)}`}
+        {!isProfileLoading && !hasPurchasedMap ? (
+          <div className="relative overflow-hidden bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-amber-500/15 dark:from-amber-950/40 dark:via-yellow-950/20 dark:to-amber-950/40 p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl border border-amber-500/30 dark:border-amber-600/40 mb-4 md:mb-8 shadow-lg backdrop-blur-md animate-in fade-in">
+            <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-7 text-center md:text-left">
+              <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-[#fabf13] to-amber-600 flex items-center justify-center shrink-0 shadow-xl shadow-amber-500/25 text-black">
+                <Lock className="w-7 h-7 sm:w-10 sm:h-10 md:w-12 md:h-12 stroke-[2.2]" />
+              </div>
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-1.5 bg-black/80 dark:bg-black/60 text-[#fabf13] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 border border-amber-500/30">
+                  <Lock size={12} />
+                  <span>{t("levels.locked_feature") || "Feature Locked"}</span>
+                </div>
+                <h2 className="text-lg sm:text-xl md:text-2xl font-black text-gray-900 dark:text-slate-100 tracking-tight">
+                  {t("levels.locked_title") || "Levels & Rewards are Locked"}
+                </h2>
+                <p className="text-gray-600 dark:text-slate-300 text-xs md:text-sm mt-1.5 leading-relaxed max-w-2xl">
+                  {t("levels.locked_hero_desc") || "Levels and rewards are exclusively for users who have purchased maps. Purchase a map to level up, earn XP points, and unlock free rewards like PDF itineraries, exclusive discounts, and free maps!"}
                 </p>
               </div>
+              <Link href="/catalog" className="shrink-0 w-full md:w-auto">
+                <Button className="w-full md:w-auto bg-[#fabf13] hover:bg-[#e0ac10] text-black font-extrabold text-xs md:text-sm px-6 md:px-8 py-5 md:py-6 rounded-xl shadow-xl shadow-amber-500/30 hover:scale-105 transition-all cursor-pointer">
+                  <Ticket className="w-4 h-4 mr-2" />
+                  {t("levels.purchase_map_cta") || "Purchase a Map to Unlock"}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-amber-500/10 dark:bg-amber-950/20 p-2.5 md:p-6 rounded-xl md:rounded-3xl flex flex-row items-center justify-between border border-amber-500/15 dark:border-amber-800/40 mb-4 md:mb-8 shadow-sm">
+            {/* LEFT: Progress Circle */}
+            <div className="relative w-14 h-14 md:w-36 md:h-36 flex items-center justify-center shrink-0">
+              <svg className="absolute w-full h-full -rotate-90" viewBox="0 0 160 160">
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="70"
+                  stroke="#f3f4f6"
+                  strokeWidth="10"
+                  fill="none"
+                />
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="70"
+                  stroke="#f59e0b"
+                  strokeWidth="10"
+                  fill="none"
+                  strokeDasharray="440"
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                  className="transition-all duration-1000 ease-out"
+                />
+              </svg>
 
-              <div className="bg-white/80 dark:bg-[#131b2e]/80 border border-gray-100 dark:border-slate-800 px-2 py-1 md:px-4 md:py-2.5 rounded-lg md:rounded-xl flex-1 md:flex-none md:w-36 shadow-sm">
-                <p className="text-[6px] md:text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest leading-none">
-                  {t("awards.level_progress") || "LEVEL PROGRESS"}
-                </p>
-                <p className="font-extrabold text-amber-600 dark:text-amber-400 mt-0.5 text-[9px] md:text-xs leading-none">{Math.round(percent)}%</p>
+              <div className="text-center">
+                {isProfileLoading ? (
+                  <>
+                    <div className="mx-auto h-3 w-10 bg-gray-200 dark:bg-slate-800 animate-pulse rounded" />
+                    <p className="text-[6px] md:text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
+                      {t("awards.xp_points") || "XP POINTS"}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs sm:text-base md:text-2xl font-extrabold text-gray-900 dark:text-slate-100 leading-none">
+                      {points.toLocaleString()}
+                    </p>
+                    <p className="text-[6px] md:text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-0.5 leading-none">
+                      {t("awards.xp_points") || "XP POINTS"}
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* RIGHT CONTENT */}
+            <div className="flex-1 ml-2 md:ml-8 text-left w-full">
+              {/* Level badge */}
+              <span className="inline-block bg-amber-500/20 text-amber-800 dark:text-amber-300 px-2 py-0.5 md:px-4 md:py-1 rounded-full text-[8px] md:text-xs font-bold mb-0.5 md:mb-2 uppercase tracking-wider">
+                {isProfileLoading
+                  ? (t("common.loading") || "Loading...")
+                  : `🏆 ${t("awards.level") || "Level"} ${currentLevel} · ${getUserLevelName(currentLevel)}`}
+              </span>
+
+              {/* Name */}
+              <h2 className="text-xs sm:text-base md:text-xl font-bold text-gray-900 dark:text-slate-100 capitalize leading-tight">
+                {isProfileLoading ? (
+                  <span className="inline-block h-4 w-20 bg-gray-200 dark:bg-slate-800 animate-pulse rounded" />
+                ) : (
+                  user?.name || "Explorer"
+                )}
+              </h2>
+
+              {/* Description */}
+              <p className="hidden md:block text-gray-500 dark:text-slate-400 mt-1.5 text-sm leading-relaxed max-w-xl">
+                {t("awards.progress_msg_prefix") || "You're making incredible progress! Earn "}
+                <span className="font-bold text-gray-900 dark:text-slate-200">
+                  {pointsNeededForNext.toLocaleString()} {t("awards.more_xp") || "more XP"}
+                </span>{" "}
+                {t("awards.to_reach") || "to reach"} {t("awards.level") || "Level"} {nextLevelData.level}.
+              </p>
+
+              {/* Cards */}
+              <div className="flex gap-1.5 md:gap-3 mt-1 md:mt-3 w-full">
+                <div className="bg-white/80 dark:bg-[#131b2e]/80 border border-gray-100 dark:border-slate-800 px-2 py-1 md:px-4 md:py-2.5 rounded-lg md:rounded-xl flex-1 md:flex-none md:w-36 shadow-sm">
+                  <p className="text-[6px] md:text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest leading-none">{t("common.next_level")}</p>
+                  <p className="font-extrabold text-gray-800 dark:text-slate-200 mt-0.5 text-[9px] md:text-xs leading-none">
+                    {currentLevel >= 14 ? (t("awards.max_level") || "Max Level") : `${t("awards.level") || "Level"} ${nextLevelData.level} · ${getUserLevelName(nextLevelIndex)}`}
+                  </p>
+                </div>
+
+                <div className="bg-white/80 dark:bg-[#131b2e]/80 border border-gray-100 dark:border-slate-800 px-2 py-1 md:px-4 md:py-2.5 rounded-lg md:rounded-xl flex-1 md:flex-none md:w-36 shadow-sm">
+                  <p className="text-[6px] md:text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest leading-none">
+                    {t("awards.level_progress") || "LEVEL PROGRESS"}
+                  </p>
+                  <p className="font-extrabold text-amber-600 dark:text-amber-400 mt-0.5 text-[9px] md:text-xs leading-none">{Math.round(percent)}%</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="mt-4 md:mt-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-200 dark:border-slate-800 pb-3 md:pb-4 mb-4 md:mb-8 gap-3">
@@ -318,13 +372,21 @@ export default function AwardsPage() {
                           title={getLocalized(award.config?.title || award.type, language)}
                           description={getLocalized(award.config?.description, language)}
                           image={rewardImage}
-                          onClick={() => setSelectedAward(award)}
+                          onClick={() => hasPurchasedMap ? setSelectedAward(award) : promptPurchaseMap()}
                         >
                           {award.type === "Free Map" ? (
                             <div className="pt-1.5">
                               {isProfileLoading ? (
                                 <Button className="w-full bg-gray-200 text-gray-400 font-bold cursor-default text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none" disabled>
                                   {t("common.loading") || "Loading..."}
+                                </Button>
+                              ) : !hasPurchasedMap ? (
+                                <Button
+                                  onClick={(e) => promptPurchaseMap(e)}
+                                  className="w-full bg-[#fabf13] hover:bg-[#e0ac10] text-black font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm cursor-pointer flex items-center justify-center gap-1.5"
+                                >
+                                  <Lock size={13} />
+                                  <span>{t("levels.locked_feature") || "Locked"}</span>
                                 </Button>
                               ) : hasRedeemed ? (
                                 <Button className="w-full bg-gray-300 text-gray-500 font-bold cursor-default text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none" disabled>
@@ -345,13 +407,20 @@ export default function AwardsPage() {
                           ) : award.config?.fileUrl ? (
                             <div className="pt-1.5">
                               <Button
-                                onClick={(e) => handleDownloadAwardPdf(e, award)}
+                                onClick={(e) => hasPurchasedMap ? handleDownloadAwardPdf(e, award) : promptPurchaseMap(e)}
                                 disabled={downloadingAwardId === award._id}
                                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-emerald-200/50 cursor-pointer"
                               >
-                                {downloadingAwardId === award._id
-                                  ? (t("awards.downloading") || "Downloading...")
-                                  : (t("awards.download_pdf") || "Download PDF")}
+                                {!hasPurchasedMap ? (
+                                  <span className="flex items-center justify-center gap-1.5">
+                                    <Lock size={13} />
+                                    <span>{t("levels.locked_feature") || "Locked"}</span>
+                                  </span>
+                                ) : downloadingAwardId === award._id ? (
+                                  t("awards.downloading") || "Downloading..."
+                                ) : (
+                                  t("awards.download_pdf") || "Download PDF"
+                                )}
                               </Button>
                             </div>
                           ) : award.type?.includes("Discount") || award.type?.includes("10%") || award.config?.discountPercentage ? (
@@ -359,11 +428,18 @@ export default function AwardsPage() {
                               <Button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setSelectedAward(award);
+                                  hasPurchasedMap ? setSelectedAward(award) : promptPurchaseMap();
                                 }}
                                 className="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] sm:text-xs uppercase tracking-wider h-10 sm:h-11 rounded-xl border-none shadow-sm shadow-amber-200/50 cursor-pointer"
                               >
-                                {t("awards.use_discount") || "Use Discount"}
+                                {!hasPurchasedMap ? (
+                                  <span className="flex items-center justify-center gap-1.5">
+                                    <Lock size={13} />
+                                    <span>{t("levels.locked_feature") || "Locked"}</span>
+                                  </span>
+                                ) : (
+                                  t("awards.use_discount") || "Use Discount"
+                                )}
                               </Button>
                             </div>
                           ) : null}
@@ -387,7 +463,7 @@ export default function AwardsPage() {
                           total={award.target}
                           coverPhoto={coverPhoto}
                           Icon={getAwardIcon(award.type)}
-                          onClick={() => setSelectedAward(award)}
+                          onClick={() => hasPurchasedMap ? setSelectedAward(award) : promptPurchaseMap()}
                         />
                       );
                     }

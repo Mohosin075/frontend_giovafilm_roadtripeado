@@ -2144,5 +2144,30 @@
     "no_data": "No data available",
     "place_singular": "spot",
     "places_plural": "spots"
+  },
+  "levels": {
+    "locked_title": "Levels & Rewards are Locked",
+    "locked_hero_desc": "Levels and rewards are exclusively for users who have purchased maps. Purchase a map to level up, earn XP points, and unlock free rewards like PDF itineraries, exclusive discounts, and free maps!",
+    "locked_sidebar_prompt": "Purchase a map to level up and earn free rewards.",
+    "locked_contributions_desc": "Levels and rewards are exclusively for users who have purchased maps. Purchase a map to level up and earn free rewards!",
+    "locked_badge": "Locked · Buy a Map",
+    "locked_feature": "Locked",
+    "unlock_with_map": "Unlock with Map",
+    "purchase_map_cta": "Purchase a Map to Unlock",
+    "explorador": "Explorador",
+    "aventurero": "Aventurero",
+    "tlacuilo": "Tlacuilo",
+    "expedicionario": "Expedicionario",
+    "viajero": "Viajero",
+    "chasqui": "Chasqui",
+    "cronista": "Cronista",
+    "baquiano": "Baquiano",
+    "cartografo": "Cartógrafo",
+    "maestro_ruta": "Maestro Ruta",
+    "leyenda": "Leyenda",
+    "gran_leyenda": "Gran Leyenda",
+    "mitico": "Mítico",
+    "inmortal": "Inmortal",
+    "supremo": "Supremo"
   }
 }
