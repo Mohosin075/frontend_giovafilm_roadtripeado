@@ -10,6 +10,7 @@ const userApi = baseApi.injectEndpoints({
 
     getPublicProfile: builder.query({
       query: (userId: string) => `/user/public/${userId}`,
+      providesTags: ["User"],
       transformResponse: (response: any) => response.data,
     }),
 

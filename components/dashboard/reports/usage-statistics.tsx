@@ -175,8 +175,8 @@ function StatColumn({
                         <span>
                           {item.placesCount}{" "}
                           {item.placesCount === 1
-                            ? t("maps_admin.place_singular") || "spot"
-                            : t("maps_admin.places_plural") || "spots"}
+                            ? t("reports_admin.place_singular") || "spot"
+                            : t("reports_admin.places_plural") || "spots"}
                         </span>
                       </span>
                     )}

@@ -1248,7 +1248,18 @@
     "user_role_updated_assignments_success": "User role updated with assignments successfully!",
     "editor_access_updated_success": "Editor access updated successfully!",
     "search_users_placeholder": "Search users...",
-    "selected": "selected"
+    "selected": "selected",
+    "activity_and_places": "User Activity",
+    "places_viewed": "Places Visited & Viewed",
+    "no_places_visited": "No places marked as visited yet.",
+    "spots_explored": "Spots Explored",
+    "last_active": "Last Active",
+    "recent_activity": "Recent User Activity",
+    "no_activity": "No recent activity recorded.",
+    "max_level_reached": "Max Tier Reached",
+    "to_reach": "needed for",
+    "reviews_needed": "more reviews needed",
+    "reviews_met": "Reviews requirement met"
   },
   "notifications_page": {
     "business_notifications": "Business Notifications",
@@ -2100,6 +2111,8 @@
     "most_viewed_maps": "Most Viewed Maps",
     "most_opened_places": "Most Opened Places",
     "most_redeemed_offers": "Most Redeemed Offers",
-    "no_data": "No data available"
+    "no_data": "No data available",
+    "place_singular": "spot",
+    "places_plural": "spots"
   }
 }

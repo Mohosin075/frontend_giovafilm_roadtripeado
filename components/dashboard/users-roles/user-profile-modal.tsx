@@ -22,6 +22,10 @@ import {
   Clock,
   Globe,
   Loader2,
+  Activity,
+  MapPin,
+  Star,
+  Ticket,
 } from "lucide-react";
 
 interface UserProfileModalProps {
@@ -36,7 +40,9 @@ export function UserProfileModal({
   onClose,
 }: UserProfileModalProps) {
   const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<"maps" | "prizes" | "contributions">("maps");
+  const [activeTab, setActiveTab] = useState<
+    "activity" | "maps" | "prizes" | "contributions"
+  >("activity");
 
   const { data: user, isLoading } = useGetUserByIdQuery(userId || "", {
     skip: !userId || !isOpen,
@@ -53,15 +59,29 @@ export function UserProfileModal({
     });
   };
 
+  const formatDateTime = (dateStr?: string | Date) => {
+    if (!dateStr) return "--";
+    return new Date(dateStr).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   const levelInfo = user?.levelInfo || {};
   const purchasedMaps = user?.purchasedMaps || [];
   const offerRedemptions = user?.offerRedemptions || [];
   const awards = user?.awards || [];
   const reviews = user?.reviews || [];
+  const visitedPlaces = user?.visitedPlaces || [];
+  const activitySummary = user?.activitySummary || {};
+  const activityTimeline = user?.activityTimeline || [];
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto rounded-3xl p-0 gap-0 border border-gray-100 dark:border-slate-800 shadow-2xl bg-white dark:bg-[#131b2e]">
+      <DialogContent className="sm:max-w-[720px] max-h-[90vh] overflow-y-auto rounded-3xl p-0 gap-0 border border-gray-100 dark:border-slate-800 shadow-2xl bg-white dark:bg-[#131b2e]">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-12 space-y-3">
             <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
@@ -115,6 +135,11 @@ export function UserProfileModal({
                       <Calendar size={13} />
                       {t("profile.joined") || "Joined"}: {formatDate(user.createdAt)}
                     </span>
+                    <span className="flex items-center gap-1" title="Last Activity">
+                      <Clock size={13} />
+                      {t("users_admin.last_active") || "Active"}:{" "}
+                      {formatDate(activitySummary.lastActivityAt || user.updatedAt || user.createdAt)}
+                    </span>
                     {user.country && (
                       <span className="flex items-center gap-1">
                         <Globe size={13} />
@@ -125,8 +150,8 @@ export function UserProfileModal({
                 </div>
               </div>
 
-              {/* Stats Overview Pill */}
-              <div className="grid grid-cols-3 gap-3 mt-6 pt-4 border-t border-white/20 text-center">
+              {/* Stats Overview Pill (4 metrics) */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-6 pt-4 border-t border-white/20 text-center">
                 <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-2xl">
                   <p className="text-[10px] uppercase font-bold text-amber-100 tracking-wider">
                     {t("users_admin.level") || "Level & Tier"}
@@ -135,7 +160,9 @@ export function UserProfileModal({
                     Nvl {levelInfo?.levelNumber ?? user.level ?? 0}
                   </p>
                   <p className="text-[10px] text-amber-200 truncate">
-                    {levelInfo?.title || "Explorador"}
+                    {typeof levelInfo?.title === "string"
+                      ? levelInfo.title
+                      : getLocalized(levelInfo?.name, language) || "Explorador"}
                   </p>
                 </div>
 
@@ -151,6 +178,18 @@ export function UserProfileModal({
 
                 <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-2xl">
                   <p className="text-[10px] uppercase font-bold text-amber-100 tracking-wider">
+                    {t("reports_admin.places_visited_total") || "Places Visited"}
+                  </p>
+                  <p className="text-base font-black text-white">
+                    {activitySummary.totalPlacesVisited ?? visitedPlaces.length}
+                  </p>
+                  <p className="text-[10px] text-amber-200">
+                    {t("users_admin.spots_explored") || "Spots Explored"}
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-2xl">
+                  <p className="text-[10px] uppercase font-bold text-amber-100 tracking-wider">
                     {t("users_admin.activated_maps") || "Activated Maps"}
                   </p>
                   <p className="text-base font-black text-white">{purchasedMaps.length}</p>
@@ -159,11 +198,90 @@ export function UserProfileModal({
                   </p>
                 </div>
               </div>
+
+              {/* Real-time Level & XP Progress Strip */}
+              <div className="mt-4 pt-3 border-t border-white/20">
+                <div className="flex items-center justify-between text-xs text-amber-100 font-semibold mb-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles size={13} className="text-amber-300" />
+                    <span>
+                      Nvl {levelInfo?.levelNumber ?? user.level ?? 0}:{" "}
+                      {typeof levelInfo?.title === "string"
+                        ? levelInfo.title
+                        : getLocalized(levelInfo?.name, language) || "Explorador"}
+                    </span>
+                  </span>
+                  <span>
+                    {levelInfo?.nextLevel ? (
+                      <span>
+                        <span className="font-bold text-white">{user.points || 0}</span> /{" "}
+                        {levelInfo.nextLevel.pointsRequired} XP{" "}
+                        <span className="text-amber-200 text-[10px]">
+                          ({levelInfo.progressPercent ?? 0}%)
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="text-amber-200 text-xs font-bold">
+                        {t("users_admin.max_level_reached") || "Max Tier Reached"} ({user.points || 0} XP)
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-black/25 overflow-hidden p-0.5 backdrop-blur-xs">
+                  <div
+                    className="h-full rounded-full bg-linear-to-r from-amber-300 via-amber-200 to-white transition-all duration-500 shadow-xs"
+                    style={{
+                      width: `${
+                        levelInfo?.nextLevel
+                          ? Math.max(3, levelInfo?.progressPercent ?? 0)
+                          : 100
+                      }%`,
+                    }}
+                  />
+                </div>
+                {levelInfo?.nextLevel && (
+                  <div className="flex items-center justify-between mt-1.5 text-[10px] text-amber-100 font-medium">
+                    <span>
+                      {levelInfo.nextLevel.pointsRemaining} XP{" "}
+                      {t("users_admin.to_reach") || "needed for"}{" "}
+                      <span className="font-bold text-white">
+                        Nvl {levelInfo.nextLevel.levelNumber} (
+                        {typeof levelInfo.nextLevel.title === "string"
+                          ? levelInfo.nextLevel.title
+                          : getLocalized(levelInfo.nextLevel.name, language) ||
+                            `Nvl ${levelInfo.nextLevel.levelNumber}`}
+                        )
+                      </span>
+                    </span>
+                    {levelInfo.nextLevel.reviewsRequired > 0 && (
+                      <span>
+                        {levelInfo.nextLevel.reviewsRemaining > 0
+                          ? `${levelInfo.nextLevel.reviewsRemaining} ${
+                              t("users_admin.reviews_needed") || "more reviews needed"
+                            }`
+                          : `✓ ${t("users_admin.reviews_met") || "Reviews requirement met"}`}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Modal Body Tabs */}
             <div className="p-6 bg-gray-50/50 dark:bg-[#0b0f19]">
-              <div className="grid grid-cols-3 bg-gray-200/70 dark:bg-slate-900/80 p-1 rounded-2xl mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 bg-gray-200/70 dark:bg-slate-900/80 p-1 rounded-2xl mb-4 gap-1">
+                <button
+                  onClick={() => setActiveTab("activity")}
+                  className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    activeTab === "activity"
+                      ? "bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-300 shadow-xs"
+                      : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
+                  }`}
+                >
+                  <Activity size={14} />
+                  <span>{t("users_admin.activity_and_places") || "User Activity"}</span>
+                </button>
+
                 <button
                   onClick={() => setActiveTab("maps")}
                   className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
@@ -200,6 +318,190 @@ export function UserProfileModal({
                   <span>{t("users_admin.contributions") || "Contributions"}</span>
                 </button>
               </div>
+
+              {/* Tab 0: User Activity & Places Viewed (Issue 4 Solution) */}
+              {activeTab === "activity" && (
+                <div className="space-y-4">
+                  {/* Activity KPI Quick Strip */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-3 rounded-xl flex items-center gap-2.5 shadow-2xs">
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <MapPin size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500 font-medium truncate">
+                          {t("reports_admin.places_visited_total") || "Places Visited"}
+                        </p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-slate-100">
+                          {activitySummary.totalPlacesVisited ?? visitedPlaces.length}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-3 rounded-xl flex items-center gap-2.5 shadow-2xs">
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <Star size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500 font-medium truncate">
+                          {t("reports_admin.reviews_total") || "Reviews"}
+                        </p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-slate-100">
+                          {activitySummary.totalReviewsSubmitted ?? reviews.length}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-3 rounded-xl flex items-center gap-2.5 shadow-2xs">
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <Gift size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500 font-medium truncate">
+                          {t("users_admin.redeemed_offers") || "Claims"}
+                        </p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-slate-100">
+                          {activitySummary.totalOffersClaimed ?? offerRedemptions.length}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-3 rounded-xl flex items-center gap-2.5 shadow-2xs">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                        <Clock size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500 font-medium truncate">
+                          {t("users_admin.last_active") || "Last Active"}
+                        </p>
+                        <p className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate">
+                          {formatDate(activitySummary.lastActivityAt || user.updatedAt || user.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section: Places Viewed & Visited */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <MapPin size={13} className="text-amber-600" />
+                        <span>{t("users_admin.places_viewed") || "Places Visited & Viewed"}</span>
+                        <span className="text-[10px] bg-gray-200 dark:bg-slate-800 px-1.5 py-0.2 rounded-full font-bold">
+                          {visitedPlaces.length}
+                        </span>
+                      </p>
+                    </div>
+
+                    {visitedPlaces.length === 0 ? (
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-xl text-center text-xs text-gray-400 dark:text-slate-500">
+                        <MapPin size={22} className="mx-auto mb-1.5 opacity-30 text-amber-500" />
+                        {t("users_admin.no_places_visited") || "No places marked as visited yet."}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+                        {visitedPlaces.map((vp: any, idx: number) => {
+                          const placeName = vp.place?.name
+                            ? getLocalized(vp.place.name, language)
+                            : vp.business?.name
+                              ? getLocalized(vp.business.name, language)
+                              : "Explored Spot";
+                          const placeAddress =
+                            vp.place?.address ||
+                            vp.place?.country ||
+                            vp.business?.location?.city ||
+                            "";
+                          const image = vp.place?.media?.[0];
+
+                          return (
+                            <div
+                              key={vp._id || idx}
+                              className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-2.5 rounded-xl flex items-center gap-2.5 shadow-2xs hover:border-amber-200 transition-colors"
+                            >
+                              <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center shrink-0 overflow-hidden border border-amber-100 dark:border-amber-900/30">
+                                {image ? (
+                                  <img
+                                    src={getImageUrl(image)}
+                                    alt=""
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <MapPin size={16} />
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate">
+                                  {placeName}
+                                </p>
+                                {placeAddress && (
+                                  <p className="text-[10px] text-gray-400 dark:text-slate-500 truncate">
+                                    {placeAddress}
+                                  </p>
+                                )}
+                                <p className="text-[9px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">
+                                  {formatDate(vp.visitedAt || vp.createdAt)}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Section: Live Activity Feed */}
+                  <div className="space-y-2 pt-2 border-t border-gray-200/60 dark:border-slate-800">
+                    <p className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                      <Activity size={13} className="text-amber-600" />
+                      <span>{t("users_admin.recent_activity") || "Recent User Activity"}</span>
+                    </p>
+
+                    {activityTimeline.length === 0 ? (
+                      <div className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-5 rounded-xl text-center text-xs text-gray-400 dark:text-slate-500">
+                        {t("users_admin.no_activity") || "No recent activity recorded."}
+                      </div>
+                    ) : (
+                      <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                        {activityTimeline.map((act: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 p-3 rounded-xl flex items-start gap-3 shadow-2xs"
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                              {act.type === "place_visit" && <MapPin size={14} />}
+                              {act.type === "review_submitted" && <Star size={14} />}
+                              {act.type === "offer_claimed" && <Ticket size={14} />}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-[10px] font-bold uppercase tracking-wide text-amber-600 dark:text-amber-400">
+                                  {act.title}
+                                </span>
+                                <span className="text-[10px] text-gray-400 dark:text-slate-500 shrink-0">
+                                  {formatDate(act.timestamp)}
+                                </span>
+                              </div>
+                              <p className="text-xs font-semibold text-gray-900 dark:text-slate-100 truncate">
+                                {act.name}
+                              </p>
+                              {act.comment && (
+                                <p className="text-[11px] text-gray-500 dark:text-slate-400 italic line-clamp-1 mt-0.5">
+                                  "{act.comment}"
+                                </p>
+                              )}
+                              {act.businessName && (
+                                <p className="text-[10px] text-gray-400 dark:text-slate-500">
+                                  {act.businessName}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Tab 1: Activated Maps */}
               {activeTab === "maps" && (

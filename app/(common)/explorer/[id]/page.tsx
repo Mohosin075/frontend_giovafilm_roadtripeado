@@ -84,7 +84,14 @@ export default function ExplorerProfilePage() {
     "leyenda", "gran_leyenda", "mitico", "inmortal", "supremo"
   ];
   const levelKey = USER_LEVEL_KEYS[data.level ?? 0] || "explorador";
-  const levelName = t(`levels.${levelKey}`) || USER_LEVELS[data.level ?? 0] || "Explorer";
+  const levelName =
+    data.levelInfo?.title ||
+    (typeof data.levelInfo?.name === "string"
+      ? data.levelInfo.name
+      : getLocalized(data.levelInfo?.name, language)) ||
+    t(`levels.${levelKey}`) ||
+    USER_LEVELS[data.level ?? 0] ||
+    "Explorer";
 
   return (
     <main className="min-h-[70vh] bg-gray-50 dark:bg-[#0b0f19] py-10 px-4">

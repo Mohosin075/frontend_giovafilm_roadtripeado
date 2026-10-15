@@ -65,7 +65,7 @@ export const awardApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Award"],
+      invalidatesTags: ["Award", "User"],
     }),
     updateLevelConfig: builder.mutation({
       query: ({ id, data }) => ({
@@ -73,14 +73,14 @@ export const awardApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["Award"],
+      invalidatesTags: ["Award", "User"],
     }),
     deleteLevelConfig: builder.mutation({
       query: (id) => ({
         url: `/awards/levels/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Award"],
+      invalidatesTags: ["Award", "User"],
     }),
   }),
 });

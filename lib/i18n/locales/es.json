@@ -1248,7 +1248,18 @@
     "user_role_updated_assignments_success": "¡Rol de usuario actualizado con asignaciones con éxito!",
     "editor_access_updated_success": "¡Acceso de editor actualizado con éxito!",
     "search_users_placeholder": "Buscar usuarios...",
-    "selected": "seleccionados"
+    "selected": "seleccionados",
+    "activity_and_places": "Actividad del Usuario",
+    "places_viewed": "Lugares Visitados y Vistos",
+    "no_places_visited": "Aún no hay lugares marcados como visitados.",
+    "spots_explored": "Lugares Explorados",
+    "last_active": "Última Actividad",
+    "recent_activity": "Actividad Reciente del Usuario",
+    "no_activity": "No hay actividad reciente registrada.",
+    "max_level_reached": "Nivel Máximo Alcanzado",
+    "to_reach": "necesarios para",
+    "reviews_needed": "reseñas más requeridas",
+    "reviews_met": "Requisito de reseñas cumplido"
   },
   "notifications_page": {
     "business_notifications": "Notificaciones de Negocios",
@@ -2100,6 +2111,8 @@
     "most_viewed_maps": "Mapas Más Vistos",
     "most_opened_places": "Lugares Más Abiertos",
     "most_redeemed_offers": "Ofertas Más Canjeadas",
-    "no_data": "No hay datos disponibles"
+    "no_data": "No hay datos disponibles",
+    "place_singular": "lugar",
+    "places_plural": "lugares"
   }
 }
