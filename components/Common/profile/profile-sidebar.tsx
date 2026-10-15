@@ -15,6 +15,7 @@ import {
   Star,
   Trophy,
   MapPin,
+  Compass,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,6 +66,12 @@ export function ProfileSidebar({ data }: ProfileProps) {
       href: "/profile/favorite-places",
       label: t("nav.favorite_places"),
       icon: Heart,
+      roles: ["all"],
+    },
+    {
+      href: "/profile/saved-routes",
+      label: t("nav.saved_routes") || "Mis Rutas Guardadas",
+      icon: Compass,
       roles: ["all"],
     },
     {

@@ -29,6 +29,8 @@ import {
   User,
   X,
   MapPin,
+  Navigation,
+  Compass,
 } from "lucide-react";
 
 import { getImageUrl, getLocalized } from "@/lib/utils";
@@ -143,12 +145,15 @@ export default function Header() {
   const navLinks = [
     { name: t("nav.map"), href: "/maps" },
     { name: t("nav.places"), href: "/places" },
+    { name: t("nav.route_planner") || "Roadtrip", href: "/route-planner" },
     { name: t("nav.offer"), href: "/offer" },
     { name: t("nav.catalog"), href: "/catalog" },
     { name: t("nav.for_business"), href: "/for-business" },
   ];
 
   const menuItems = [
+    { label: t("nav.route_planner") || "Roadtrip Planner", href: "/route-planner", icon: Navigation },
+    { label: t("nav.saved_routes") || "Mis Rutas Guardadas", href: "/profile/saved-routes", icon: Compass },
     { label: t("nav.notifications") || "Notifications", href: "/notifications", icon: Bell },
     { label: t("nav.visited_places") || "Visited Places", href: "/profile/visited-places", icon: CheckCircle2 },
     { label: t("nav.favorite_places"), href: "/profile/favorite-places", icon: Heart },

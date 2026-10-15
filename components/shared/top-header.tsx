@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Gift, LayoutGrid, MapIcon } from "lucide-react";
+import { BookOpen, Gift, LayoutGrid, MapIcon, Navigation, Compass } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -20,6 +20,16 @@ export default function TopHeader() {
       label: t("nav.places"),
       path: "/places",
       icon: <LayoutGrid className="w-6 h-6" />,
+    },
+    {
+      label: t("nav.route_planner") || "Planificador",
+      path: "/route-planner",
+      icon: <Navigation className="w-6 h-6" />,
+    },
+    {
+      label: t("nav.saved_routes") || "Mis Rutas Guardadas",
+      path: "/profile/saved-routes",
+      icon: <Compass className="w-6 h-6" />,
     },
     {
       label: t("nav.offer"),
