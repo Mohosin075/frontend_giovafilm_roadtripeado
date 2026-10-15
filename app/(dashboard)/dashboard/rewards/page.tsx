@@ -92,13 +92,15 @@ export default function RewardsAdminPage() {
   const configs = configsRes?.data || [];
   const maps = mapsRes?.data || [];
 
+  const levelsData = levelsRes?.data;
+
   // Active tiers list (DB or fallback)
   const allLevels = useMemo(() => {
-    if (levelsRes?.data && Array.isArray(levelsRes.data) && levelsRes.data.length > 0) {
-      return [...levelsRes.data].sort((a, b) => Number(a.level) - Number(b.level));
+    if (levelsData && Array.isArray(levelsData) && levelsData.length > 0) {
+      return [...levelsData].sort((a, b) => Number(a.level) - Number(b.level));
     }
     return DEFAULT_LEVEL_THRESHOLDS;
-  }, [levelsRes?.data]);
+  }, [levelsData]);
 
   // Reward modal & filter states
   const [open, setOpen] = useState(false);

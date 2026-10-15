@@ -36,7 +36,9 @@ export default function SavedRoutes() {
   });
   const [deleteRoutePlan] = useDeleteRoutePlanMutation();
 
-  const allRoutes: any[] = myRoutesRes?.data?.data || myRoutesRes?.data || [];
+  const allRoutes: any[] = useMemo(() => {
+    return myRoutesRes?.data?.data || myRoutesRes?.data || [];
+  }, [myRoutesRes]);
 
   const filtered = useMemo(() => {
     return allRoutes.filter((r) => {

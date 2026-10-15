@@ -7,12 +7,10 @@ import {
   Plus,
   MapPin,
   Check,
-  Filter,
   Layers,
   Map as MapIcon,
   List,
   Sparkles,
-  Compass,
   RotateCcw,
 } from "lucide-react";
 import { useGetPlacesQuery } from "@/redux/features/place/placeApi";
@@ -134,17 +132,17 @@ export default function AddStopModal({
     { skip: !isOpen }
   );
 
-  const rawPlaces = placesRes?.data?.data || placesRes?.data || [];
   const categories = categoriesRes?.data?.data || categoriesRes?.data || [];
   const mapsList = mapsRes?.data?.data || mapsRes?.data || [];
 
   // Filter places based on unadded toggle if enabled
   const places = useMemo(() => {
+    const rawPlaces = placesRes?.data?.data || placesRes?.data || [];
     if (!onlyUnadded) return rawPlaces;
     return rawPlaces.filter(
       (p: any) => !selectedPlaceIds.includes(p._id || p.id)
     );
-  }, [rawPlaces, onlyUnadded, selectedPlaceIds]);
+  }, [placesRes, onlyUnadded, selectedPlaceIds]);
 
   const activeFiltersCount =
     (selectedCategory !== "all" ? 1 : 0) +

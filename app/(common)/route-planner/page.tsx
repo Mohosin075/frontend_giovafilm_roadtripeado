@@ -24,7 +24,6 @@ import {
   Loader2,
 } from "lucide-react";
 import { SafeImage } from "@/components/shared/safe-image";
-import { NoImage } from "@/lib/others/others";
 import { getUsableMediaUrl, getLocalized } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import {

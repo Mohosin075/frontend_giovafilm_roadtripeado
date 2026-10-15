@@ -6,10 +6,9 @@ import {
   useDeleteRoutePlanMutation,
 } from "@/redux/features/route-plan/routePlanApi";
 import { SafeImage } from "@/components/shared/safe-image";
-import { getUsableMediaUrl, getLocalized } from "@/lib/utils";
+import { getUsableMediaUrl } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { toast } from "sonner";
-import Link from "next/link";
 
 interface SavedRoutesModalProps {
   isOpen: boolean;
@@ -30,7 +29,7 @@ export default function SavedRoutesModal({
   const { data: myRoutesRes, isLoading } = useGetMyRoutePlansQuery(undefined, {
     skip: !isOpen,
   });
-  const [deleteRoutePlan, { isLoading: isDeleting }] = useDeleteRoutePlanMutation();
+  const [deleteRoutePlan] = useDeleteRoutePlanMutation();
 
   if (!isOpen) return null;
 
