@@ -41,6 +41,7 @@ interface MapFiltersProps {
   setIsManualSelection: (val: boolean) => void;
   availableCountries: string[];
   isLoggedIn?: boolean;
+  isMapPurchased?: boolean;
   isLoading?: boolean;
   hideDesktopMapFilter?: boolean;
 }
@@ -58,6 +59,7 @@ export function MapFilters({
   setIsManualSelection,
   availableCountries,
   isLoggedIn = true,
+  isMapPurchased = true,
   isLoading = false,
   hideDesktopMapFilter = false,
 }: MapFiltersProps) {
@@ -244,46 +246,76 @@ export function MapFilters({
                             <div className="py-1">
                               {placesInCat.length > 0 ? (
                                 <>
-                                  {placesInCat
+                                   {placesInCat
                                     .slice(0, SIDEBAR_PLACES_CAP)
-                                    .map((place: any) => (
-                                      <button
-                                        key={place._id}
-                                        onClick={() => {
-                                          const cover = getUsableMediaUrl(place.media?.photos || place.media);
-                                          if (cover && typeof window !== "undefined") {
-                                            const img = new Image();
-                                            img.src = cover;
-                                          }
-                                          setSelectedLocation({
-                                            id: place._id,
-                                            type: normalizePinType(place),
-                                            data: place,
-                                          });
-                                        }}
-                                        className={`w-full flex items-center gap-3 px-6 py-2 text-left transition-all ${
-                                          selectedLocation?.id === place._id
-                                            ? "bg-amber-500 text-black font-bold shadow-md"
-                                            : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800/80 hover:text-amber-500 dark:hover:text-[#fabf13]"
-                                        }`}
-                                      >
-                                        <div
-                                          className={`w-1.5 h-1.5 rounded-full ${selectedLocation?.id === place._id ? "bg-black" : "bg-amber-400"}`}
-                                        />
-                                        <div className="flex flex-col min-w-0">
-                                          <span className="truncate flex items-center gap-1.5">
-                                            {place.isLocked ? (
-                                              <>
-                                                <Lock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                                                <span>{t("map.premium_location", "Premium Location")}</span>
-                                              </>
-                                            ) : (
-                                              getSafeString(place.name, language)
-                                            )}
-                                          </span>
-                                        </div>
-                                      </button>
-                                    ))}
+                                    .map((place: any) => {
+                                      const isBusiness =
+                                        place?.type === "business" ||
+                                        place?.type === "Business" ||
+                                        place?.placeType === "Business";
+                                      const isLocked = Boolean(
+                                        place.isLocked ||
+                                          (isMapPurchased === false && !isBusiness)
+                                      );
+
+                                      return (
+                                        <button
+                                          key={place._id}
+                                          onClick={() => {
+                                            const cover = getUsableMediaUrl(place.media?.photos || place.media);
+                                            if (cover && typeof window !== "undefined") {
+                                              const img = new Image();
+                                              img.src = cover;
+                                            }
+                                            setSelectedLocation({
+                                              id: place._id,
+                                              type: normalizePinType(place),
+                                              data: {
+                                                ...place,
+                                                isLocked,
+                                              },
+                                            });
+                                          }}
+                                          className={`w-full flex items-center gap-2.5 px-6 py-2 text-left transition-all ${
+                                            selectedLocation?.id === place._id
+                                              ? "bg-amber-500 text-black font-bold shadow-md"
+                                              : isLocked
+                                              ? "text-gray-500 dark:text-slate-400 hover:bg-amber-50/50 dark:hover:bg-slate-800/80 hover:text-amber-600 dark:hover:text-[#fabf13]"
+                                              : "text-gray-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800/80 hover:text-amber-500 dark:hover:text-[#fabf13]"
+                                          }`}
+                                        >
+                                          {isLocked ? (
+                                            <Lock
+                                              className={`w-3.5 h-3.5 shrink-0 ${
+                                                selectedLocation?.id === place._id
+                                                  ? "text-black"
+                                                  : "text-amber-500 dark:text-[#fabf13]"
+                                              }`}
+                                              strokeWidth={2.4}
+                                            />
+                                          ) : (
+                                            <div
+                                              className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                                                selectedLocation?.id === place._id
+                                                  ? "bg-black"
+                                                  : "bg-amber-400"
+                                              }`}
+                                            />
+                                          )}
+                                          <div className="flex flex-col min-w-0 flex-1">
+                                            <span className="truncate flex items-center gap-1.5">
+                                              {isLocked ? (
+                                                <span className="font-medium text-gray-700 dark:text-slate-300">
+                                                  {t("map.premium_location", "Premium Location")}
+                                                </span>
+                                              ) : (
+                                                getSafeString(place.name, language)
+                                              )}
+                                            </span>
+                                          </div>
+                                        </button>
+                                      );
+                                    })}
                                   {placesInCat.length > SIDEBAR_PLACES_CAP && (
                                     <p className="px-6 py-2 text-xs text-gray-400">
                                       +{placesInCat.length - SIDEBAR_PLACES_CAP}{" "}

@@ -804,38 +804,7 @@ export default function MapDetails() {
               <Button variant="ghost" className="text-gray-500 dark:text-slate-400 dark:hover:bg-slate-800 w-full cursor-pointer">{t("place.back_to_maps")}</Button>
             </Link>
           </div>
-          <div className="pt-2 border-t border-gray-100 dark:border-slate-800">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleOpenReviewModal}
-              className="w-full font-bold border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30 rounded-xl h-11 text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2"
-            >
-              <Star size={15} className="fill-amber-400 text-amber-400" />
-              {myReview ? t("reviews.edit_your_review") : t("reviews.write_review")}
-            </Button>
-          </div>
         </div>
-
-        <ReviewModal
-          isOpen={isReviewOpen}
-          onClose={() => {
-            setIsReviewOpen(false);
-            setSelectedReviewForEdit(null);
-          }}
-          placeId={isActuallyBusiness ? undefined : (id as string)}
-          businessId={isActuallyBusiness ? (id as string) : undefined}
-          isMapPurchased={false}
-          initialData={
-            selectedReviewForEdit
-              ? {
-                  _id: selectedReviewForEdit._id,
-                  rating: selectedReviewForEdit.rating,
-                  review: selectedReviewForEdit.review,
-                }
-              : undefined
-          }
-        />
       </div>
     );
   }

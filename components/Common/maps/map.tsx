@@ -828,23 +828,9 @@ export default function MapPage() {
     })
     : [];
 
-  // Unpurchased sidebar: same visibility rules as map markers
+  // Sidebar places: include all locations for selected map (unpurchased spots appear locked with padlock icon)
   const sidebarPlaces = (selectedCountry && isPlacesSettledForMap)
-    ? (isUserResolved && !isCurrentMapPurchased
-      ? fetchedPlaces.filter((place: any) => {
-        if (!belongsToSelectedMap(place)) return false;
-
-        if (searchQuery && !matchesSearch(place, searchQuery)) {
-          return false;
-        }
-
-        const categoryId = getCategoryId(place);
-        return (
-          isBusinessLocation(place) ||
-          inherentlyBusinessCatIds.has(categoryId)
-        );
-      })
-      : fetchedPlaces.filter((place: any) => {
+    ? fetchedPlaces.filter((place: any) => {
         if (!belongsToSelectedMap(place)) return false;
 
         if (searchQuery && !matchesSearch(place, searchQuery)) {
@@ -852,7 +838,7 @@ export default function MapPage() {
         }
 
         return true;
-      }))
+      })
     : [];
 
   if (!hasMounted) return null;
@@ -968,6 +954,7 @@ export default function MapPage() {
                   setIsManualSelection={setIsManualSelection}
                   availableCountries={availableCountries}
                   isLoggedIn={isLoggedIn}
+                  isMapPurchased={isCurrentMapPurchased}
                   isLoading={isSidebarLoading}
                   hideDesktopMapFilter={true}
                 />
