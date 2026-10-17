@@ -248,6 +248,14 @@ export default function ExplorerProfilePage() {
                         {formatDate(data.createdAt) || "—"}
                       </span>
                     </div>
+
+                    {/* Location / City */}
+                    {(data.address?.city || data.city) && (
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-slate-800/80 text-gray-600 dark:text-slate-300 text-xs font-semibold border border-gray-200 dark:border-slate-700/60">
+                        <MapPin size={12} className="text-amber-500" />
+                        <span>{data.address?.city || data.city}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
