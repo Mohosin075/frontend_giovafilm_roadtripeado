@@ -618,7 +618,7 @@ export function CreateOfferDialog({
                     id="redemptionDuration"
                     type="number"
                     min={1}
-                    placeholder="e.g., 1440 for 24 hours"
+                    placeholder={t("offers_admin.duration_placeholder") || "e.g., 1440 for 24 hours"}
                     className="mt-1 text-xs dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100"
                     {...register("redemptionDuration", {
                       required: "Duration is required",
@@ -670,12 +670,12 @@ export function CreateOfferDialog({
                   }
                 }}
               >
-                <option value="">Select discount type</option>
-                <option value="Percentage">Percentage (%)</option>
-                <option value="Flat">Flat Amount ($)</option>
-                <option value="Fixed Price">Fixed Price (bundle total $)</option>
-                <option value="BOGO">BOGO (Buy 1 Get 1)</option>
-                <option value="Free item">Free Item</option>
+                <option value="">{t("offers_admin.select_discount_type") || "Select discount type"}</option>
+                <option value="Percentage">{t("offers_admin.percentage") || "Percentage (%)"}</option>
+                <option value="Flat">{t("offers_admin.flat_amount") || "Flat Amount ($)"}</option>
+                <option value="Fixed Price">{t("offers_admin.fixed_price") || "Fixed Price (bundle total $)"}</option>
+                <option value="BOGO">{t("offers_admin.bogo") || "BOGO (Buy 1 Get 1)"}</option>
+                <option value="Free item">{t("offers_admin.free_item") || "Free Item"}</option>
               </select>
             </div>
 

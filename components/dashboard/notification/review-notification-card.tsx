@@ -1,6 +1,7 @@
 "use client";
 
 import { Star } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface ReviewNotificationCardProps {
   userName: string;
@@ -19,6 +20,7 @@ export function ReviewNotificationCard({
   rating,
   timestamp,
 }: ReviewNotificationCardProps) {
+  const { t } = useLanguage();
   return (
     <div className="flex items-start gap-4 p-4 bg-white dark:bg-[#131b2e] rounded-lg border border-gray-200 dark:border-slate-800 hover:shadow-md transition-shadow">
       {/* User Avatar */}
@@ -32,7 +34,7 @@ export function ReviewNotificationCard({
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-gray-900 dark:text-slate-100">{userName}</p>
         <p className="text-sm text-gray-600 dark:text-slate-400">
-          reviewed{" "}
+          {t("notification.reviewed") || "reviewed"}{" "}
           <a href={placeLink} className="text-blue-600 dark:text-blue-400 hover:underline">
             {placeName}
           </a>

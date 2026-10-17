@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 import {
   Carousel,
@@ -50,18 +51,21 @@ const maps: MapItem[] = [
 ];
 
 export default function SimilarMaps() {
+  const { t } = useLanguage();
   return (
     <section className="py-16">
       <div className="max-w-[1400px] mx-auto px-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">SIMILAR MAPS</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
+            {t("maps.similar_maps") || "SIMILAR MAPS"}
+          </h2>
 
           <Link
             href="/collections"
             className="text-yellow-500 font-semibold hover:underline"
           >
-            View All Collections →
+            {t("maps.view_all_collections") || "View All Collections →"}
           </Link>
         </div>
 

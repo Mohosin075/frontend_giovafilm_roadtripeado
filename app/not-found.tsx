@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/shared/navigation/header";
 import Footer from "@/components/shared/navigation/footer";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function NotFound() {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen flex flex-col font-inter">
       <Header />
@@ -50,19 +54,19 @@ export default function NotFound() {
           
           {/* Subheading */}
           <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-slate-100 tracking-tight">
-            Off the Beaten Path
+            {t("not_found.title") || "Off the Beaten Path"}
           </h2>
           
           {/* Description */}
           <p className="text-lg text-gray-600 dark:text-slate-400 max-w-lg mx-auto leading-relaxed mb-10">
-            Oops! It looks like the destination you&apos;re looking for isn&apos;t on our maps yet. Let&apos;s get you back to discovering hidden gems.
+            {t("not_found.description") || "Oops! It looks like the destination you're looking for isn't on our maps yet. Let's get you back to discovering hidden gems."}
           </p>
           
           {/* Action Button */}
           <div className="pt-8">
             <Link href="/">
               <Button className="bg-[#FFC107] hover:bg-[#FFB300] text-black font-extrabold rounded-lg px-10 h-14 text-base shadow-lg shadow-yellow-500/20 cursor-pointer">
-                Back to Home
+                {t("not_found.back_home") || "Back to Home"}
               </Button>
             </Link>
           </div>

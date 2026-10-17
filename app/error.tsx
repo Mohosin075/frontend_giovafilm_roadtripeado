@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, AlertTriangle } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function GlobalError({
   error,
@@ -11,6 +12,7 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useLanguage();
   useEffect(() => {
     console.error("Global Error Caught by Boundary:", error);
     // If it's a stale deployment chunk error, automatically reload to fetch the new build
@@ -32,9 +34,9 @@ export default function GlobalError({
           <AlertTriangle size={28} />
         </div>
         <div className="space-y-1.5">
-          <h2 className="text-xl font-black">Something went wrong</h2>
+          <h2 className="text-xl font-black">{t("error_page.title") || "Something went wrong"}</h2>
           <p className="text-xs text-gray-500 dark:text-slate-400">
-            A temporary client error occurred. Please refresh the page to reload the latest version.
+            {t("error_page.desc") || "A temporary client error occurred. Please refresh the page to reload the latest version."}
           </p>
           {error?.message && (
             <p className="text-[11px] font-mono text-rose-400 bg-rose-950/40 border border-rose-900/50 p-2.5 rounded-xl break-words text-left">
@@ -48,14 +50,14 @@ export default function GlobalError({
             className="flex-1 bg-amber-400 hover:bg-amber-500 text-black font-bold rounded-xl h-11 text-xs cursor-pointer inline-flex items-center justify-center gap-1.5"
           >
             <RefreshCw size={14} />
-            <span>Reload Page</span>
+            <span>{t("error_page.reload") || "Reload Page"}</span>
           </Button>
           <Button
             onClick={() => reset()}
             variant="outline"
             className="flex-1 border-gray-200 dark:border-slate-700 font-bold rounded-xl h-11 text-xs cursor-pointer"
           >
-            Try Again
+            {t("error_page.try_again") || "Try Again"}
           </Button>
         </div>
       </div>

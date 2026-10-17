@@ -221,21 +221,21 @@ export default function ReportsPage() {
           </style>
         </head>
         <body>
-          <h1>Platform Reports, User Activity & Insights</h1>
+          <h1>${t("reports_admin.title") || "Platform Reports, User Activity & Insights"}</h1>
           <div class="subtitle">Generated on ${new Date().toLocaleString()}</div>
 
           <div class="section">
-            <div class="section-title">User Activity & Engagement Overview</div>
+            <div class="section-title">${t("reports_admin.user_activity_title") || "User Activity & Engagement Overview"}</div>
             <table>
               <thead>
                 <tr>
-                  <th>Active Users (Today)</th>
-                  <th>Active Users (This Week)</th>
-                  <th>Active Users (This Month)</th>
-                  <th>Total Registered</th>
-                  <th>Places Visited</th>
-                  <th>Offers Redeemed</th>
-                  <th>Reviews</th>
+                  <th>${t("reports_admin.active_today") || "Active Users (Today)"}</th>
+                  <th>${t("reports_admin.active_this_week") || "Active Users (This Week)"}</th>
+                  <th>${t("reports_admin.active_this_month") || "Active Users (This Month)"}</th>
+                  <th>${t("reports_admin.total_registered") || "Total Registered"}</th>
+                  <th>${t("reports_admin.places_visited") || "Places Visited"}</th>
+                  <th>${t("reports_admin.offers_redeemed") || "Offers Redeemed"}</th>
+                  <th>${t("reports_admin.reviews") || "Reviews"}</th>
                 </tr>
               </thead>
               <tbody>

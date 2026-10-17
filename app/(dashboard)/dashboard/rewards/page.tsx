@@ -494,7 +494,7 @@ export default function RewardsAdminPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-900/60 text-[11px] uppercase font-bold text-gray-500 dark:text-slate-400 tracking-wider">
-                  <th className="px-6 py-4 text-left">Level & Rank</th>
+                  <th className="px-6 py-4 text-left">{t("rewards_admin.level_rank") || "Level & Rank"}</th>
                   <th className="px-6 py-4 text-left">{t("rewards_admin.cover") || "Icon"}</th>
                   <th className="px-6 py-4 text-left">
                     {t("rewards_admin.reward_name") || "Reward & Description"}
@@ -608,7 +608,7 @@ export default function RewardsAdminPage() {
                             </div>
                           )}
                           {!reward.mapId && !reward.fileUrl && (
-                            <span className="text-gray-400 dark:text-slate-500 italic">None</span>
+                            <span className="text-gray-400 dark:text-slate-500 italic">{t("rewards_admin.none") || "None"}</span>
                           )}
                         </td>
 
@@ -620,7 +620,7 @@ export default function RewardsAdminPage() {
                               size="sm"
                               onClick={() => handleOpenEditReward(reward)}
                               className="h-9 w-9 p-0 rounded-xl text-gray-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 cursor-pointer"
-                              title="Edit Reward"
+                              title={t("rewards_admin.edit_reward") || "Edit Reward"}
                             >
                               <Edit size={16} />
                             </Button>
@@ -629,7 +629,7 @@ export default function RewardsAdminPage() {
                               size="sm"
                               onClick={() => handleDeleteReward(reward._id)}
                               className="h-9 w-9 p-0 rounded-xl text-gray-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-slate-800 cursor-pointer"
-                              title="Delete Reward"
+                              title={t("rewards_admin.delete_reward") || "Delete Reward"}
                             >
                               <Trash2 size={16} />
                             </Button>
@@ -666,7 +666,7 @@ export default function RewardsAdminPage() {
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl px-4 py-2 cursor-pointer shadow-sm flex items-center gap-2 self-start sm:self-auto shrink-0"
             >
               <Plus size={15} />
-              Add Tier / Level
+              {t("rewards_admin.add_tier") || "Add Tier / Level"}
             </Button>
           </div>
 
@@ -675,12 +675,12 @@ export default function RewardsAdminPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-900/60 text-[11px] uppercase font-bold text-gray-500 dark:text-slate-400 tracking-wider">
-                    <th className="px-6 py-4 text-left">Level #</th>
-                    <th className="px-6 py-4 text-left">Rank & Tier Name</th>
-                    <th className="px-6 py-4 text-left">Minimum XP Required</th>
-                    <th className="px-6 py-4 text-left">Required Approved Reviews</th>
-                    <th className="px-6 py-4 text-left">Attached Rewards</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th className="px-6 py-4 text-left">{t("rewards_admin.level_num") || "Level #"}</th>
+                    <th className="px-6 py-4 text-left">{t("rewards_admin.rank_tier_name") || "Rank & Tier Name"}</th>
+                    <th className="px-6 py-4 text-left">{t("rewards_admin.min_xp_required") || "Minimum XP Required"}</th>
+                    <th className="px-6 py-4 text-left">{t("rewards_admin.req_approved_reviews") || "Required Approved Reviews"}</th>
+                    <th className="px-6 py-4 text-left">{t("rewards_admin.attached_rewards") || "Attached Rewards"}</th>
+                    <th className="px-6 py-4 text-right">{t("rewards_admin.actions") || "Actions"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80">
@@ -689,7 +689,7 @@ export default function RewardsAdminPage() {
                       <td colSpan={6} className="px-6 py-12 text-center text-gray-400 dark:text-slate-500">
                         <div className="flex items-center justify-center gap-2">
                           <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                          Loading tiers & levels...
+                          {t("rewards_admin.loading_tiers") || "Loading tiers & levels..."}
                         </div>
                       </td>
                     </tr>

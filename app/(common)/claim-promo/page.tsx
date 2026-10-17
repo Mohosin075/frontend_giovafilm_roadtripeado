@@ -227,9 +227,9 @@ function ClaimPromoContent() {
       }`}>
         <div className="flex flex-col items-center space-y-4 max-w-sm text-center relative z-10">
           <Loader2 className="w-12 h-12 animate-spin text-[#FFC107]" />
-          <h3 className="text-xl font-bold tracking-tight">Verifying invitation...</h3>
+          <h3 className="text-xl font-bold tracking-tight">{t("promo_claim.verifying") || "Verifying invitation..."}</h3>
           <p className="text-sm text-gray-500 leading-relaxed">
-            Please wait while we confirm your invitation details and map access settings.
+            {t("promo_claim.verifying_desc") || "Please wait while we confirm your invitation details and map access settings."}
           </p>
         </div>
       </div>
@@ -245,19 +245,19 @@ function ClaimPromoContent() {
             <CheckCircle className="w-10 h-10 text-emerald-500" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">Upgrade Successful!</h2>
+            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">{t("promo_claim.upgrade_success") || "Upgrade Successful!"}</h2>
             <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
-              Payment verified. The map access has been successfully added to your account.
+              {t("promo_claim.payment_verified") || "Payment verified. The map access has been successfully added to your account."}
             </p>
           </div>
           <div className="bg-emerald-50/70 dark:bg-emerald-950/40 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/40 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
-            Status: Lifetime Access Granted ✅
+            {t("promo_claim.lifetime_granted") || "Status: Lifetime Access Granted ✅"}
           </div>
           <Button
             onClick={handleGoToPurchasedMaps}
             className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg transition-all shadow-lg shadow-yellow-500/20 text-base"
           >
-            View My Purchased Maps <ArrowRight size={18} className="ml-1 inline" />
+            {t("promo_claim.view_purchased_maps") || "View My Purchased Maps"} <ArrowRight size={18} className="ml-1 inline" />
           </Button>
         </div>
       </section>
@@ -273,9 +273,9 @@ function ClaimPromoContent() {
             <XCircle className="w-10 h-10 text-[#FFC107]" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">Checkout Canceled</h2>
+            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">{t("promo_claim.checkout_canceled") || "Checkout Canceled"}</h2>
             <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
-              Checkout was canceled. No charges were made. You can complete the upgrade whenever you're ready.
+              {t("promo_claim.checkout_canceled_desc") || "Checkout was canceled. No charges were made. You can complete the upgrade whenever you're ready."}
             </p>
           </div>
           <div className="flex flex-col gap-3 pt-2">
@@ -307,19 +307,19 @@ function ClaimPromoContent() {
             <CheckCircle className="w-10 h-10 text-emerald-500" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">Invitation Claimed!</h2>
+            <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">{t("promo_claim.invitation_claimed") || "Invitation Claimed!"}</h2>
             <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
-              Your free map access has been activated. Redirecting you to your map now...
+              {t("promo_claim.invitation_claimed_desc") || "Your free map access has been activated. Redirecting you to your map now..."}
             </p>
           </div>
           <div className="bg-emerald-50/70 dark:bg-emerald-950/40 p-4 rounded-xl border border-emerald-100 dark:border-emerald-800/40 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
-            Status: Lifetime Access Granted ✅
+            {t("promo_claim.lifetime_granted") || "Status: Lifetime Access Granted ✅"}
           </div>
           <Button
             onClick={handleGoToMap}
             className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-extrabold rounded-lg transition-all shadow-lg shadow-yellow-500/20 text-base cursor-pointer"
           >
-            Open Map <ArrowRight size={18} className="ml-1 inline" />
+            {t("promo_claim.open_map") || "Open Map"} <ArrowRight size={18} className="ml-1 inline" />
           </Button>
         </div>
       </section>
