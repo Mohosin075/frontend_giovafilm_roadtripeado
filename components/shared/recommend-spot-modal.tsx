@@ -41,6 +41,10 @@ import {
   Camera,
   Info,
   Check,
+  Footprints,
+  Clock,
+  Mountain,
+  Lightbulb,
 } from "lucide-react";
 import { toast } from "sonner";
 import { buildPlaceRequestBody } from "@/components/dashboard/places/place-payload";
@@ -1015,118 +1019,147 @@ export function RecommendSpotModal({
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">
                     <Sparkles size={15} />
                     <span>
-                      {isEs ? "2. Detalles, Fotos y Servicios" : "2. Details, Photos & Amenities"}
+                      {isEs ? "2. Detalles, Acceso y Fotos" : "2. Details, Access & Photos"}
                     </span>
                   </div>
 
-                  {/* Description */}
-                  <div>
-                    <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                      {isEs ? "Descripción General" : "General Description"}
-                    </Label>
-                    <Textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder={
-                        isEs
-                          ? "¿Qué hace especial a este lugar? Cuéntale a los viajeros qué esperar..."
-                          : "What makes this place special? Tell travelers what to expect..."
-                      }
-                      rows={2}
-                      className="mt-1 rounded-xl text-sm bg-gray-50/50 dark:bg-slate-900/60 resize-none"
-                    />
-                  </div>
-
-                  {/* Access Description (Detailed explanation from parking to spot) */}
-                  <div>
-                    <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                      {isEs
-                        ? "Descripción del Acceso (cómo llegar desde el estacionamiento) *"
-                        : "Access Description (how to reach from parking area) *"}
-                    </Label>
-                    <Textarea
-                      value={accessDescription}
-                      onChange={(e) => setAccessDescription(e.target.value)}
-                      placeholder={
-                        isEs
-                          ? "Explica detalladamente cómo llegar a pie desde donde se estaciona el vehículo hasta el lugar (ej: caminar 150m por el sendero rocoso hacia el río)..."
-                          : "Explain in detail how to reach on foot from where vehicles park to the spot (e.g. walk 150m along the rocky trail towards the river)..."
-                      }
-                      rows={2}
-                      className="mt-1 rounded-xl text-sm bg-gray-50/50 dark:bg-slate-900/60 resize-none"
-                    />
-                  </div>
-
-                  {/* Walking Time & Access Difficulty */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {/* Descriptions Card */}
+                  <div className="space-y-3 p-3.5 sm:p-4 rounded-2xl bg-gray-50/70 dark:bg-slate-900/50 border border-gray-200/80 dark:border-slate-800">
+                    {/* General Description */}
                     <div>
-                      <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                        {isEs ? "Tiempo de Caminata" : "Walking / Hike Time"}
+                      <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center justify-between mb-1">
+                        <span>{isEs ? "Descripción del Lugar" : "Spot Description"}</span>
+                        <span className="text-[10px] font-normal text-gray-400 dark:text-slate-500">
+                          {isEs ? "Opcional" : "Optional"}
+                        </span>
                       </Label>
-                      <Input
-                        value={hikeTime}
-                        onChange={(e) => setHikeTime(e.target.value)}
-                        placeholder={isEs ? "Ej: 15 minutos" : "e.g. 15 minutes"}
-                        className="mt-1 h-12 rounded-xl text-sm bg-gray-50/50 dark:bg-slate-900/60"
+                      <Textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={
+                          isEs
+                            ? "¿Qué hace único o especial a este lugar?..."
+                            : "What makes this spot special and unique?..."
+                        }
+                        rows={2}
+                        className="rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 resize-none placeholder:text-gray-400"
                       />
                     </div>
 
+                    {/* Access Description (Parking to Spot) */}
                     <div>
-                      <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                        {isEs ? "Dificultad de Acceso" : "Access Difficulty"}
+                      <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center justify-between mb-1">
+                        <span>{isEs ? "Acceso desde el Estacionamiento *" : "Access from Parking Area *"}</span>
+                        <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                          {isEs ? "Ruta a pie" : "Walking route"}
+                        </span>
                       </Label>
-                      <Select
-                        value={difficulty}
-                        onValueChange={(val) => setDifficulty(val)}
-                      >
-                        <SelectTrigger className="mt-1 h-12 rounded-xl w-full text-sm bg-gray-50/50 dark:bg-slate-900/60">
-                          <SelectValue placeholder={isEs ? "Seleccionar dificultad" : "Select difficulty"} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Easy">{isEs ? "Fácil" : "Easy"}</SelectItem>
-                          <SelectItem value="Moderate">{isEs ? "Moderado" : "Moderate"}</SelectItem>
-                          <SelectItem value="Hard">{isEs ? "Difícil" : "Hard"}</SelectItem>
-                          <SelectItem value="Extreme">{isEs ? "Extremo" : "Extreme"}</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Textarea
+                        value={accessDescription}
+                        onChange={(e) => setAccessDescription(e.target.value)}
+                        placeholder={
+                          isEs
+                            ? "Explica la ruta a pie desde el estacionamiento (ej: caminar 150m por el sendero rocoso)..."
+                            : "Explain the walking route from where you park (e.g. walk 150m along the rocky trail)..."
+                        }
+                        rows={2}
+                        className="rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 resize-none placeholder:text-gray-400"
+                      />
                     </div>
                   </div>
 
-                  {/* Schedule / Always Open */}
-                  <div className="space-y-2 p-3.5 rounded-2xl bg-gray-50/60 dark:bg-slate-900/40 border border-gray-200 dark:border-slate-800">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                        {isEs ? "¿El lugar está siempre abierto? (24/7)" : "Is this location always open (24/7)?"}
-                      </Label>
-                      <button
-                        type="button"
-                        onClick={() => setIsAlwaysOpen(!isAlwaysOpen)}
-                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                          isAlwaysOpen
-                            ? "bg-amber-400 text-black shadow-xs"
-                            : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300"
-                        }`}
-                      >
-                        {isAlwaysOpen ? (isEs ? "Sí, Abierto 24/7" : "Yes, Always Open") : (isEs ? "Horario específico" : "Specific hours")}
-                      </button>
+                  {/* Trail & Schedule Grouped Box */}
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-gray-50/70 dark:bg-slate-900/50 border border-gray-200/80 dark:border-slate-800 space-y-3">
+                    {/* Walking Time & Access Difficulty */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5 mb-1">
+                          <Footprints size={13} className="text-amber-500" />
+                          <span>{isEs ? "Tiempo de Caminata" : "Walking / Hike Time"}</span>
+                        </Label>
+                        <Input
+                          value={hikeTime}
+                          onChange={(e) => setHikeTime(e.target.value)}
+                          placeholder={isEs ? "Ej: 15 min" : "e.g. 15 min"}
+                          className="h-10 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800"
+                        />
+                      </div>
+
+                      <div>
+                        <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5 mb-1">
+                          <Mountain size={13} className="text-amber-500" />
+                          <span>{isEs ? "Dificultad de Acceso" : "Access Difficulty"}</span>
+                        </Label>
+                        <Select
+                          value={difficulty}
+                          onValueChange={(val) => setDifficulty(val)}
+                        >
+                          <SelectTrigger className="h-10 rounded-xl w-full text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800">
+                            <SelectValue placeholder={isEs ? "Dificultad" : "Difficulty"} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Easy">{isEs ? "🟢 Fácil" : "🟢 Easy"}</SelectItem>
+                            <SelectItem value="Moderate">{isEs ? "🟡 Moderado" : "🟡 Moderate"}</SelectItem>
+                            <SelectItem value="Hard">{isEs ? "🟠 Difícil" : "🟠 Hard"}</SelectItem>
+                            <SelectItem value="Extreme">{isEs ? "🔴 Extremo" : "🔴 Extreme"}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
-                    {!isAlwaysOpen && (
-                      <div className="pt-2">
+                    {/* Schedule / 24/7 Selector */}
+                    <div className="pt-2 border-t border-gray-200/60 dark:border-slate-800/80 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5">
+                          <Clock size={13} className="text-amber-500" />
+                          <span>{isEs ? "¿Siempre abierto (24/7)?" : "Always open (24/7)?"}</span>
+                        </Label>
+                        <div className="flex items-center gap-1 p-0.5 rounded-lg bg-gray-200/80 dark:bg-slate-800">
+                          <button
+                            type="button"
+                            onClick={() => setIsAlwaysOpen(true)}
+                            className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                              isAlwaysOpen
+                                ? "bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-400 shadow-xs"
+                                : "text-gray-500 hover:text-gray-900 dark:text-slate-400"
+                            }`}
+                          >
+                            {isEs ? "Sí, 24/7" : "Yes, 24/7"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setIsAlwaysOpen(false)}
+                            className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                              !isAlwaysOpen
+                                ? "bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-400 shadow-xs"
+                                : "text-gray-500 hover:text-gray-900 dark:text-slate-400"
+                            }`}
+                          >
+                            {isEs ? "Horario" : "Hours"}
+                          </button>
+                        </div>
+                      </div>
+
+                      {!isAlwaysOpen && (
                         <Input
                           value={schedules}
                           onChange={(e) => setSchedules(e.target.value)}
-                          placeholder={isEs ? "Ej: 8:00 AM - 6:00 PM (Miércoles a Domingo)" : "e.g. 8:00 AM - 6:00 PM (Wednesday to Sunday)"}
-                          className="h-11 rounded-xl text-xs bg-white dark:bg-slate-900"
+                          placeholder={
+                            isEs
+                              ? "Ej: 8:00 AM - 6:00 PM (Mié a Dom)"
+                              : "e.g. 8:00 AM - 6:00 PM (Wed to Sun)"
+                          }
+                          className="h-9 rounded-xl text-xs bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 mt-1"
                         />
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
 
-                  {/* Tips & Advice */}
+                  {/* Tips & Recommendations */}
                   <div>
-                    <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                      {isEs ? "Consejos y Recomendaciones" : "Tips & Advice"}
+                    <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5 mb-1">
+                      <Lightbulb size={13} className="text-amber-500" />
+                      <span>{isEs ? "Consejos y Recomendaciones" : "Tips & Recommendations"}</span>
                     </Label>
                     <Input
                       value={tips}
@@ -1134,18 +1167,18 @@ export function RecommendSpotModal({
                       placeholder={
                         isEs
                           ? "Ej: Llevar calzado cerrado, agua y protector solar"
-                          : "e.g. Bring closed shoes, water, and sunblock"
+                          : "e.g. Wear closed shoes, bring water and sunblock"
                       }
-                      className="mt-1 h-12 rounded-xl text-sm bg-gray-50/50 dark:bg-slate-900/60"
+                      className="h-10 rounded-xl text-xs sm:text-sm bg-gray-50/50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800"
                     />
                   </div>
 
                   {/* Amenities */}
                   <div>
-                    <Label className="text-xs font-bold text-gray-700 dark:text-slate-300 block mb-2">
+                    <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 block mb-1.5">
                       {isEs ? "Servicios y Facilidades" : "Amenities & Services"}
                     </Label>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                       {servicesList.map((srv) => {
                         const active = selectedServices.includes(srv.id);
                         return (
@@ -1153,13 +1186,13 @@ export function RecommendSpotModal({
                             key={srv.id}
                             type="button"
                             onClick={() => toggleService(srv.id)}
-                            className={`text-xs px-3.5 py-2 rounded-xl font-semibold transition-all cursor-pointer border flex items-center gap-1.5 ${
+                            className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer border flex items-center gap-1.5 ${
                               active
                                 ? "bg-amber-400 text-black border-amber-400 shadow-xs font-bold"
-                                : "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-400 border-gray-200 dark:border-slate-700 hover:bg-gray-100"
+                                : "bg-gray-50/80 dark:bg-slate-900/60 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700"
                             }`}
                           >
-                            {active && <Check size={12} className="stroke-[3]" />}
+                            {active && <Check size={11} className="stroke-[3]" />}
                             <span>{srv.label}</span>
                           </button>
                         );
