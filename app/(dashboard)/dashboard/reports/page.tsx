@@ -202,7 +202,7 @@ export default function ReportsPage() {
     const htmlContent = `
       <html>
         <head>
-          <title>Reports, User Activity & Insights - ${new Date().toLocaleDateString()}</title>
+          <title>${t("reports_admin.title") || "Reports, User Activity & Insights"} - ${new Date().toLocaleDateString()}</title>
           <style>
             body { font-family: sans-serif; color: #333; padding: 40px; line-height: 1.6; }
             h1 { font-size: 24px; color: #111; margin-bottom: 5px; }
@@ -253,16 +253,16 @@ export default function ReportsPage() {
           </div>
 
           <div class="section">
-            <div class="section-title">Usage Statistics Overview</div>
+            <div class="section-title">${t("reports_admin.usage_title") || "Usage Statistics Overview"}</div>
             <div class="row-flex">
               <div class="col">
-                <h3>Most Viewed Maps</h3>
+                <h3>${t("reports_admin.most_viewed_maps") || "Most Viewed Maps"}</h3>
                 <table>
                   <thead>
                     <tr>
-                      <th>Map Name</th>
-                      <th>Spots</th>
-                      <th>Views</th>
+                      <th>${t("reports.map_name") || "Map Name"}</th>
+                      <th>${t("reports_admin.places_plural") || "Spots"}</th>
+                      <th>${t("business_admin.views") || "Views"}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -271,23 +271,23 @@ export default function ReportsPage() {
                         (item: any) => `
                         <tr>
                           <td>${item.name}</td>
-                          <td>${item.placesCount ?? 0} spots</td>
+                          <td>${item.placesCount ?? 0} ${item.placesCount === 1 ? (t("reports_admin.place_singular") || "spot") : (t("reports_admin.places_plural") || "spots")}</td>
                           <td>${item.count?.toLocaleString()}</td>
                         </tr>
                       `
-                      ).join("") || '<tr><td colspan="3">No data</td></tr>'
+                      ).join("") || `<tr><td colspan="3">${t("reports_admin.no_data") || "No data"}</td></tr>`
                     }
                   </tbody>
                 </table>
               </div>
 
               <div class="col">
-                <h3>Most Opened Places</h3>
+                <h3>${t("reports_admin.most_opened_places") || "Most Opened Places"}</h3>
                 <table>
                   <thead>
                     <tr>
-                      <th>Place Name</th>
-                      <th>Opens</th>
+                      <th>${t("reports.place_name") || "Place Name"}</th>
+                      <th>${t("reports_admin.activity") || "Opens"}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -299,20 +299,20 @@ export default function ReportsPage() {
                           <td>${item.count?.toLocaleString()}</td>
                         </tr>
                       `
-                      ).join("") || '<tr><td colspan="2">No data</td></tr>'
+                      ).join("") || `<tr><td colspan="2">${t("reports_admin.no_data") || "No data"}</td></tr>`
                     }
                   </tbody>
                 </table>
               </div>
 
               <div class="col">
-                <h3>Most Redeemed Offers</h3>
+                <h3>${t("reports_admin.most_redeemed_offers") || "Most Redeemed Offers"}</h3>
                 <table>
                   <thead>
                     <tr>
-                      <th>Offer Title</th>
-                      <th>Business</th>
-                      <th>Redemptions</th>
+                      <th>${t("reports.offer_title") || "Offer Title"}</th>
+                      <th>${t("business_admin.business") || "Business"}</th>
+                      <th>${t("reports_admin.offers_redeemed") || "Redemptions"}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -325,7 +325,7 @@ export default function ReportsPage() {
                           <td>${item.count?.toLocaleString()}</td>
                         </tr>
                       `
-                      ).join("") || '<tr><td colspan="3">No data</td></tr>'
+                      ).join("") || `<tr><td colspan="3">${t("reports_admin.no_data") || "No data"}</td></tr>`
                     }
                   </tbody>
                 </table>
