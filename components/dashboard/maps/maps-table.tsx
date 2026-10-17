@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   useDeleteMapMutation,
@@ -14,6 +13,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
+import { TablePagination } from "@/components/dashboard/shared/table-pagination";
 
 interface Map {
   _id: string;
@@ -257,52 +257,14 @@ export function MapsTable({ onEditMap }: { onEditMap?: (map: Map) => void }) {
       </div>
 
       {/* Pagination */}
-      {!isLoading && meta && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-transparent mt-auto">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-slate-400">{t("dashboard.table.rows_per_page")}</span>
-            <select
-              value={limit}
-              onChange={(e) => {
-                setLimit(Number(e.target.value));
-                setPage(1);
-              }}
-              className="border border-gray-300 dark:border-slate-800 rounded p-1 text-sm bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 dark:text-slate-400 border-none">
-              {t("common.page")} {meta.page} of {meta.totalPage || 1}
-            </span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
-                {t("dashboard.table.previous")}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => p + 1)}
-                disabled={page >= (meta.totalPage || 1)}
-                className="dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
-                {t("dashboard.table.next")}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <TablePagination
+        page={page}
+        limit={limit}
+        totalPage={meta?.totalPage}
+        isLoading={isLoading}
+        onPageChange={setPage}
+        onLimitChange={setLimit}
+      />
     </div>
   );
 }

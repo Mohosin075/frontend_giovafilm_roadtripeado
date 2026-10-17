@@ -20,25 +20,16 @@ import { Input } from "@/components/ui/input";
 import {
   Bell,
   CheckCheck,
-  Star,
-  Trophy,
-  Award,
-  Gift,
-  MapPin,
-  Map,
-  AlertCircle,
-  MessageSquare,
   Search,
-  Filter,
   Check,
   Archive,
-  Compass,
   ArrowRight,
-  Loader2,
   Sparkles,
   Trash2,
   X,
   BellRing,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -46,22 +37,11 @@ import {
   requestNotificationPermission,
   showDesktopNotification,
 } from "@/lib/push-notification";
-
-function formatRelativeTime(dateString: string, lang: string = "es"): string {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffSec = Math.floor((now.getTime() - date.getTime()) / 1000);
-  const isEs = lang === "es";
-
-  if (diffSec < 60) return isEs ? "Ahora mismo" : "Just now";
-  const diffMin = Math.floor(diffSec / 60);
-  if (diffMin < 60) return isEs ? `Hace ${diffMin}m` : `${diffMin}m ago`;
-  const diffHours = Math.floor(diffMin / 60);
-  if (diffHours < 24) return isEs ? `Hace ${diffHours}h` : `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  return isEs ? `Hace ${diffDays}d` : `${diffDays}d ago`;
-}
+import {
+  formatRelativeTime,
+  getNotificationText,
+  getNotificationIconConfig,
+} from "@/components/shared/notifications/notification-helpers";
 
 export default function NotificationsPage() {
   const { t, language } = useLanguage();
@@ -164,14 +144,8 @@ export default function NotificationsPage() {
       refetchUnread();
       const notif = payload?.data;
       if (notif) {
-        const titleStr =
-          typeof notif.title === "object"
-            ? notif.title[language] || notif.title.en || notif.title.es || "Roadtripeado"
-            : notif.title || "Roadtripeado";
-        const contentStr =
-          typeof notif.content === "object"
-            ? notif.content[language] || notif.content.en || notif.content.es || ""
-            : notif.content || "";
+        const titleStr = getNotificationText(notif.title, language) || "Roadtripeado";
+        const contentStr = getNotificationText(notif.content, language);
         showDesktopNotification(titleStr, {
           body: contentStr,
           url: notif.actionUrl || "/notifications",
@@ -192,99 +166,6 @@ export default function NotificationsPage() {
   const notifications: INotificationItem[] = Array.isArray(rawNotifs)
     ? rawNotifs
     : (Array.isArray(rawNotifs?.data) ? rawNotifs.data : []);
-
-  const getText = (val: any) => {
-    if (!val) return "";
-    let str = "";
-    if (typeof val === "string") {
-      str = val;
-    } else if (typeof val === "object") {
-      str = val[language] || val.es || val.en || "";
-      if (typeof str === "object") {
-        str = (str as any)[language] || (str as any).es || (str as any).en || "";
-      }
-    }
-    if (typeof str === "string") {
-      return str.replace(/\[object Object\]/gi, language === "es" ? "tu aporte" : "your submission");
-    }
-    return String(str || "");
-  };
-
-  const getIconConfig = (type: string, category: string) => {
-    switch (type) {
-      case "NEW_OFFER":
-        return {
-          icon: Gift,
-          bgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400 border-purple-200/60 dark:border-purple-800/40",
-          badgeColor: "bg-purple-50/90 text-purple-700 border-purple-200/60 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/40",
-          label: t("notifications_page.offer") || "Offer",
-        };
-      case "NEW_LOCATION":
-        return {
-          icon: MapPin,
-          bgColor: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 border-emerald-200/60 dark:border-emerald-800/40",
-          badgeColor: "bg-emerald-50/90 text-emerald-700 border-emerald-200/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40",
-          label: t("notifications_page.location") || "Location",
-        };
-      case "NEW_MAP":
-        return {
-          icon: Map,
-          bgColor: "bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 border-blue-200/60 dark:border-blue-800/40",
-          badgeColor: "bg-blue-50/90 text-blue-700 border-blue-200/60 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800/40",
-          label: t("notifications_page.map") || "Map",
-        };
-      case "APPROVED_REVIEW":
-        return {
-          icon: Star,
-          bgColor: "bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400 border-amber-200/60 dark:border-amber-800/40",
-          badgeColor: "bg-amber-50/90 text-amber-700 border-amber-200/60 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40",
-          label: t("notifications_page.review") || "Review",
-        };
-      case "UNLOCKED_LEVEL":
-        return {
-          icon: Trophy,
-          bgColor: "bg-yellow-50 text-yellow-700 dark:bg-yellow-950/50 dark:text-yellow-400 border-yellow-200/60 dark:border-yellow-800/40",
-          badgeColor: "bg-yellow-50/90 text-yellow-800 border-yellow-200/60 dark:bg-yellow-950/40 dark:text-yellow-300 dark:border-yellow-800/40",
-          label: t("notifications_page.level_up") || "Level Up",
-        };
-      case "EARNED_REWARD":
-        return {
-          icon: Award,
-          bgColor: "bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400 border-rose-200/60 dark:border-rose-800/40",
-          badgeColor: "bg-rose-50/90 text-rose-700 border-rose-200/60 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40",
-          label: t("notifications_page.reward") || "Reward",
-        };
-      case "IMPORTANT_UPDATE":
-      case "SYSTEM_ALERT":
-        return {
-          icon: AlertCircle,
-          bgColor: "bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400 border-red-200/60 dark:border-red-800/40",
-          badgeColor: "bg-red-50/90 text-red-700 border-red-200/60 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800/40",
-          label: t("notifications_page.important") || "Important",
-        };
-      case "NEW_MESSAGE":
-        return {
-          icon: MessageSquare,
-          bgColor: "bg-sky-50 text-sky-600 dark:bg-sky-950/50 dark:text-sky-400 border-sky-200/60 dark:border-sky-800/40",
-          badgeColor: "bg-sky-50/90 text-sky-700 border-sky-200/60 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/40",
-          label: t("notifications_page.message") || "Message",
-        };
-      default:
-        return category === "roadtripeado"
-          ? {
-              icon: Compass,
-              bgColor: "bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 border-blue-200/60 dark:border-blue-800/40",
-              badgeColor: "bg-blue-50/90 text-blue-700 border-blue-200/60 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800/40",
-              label: t("notifications_page.roadtripeado") || "Roadtripeado",
-            }
-          : {
-              icon: Bell,
-              bgColor: "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400 border-indigo-200/60 dark:border-indigo-800/40",
-              badgeColor: "bg-indigo-50/90 text-indigo-700 border-indigo-200/60 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800/40",
-              label: t("notifications_page.account") || "Account",
-            };
-    }
-  };
 
   const handleMarkAllRead = async () => {
     try {
@@ -574,13 +455,14 @@ export default function NotificationsPage() {
         ) : (
           <div className="space-y-3 sm:space-y-4">
             {notifications.map((item) => {
-              const { icon: Icon, bgColor, badgeColor, label } = getIconConfig(
+              const { icon: Icon, bgColor, badgeColor, label } = getNotificationIconConfig(
                 item.type,
-                item.category
+                item.category,
+                t
               );
-              const title = getText(item.title);
-              const content = getText(item.content);
-              const actionText = getText(item.actionText);
+              const title = getNotificationText(item.title, language);
+              const content = getNotificationText(item.content, language);
+              const actionText = getNotificationText(item.actionText, language);
 
               return (
                 <div

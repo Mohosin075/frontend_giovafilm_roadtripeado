@@ -127,7 +127,8 @@
     "no_results": "No se encontraron resultados.",
     "view_details": "Ver detalles",
     "just_now": "Hace un momento",
-    "ago": "hace"
+    "ago": "hace",
+    "of": "de"
   },
   "levels": {
     "locked_title": "Niveles y Recompensas Bloqueados",

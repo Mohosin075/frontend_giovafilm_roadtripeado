@@ -6,18 +6,8 @@ import { useRouter } from "next/navigation";
 import {
   Bell,
   CheckCheck,
-  Star,
-  Trophy,
-  Award,
-  Gift,
-  MapPin,
-  Map,
-  AlertCircle,
-  MessageSquare,
-  Compass,
   ArrowRight,
   Loader2,
-  Check,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -34,22 +24,11 @@ import {
 import { getSocket, emitWhenReady } from "@/lib/socket";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { toast } from "sonner";
-
-function formatRelativeTime(dateString: string, lang: string = "es"): string {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffSec = Math.floor((now.getTime() - date.getTime()) / 1000);
-  const isEs = lang === "es";
-
-  if (diffSec < 60) return isEs ? "Ahora mismo" : "Just now";
-  const diffMin = Math.floor(diffSec / 60);
-  if (diffMin < 60) return isEs ? `Hace ${diffMin}m` : `${diffMin}m ago`;
-  const diffHours = Math.floor(diffMin / 60);
-  if (diffHours < 24) return isEs ? `Hace ${diffHours}h` : `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  return isEs ? `Hace ${diffDays}d` : `${diffDays}d ago`;
-}
+import {
+  formatRelativeTime,
+  getNotificationText,
+  getNotificationIconConfig,
+} from "@/components/shared/notifications/notification-helpers";
 
 interface NotificationBellDropdownProps {
   userId?: string;
@@ -100,14 +79,8 @@ export default function NotificationBellDropdown({
 
       const notif = payload?.data;
       if (notif) {
-        const titleStr =
-          typeof notif.title === "object"
-            ? notif.title[language] || notif.title.en || notif.title.es || "New Notification"
-            : notif.title || "New Notification";
-        const contentStr =
-          typeof notif.content === "object"
-            ? notif.content[language] || notif.content.en || notif.content.es || ""
-            : notif.content || "";
+        const titleStr = getNotificationText(notif.title, language) || "New Notification";
+        const contentStr = getNotificationText(notif.content, language);
 
         // 1. Rich In-App Toast
         toast.info(titleStr, {
@@ -160,68 +133,6 @@ export default function NotificationBellDropdown({
       socket.off("unread_count_update", handleCountUpdate);
     };
   }, [userId, open, language, refetchUnread, refetchNotifs, router, viewAllHref]);
-
-  const getText = (val: any) => {
-    if (!val) return "";
-    if (typeof val === "string") return val;
-    return val[language] || val.es || val.en || "";
-  };
-
-  const getIconConfig = (type: string, category: string) => {
-    switch (type) {
-      case "NEW_OFFER":
-        return {
-          icon: Gift,
-          bgColor: "bg-purple-100 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400",
-        };
-      case "NEW_LOCATION":
-        return {
-          icon: MapPin,
-          bgColor: "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400",
-        };
-      case "NEW_MAP":
-        return {
-          icon: Map,
-          bgColor: "bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400",
-        };
-      case "APPROVED_REVIEW":
-        return {
-          icon: Star,
-          bgColor: "bg-amber-100 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400",
-        };
-      case "UNLOCKED_LEVEL":
-        return {
-          icon: Trophy,
-          bgColor: "bg-yellow-100 text-yellow-700 dark:bg-yellow-950/60 dark:text-yellow-400",
-        };
-      case "EARNED_REWARD":
-        return {
-          icon: Award,
-          bgColor: "bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400",
-        };
-      case "IMPORTANT_UPDATE":
-      case "SYSTEM_ALERT":
-        return {
-          icon: AlertCircle,
-          bgColor: "bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400",
-        };
-      case "NEW_MESSAGE":
-        return {
-          icon: MessageSquare,
-          bgColor: "bg-sky-100 text-sky-600 dark:bg-sky-950/60 dark:text-sky-400",
-        };
-      default:
-        return category === "roadtripeado"
-          ? {
-              icon: Compass,
-              bgColor: "bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400",
-            }
-          : {
-              icon: Bell,
-              bgColor: "bg-indigo-100 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400",
-            };
-    }
-  };
 
   const handleMarkAll = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -373,12 +284,12 @@ export default function NotificationBellDropdown({
             </div>
           ) : (
             notifications.map((item) => {
-              const { icon: Icon, bgColor } = getIconConfig(
+              const { icon: Icon, bgColor } = getNotificationIconConfig(
                 item.type,
                 item.category
               );
-              const title = getText(item.title);
-              const content = getText(item.content);
+              const title = getNotificationText(item.title, language);
+              const content = getNotificationText(item.content, language);
 
               return (
                 <div

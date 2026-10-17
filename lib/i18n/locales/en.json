@@ -127,7 +127,8 @@
     "no_results": "No results found.",
     "view_details": "View details",
     "just_now": "Just now",
-    "ago": "ago"
+    "ago": "ago",
+    "of": "of"
   },
   "levels": {
     "locked_title": "Levels & Rewards are Locked",
