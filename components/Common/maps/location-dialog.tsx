@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { Star, X, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { ReviewModal } from "./review-modal";
 
 const getSafeString = (val: any, lang: string = "es"): string => {
   return getLocalized(val, lang);
@@ -34,6 +35,7 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
   );
   const [hasFalledBack, setHasFalledBack] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   useEffect(() => {
     setActiveType(initialType === "business" ? "business" : "place");
@@ -147,6 +149,15 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
                 {t("map.buy_map")}
               </Button>
             </Link>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsReviewOpen(true)}
+              className="w-full border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30 font-bold rounded-xl h-12 text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2"
+            >
+              <Star size={16} className="fill-amber-400 text-amber-400" />
+              {t("reviews.write_review")}
+            </Button>
             <button
               onClick={onClose}
               className="w-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 font-semibold rounded-xl h-12 transition-colors cursor-pointer text-sm"
@@ -155,6 +166,14 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
             </button>
           </div>
         </div>
+
+        <ReviewModal
+          isOpen={isReviewOpen}
+          onClose={() => setIsReviewOpen(false)}
+          placeId={activeType === "place" ? locationId : undefined}
+          businessId={activeType === "business" ? locationId : undefined}
+          isMapPurchased={false}
+        />
       </div>
     );
   }

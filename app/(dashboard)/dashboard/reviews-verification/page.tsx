@@ -45,11 +45,14 @@ import {
   AlertTriangle,
   Compass,
   CheckCircle2,
+  Building2,
+  Calendar,
 } from "lucide-react";
 import { toast } from "sonner";
 import { appAlert } from "@/lib/app-alert";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { ViewPlaceModal } from "@/components/dashboard/places/view-place-modal";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const getSafeString = (val: any, lang: string = "es"): string => {
   if (!val) return "";
@@ -214,29 +217,76 @@ export default function ReviewsVerificationPage() {
   };
 
   // Handle Approve Review
-  const handleApproveReviewItem = async (revId: string) => {
-    try {
-      await approveReview(revId).unwrap();
-      toast.success(
-        isEs ? "Reseña aprobada con éxito." : "Review approved successfully."
-      );
-      refetchReviews();
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to approve review");
-    }
+  const handleApproveReviewItem = async (
+    revId: string,
+    pointsToAward: number,
+    targetName: string
+  ) => {
+    const pointsInfo =
+      pointsToAward > 0
+        ? isEs
+          ? `Se otorgarán +${pointsToAward} puntos al usuario.`
+          : `+${pointsToAward} points will be awarded to reviewer.`
+        : isEs
+        ? `0 puntos (el usuario no ha comprado este mapa).`
+        : `0 points (reviewer has not purchased this map).`;
+
+    appAlert
+      .fire({
+        title: isEs ? "¿Aprobar esta reseña?" : "Approve this review?",
+        text: isEs
+          ? `La reseña sobre "${targetName}" se publicará en el sitio. ${pointsInfo}`
+          : `The review for "${targetName}" will be published live. ${pointsInfo}`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: isEs
+          ? `Sí, aprobar (${pointsToAward > 0 ? `+${pointsToAward}` : "0"} pts)`
+          : `Yes, approve (${pointsToAward > 0 ? `+${pointsToAward}` : "0"} pts)`,
+        cancelButtonText: isEs ? "Cancelar" : "Cancel",
+        confirmButtonColor: "#10B981",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await approveReview(revId).unwrap();
+            toast.success(
+              isEs ? "Reseña aprobada con éxito." : "Review approved successfully."
+            );
+            refetchReviews();
+          } catch (err: any) {
+            toast.error(err?.data?.message || "Failed to approve review");
+          }
+        }
+      });
   };
 
   // Handle Reject Review
-  const handleRejectReviewItem = async (revId: string) => {
-    try {
-      await rejectReview(revId).unwrap();
-      toast.success(
-        isEs ? "Reseña rechazada." : "Review rejected."
-      );
-      refetchReviews();
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to reject review");
-    }
+  const handleRejectReviewItem = async (revId: string, targetName: string) => {
+    appAlert
+      .fire({
+        title: isEs ? "¿Rechazar esta reseña?" : "Reject this review?",
+        text: isEs
+          ? `¿Estás seguro de rechazar la reseña sobre "${targetName}"? No será visible públicamente.`
+          : `Are you sure you want to reject the review for "${targetName}"? It will not appear publicly.`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: isEs ? "Sí, rechazar" : "Yes, reject",
+        cancelButtonText: isEs ? "Cancelar" : "Cancel",
+        confirmButtonColor: "#ef4444",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await rejectReview(revId).unwrap();
+            toast.success(
+              isEs ? "Reseña rechazada." : "Review rejected."
+            );
+            refetchReviews();
+          } catch (err: any) {
+            toast.error(err?.data?.message || "Failed to reject review");
+          }
+        }
+      });
   };
 
   const quickRejectionReasons = [
@@ -888,91 +938,285 @@ export default function ReviewsVerificationPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredReviews.map((review: any) => {
                 const isBusiness = !!review.businessId;
+                const targetEntity = isBusiness ? review.businessId : review.placeId;
                 const targetType = isBusiness
                   ? isEs
                     ? "Negocio"
                     : "Business"
                   : isEs
-                  ? "Lugar"
-                  : "Place";
-                const rawTargetName = isBusiness
-                  ? review.businessId?.name
-                  : review.placeId?.name;
+                  ? "Lugar Turístico"
+                  : "Tourist Spot";
                 const targetName =
-                  getSafeString(rawTargetName, language) ||
+                  getSafeString(targetEntity?.name, language) ||
                   (isBusiness ? "Unknown Business" : "Unknown Place");
+
+                const targetMedia = targetEntity?.media;
+                const targetThumb = Array.isArray(targetMedia)
+                  ? targetMedia[0]
+                  : typeof targetMedia === "object"
+                  ? targetMedia?.photos?.[0]
+                  : null;
+
+                const targetAddress =
+                  targetEntity?.address ||
+                  targetEntity?.location?.address ||
+                  targetEntity?.location?.city ||
+                  "";
+                const targetMapName = targetEntity?.map
+                  ? getSafeString(targetEntity.map.name, language)
+                  : null;
 
                 const reviewerName =
                   getSafeString(review.reviewer?.name, language) ||
-                  (isEs ? "Anónimo" : "Anonymous");
+                  (isEs ? "Usuario" : "User");
+                const reviewerProfile = review.reviewer?.profile;
+                const reviewerLevel = review.reviewer?.level ?? 0;
                 const reviewContent = getSafeString(review.review, language);
+
+                // Calculate point breakdown (New values: Rating 1pt, Text 4pts, 200+ chars 5pts)
+                let calculatedPoints = 1;
+                if (reviewContent && reviewContent.trim() !== "") {
+                  calculatedPoints += 4;
+                  if (reviewContent.trim().length >= 200) {
+                    calculatedPoints += 5;
+                  }
+                }
+
+                // Check if user purchased map
+                const userPurchasedMaps = Array.isArray(review.reviewer?.purchasedMaps)
+                  ? review.reviewer.purchasedMaps
+                  : [];
+                const placeMapId = targetEntity?.map?._id || targetEntity?.map;
+                const isMapPurchased =
+                  !placeMapId ||
+                  userPurchasedMaps.some((m: any) => {
+                    const mid = typeof m === "object" ? (m._id || m.id) : m;
+                    return String(mid) === String(placeMapId);
+                  });
+
+                const pointsToAward = isMapPurchased ? calculatedPoints : 0;
 
                 return (
                   <Card
                     key={review._id}
-                    className="rounded-2xl shadow-sm bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col justify-between"
+                    className="rounded-3xl shadow-xs hover:shadow-md transition-all bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 overflow-hidden flex flex-col justify-between"
                   >
-                    <CardHeader className="pb-4">
-                      <div className="flex justify-between items-start gap-3">
-                        <div className="min-w-0">
-                          <CardTitle className="text-lg font-bold line-clamp-1 text-gray-900 dark:text-slate-100">
-                            <span className="text-xs uppercase font-extrabold text-blue-600 dark:text-blue-400 block mb-0.5">
-                              {targetType}
-                            </span>
-                            {targetName}
-                          </CardTitle>
-                          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                            {isEs ? "Por:" : "By:"}{" "}
-                            <span className="font-semibold text-gray-800 dark:text-slate-200">
-                              {reviewerName}
-                            </span>
-                          </p>
+                    {/* Top Identity Header */}
+                    <div className="p-4 sm:p-5 pb-3 border-b border-gray-100 dark:border-slate-800/80 bg-gray-50/50 dark:bg-slate-900/40">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3 min-w-0">
+                          {/* Thumbnail */}
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 dark:bg-slate-800 overflow-hidden shrink-0 border border-gray-200 dark:border-slate-700/80 flex items-center justify-center">
+                            {targetThumb ? (
+                              <img
+                                src={getImageUrl(targetThumb)}
+                                alt={targetName}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : isBusiness ? (
+                              <Building2 size={22} className="text-purple-500 opacity-80" />
+                            ) : (
+                              <MapPin size={22} className="text-amber-500 opacity-80" />
+                            )}
+                          </div>
+
+                          {/* Info */}
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                              <span
+                                className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                                  isBusiness
+                                    ? "bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40"
+                                    : "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800/40"
+                                }`}
+                              >
+                                {targetType}
+                              </span>
+                              {targetMapName && (
+                                <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 px-2 py-0.5 rounded-md truncate max-w-44">
+                                  🗺️ {targetMapName}
+                                </span>
+                              )}
+                            </div>
+
+                            <h4
+                              className="text-base font-extrabold text-gray-900 dark:text-slate-100 leading-snug truncate"
+                              title={targetName}
+                            >
+                              {targetName}
+                            </h4>
+
+                            {targetAddress && (
+                              <p className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1 mt-0.5 truncate">
+                                <MapPin size={12} className="shrink-0 text-gray-400" />
+                                <span className="truncate">{targetAddress}</span>
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/40 px-2.5 py-1 rounded-full text-xs font-bold shrink-0">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400" />
-                          <span>{review.rating || 0}.0</span>
+
+                        {/* Rating & Points Pill */}
+                        <div className="flex flex-col items-end gap-1.5 shrink-0">
+                          <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/40 px-3 py-1 rounded-full text-xs font-black shadow-2xs">
+                            <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400" />
+                            <span>{review.rating || 0}.0</span>
+                          </div>
+
+                          {isMapPurchased ? (
+                            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                              <Sparkles size={11} className="text-emerald-500" />
+                              +{pointsToAward} pts
+                            </span>
+                          ) : (
+                            <span
+                              className="text-[10px] font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 px-2.5 py-0.5 rounded-full"
+                              title={
+                                isEs
+                                  ? "El usuario no ha comprado este mapa, por lo que ganará 0 puntos"
+                                  : "Reviewer has not purchased this map, so 0 points will be awarded"
+                              }
+                            >
+                              {isEs ? "0 pts (Mapa no comprado)" : "0 pts (Unpurchased Map)"}
+                            </span>
+                          )}
                         </div>
                       </div>
-                    </CardHeader>
+                    </div>
 
-                    <CardContent className="space-y-4 flex-1 flex flex-col justify-between">
-                      <p className="text-sm text-gray-700 dark:text-slate-300 italic border-l-4 border-amber-400 pl-3 py-1">
-                        "{reviewContent || (isEs ? "Sin comentario escrito (solo calificación)" : "No review content provided")}"
-                      </p>
+                    {/* Reviewer Row */}
+                    <div className="px-5 pt-3.5 pb-2 flex items-center justify-between gap-3 text-xs">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Avatar className="w-7 h-7 border border-gray-200 dark:border-slate-700 shrink-0">
+                          <AvatarImage src={getImageUrl(reviewerProfile)} alt={reviewerName} />
+                          <AvatarFallback className="text-[10px] font-bold bg-amber-100 text-amber-900">
+                            {reviewerName.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex items-center gap-2">
+                          <span className="font-bold text-gray-800 dark:text-slate-200 truncate">
+                            {reviewerName}
+                          </span>
+                          {typeof reviewerLevel === "number" && (
+                            <span className="text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400">
+                              Nvl {reviewerLevel}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <span className="text-[11px] text-gray-400 dark:text-slate-500 shrink-0 flex items-center gap-1">
+                        <Calendar size={12} />
+                        {new Date(review.createdAt || Date.now()).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+
+                    {/* Review Content & Photos */}
+                    <CardContent className="space-y-3 px-5 py-2 flex-1 flex flex-col justify-between">
+                      <div className="relative p-3.5 rounded-2xl bg-gray-50 dark:bg-slate-900/60 border border-gray-100 dark:border-slate-800/60">
+                        <p className="text-sm text-gray-800 dark:text-slate-200 leading-relaxed italic">
+                          "{reviewContent || (isEs ? "Sin comentario escrito (solo calificación de estrellas)" : "No review text provided (star rating only)")}"
+                        </p>
+
+                        <div className="mt-2.5 pt-2 border-t border-gray-200/60 dark:border-slate-800 flex items-center justify-between text-[11px] text-gray-400 dark:text-slate-500 font-medium">
+                          <span>
+                            {reviewContent.trim().length} {isEs ? "caracteres" : "chars"}
+                          </span>
+                          {isMapPurchased ? (
+                            reviewContent.trim().length >= 200 ? (
+                              <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                                <Sparkles size={11} />
+                                {isEs ? "Bono completo (1+4+5 = 10 pts)" : "Full bonus (1+4+5 = 10 pts)"}
+                              </span>
+                            ) : (
+                              <span>
+                                {isEs ? "Calificación + Texto (1+4 = 5 pts)" : "Rating + Text (1+4 = 5 pts)"}
+                              </span>
+                            )
+                          ) : (
+                            <span className="text-amber-700 dark:text-amber-400">
+                              {isEs ? "Sin puntos (mapa no comprado)" : "No points (map unpurchased)"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
 
                       {review.media && review.media.length > 0 && (
-                        <div className="flex gap-2 overflow-x-auto py-2">
-                          {review.media.map((img: string, idx: number) => (
-                            <img
-                              key={idx}
-                              src={getImageUrl(img)}
-                              alt="Review upload"
-                              className="w-16 h-16 object-cover rounded-xl border border-gray-200 dark:border-slate-800 shrink-0"
-                            />
-                          ))}
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                            {isEs ? "Fotos adjuntas:" : "Attached photos:"}
+                          </span>
+                          <div className="flex gap-2 overflow-x-auto py-1">
+                            {review.media.map((img: string, idx: number) => (
+                              <a
+                                key={idx}
+                                href={getImageUrl(img)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group relative"
+                              >
+                                <img
+                                  src={getImageUrl(img)}
+                                  alt="Review upload"
+                                  className="w-16 h-16 object-cover rounded-xl border border-gray-200 dark:border-slate-800 shrink-0 group-hover:opacity-90 transition-opacity"
+                                />
+                              </a>
+                            ))}
+                          </div>
                         </div>
                       )}
 
-                      <div className="flex justify-end items-center gap-2.5 pt-4 border-t border-gray-150 dark:border-slate-800 mt-auto">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRejectReviewItem(review._id)}
-                          disabled={isApprovingReview || isRejectingReview}
-                          className="h-9 px-4 rounded-xl border-rose-300 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold cursor-pointer"
-                        >
-                          <X className="w-3.5 h-3.5 mr-1" />
-                          {isEs ? "Rechazar" : "Reject"}
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => handleApproveReviewItem(review._id)}
-                          disabled={isApprovingReview || isRejectingReview}
-                          className="h-9 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs cursor-pointer"
-                        >
-                          <Check className="w-3.5 h-3.5 mr-1" />
-                          {isEs ? "Aprobar" : "Approve"}
-                        </Button>
+                      {/* Footer Actions */}
+                      <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-150 dark:border-slate-800 mt-auto">
+                        {review.placeId?._id || review.placeId ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            type="button"
+                            onClick={() => {
+                              setModalPlaceId(review.placeId?._id || review.placeId);
+                              setIsPlaceModalOpen(true);
+                            }}
+                            className="h-9 px-3 rounded-xl border-amber-300 dark:border-amber-700/60 text-amber-800 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-xs font-bold gap-1.5 cursor-pointer shadow-2xs"
+                          >
+                            <Eye size={14} className="text-amber-500" />
+                            <span>{isEs ? "Ver Lugar" : "View Spot"}</span>
+                          </Button>
+                        ) : (
+                          <div />
+                        )}
+
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            type="button"
+                            onClick={() => handleRejectReviewItem(review._id, targetName)}
+                            disabled={isApprovingReview || isRejectingReview}
+                            className="h-9 px-3.5 rounded-xl border-rose-300 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold cursor-pointer"
+                          >
+                            <X className="w-3.5 h-3.5 mr-1" />
+                            {isEs ? "Rechazar" : "Reject"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            type="button"
+                            onClick={() => handleApproveReviewItem(review._id, pointsToAward, targetName)}
+                            disabled={isApprovingReview || isRejectingReview}
+                            className="h-9 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs cursor-pointer flex items-center gap-1.5"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>
+                              {isEs ? "Aprobar" : "Approve"}{" "}
+                              <span className="font-black opacity-90">
+                                ({pointsToAward > 0 ? `+${pointsToAward}` : "0"} pts)
+                              </span>
+                            </span>
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

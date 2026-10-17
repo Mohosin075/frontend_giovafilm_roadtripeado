@@ -804,7 +804,38 @@ export default function MapDetails() {
               <Button variant="ghost" className="text-gray-500 dark:text-slate-400 dark:hover:bg-slate-800 w-full cursor-pointer">{t("place.back_to_maps")}</Button>
             </Link>
           </div>
+          <div className="pt-2 border-t border-gray-100 dark:border-slate-800">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleOpenReviewModal}
+              className="w-full font-bold border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30 rounded-xl h-11 text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2"
+            >
+              <Star size={15} className="fill-amber-400 text-amber-400" />
+              {myReview ? t("reviews.edit_your_review") : t("reviews.write_review")}
+            </Button>
+          </div>
         </div>
+
+        <ReviewModal
+          isOpen={isReviewOpen}
+          onClose={() => {
+            setIsReviewOpen(false);
+            setSelectedReviewForEdit(null);
+          }}
+          placeId={isActuallyBusiness ? undefined : (id as string)}
+          businessId={isActuallyBusiness ? (id as string) : undefined}
+          isMapPurchased={false}
+          initialData={
+            selectedReviewForEdit
+              ? {
+                  _id: selectedReviewForEdit._id,
+                  rating: selectedReviewForEdit.rating,
+                  review: selectedReviewForEdit.review,
+                }
+              : undefined
+          }
+        />
       </div>
     );
   }
@@ -1572,14 +1603,20 @@ export default function MapDetails() {
                 <p className="text-xs font-medium text-gray-500 dark:text-slate-400">
                   {approvedReviews.length > 0
                     ? `${t("reviews.based_on_reviews")} ${approvedReviews.length} ${t("reviews.verified_reviews")}`
-                    : t("reviews.no_reviews_yet")}
+                    : isMapPurchased
+                      ? t("reviews.no_reviews_yet")
+                      : t("reviews.no_reviews_yet_unpurchased")}
                 </p>
               </div>
             </div>
 
             <div className="hidden md:flex items-center gap-2 bg-white/80 dark:bg-[#0e1424] backdrop-blur-xs border border-amber-200/60 dark:border-amber-500/30 px-3.5 py-2 rounded-xl text-xs text-amber-900 dark:text-amber-300 font-bold">
               <Sparkles size={16} className="text-amber-500" />
-              <span>{t("reviews.earn_points_banner")}</span>
+              <span>
+                {isMapPurchased
+                  ? t("reviews.earn_points_banner")
+                  : t("reviews.unlock_map_to_earn_points")}
+              </span>
             </div>
           </div>
 
@@ -1631,7 +1668,9 @@ export default function MapDetails() {
 
               <p className="text-xs text-amber-900 dark:text-amber-300 font-medium mb-3 leading-relaxed">
                 {myReview.status === "Pending"
-                  ? t("reviews.thank_you_pending")
+                  ? isMapPurchased
+                    ? t("reviews.thank_you_pending")
+                    : t("reviews.thank_you_pending_no_points")
                   : t("reviews.rejected_desc")}
               </p>
 
@@ -1679,9 +1718,15 @@ export default function MapDetails() {
                     <CheckCircle2 size={13} className="text-green-600 dark:text-green-400" />
                     {t("reviews.your_published_review")}
                   </span>
-                  <span className="text-xs font-bold text-green-700 dark:text-green-400">
-                    +{myReview.pointsEarned || 0} {t("reviews.points_earned")}
-                  </span>
+                  {(myReview.pointsEarned || 0) > 0 ? (
+                    <span className="text-xs font-bold text-green-700 dark:text-green-400">
+                      +{myReview.pointsEarned} {t("reviews.points_earned")}
+                    </span>
+                  ) : (
+                    <span className="text-xs font-medium text-amber-700 dark:text-amber-400 bg-amber-100/60 dark:bg-amber-950/40 px-2.5 py-0.5 rounded-full">
+                      {t("reviews.unpurchased_map_notice_short")}
+                    </span>
+                  )}
                 </div>
                 <Button
                   onClick={handleOpenReviewModal}
@@ -1736,7 +1781,9 @@ export default function MapDetails() {
             <div className="py-12 text-center text-gray-500 dark:text-slate-400 bg-gray-50/50 dark:bg-[#0e1424] rounded-2xl border border-dashed border-gray-200 dark:border-slate-800 space-y-2">
               <p className="text-base font-bold text-gray-700 dark:text-slate-200">{t("reviews.no_public_reviews")}</p>
               <p className="text-xs text-gray-400 dark:text-slate-500 max-w-sm mx-auto">
-                {t("reviews.first_to_share")}
+                {isMapPurchased
+                  ? t("reviews.first_to_share")
+                  : t("reviews.first_to_share_unpurchased")}
               </p>
             </div>
           ) : (
@@ -1839,6 +1886,7 @@ export default function MapDetails() {
         }}
         placeId={isActuallyBusiness ? undefined : placeData?._id}
         businessId={isActuallyBusiness ? placeData?._id : undefined}
+        isMapPurchased={isMapPurchased}
         initialData={
           selectedReviewForEdit
             ? {

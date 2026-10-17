@@ -22,6 +22,7 @@ interface ReviewModalProps {
   onClose: () => void;
   placeId?: string;
   businessId?: string;
+  isMapPurchased?: boolean;
   initialData?: {
     _id: string;
     rating: number;
@@ -34,6 +35,7 @@ export function ReviewModal({
   onClose,
   placeId,
   businessId,
+  isMapPurchased,
   initialData,
 }: ReviewModalProps) {
   const { t } = useLanguage();
@@ -185,14 +187,16 @@ export function ReviewModal({
               </p>
               <span
                 className={`text-[10px] sm:text-xs font-medium ${
-                  review.trim().length >= 200
+                  isMapPurchased !== false && review.trim().length >= 200
                     ? "text-green-600 dark:text-emerald-400 font-bold"
                     : "text-gray-400 dark:text-slate-500"
                 }`}
               >
-                {review.trim().length >= 200
-                  ? t("reviews.bonus_unlocked")
-                  : `${review.trim().length}/200 ${t("reviews.chars_for_bonus")}`}
+                {isMapPurchased === false
+                  ? `${review.trim().length} ${t("reviews.characters")}`
+                  : review.trim().length >= 200
+                    ? t("reviews.bonus_unlocked")
+                    : `${review.trim().length}/200 ${t("reviews.chars_for_bonus")}`}
               </span>
             </div>
             <Textarea
@@ -203,13 +207,28 @@ export function ReviewModal({
             />
           </div>
 
+          {/* Unpurchased Map Notice */}
+          {isMapPurchased === false && (
+            <div className="bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-xl p-2.5 sm:p-3 flex items-start gap-2.5 text-left">
+              <span className="text-sm shrink-0 mt-0.5">ℹ️</span>
+              <div className="text-[11px] sm:text-xs text-amber-900 dark:text-amber-300 leading-relaxed">
+                <p className="font-bold">{t("reviews.unpurchased_map_notice_title")}</p>
+                <p className="text-amber-800/90 dark:text-amber-400/90 mt-0.5">
+                  {t("reviews.unpurchased_map_notice_desc")}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Verification Process Notice */}
           <div className="bg-blue-50/70 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 rounded-xl p-2.5 sm:p-3 flex items-start gap-2.5 text-left">
             <span className="text-sm shrink-0 mt-0.5">🛡️</span>
             <div className="text-[11px] sm:text-xs text-blue-900 dark:text-blue-300 leading-relaxed">
               <p className="font-bold">{t("reviews.moderation_notice_title")}</p>
               <p className="text-blue-700 dark:text-blue-400/80 mt-0.5">
-                {t("reviews.moderation_notice_desc")}
+                {isMapPurchased === false
+                  ? t("reviews.moderation_notice_desc_unpurchased")
+                  : t("reviews.moderation_notice_desc")}
               </p>
             </div>
           </div>
