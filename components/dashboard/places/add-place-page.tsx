@@ -1220,7 +1220,15 @@ export default function AddPlacePage() {
         menuImages: asMediaUrls(finalData.existingMenuImages),
       };
 
-      if (selectedPlace?.country) {
+      const mapCountry =
+        selectedMap?.country ||
+        (typeof selectedMap?.name === "object"
+          ? selectedMap?.name?.en || selectedMap?.name?.es
+          : selectedMap?.name);
+
+      if (mapCountry) {
+        placeData.country = String(mapCountry).trim();
+      } else if (selectedPlace?.country) {
         placeData.country = selectedPlace.country;
       }
       if (pinMoved) {

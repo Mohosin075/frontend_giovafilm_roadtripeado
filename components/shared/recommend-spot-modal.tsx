@@ -507,8 +507,12 @@ export function RecommendSpotModal({
       category: categoryId,
       type: "Regular",
       address: address.trim(),
-      description: description.trim() || name.trim(),
-      country: selectedMap?.country || "",
+      country:
+        selectedMap?.country ||
+        (typeof selectedMap?.name === "object"
+          ? selectedMap?.name?.en || selectedMap?.name?.es
+          : selectedMap?.name) ||
+        "",
       location: {
         type: "Point",
         coordinates: [lngNum, latNum],
