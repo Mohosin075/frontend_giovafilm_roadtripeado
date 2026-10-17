@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -45,10 +46,16 @@ import {
   Clock,
   Mountain,
   Lightbulb,
+  Car,
+  Users,
+  Dog,
+  Baby,
+  Utensils,
+  Wifi,
 } from "lucide-react";
 import { toast } from "sonner";
 import { buildPlaceRequestBody } from "@/components/dashboard/places/place-payload";
-import { getLocalized } from "@/lib/utils";
+import { getLocalized, parseHikeTime, composeHikeTime } from "@/lib/utils";
 import Link from "next/link";
 import {
   APIProvider,
@@ -298,13 +305,26 @@ export function RecommendSpotModal({
   const userLevel = user?.level || 0;
   const isLocked = !isPrivileged && userLevel < 1;
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { value: hikeTimeAmount, unit: hikeTimeUnit } = parseHikeTime(hikeTime);
+
+  const handleHikeTimeAmountChange = (val: string) => {
+    const nextHike = composeHikeTime(val, hikeTimeUnit);
+    setHikeTime(nextHike);
+  };
+
+  const handleHikeTimeUnitChange = (unit: "mins" | "hours") => {
+    const nextHike = composeHikeTime(hikeTimeAmount || "15", unit);
+    setHikeTime(nextHike);
+  };
+
   const servicesList = [
-    { id: "Parking", label: isEs ? "Estacionamiento" : "Parking" },
-    { id: "Restrooms", label: isEs ? "Baños" : "Restrooms" },
-    { id: "Pet Friendly", label: "Pet Friendly" },
-    { id: "Family Friendly", label: isEs ? "Familiar" : "Family Friendly" },
-    { id: "Food Nearby", label: isEs ? "Comida cerca" : "Food Nearby" },
-    { id: "Wifi", label: "Wifi" },
+    { id: "Parking", label: isEs ? "Estacionamiento" : "Parking", icon: Car },
+    { id: "Restrooms", label: isEs ? "Baños" : "Restrooms", icon: Users },
+    { id: "Pet Friendly", label: "Pet Friendly", icon: Dog },
+    { id: "Family Friendly", label: isEs ? "Familiar" : "Family Friendly", icon: Baby },
+    { id: "Food Nearby", label: isEs ? "Comida cerca" : "Food Nearby", icon: Utensils },
+    { id: "Wifi", label: "Wifi", icon: Wifi },
   ];
 
   const clearError = (field: string) => {
@@ -1023,252 +1043,288 @@ export function RecommendSpotModal({
                     </span>
                   </div>
 
-                  {/* Descriptions Card */}
-                  <div className="space-y-3 p-3.5 sm:p-4 rounded-2xl bg-gray-50/70 dark:bg-slate-900/50 border border-gray-200/80 dark:border-slate-800">
-                    {/* General Description */}
-                    <div>
-                      <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center justify-between mb-1">
-                        <span>{isEs ? "Descripción del Lugar" : "Spot Description"}</span>
-                        <span className="text-[10px] font-normal text-gray-400 dark:text-slate-500">
-                          {isEs ? "Opcional" : "Optional"}
-                        </span>
+                  {/* Access Description (Parking to Spot) - styled like PlaceFormContent */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                        {isEs ? "Descripción de Acceso" : "Access Description"} <span className="text-red-500">*</span>
                       </Label>
-                      <Textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder={
-                          isEs
-                            ? "¿Qué hace único o especial a este lugar?..."
-                            : "What makes this spot special and unique?..."
-                        }
-                        rows={2}
-                        className="rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 resize-none placeholder:text-gray-400"
-                      />
                     </div>
-
-                    {/* Access Description (Parking to Spot) */}
-                    <div>
-                      <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center justify-between mb-1">
-                        <span>{isEs ? "Acceso desde el Estacionamiento *" : "Access from Parking Area *"}</span>
-                        <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">
-                          {isEs ? "Ruta a pie" : "Walking route"}
-                        </span>
-                      </Label>
-                      <Textarea
-                        value={accessDescription}
-                        onChange={(e) => setAccessDescription(e.target.value)}
-                        placeholder={
-                          isEs
-                            ? "Explica la ruta a pie desde el estacionamiento (ej: caminar 150m por el sendero rocoso)..."
-                            : "Explain the walking route from where you park (e.g. walk 150m along the rocky trail)..."
-                        }
-                        rows={2}
-                        className="rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 resize-none placeholder:text-gray-400"
-                      />
-                    </div>
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400">
+                      {isEs
+                        ? "Escribe cómo llegar a pie desde el estacionamiento (sé conciso)."
+                        : "Explain how to reach on foot from parking (keep it concise)."}
+                    </p>
+                    <Textarea
+                      placeholder={
+                        isEs
+                          ? "Ej: Caminar 150m por el sendero rocoso hacia el mirador..."
+                          : "e.g., Walk 150m along the rocky trail towards the viewpoint..."
+                      }
+                      value={accessDescription}
+                      onChange={(e) => setAccessDescription(e.target.value)}
+                      className="min-h-[85px] border-gray-200 dark:border-slate-800 italic text-sm bg-white dark:bg-slate-900/60 dark:text-slate-100 rounded-lg resize-none"
+                    />
                   </div>
 
-                  {/* Trail & Schedule Grouped Box */}
-                  <div className="p-3.5 sm:p-4 rounded-2xl bg-gray-50/70 dark:bg-slate-900/50 border border-gray-200/80 dark:border-slate-800 space-y-3">
-                    {/* Walking Time & Access Difficulty */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5 mb-1">
-                          <Footprints size={13} className="text-amber-500" />
-                          <span>{isEs ? "Tiempo de Caminata" : "Walking / Hike Time"}</span>
-                        </Label>
-                        <Input
-                          value={hikeTime}
-                          onChange={(e) => setHikeTime(e.target.value)}
-                          placeholder={isEs ? "Ej: 15 min" : "e.g. 15 min"}
-                          className="h-10 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800"
-                        />
-                      </div>
-
-                      <div>
-                        <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5 mb-1">
-                          <Mountain size={13} className="text-amber-500" />
-                          <span>{isEs ? "Dificultad de Acceso" : "Access Difficulty"}</span>
-                        </Label>
-                        <Select
-                          value={difficulty}
-                          onValueChange={(val) => setDifficulty(val)}
+                  {/* Difficulty & Walking Time (Side by side like PlaceFormContent) */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Difficulty */}
+                    <div className="space-y-1.5">
+                      <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                        {isEs ? "Dificultad" : "Difficulty"}
+                      </Label>
+                      <Select
+                        value={difficulty}
+                        onValueChange={(val) => setDifficulty(val)}
+                      >
+                        <SelectTrigger className="w-full h-9 bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 rounded-lg text-sm italic">
+                          <SelectValue placeholder={isEs ? "Seleccionar dificultad" : "Select difficulty"} />
+                        </SelectTrigger>
+                        <SelectContent
+                          position="popper"
+                          style={{ zIndex: 99999 }}
+                          className="bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100"
                         >
-                          <SelectTrigger className="h-10 rounded-xl w-full text-xs sm:text-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800">
-                            <SelectValue placeholder={isEs ? "Dificultad" : "Difficulty"} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Easy">{isEs ? "🟢 Fácil" : "🟢 Easy"}</SelectItem>
-                            <SelectItem value="Moderate">{isEs ? "🟡 Moderado" : "🟡 Moderate"}</SelectItem>
-                            <SelectItem value="Hard">{isEs ? "🟠 Difícil" : "🟠 Hard"}</SelectItem>
-                            <SelectItem value="Extreme">{isEs ? "🔴 Extremo" : "🔴 Extreme"}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                          <SelectItem value="Easy">{isEs ? "Fácil" : "Easy"}</SelectItem>
+                          <SelectItem value="Moderate">{isEs ? "Moderado" : "Moderate"}</SelectItem>
+                          <SelectItem value="Hard">{isEs ? "Difícil" : "Hard"}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[10px] text-gray-400 dark:text-slate-500">
+                        {isEs ? "Nivel del sendero o terreno" : "Trail or terrain difficulty level"}
+                      </p>
                     </div>
 
-                    {/* Schedule / 24/7 Selector */}
-                    <div className="pt-2 border-t border-gray-200/60 dark:border-slate-800/80 space-y-2">
+                    {/* Walking Time */}
+                    <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5">
-                          <Clock size={13} className="text-amber-500" />
-                          <span>{isEs ? "¿Siempre abierto (24/7)?" : "Always open (24/7)?"}</span>
+                        <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                          {isEs ? "Tiempo de Caminata" : "Walking Time"}
                         </Label>
-                        <div className="flex items-center gap-1 p-0.5 rounded-lg bg-gray-200/80 dark:bg-slate-800">
-                          <button
-                            type="button"
-                            onClick={() => setIsAlwaysOpen(true)}
-                            className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
-                              isAlwaysOpen
-                                ? "bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-400 shadow-xs"
-                                : "text-gray-500 hover:text-gray-900 dark:text-slate-400"
-                            }`}
-                          >
-                            {isEs ? "Sí, 24/7" : "Yes, 24/7"}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setIsAlwaysOpen(false)}
-                            className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
-                              !isAlwaysOpen
-                                ? "bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-400 shadow-xs"
-                                : "text-gray-500 hover:text-gray-900 dark:text-slate-400"
-                            }`}
-                          >
-                            {isEs ? "Horario" : "Hours"}
-                          </button>
-                        </div>
+                        {hikeTime && (
+                          <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-1.5 py-0.5 rounded">
+                            {hikeTime}
+                          </span>
+                        )}
                       </div>
-
-                      {!isAlwaysOpen && (
-                        <Input
-                          value={schedules}
-                          onChange={(e) => setSchedules(e.target.value)}
-                          placeholder={
-                            isEs
-                              ? "Ej: 8:00 AM - 6:00 PM (Mié a Dom)"
-                              : "e.g. 8:00 AM - 6:00 PM (Wed to Sun)"
-                          }
-                          className="h-9 rounded-xl text-xs bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 mt-1"
+                      <div className="flex rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 h-9 overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+                        <input
+                          type="text"
+                          placeholder="15"
+                          value={hikeTimeAmount}
+                          onChange={(e) => handleHikeTimeAmountChange(e.target.value)}
+                          className="w-full bg-transparent px-3 text-sm italic text-gray-900 dark:text-slate-100 focus:outline-none"
                         />
-                      )}
+                        <select
+                          value={hikeTimeUnit}
+                          onChange={(e) => handleHikeTimeUnitChange(e.target.value as "mins" | "hours")}
+                          className="border-l border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800 px-2.5 text-xs font-medium text-gray-700 dark:text-slate-200 focus:outline-none cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                        >
+                          <option value="mins">{isEs ? "Minutos" : "Minutes"}</option>
+                          <option value="hours">{isEs ? "Horas" : "Hours"}</option>
+                        </select>
+                      </div>
+                      <p className="text-[10px] text-gray-400 dark:text-slate-500">
+                        {isEs ? "Aprox. tiempo a pie" : "Approx. time to walk/hike"}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Tips & Recommendations */}
-                  <div>
-                    <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-1.5 mb-1">
-                      <Lightbulb size={13} className="text-amber-500" />
-                      <span>{isEs ? "Consejos y Recomendaciones" : "Tips & Recommendations"}</span>
+                  {/* Schedule / Always Open */}
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                      {isEs ? "Horarios" : "Schedules"}
                     </Label>
+                    <div className="flex items-center gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <button
+                          type="button"
+                          onClick={() => setIsAlwaysOpen(!isAlwaysOpen)}
+                          className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-all cursor-pointer ${
+                            isAlwaysOpen
+                              ? "bg-amber-400 border-amber-400 text-black shadow-xs font-bold"
+                              : "border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/80"
+                          }`}
+                        >
+                          {isAlwaysOpen && <Check size={11} className="stroke-[3]" />}
+                        </button>
+                        <span
+                          onClick={() => setIsAlwaysOpen(!isAlwaysOpen)}
+                          className="text-sm text-gray-700 dark:text-slate-300 font-normal"
+                        >
+                          {isEs ? "Siempre abierto (24/7)" : "Always open (24/7)"}
+                        </span>
+                      </label>
+                    </div>
+                    {!isAlwaysOpen && (
+                      <Input
+                        placeholder={
+                          isEs
+                            ? "Ej: 8:00 AM - 6:00 PM (Miércoles a Domingo)"
+                            : "e.g. 8:00 AM - 6:00 PM (Wed to Sun)"
+                        }
+                        value={schedules}
+                        onChange={(e) => setSchedules(e.target.value)}
+                        className="w-full bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 rounded-lg h-9 text-sm italic mt-1"
+                      />
+                    )}
+                  </div>
+
+                  {/* General Description */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                        {isEs ? "Descripción del Lugar" : "Spot Description"}
+                      </Label>
+                      <span className="text-[11px] text-gray-400 italic">
+                        {isEs ? "Opcional" : "Optional"}
+                      </span>
+                    </div>
+                    <Textarea
+                      placeholder={
+                        isEs
+                          ? "¿Qué hace único o especial a este lugar?..."
+                          : "What makes this spot special and unique?..."
+                      }
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="min-h-[80px] border-gray-200 dark:border-slate-800 italic text-sm bg-white dark:bg-slate-900/60 dark:text-slate-100 rounded-lg resize-none"
+                    />
+                  </div>
+
+                  {/* Tips / What to Take */}
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                      {isEs ? "Qué Llevar / Consejos" : "What to Take / Tips"}
+                    </Label>
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400">
+                      {isEs
+                        ? "Agua, calzado cómodo, protector solar, etc."
+                        : "Water, comfortable shoes, sunscreen, etc."}
+                    </p>
                     <Input
-                      value={tips}
-                      onChange={(e) => setTips(e.target.value)}
                       placeholder={
                         isEs
                           ? "Ej: Llevar calzado cerrado, agua y protector solar"
                           : "e.g. Wear closed shoes, bring water and sunblock"
                       }
-                      className="h-10 rounded-xl text-xs sm:text-sm bg-gray-50/50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800"
+                      value={tips}
+                      onChange={(e) => setTips(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-900/60 dark:text-slate-100 border-gray-200 dark:border-slate-800 rounded-lg h-9 text-sm italic"
                     />
                   </div>
 
-                  {/* Amenities */}
-                  <div>
-                    <Label className="text-xs font-bold text-gray-800 dark:text-slate-200 block mb-1.5">
-                      {isEs ? "Servicios y Facilidades" : "Amenities & Services"}
+                  {/* Services Available (2-column grid so labels are never cut off) */}
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                      {isEs ? "Servicios Disponibles" : "Services Available"}
                     </Label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {servicesList.map((srv) => {
-                        const active = selectedServices.includes(srv.id);
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {servicesList.map((service) => {
+                        const Icon = service.icon;
+                        const isSelected = selectedServices.includes(service.id);
                         return (
-                          <button
-                            key={srv.id}
-                            type="button"
-                            onClick={() => toggleService(srv.id)}
-                            className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer border flex items-center gap-1.5 ${
-                              active
-                                ? "bg-amber-400 text-black border-amber-400 shadow-xs font-bold"
-                                : "bg-gray-50/80 dark:bg-slate-900/60 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700"
+                          <div
+                            key={service.id}
+                            onClick={() => toggleService(service.id)}
+                            className={`p-2.5 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-all select-none ${
+                              isSelected
+                                ? "bg-amber-500/10 border-amber-500/50 text-amber-600 dark:text-amber-400 font-semibold shadow-xs"
+                                : "bg-white dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 text-gray-700 dark:text-slate-200"
                             }`}
                           >
-                            {active && <Check size={11} className="stroke-[3]" />}
-                            <span>{srv.label}</span>
-                          </button>
+                            <div
+                              className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-all ${
+                                isSelected
+                                  ? "bg-amber-400 border-amber-400 text-black shadow-xs font-bold"
+                                  : "border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800/80"
+                              }`}
+                            >
+                              {isSelected && <Check size={11} className="stroke-[3]" />}
+                            </div>
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <Icon size={14} className="shrink-0 text-gray-400" />
+                              <span className="text-xs whitespace-nowrap">{service.label}</span>
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
                   </div>
 
-                  {/* Photos Upload Section */}
+                  {/* Photos Upload Section (Upload area like PlaceFormContent) */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label className="text-xs font-bold text-gray-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <Camera size={13} className="text-amber-500" />
-                        <span>{isEs ? "Fotos del Lugar (Máx 5) *" : "Spot Photos (Max 5) *"}</span>
+                      <Label className="text-sm font-medium text-gray-800 dark:text-slate-100">
+                        {isEs ? "Fotos del Lugar" : "Spot Photos"} <span className="text-red-500">*</span>
                       </Label>
-                      <span className="text-xs font-bold text-gray-400">
+                      <span className="text-xs font-semibold text-gray-400">
                         {images.length}/5
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-gray-500 dark:text-slate-400 leading-tight">
-                      {isEs
-                        ? "Nota: Las fotos deben ser de buena calidad y representar fielmente tanto la ubicación como la experiencia que se recomienda."
-                        : "Note: Photos must be of good quality and accurately represent both the location and the experience being recommended."}
-                    </p>
-
                     <div
-                      className={`p-3.5 rounded-2xl border transition-colors ${
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`border-2 border-dashed rounded-xl p-4 bg-white dark:bg-[#0e1424] flex flex-col items-center justify-center gap-2 cursor-pointer transition-all hover:border-amber-400 ${
                         errors.images
-                          ? "border-rose-400 bg-rose-50/20 dark:bg-rose-950/20"
-                          : "border-gray-200 dark:border-slate-800 bg-gray-50/40 dark:bg-slate-900/40"
+                          ? "border-red-500 bg-red-50/10"
+                          : "border-gray-200 dark:border-slate-800 hover:bg-gray-50/50 dark:hover:bg-slate-900/60"
                       }`}
                     >
-                      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
+                      <div className="w-9 h-9 rounded-full bg-gray-50 dark:bg-slate-800 text-gray-400 flex items-center justify-center">
+                        <Upload size={18} />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs font-bold text-gray-700 dark:text-slate-200">
+                          {isEs ? "Haz clic para subir fotos" : "Click to upload photos"}
+                        </p>
+                        <p className="text-[10px] text-gray-400 dark:text-slate-500">
+                          {isEs ? "Hasta 5 fotos (JPG, PNG)" : "Up to 5 photos (JPG, PNG)"}
+                        </p>
+                      </div>
+                    </div>
+                    {errors.images && (
+                      <p className="text-[11px] text-red-500 font-semibold">{errors.images}</p>
+                    )}
+
+                    {/* Previews */}
+                    {imagePreviews.length > 0 && (
+                      <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 pt-1">
                         {imagePreviews.map((src, idx) => (
                           <div
                             key={idx}
-                            className="relative h-20 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 group shadow-xs"
+                            className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 group shadow-xs"
                           >
-                            <img
-                              src={src}
-                              alt="Preview"
-                              className="w-full h-full object-cover"
-                            />
+                            <img src={src} alt="Preview" className="w-full h-full object-cover" />
+                            {idx === 0 && (
+                              <span className="absolute top-1 left-1 bg-amber-500 text-white text-[8px] font-extrabold uppercase px-1 py-0.5 rounded shadow-xs">
+                                {isEs ? "Portada" : "Cover"}
+                              </span>
+                            )}
                             <button
                               type="button"
-                              onClick={() => removeImage(idx)}
-                              className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/75 hover:bg-black text-white flex items-center justify-center transition-opacity cursor-pointer shadow-sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeImage(idx);
+                              }}
+                              className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/75 hover:bg-red-600 text-white flex items-center justify-center transition-colors cursor-pointer"
                             >
-                              <X size={12} />
+                              <X size={11} />
                             </button>
                           </div>
                         ))}
-
-                        {images.length < 5 && (
-                          <label className="h-20 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-700 hover:border-amber-400 dark:hover:border-amber-400 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white dark:bg-slate-900/60 p-2 text-center">
-                            <Upload size={18} className="text-amber-500 mb-0.5" />
-                            <span className="text-[11px] text-gray-700 dark:text-slate-300 font-bold">
-                              {isEs ? "Añadir foto" : "Add photo"}
-                            </span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              multiple
-                              onChange={handleImageChange}
-                              className="hidden"
-                            />
-                          </label>
-                        )}
                       </div>
+                    )}
 
-                      {errors.images && (
-                        <p className="text-xs text-rose-500 font-semibold mt-2.5 flex items-center gap-1.5">
-                          <AlertCircle size={13} /> {errors.images}
-                        </p>
-                      )}
-                    </div>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      multiple
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageChange}
+                    />
                   </div>
                 </div>
               </div>

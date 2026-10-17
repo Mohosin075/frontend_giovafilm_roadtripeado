@@ -12,6 +12,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
+    console.error("Global Error Caught by Boundary:", error);
     // If it's a stale deployment chunk error, automatically reload to fetch the new build
     const msg = error?.message || "";
     const name = error?.name || "";
@@ -35,6 +36,11 @@ export default function GlobalError({
           <p className="text-xs text-gray-500 dark:text-slate-400">
             A temporary client error occurred. Please refresh the page to reload the latest version.
           </p>
+          {error?.message && (
+            <p className="text-[11px] font-mono text-rose-400 bg-rose-950/40 border border-rose-900/50 p-2.5 rounded-xl break-words text-left">
+              {error.message}
+            </p>
+          )}
         </div>
         <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
           <Button
