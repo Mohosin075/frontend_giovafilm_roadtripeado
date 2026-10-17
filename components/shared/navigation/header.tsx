@@ -382,12 +382,12 @@ export default function Header() {
 
           {/* Search Bar - Desktop — hidden on Places/Offers (page has its own) */}
           {!hideHeaderSearch && (
-            <div className="hidden md:block flex-1 max-w-2xl mx-4">
-              <div className="relative group">
+            <div className="hidden md:block flex-1 min-w-[200px] lg:min-w-[240px] xl:min-w-[300px] max-w-2xl mx-2 xl:mx-4">
+              <div className="relative group w-full">
                 <button
                   type="button"
                   onClick={submitHeaderSearch}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors cursor-pointer"
                   aria-label="Search"
                 >
                   <Search className="size-5" />
@@ -403,19 +403,19 @@ export default function Header() {
                     }
                   }}
                   placeholder={t("search.placeholder_full")}
-                  className="w-full bg-[#F5F5F5] dark:bg-[#131b2e] border border-transparent dark:border-slate-800 rounded-full py-3.5 pl-12 pr-6 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-[#fabf13]/50 outline-none transition-all"
+                  className="w-full bg-[#F5F5F5] dark:bg-[#131b2e] border border-transparent dark:border-slate-800 rounded-full py-3 pl-11 pr-5 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-[#fabf13]/50 outline-none transition-all"
                 />
 
                 {/* Search Results Dropdown */}
                 {searchTerm && (
-                  <div className="absolute top-full mt-2 w-full bg-white dark:bg-[#131b2e]/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50">
+                  <div className="absolute top-full mt-2 left-0 w-full min-w-[340px] sm:min-w-[420px] max-w-[min(90vw,540px)] bg-white dark:bg-[#131b2e]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50 animate-in fade-in-0 zoom-in-95">
                     {isSearchPending ? (
                       <div className="p-4 text-center text-sm text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2">
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
                         {t("search.searching")}
                       </div>
                     ) : places.length > 0 ? (
-                      <div className="max-h-60 overflow-y-auto">
+                      <div className="max-h-64 overflow-y-auto overflow-x-hidden">
                         {places.map((place: any) => (
                           <Link
                             key={place._id}
@@ -426,7 +426,7 @@ export default function Header() {
                                   (typeof place.map === "object" &&
                                     (place.map?.name || place.map?.country)) ||
                                   place.country;
-                              if (mapName) {
+                                if (mapName) {
                                   localStorage.setItem(
                                     "selectedCountryFilter",
                                     String(mapName),
@@ -437,7 +437,7 @@ export default function Header() {
                             }}
                             className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors border-b border-gray-50 dark:border-slate-800/60 last:border-0"
                           >
-                            <div className="size-10 rounded-lg overflow-hidden shrink-0">
+                            <div className="size-10 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
                               {place.media?.[0] ? (
                                 <img
                                   src={getImageUrl(place.media[0])}
@@ -445,13 +445,11 @@ export default function Header() {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-full bg-gray-200 dark:bg-slate-800 flex items-center justify-center">
-                                  <Map className="size-4 text-gray-400" />
-                                </div>
+                                <Map className="size-4 text-gray-400" />
                               )}
                             </div>
-                            <div>
-                              <h4 className="text-sm font-semibold text-gray-900 dark:text-slate-100">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-sm font-semibold text-gray-900 dark:text-slate-100 truncate">
                                 {getLocalized(place.name, language)}
                               </h4>
                               <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
@@ -473,7 +471,7 @@ export default function Header() {
           )}
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-2 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-1 xl:gap-2 whitespace-nowrap">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href;
 
@@ -481,7 +479,7 @@ export default function Header() {
                 <AuthLink
                   key={index}
                   href={link.href}
-                  className={`font-semibold font-inter transition-all text-sm rounded-xl py-1.5 px-3.5 ${
+                  className={`font-semibold font-inter transition-all text-xs xl:text-sm rounded-xl py-1.5 px-2.5 xl:px-3.5 shrink-0 ${
                     isActive
                       ? "bg-primary text-black dark:text-slate-950 font-bold shadow-[0_2px_12px_rgba(250,191,19,0.35)]"
                       : "text-gray-700 dark:text-slate-300 hover:text-black dark:hover:text-primary hover:bg-black/5 dark:hover:bg-white/5"
