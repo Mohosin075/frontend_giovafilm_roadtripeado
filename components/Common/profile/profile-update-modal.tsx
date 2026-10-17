@@ -49,7 +49,9 @@ export default function ProfileUpdateModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isEs = language === "es";
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -92,13 +94,13 @@ export default function ProfileUpdateModal({
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error(t("profile.upload_valid_format") || "Please upload an image in JPG, PNG, or WebP format.");
+      toast.error(t("profile.upload_valid_format") || (isEs ? "Por favor sube una imagen en formato JPG, PNG o WebP." : "Please upload an image in JPG, PNG, or WebP format."));
       e.target.value = "";
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      toast.error(t("profile.image_max_size") || "Image size must not exceed 5MB.");
+      toast.error(t("profile.image_max_size") || (isEs ? "El tamaño de la imagen no debe superar los 5MB." : "Image size must not exceed 5MB."));
       e.target.value = "";
       return;
     }
@@ -120,7 +122,7 @@ export default function ProfileUpdateModal({
 
     const trimmedName = name.trim();
     if (!trimmedName) {
-      toast.error(t("profile.name_required") || "Your name cannot be empty.");
+      toast.error(t("profile.name_required") || (isEs ? "Tu nombre no puede estar vacío." : "Your name cannot be empty."));
       nameInputRef.current?.focus();
       return;
     }
@@ -146,11 +148,11 @@ export default function ProfileUpdateModal({
 
     try {
       await updateProfile(formData).unwrap();
-      toast.success(t("profile.update_success") || "Profile updated successfully!");
+      toast.success(t("profile.update_success") || (isEs ? "¡Perfil actualizado exitosamente!" : "Profile updated successfully!"));
       onOpenChange(false);
     } catch (err: any) {
       const message =
-        err?.data?.message || err?.message || "Profile update failed.";
+        err?.data?.message || err?.message || (isEs ? "Error al actualizar el perfil." : "Profile update failed.");
       toast.error(message);
     }
   };
@@ -168,17 +170,17 @@ export default function ProfileUpdateModal({
 
         <DialogHeader className="relative shrink-0 px-5 pt-4 pb-3 sm:px-6 sm:pt-5 border-b border-gray-100 dark:border-slate-800/80 text-left">
           <DialogTitle className="text-xl font-bold pr-10 text-gray-900 dark:text-slate-100 flex items-center gap-2">
-            <span>{t("profile.edit_profile") || "Editar Perfil"}</span>
+            <span>{t("profile.edit_profile") || (isEs ? "Editar Perfil" : "Edit Profile")}</span>
           </DialogTitle>
           <DialogDescription className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-0.5">
-            {t("profile.edit_desc") || "Personaliza tu información de explorador y presencia en Roadtripeado."}
+            {t("profile.edit_desc") || (isEs ? "Personaliza tu información de explorador y presencia en Roadtripeado." : "Customize your explorer information and presence in Roadtripeado.")}
           </DialogDescription>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
             className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
-            aria-label={t("common.close") || "Close"}
+            aria-label={t("common.close") || (isEs ? "Cerrar" : "Close")}
           >
             <X size={18} />
           </button>
@@ -191,7 +193,7 @@ export default function ProfileUpdateModal({
           <div className="flex-1 overflow-y-auto px-5 py-4 sm:px-6 space-y-6">
             {/* Quick View Public Profile Banner */}
             {userId && (
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-linear-to-r from-amber-500/10 via-amber-400/5 to-transparent border border-amber-500/30 dark:border-amber-500/20">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-2xl bg-linear-to-r from-amber-500/10 via-amber-400/5 to-transparent border border-amber-500/30 dark:border-amber-500/20 gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400 text-black shadow-xs font-bold">
                     <Compass size={20} />
@@ -199,20 +201,20 @@ export default function ProfileUpdateModal({
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="font-bold text-sm text-gray-900 dark:text-slate-100 truncate">
-                        {t("profile.public_explorer_card") || "Perfil Público de Explorador"}
+                        {t("profile.public_explorer_card") || (isEs ? "Perfil Público de Explorador" : "Public Explorer Profile")}
                       </p>
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         profileStatus === "public"
                           ? "bg-green-100 text-green-800 dark:bg-green-950/60 dark:text-green-300 border border-green-300/40"
                           : "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300"
                       }`}>
-                        {profileStatus === "public" ? "Público" : "Privado"}
+                        {profileStatus === "public" ? (isEs ? "Público" : "Public") : (isEs ? "Privado" : "Private")}
                       </span>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
                       {profileStatus === "public"
-                        ? (t("profile.status_public_hint") || "Visible para la comunidad de exploradores")
-                        : (t("profile.status_private_hint") || "Tu perfil está en modo privado")}
+                        ? (t("profile.status_public_hint") || (isEs ? "Visible para la comunidad de exploradores" : "Visible to the explorer community"))
+                        : (t("profile.status_private_hint") || (isEs ? "Tu perfil está en modo privado" : "Your profile is private"))}
                     </p>
                   </div>
                 </div>
@@ -220,9 +222,9 @@ export default function ProfileUpdateModal({
                 <Link
                   href={`/explorer/${userId}`}
                   target="_blank"
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-xs transition-colors shrink-0 shadow-xs ml-3"
+                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-xs transition-colors shrink-0 shadow-xs w-full sm:w-auto"
                 >
-                  <span>{t("profile.view_public") || "Ver mi perfil"}</span>
+                  <span>{t("profile.view_public") || (isEs ? "Ver mi perfil" : "View Profile")}</span>
                   <ExternalLink size={13} />
                 </Link>
               </div>
@@ -261,7 +263,7 @@ export default function ProfileUpdateModal({
                   onClick={handleRemoveImage}
                   className="mt-2.5 text-xs font-semibold text-red-600 hover:text-red-700 transition-colors"
                 >
-                  {t("profile.remove_new_photo") || "Eliminar nueva foto"}
+                  {t("profile.remove_new_photo") || (isEs ? "Eliminar nueva foto" : "Remove new photo")}
                 </button>
               )}
 
@@ -281,21 +283,21 @@ export default function ProfileUpdateModal({
             <div className="space-y-4">
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 flex items-center gap-1.5">
                 <User size={13} />
-                <span>Información Personal</span>
+                <span>{t("profile.personal_info") || (isEs ? "Información Personal" : "Personal Information")}</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* Name */}
                 <div className="space-y-1.5">
                   <label htmlFor="profile-name" className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                    {t("contact_form.name") || "Nombre"} <span className="text-red-500">*</span>
+                    {t("contact_form.name") || (isEs ? "Nombre" : "Name")} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <User className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={16} />
                     <Input
                       id="profile-name"
                       ref={nameInputRef}
-                      placeholder={t("profile.display_name_placeholder") || "Tu nombre de explorador"}
+                      placeholder={t("profile.display_name_placeholder") || (isEs ? "Tu nombre de explorador" : "Your explorer name")}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
@@ -308,13 +310,13 @@ export default function ProfileUpdateModal({
                 {/* City */}
                 <div className="space-y-1.5">
                   <label htmlFor="profile-city" className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                    {t("profile.city") || "Ciudad / Ubicación"}
+                    {t("profile.city") || (isEs ? "Ciudad / Ubicación" : "City / Location")}
                   </label>
                   <div className="relative">
                     <MapPin className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={16} />
                     <Input
                       id="profile-city"
-                      placeholder={t("profile.city_placeholder") || "Ej. San Juan, Puerto Rico"}
+                      placeholder={t("profile.city_placeholder") || (isEs ? "Ej. San Juan, Puerto Rico" : "e.g. San Juan, Puerto Rico")}
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                       maxLength={60}
@@ -329,11 +331,11 @@ export default function ProfileUpdateModal({
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label htmlFor="profile-email" className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                      {t("profile.email_label") || "Correo electrónico"}
+                      {t("profile.email_label") || (isEs ? "Correo electrónico" : "Email Address")}
                     </label>
                     <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-green-600 dark:text-green-400">
                       <ShieldCheck size={12} />
-                      {t("profile.email_verified") || "Verificado"}
+                      {t("profile.email_verified") || (isEs ? "Verificado" : "Verified")}
                     </span>
                   </div>
                   <div className="relative">
@@ -354,7 +356,7 @@ export default function ProfileUpdateModal({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <label htmlFor="profile-description" className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                    {t("profile.bio") || "Biografía / Sobre mí"}
+                    {t("profile.bio") || (isEs ? "Biografía / Sobre mí" : "Bio / About Me")}
                   </label>
                   <span className={`text-[11px] font-medium ${description.length >= MAX_BIO_LENGTH ? "text-red-500" : "text-gray-400 dark:text-slate-500"}`}>
                     {description.length}/{MAX_BIO_LENGTH}
@@ -362,14 +364,14 @@ export default function ProfileUpdateModal({
                 </div>
                 <Textarea
                   id="profile-description"
-                  placeholder={t("profile.bio_placeholder") || "Cuéntale a la comunidad sobre ti, tus viajes favoritos o tu estilo de ruta..."}
+                  placeholder={t("profile.bio_placeholder") || (isEs ? "Cuéntale a la comunidad sobre ti, tus viajes favoritos o tu estilo de ruta..." : "Tell the community about yourself and your travel adventures...")}
                   value={description}
                   onChange={(e) => setDescription(e.target.value.slice(0, MAX_BIO_LENGTH))}
                   rows={3}
                   className="rounded-xl bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 text-sm resize-none focus-visible:ring-yellow-400"
                 />
                 <p className="text-[11px] text-gray-400 dark:text-slate-500">
-                  Esta descripción se mostrará en tu tarjeta de explorador y en tu perfil público.
+                  {t("profile.bio_helper") || (isEs ? "Esta descripción se mostrará en tu tarjeta de explorador y en tu perfil público." : "This description will be displayed on your explorer card and public profile.")}
                 </p>
               </div>
             </div>
@@ -378,14 +380,14 @@ export default function ProfileUpdateModal({
             <div className="space-y-4">
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 flex items-center gap-1.5">
                 <Globe size={13} />
-                <span>Contacto y Enlaces</span>
+                <span>{t("profile.contact_links") || (isEs ? "Contacto y Enlaces" : "Contact & Links")}</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* Phone */}
                 <div className="space-y-1.5">
                   <label htmlFor="profile-phone" className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                    {t("places_admin.phone_number") || "Teléfono"}
+                    {t("places_admin.phone_number") || (isEs ? "Teléfono" : "Phone")}
                   </label>
                   <div className="relative">
                     <Phone className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={16} />
@@ -404,7 +406,7 @@ export default function ProfileUpdateModal({
                 {/* Website */}
                 <div className="space-y-1.5">
                   <label htmlFor="profile-website" className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                    {t("places_admin.website_url") || "Sitio Web"}
+                    {t("places_admin.website_url") || (isEs ? "Sitio Web" : "Website")}
                   </label>
                   <div className="relative">
                     <Globe className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={16} />
@@ -432,7 +434,7 @@ export default function ProfileUpdateModal({
                   </span>
                   <Input
                     id="profile-instagram"
-                    placeholder="usuario"
+                    placeholder={isEs ? "usuario" : "username"}
                     value={instagram}
                     onChange={(e) => setInstagram(e.target.value.replace(/^@/, ""))}
                     className="h-11 pl-8 rounded-xl bg-gray-50 dark:bg-slate-900/60 border-gray-200 dark:border-slate-800 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 text-sm"
@@ -446,7 +448,7 @@ export default function ProfileUpdateModal({
             <div className="space-y-3 pt-1">
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 flex items-center gap-1.5">
                 <Eye size={13} />
-                <span>{t("profile.profile_visibility") || "Visibilidad del Perfil"}</span>
+                <span>{t("profile.profile_visibility") || (isEs ? "Visibilidad del Perfil" : "Profile Visibility")}</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -454,7 +456,7 @@ export default function ProfileUpdateModal({
                 <button
                   type="button"
                   onClick={() => setProfileStatus("public")}
-                  className={`flex items-start gap-3 p-3.5 rounded-2xl border text-left transition-all ${
+                  className={`flex items-start gap-3 p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
                     profileStatus === "public"
                       ? "border-yellow-400 bg-amber-500/10 dark:bg-amber-400/10 shadow-xs"
                       : "border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 bg-transparent"
@@ -469,10 +471,10 @@ export default function ProfileUpdateModal({
                   </div>
                   <div>
                     <p className="text-xs font-bold text-gray-900 dark:text-slate-100">
-                      {t("profile.visibility_public") || "Público (Recomendado)"}
+                      {t("profile.visibility_public") || (isEs ? "Público (Recomendado)" : "Public (Recommended)")}
                     </p>
                     <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5 leading-relaxed">
-                      {t("profile.visibility_public_desc") || "Otros viajeros pueden ver tus aportes, nivel y rutas."}
+                      {t("profile.visibility_public_desc") || (isEs ? "Otros viajeros pueden ver tus aportes, nivel y rutas." : "Other explorers can see your contributions, level, and routes.")}
                     </p>
                   </div>
                 </button>
@@ -481,7 +483,7 @@ export default function ProfileUpdateModal({
                 <button
                   type="button"
                   onClick={() => setProfileStatus("private")}
-                  className={`flex items-start gap-3 p-3.5 rounded-2xl border text-left transition-all ${
+                  className={`flex items-start gap-3 p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
                     profileStatus === "private"
                       ? "border-yellow-400 bg-amber-500/10 dark:bg-amber-400/10 shadow-xs"
                       : "border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 bg-transparent"
@@ -496,10 +498,10 @@ export default function ProfileUpdateModal({
                   </div>
                   <div>
                     <p className="text-xs font-bold text-gray-900 dark:text-slate-100">
-                      {t("profile.visibility_private") || "Privado"}
+                      {t("profile.visibility_private") || (isEs ? "Privado" : "Private")}
                     </p>
                     <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5 leading-relaxed">
-                      {t("profile.visibility_private_desc") || "Solo tú puedes ver tus estadísticas y rutas."}
+                      {t("profile.visibility_private_desc") || (isEs ? "Solo tú puedes ver tus estadísticas y rutas." : "Only you can see your statistics and routes.")}
                     </p>
                   </div>
                 </button>
@@ -513,24 +515,24 @@ export default function ProfileUpdateModal({
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 flex-1 rounded-xl border-gray-200 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200 dark:hover:bg-slate-800 font-semibold text-sm"
+                className="h-11 flex-1 rounded-xl border-gray-200 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200 dark:hover:bg-slate-800 font-semibold text-sm cursor-pointer"
                 onClick={() => onOpenChange(false)}
                 disabled={isLoading}
               >
-                {t("common.cancel") || "Cancelar"}
+                {t("common.cancel") || (isEs ? "Cancelar" : "Cancel")}
               </Button>
               <Button
                 type="submit"
-                className="h-11 flex-1 rounded-xl bg-yellow-400 text-black hover:bg-yellow-500 font-bold text-sm shadow-sm transition-transform active:scale-[0.99]"
+                className="h-11 flex-1 rounded-xl bg-yellow-400 text-black hover:bg-yellow-500 font-bold text-sm shadow-sm transition-transform active:scale-[0.99] cursor-pointer"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("common.saving") || "Guardando..."}
+                    {t("common.saving") || (isEs ? "Guardando..." : "Saving...")}
                   </>
                 ) : (
-                  t("common.save") || "Guardar Cambios"
+                  t("common.save") || (isEs ? "Guardar Cambios" : "Save Changes")
                 )}
               </Button>
             </div>

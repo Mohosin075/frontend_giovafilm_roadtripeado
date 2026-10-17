@@ -118,12 +118,12 @@ export function ViewPlaceModal({
           try {
             await reviewRecommendedPlace({
               id: place._id,
-              data: { status: "Published", pointsAwarded: 50 },
+              data: { status: "Published", pointsAwarded: 25 },
             }).unwrap();
             toast.success(
               language === "es"
-                ? "Lugar aprobado y 50 puntos otorgados al descubridor."
-                : "Spot approved, published, and 50 points awarded!"
+                ? "Lugar aprobado y 25 puntos otorgados al descubridor."
+                : "Spot approved, published, and 25 points awarded!"
             );
           } catch (error: any) {
             toast.error(error?.data?.message || "Failed to approve place");

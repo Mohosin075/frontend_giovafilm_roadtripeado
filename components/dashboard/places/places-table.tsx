@@ -178,10 +178,10 @@ export function PlacesTable() {
           try {
             await reviewRecommendedPlace({
               id: place._id,
-              data: { status: "Published", pointsAwarded: 50 },
+              data: { status: "Published", pointsAwarded: 25 },
             }).unwrap();
             toast.success(
-              t("places_admin.approve_success_toast") || "Spot approved, published, and 50 points awarded to contributor."
+              t("places_admin.approve_success_toast") || "Spot approved, published, and 25 points awarded to contributor."
             );
           } catch (error: any) {
             toast.error(error?.data?.message || "Failed to approve place");

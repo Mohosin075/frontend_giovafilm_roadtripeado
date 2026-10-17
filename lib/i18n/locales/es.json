@@ -527,7 +527,10 @@
     "visibility_private": "Privado",
     "visibility_private_desc": "Solo tú puedes ver tus estadísticas y rutas.",
     "email_label": "Correo electrónico",
-    "email_verified": "Cuenta verificada"
+    "email_verified": "Cuenta verificada",
+    "personal_info": "Información Personal",
+    "contact_links": "Contacto y Enlaces",
+    "bio_helper": "Esta descripción se mostrará en tu tarjeta de explorador y en tu perfil público."
   },
   "auth": {
     "login_title": "Bienvenido de Nuevo",

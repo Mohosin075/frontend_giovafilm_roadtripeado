@@ -178,12 +178,12 @@ export default function ReviewsVerificationPage() {
           try {
             await reviewRecommendedPlace({
               id: spot._id,
-              data: { status: "Published", pointsAwarded: 50 },
+              data: { status: "Published", pointsAwarded: 25 },
             }).unwrap();
             toast.success(
               isEs
-                ? "Lugar aprobado y 50 puntos otorgados con éxito."
-                : "Spot approved and 50 points awarded!"
+                ? "Lugar aprobado y 25 puntos otorgados con éxito."
+                : "Spot approved and 25 points awarded!"
             );
             refetchPlaces();
           } catch (err: any) {

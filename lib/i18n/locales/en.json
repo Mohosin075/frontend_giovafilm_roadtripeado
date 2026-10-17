@@ -527,7 +527,10 @@
     "visibility_private": "Private",
     "visibility_private_desc": "Only you can see your statistics and routes.",
     "email_label": "Email Address",
-    "email_verified": "Verified Account"
+    "email_verified": "Verified Account",
+    "personal_info": "Personal Information",
+    "contact_links": "Contact & Links",
+    "bio_helper": "This description will be displayed on your explorer card and public profile."
   },
   "auth": {
     "login_title": "Welcome Back",
