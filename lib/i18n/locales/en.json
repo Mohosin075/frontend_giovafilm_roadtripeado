@@ -368,12 +368,13 @@
     "track_impact": "Track your impact in the community",
     "total_points": "TOTAL POINTS",
     "approved_reviews": "APPROVED REVIEWS",
+    "approved_recommendations": "APPROVED SPOTS",
     "current_level": "CURRENT LEVEL",
     "progress_to_level": "Progress to Level",
     "pts": "pts",
     "and": "and",
     "reviews_until_next": "reviews until next rank",
-    "earn_points_help": "💡 Earn points by adding reviews, uploading photos, and exploring new places."
+    "earn_points_help": "💡 Earn points by writing reviews (+10 pts) and recommending new spots (+25 pts once approved)."
   },
   "business_details": {
     "back_to_list": "Back to List",

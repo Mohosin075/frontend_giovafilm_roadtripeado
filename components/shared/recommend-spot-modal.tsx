@@ -1264,6 +1264,21 @@ export function RecommendSpotModal({
                       </span>
                     </div>
 
+                    {/* Image quality and accurate representation guidelines */}
+                    <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/10 dark:bg-amber-500/10 border border-amber-500/25 text-amber-900 dark:text-amber-200">
+                      <Camera size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <div className="text-[11px] leading-relaxed">
+                        <p className="font-bold text-amber-950 dark:text-amber-200">
+                          {isEs ? "Requisitos para las fotos:" : "Photo Requirements:"}
+                        </p>
+                        <p className="text-amber-900/90 dark:text-amber-300/90 mt-0.5">
+                          {isEs
+                            ? "Las fotos deben ser de buena calidad y representar con precisión tanto el lugar como la experiencia recomendada (evita imágenes borrosas, capturas de pantalla o contenido engañoso)."
+                            : "Images must be of good quality and accurately represent both the location and the experience being recommended (avoid blurry photos, screenshots, or misleading content)."}
+                        </p>
+                      </div>
+                    </div>
+
                     <div
                       onClick={() => fileInputRef.current?.click()}
                       className={`border-2 border-dashed rounded-xl p-4 bg-white dark:bg-[#0e1424] flex flex-col items-center justify-center gap-2 cursor-pointer transition-all hover:border-amber-400 ${
@@ -1280,7 +1295,7 @@ export function RecommendSpotModal({
                           {isEs ? "Haz clic para subir fotos" : "Click to upload photos"}
                         </p>
                         <p className="text-[10px] text-gray-400 dark:text-slate-500">
-                          {isEs ? "Hasta 5 fotos (JPG, PNG)" : "Up to 5 photos (JPG, PNG)"}
+                          {isEs ? "Hasta 5 fotos (JPG, PNG, WebP · máx 5MB)" : "Up to 5 photos (JPG, PNG, WebP · max 5MB)"}
                         </p>
                       </div>
                     </div>

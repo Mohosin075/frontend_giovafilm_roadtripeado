@@ -368,12 +368,13 @@
     "track_impact": "Sigue tu impacto en la comunidad",
     "total_points": "PUNTOS TOTALES",
     "approved_reviews": "RESEÑAS APROBADAS",
+    "approved_recommendations": "LUGARES APROBADOS",
     "current_level": "NIVEL ACTUAL",
     "progress_to_level": "Progreso al Nivel",
     "pts": "pts",
     "and": "y",
     "reviews_until_next": "reseñas para el siguiente rango",
-    "earn_points_help": "💡 Gana puntos agregando reseñas, subiendo fotos y explorando nuevos lugares."
+    "earn_points_help": "💡 Gana puntos agregando reseñas (+10 pts) y recomendando nuevos lugares (+25 pts una vez aprobados)."
   },
   "business_details": {
     "back_to_list": "Volver a la Lista",

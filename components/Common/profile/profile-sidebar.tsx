@@ -97,12 +97,6 @@ export function ProfileSidebar({ data }: ProfileProps) {
       roles: ["all"],
     },
     {
-      href: "/profile/recommended-places",
-      label: t("nav.recommended_places") || "Recommended Spots",
-      icon: MapPin,
-      roles: ["all"],
-    },
-    {
       href: "/profile/awards",
       label: t("nav.awards"),
       icon: Trophy,

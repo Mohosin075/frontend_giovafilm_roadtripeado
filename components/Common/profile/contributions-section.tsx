@@ -2,17 +2,27 @@
 
 import { useState } from "react";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
+import { useGetMyRecommendationsQuery } from "@/redux/features/place/placeApi";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { RecommendSpotModal } from "@/components/shared/recommend-spot-modal";
 import { Plus, Lock } from "lucide-react";
 import Link from "next/link";
 
-export function ContributionsSection() {
+interface ContributionsSectionProps {
+  onTabChange?: (tab: "reviews" | "spots") => void;
+  activeTab?: "reviews" | "spots";
+}
+
+export function ContributionsSection({
+  onTabChange,
+  activeTab,
+}: ContributionsSectionProps = {}) {
   const { t, language } = useLanguage();
   const isEs = language === "es";
   const [isRecommendOpen, setIsRecommendOpen] = useState(false);
   const { data: user, isLoading } = useGetProfileQuery({});
+  const { data: recData } = useGetMyRecommendationsQuery({ status: "Approved", limit: 1 });
   
   const purchasedMaps = Array.isArray(user?.purchasedMaps) ? user.purchasedMaps : [];
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");
@@ -20,6 +30,11 @@ export function ContributionsSection() {
 
   const currentPoints = user?.points || 0;
   const currentLevel = user?.level || 0;
+
+  const approvedSpotsCount =
+    user?.approvedRecommendedPlacesCount !== undefined
+      ? user.approvedRecommendedPlacesCount
+      : (recData?.meta?.total ?? 0);
 
   // Levels thresholds mapping
   const USER_LEVELS = [
@@ -69,10 +84,10 @@ export function ContributionsSection() {
         </Button>
       </div>
 
-      {/* Statistics Grid */}
+      {/* Statistics Grid - 5 KPIs Overview */}
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-          {[1, 2, 3, 4].map((i) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
+          {[1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
               className="bg-gray-50 dark:bg-slate-900/60 rounded-xl p-3 sm:p-6 border border-gray-100 dark:border-slate-800 h-20 sm:h-28 animate-pulse"
@@ -80,7 +95,7 @@ export function ContributionsSection() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
           {/* Total Points */}
           <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
             <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
@@ -95,12 +110,38 @@ export function ContributionsSection() {
             )}
           </div>
 
-          {/* Reviews */}
-          <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
+          {/* Approved Reviews */}
+          <div
+            onClick={() => onTabChange?.("reviews")}
+            className={`bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border flex flex-col justify-center transition-colors ${
+              onTabChange ? "cursor-pointer hover:bg-amber-500/10 dark:hover:bg-amber-500/10" : ""
+            } ${
+              activeTab === "reviews"
+                ? "border-amber-400/70 shadow-xs"
+                : "border-gray-100 dark:border-slate-800/80"
+            }`}
+          >
             <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
               {t("contributions.approved_reviews")}
             </p>
             <p className="text-lg sm:text-4xl font-extrabold text-amber-500">{user?.totalReviewsApproved || 0}</p>
+          </div>
+
+          {/* Approved Recommended Places */}
+          <div
+            onClick={() => onTabChange?.("spots")}
+            className={`bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border flex flex-col justify-center transition-colors ${
+              onTabChange ? "cursor-pointer hover:bg-amber-500/10 dark:hover:bg-amber-500/10" : ""
+            } ${
+              activeTab === "spots"
+                ? "border-amber-400/70 shadow-xs"
+                : "border-gray-100 dark:border-slate-800/80"
+            }`}
+          >
+            <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
+              {t("contributions.approved_recommendations") || "Lugares Aprobados"}
+            </p>
+            <p className="text-lg sm:text-4xl font-extrabold text-amber-500">{approvedSpotsCount}</p>
           </div>
 
           {/* Visited Places */}
@@ -117,7 +158,7 @@ export function ContributionsSection() {
           </Link>
 
           {/* Level */}
-          <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center">
+          <div className="bg-gray-50 dark:bg-[#0e1424] rounded-xl p-2.5 sm:p-6 text-center border border-gray-100 dark:border-slate-800/80 flex flex-col justify-center col-span-2 sm:col-span-1">
             <p className="text-gray-500 dark:text-slate-400 text-[9px] sm:text-xs font-semibold tracking-tight sm:tracking-wide mb-1 leading-tight uppercase">
               {t("contributions.current_level")}
             </p>
