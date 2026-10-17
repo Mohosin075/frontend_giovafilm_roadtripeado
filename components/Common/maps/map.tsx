@@ -10,6 +10,7 @@ import { useGetMapsQuery } from "@/redux/features/map/mapApi";
 import { normalizePinType, trackUsage } from "@/lib/record-visit";
 import { useGetPublicPlacesBusinessQuery } from "@/redux/features/public/publicApi";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
+import { useGetMyVisitedPlacesQuery } from "@/redux/features/visited/visitedApi";
 import { useAppSelector } from "@/redux/hook";
 import {
   AdvancedMarker,
@@ -91,12 +92,14 @@ function ViewportPlaceMarkers({
   selectedLocation,
   setSelectedLocation,
   isMobile,
+  visitedPlaceIds,
 }: {
   places: any[];
   fetchedCategories: any[];
   selectedLocation: any;
   setSelectedLocation: (loc: any) => void;
   isMobile: boolean;
+  visitedPlaceIds?: Set<string>;
 }) {
   const map = useMap();
   const [bounds, setBounds] = useState<{
@@ -184,7 +187,11 @@ function ViewportPlaceMarkers({
               isSelected={selectedLocation?.id === place._id}
               isLocked={place.isLocked}
               isMobile={isMobile}
-              isVisited={place.isVisited}
+              isVisited={
+                visitedPlaceIds?.has(String(place._id)) ||
+                (place.id ? visitedPlaceIds?.has(String(place.id)) : false) ||
+                Boolean(place.isVisited)
+              }
             />
           </AdvancedMarker>
         );
@@ -253,15 +260,31 @@ function CountryPanner({
 }
 
 function MapPanner({
+  selectedId,
   position,
   isMobile,
 }: {
+  selectedId: string | null;
   position: { lat: number; lng: number } | null;
   isMobile?: boolean;
 }) {
   const map = useMap();
+  const lastSelectedIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (map && position) {
+    if (!selectedId || !position) {
+      lastSelectedIdRef.current = null;
+      return;
+    }
+
+    // Do not pan or zoom again if already panned to this selected location
+    if (lastSelectedIdRef.current === selectedId) {
+      return;
+    }
+
+    lastSelectedIdRef.current = selectedId;
+
+    if (map) {
       // Focus smoothly on the selected pin with clear visibility
       map.panTo(position);
 
@@ -279,7 +302,7 @@ function MapPanner({
         return () => clearTimeout(timer);
       }
     }
-  }, [map, position, isMobile]);
+  }, [map, selectedId, position, isMobile]);
   return null;
 }
 
@@ -469,6 +492,25 @@ export default function MapPage() {
     isLoading: isLoadingUser,
     isFetching: isFetchingUser,
   } = useGetProfileQuery({}, { skip: !accessToken });
+  const { data: visitedRes } = useGetMyVisitedPlacesQuery(undefined, {
+    skip: !accessToken,
+  });
+
+  const visitedPlaceIds = useMemo(() => {
+    const ids = new Set<string>();
+    const list: any[] = visitedRes?.data || [];
+    for (const item of list) {
+      const pid = item.place?._id || item.place || item.business?._id || item.business;
+      if (pid) ids.add(String(pid));
+    }
+    const userVisited: any[] = userProfile?.visitedPlaces || [];
+    for (const v of userVisited) {
+      const vid = typeof v === "object" ? (v?._id || v?.id) : v;
+      if (vid) ids.add(String(vid));
+    }
+    return ids;
+  }, [visitedRes, userProfile?.visitedPlaces]);
+
   const isLoggedIn = !!userProfile;
   // Guests skip profile; logged-in users wait until profile request finishes
   const isUserResolved = !accessToken || (!isLoadingUser && !isFetchingUser) || !!userProfile;
@@ -898,6 +940,7 @@ export default function MapPage() {
             />
 
             <MapPanner
+              selectedId={selectedLocation?.id || null}
               position={
                 selectedLocation
                   ? (() => {
@@ -937,6 +980,7 @@ export default function MapPage() {
               selectedLocation={selectedLocation}
               setSelectedLocation={setSelectedLocation}
               isMobile={isMobile}
+              visitedPlaceIds={visitedPlaceIds}
             />
 
             <MapControl position={ControlPosition.TOP_LEFT}>

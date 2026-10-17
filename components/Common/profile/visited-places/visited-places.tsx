@@ -22,7 +22,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 12;
 
 export default function VisitedPlaces() {
   const { t, language } = useLanguage();
@@ -91,27 +91,27 @@ export default function VisitedPlaces() {
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-10 font-public-sans">
+    <section className="max-w-7xl mx-auto px-3.5 sm:px-6 py-6 sm:py-10 font-public-sans">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
             <span>{t("visited.title") || t("nav.visited_places") || "Visited Places"}</span>
-            <span className="text-base font-semibold bg-amber-400/20 text-amber-600 dark:text-amber-400 px-3 py-0.5 rounded-full">
+            <span className="text-sm sm:text-base font-semibold bg-amber-400/20 text-amber-600 dark:text-amber-400 px-2.5 sm:px-3 py-0.5 rounded-full">
               {allVisited.length}
             </span>
           </h1>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
             {t("visited.subtitle") || "Places you have marked as visited on Roadtripeado"}
           </p>
         </div>
 
         {/* Search */}
-        <div className="flex items-center border border-gray-200 dark:border-slate-800 rounded-lg px-3 py-1 bg-white dark:bg-[#131b2e]">
-          <Search className="text-gray-400 dark:text-slate-500 w-4 h-4 mr-2" />
+        <div className="flex items-center border border-gray-200 dark:border-slate-800 rounded-lg px-3 py-1 bg-white dark:bg-[#131b2e] w-full sm:w-auto">
+          <Search className="text-gray-400 dark:text-slate-500 w-4 h-4 mr-2 shrink-0" />
           <Input
             placeholder="Search visited places..."
-            className="border-none focus-visible:ring-0 w-52 bg-transparent text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
+            className="border-none focus-visible:ring-0 w-full sm:w-52 bg-transparent text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 text-xs sm:text-sm"
             value={search}
             onChange={handleSearch}
           />
@@ -124,7 +124,7 @@ export default function VisitedPlaces() {
           <button
             key={value}
             onClick={() => handleTypeChange(value)}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-colors cursor-pointer ${
               activeType === value
                 ? "bg-yellow-400 border-yellow-400 text-black font-bold"
                 : "bg-white dark:bg-[#131b2e] border-gray-200 dark:border-slate-800 text-gray-600 dark:text-slate-300 hover:border-yellow-400 dark:hover:border-yellow-500"
@@ -138,11 +138,11 @@ export default function VisitedPlaces() {
 
       {/* Content */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="h-64 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse"
+              className="h-44 sm:h-64 rounded-2xl bg-gray-100 dark:bg-slate-800 animate-pulse"
             />
           ))}
         </div>
@@ -163,7 +163,7 @@ export default function VisitedPlaces() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
           {paginated.map((item) => {
             const entity = item.place || item.business;
             const targetId = entity?._id;
@@ -183,7 +183,7 @@ export default function VisitedPlaces() {
                 className="group relative bg-white dark:bg-[#131b2e] border border-gray-100 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 flex flex-col"
               >
                 {/* Image */}
-                <div className="relative h-48 w-full bg-gray-100 dark:bg-slate-800 overflow-hidden">
+                <div className="relative h-32 sm:h-48 w-full bg-gray-100 dark:bg-slate-800 overflow-hidden">
                   {image ? (
                     <img
                       src={image}
@@ -195,8 +195,8 @@ export default function VisitedPlaces() {
                   )}
 
                   {/* Gold Visited Badge */}
-                  <div className="absolute top-3 left-3 bg-amber-400/90 text-black px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm backdrop-blur-xs">
-                    <CheckCircle2 size={13} className="text-black" />
+                  <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-amber-400/90 text-black px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1 shadow-sm backdrop-blur-xs">
+                    <CheckCircle2 size={12} className="text-black shrink-0" />
                     <span>{t("visited.badge") || "Visited"}</span>
                   </div>
 
@@ -205,28 +205,28 @@ export default function VisitedPlaces() {
                     type="button"
                     onClick={() => handleRemove(item)}
                     disabled={isToggling}
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 hover:bg-red-600 text-white flex items-center justify-center transition-colors cursor-pointer"
+                    className="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/50 hover:bg-red-600 text-white flex items-center justify-center transition-colors cursor-pointer"
                     title={t("visited.remove_tooltip") || "Remove from visited"}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={13} />
                   </button>
                 </div>
 
                 {/* Info */}
-                <div className="p-4 flex-1 flex flex-col justify-between">
+                <div className="p-2.5 sm:p-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-bold text-gray-900 dark:text-slate-100 text-base mb-1 truncate">
+                    <h3 className="font-bold text-gray-900 dark:text-slate-100 text-xs sm:text-base mb-0.5 sm:mb-1 truncate">
                       {name}
                     </h3>
-                    <p className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1 truncate mb-2">
-                      <MapPin size={12} className="shrink-0 text-amber-500" />
+                    <p className="text-[10px] sm:text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1 truncate mb-1.5 sm:mb-2">
+                      <MapPin size={11} className="shrink-0 text-amber-500" />
                       <span>{entity?.address || entity?.map?.name || t("visited.view_on_map") || "View on map"}</span>
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-slate-800/80 text-xs">
+                  <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-gray-100 dark:border-slate-800/80 text-[10px] sm:text-xs">
                     <div className="flex items-center gap-1 font-bold text-gray-900 dark:text-slate-100">
-                      <Star size={13} className="fill-amber-400 text-amber-400" />
+                      <Star size={12} className="fill-amber-400 text-amber-400 shrink-0" />
                       <span>{entity?.rating || "—"}</span>
                     </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   useToggleVisitedMutation,
   useGetMyVisitedPlacesQuery,
@@ -31,6 +32,12 @@ export function VisitedButton({
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const router = useRouter();
 
+  const [optimisticVisited, setOptimisticVisited] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setOptimisticVisited(null);
+  }, [placeId]);
+
   const { data: visitedData } = useGetMyVisitedPlacesQuery(undefined, {
     skip: !accessToken,
   });
@@ -41,7 +48,12 @@ export function VisitedButton({
     return String(pId) === String(placeId);
   });
 
-  const isVisited = initialIsVisited ?? isVisitedInList;
+  const isVisited =
+    optimisticVisited !== null
+      ? optimisticVisited
+      : visitedData !== undefined
+        ? isVisitedInList
+        : Boolean(initialIsVisited);
 
   const handleToggle = async (e?: React.MouseEvent) => {
     if (e) {
@@ -61,9 +73,13 @@ export function VisitedButton({
       return;
     }
 
+    const previousState = isVisited;
+    setOptimisticVisited(!previousState);
+
     try {
       const res = await toggleVisited({ placeId, type }).unwrap();
-      const nextVisited = res?.data?.isVisited ?? !isVisited;
+      const nextVisited = res?.data?.isVisited ?? res?.isVisited ?? !previousState;
+      setOptimisticVisited(nextVisited);
 
       toast.success(
         nextVisited
@@ -71,6 +87,7 @@ export function VisitedButton({
           : (t("visited.removed_success") || "Removed from visited places"),
       );
     } catch (error: unknown) {
+      setOptimisticVisited(previousState);
       toast.error(getApiErrorMessage(error));
     }
   };
@@ -80,8 +97,8 @@ export function VisitedButton({
       type="button"
       className={`inline-flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer rounded-xl h-11 sm:h-12 px-3.5 border ${
         isVisited
-          ? "bg-amber-500/15 border-amber-500 text-amber-500 font-bold shadow-xs hover:bg-amber-500/25"
-          : "bg-white dark:bg-[#131b2e] border-gray-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:border-amber-400 hover:text-amber-500 shadow-xs"
+          ? "bg-[#FFC107] border-[#FFC107] text-black font-extrabold shadow-md hover:bg-[#FFB300] active:scale-95"
+          : "bg-white dark:bg-[#131b2e] border-gray-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:border-[#FFC107] hover:text-[#FFC107] shadow-xs"
       } ${Style || ""}`}
       onClick={handleToggle}
       disabled={isLoading}
@@ -92,14 +109,14 @@ export function VisitedButton({
         size={18}
         className={
           isVisited
-            ? "stroke-[3] text-amber-500"
+            ? "stroke-[3.5] text-black"
             : isLoading
               ? "animate-pulse text-gray-400"
               : "stroke-[2.5]"
         }
       />
       {showText && (
-        <span className="text-xs sm:text-sm font-semibold">
+        <span className="text-xs sm:text-sm font-bold">
           {isVisited ? (t("visited.badge") || "Visited") : (t("visited.mark_visited_short") || "Mark Visited")}
         </span>
       )}

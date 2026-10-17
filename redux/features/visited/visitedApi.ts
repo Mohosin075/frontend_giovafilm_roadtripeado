@@ -15,7 +15,7 @@ const visitedApi = baseApi.injectEndpoints({
       query: (params) => ({
         url: `/visited/my-places`,
         method: "GET",
-        params: params || {},
+        params: { limit: 1000, ...(params || {}) },
       }),
       providesTags: ["Visited"],
     }),
