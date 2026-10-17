@@ -422,10 +422,30 @@ export function ViewPlaceModal({
                     <Sparkles size={11} className="text-amber-400" />
                     <span>
                       {language === "es" ? "Descubierto por:" : "Discovered by:"}{" "}
-                      {place.discoveredByName ||
-                        (typeof place.discoveredBy === "object"
-                          ? place.discoveredBy?.name
-                          : place.discoveredBy)}
+                      {(() => {
+                        const discovererName =
+                          place.discoveredByName ||
+                          (typeof place.discoveredBy === "object"
+                            ? place.discoveredBy?.name
+                            : place.discoveredBy);
+                        const discovererId =
+                          typeof place.discoveredBy === "object"
+                            ? place.discoveredBy?._id || place.discoveredBy?.id
+                            : place.discoveredBy;
+
+                        if (discovererId) {
+                          return (
+                            <Link
+                              href={`/explorer/${discovererId}`}
+                              target="_blank"
+                              className="font-bold underline decoration-amber-400/50 hover:text-white transition-colors"
+                            >
+                              {discovererName}
+                            </Link>
+                          );
+                        }
+                        return <span className="font-bold">{discovererName}</span>;
+                      })()}
                     </span>
                   </div>
                 )}
@@ -455,13 +475,31 @@ export function ViewPlaceModal({
                     </div>
                     <div className="text-xs text-amber-700 dark:text-amber-300">
                       {language === "es" ? "Recomendado por:" : "Recommended by:"}{" "}
-                      <span className="font-semibold text-gray-900 dark:text-white">
-                        {place.discoveredByName ||
+                      {(() => {
+                        const discovererName =
+                          place.discoveredByName ||
                           (typeof place.discoveredBy === "object"
                             ? place.discoveredBy?.name
                             : place.discoveredBy) ||
-                          "Usuario"}
-                      </span>
+                          "Usuario";
+                        const discovererId =
+                          typeof place.discoveredBy === "object"
+                            ? place.discoveredBy?._id || place.discoveredBy?.id
+                            : place.discoveredBy;
+
+                        if (discovererId) {
+                          return (
+                            <Link
+                              href={`/explorer/${discovererId}`}
+                              target="_blank"
+                              className="font-semibold text-gray-900 dark:text-white underline hover:text-amber-600 transition-colors"
+                            >
+                              {discovererName}
+                            </Link>
+                          );
+                        }
+                        return <span className="font-semibold text-gray-900 dark:text-white">{discovererName}</span>;
+                      })()}
                     </div>
                   </div>
                 </div>

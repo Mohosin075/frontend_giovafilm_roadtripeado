@@ -231,7 +231,34 @@ export function RecommendSpotModal({
   );
 
   const { data: categoriesData } = useGetCategoriesQuery({ limit: 100 });
-  const categories = categoriesData?.data || [];
+  const rawCategories: any[] = categoriesData?.data || [];
+  // Exclude businesses, restaurants, food, and commercial establishments
+  const categories = rawCategories.filter((cat: any) => {
+    if (cat?.status === "Hidden") return false;
+    const catName = (
+      typeof cat?.name === "object"
+        ? (cat?.name?.en || cat?.name?.es || Object.values(cat.name)[0])
+        : cat?.name || ""
+    ).toLowerCase();
+    const isCommercial =
+      catName.includes("business") ||
+      catName.includes("negocio") ||
+      catName.includes("restaurant") ||
+      catName.includes("restaurante") ||
+      catName.includes("comida") ||
+      catName.includes("food") ||
+      catName.includes("bar") ||
+      catName.includes("cafe") ||
+      catName.includes("café") ||
+      catName.includes("shop") ||
+      catName.includes("store") ||
+      catName.includes("tienda") ||
+      catName.includes("hotel") ||
+      catName.includes("hospedaje") ||
+      catName.includes("alojamiento") ||
+      catName.includes("commercial");
+    return !isCommercial;
+  });
 
   const [recommendPlace, { isLoading: isSubmitting }] =
     useRecommendPlaceMutation();
@@ -246,6 +273,11 @@ export function RecommendSpotModal({
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [description, setDescription] = useState("");
+  const [accessDescription, setAccessDescription] = useState("");
+  const [hikeTime, setHikeTime] = useState("");
+  const [difficulty, setDifficulty] = useState("Easy");
+  const [isAlwaysOpen, setIsAlwaysOpen] = useState(true);
+  const [schedules, setSchedules] = useState("");
   const [tips, setTips] = useState("");
   const [googleUrl, setGoogleUrl] = useState("");
   const [showUrlExtractor, setShowUrlExtractor] = useState(false);
@@ -402,6 +434,11 @@ export function RecommendSpotModal({
     setLatitude("");
     setLongitude("");
     setDescription("");
+    setAccessDescription("");
+    setHikeTime("");
+    setDifficulty("Easy");
+    setIsAlwaysOpen(true);
+    setSchedules("");
     setTips("");
     setGoogleUrl("");
     setSelectedServices([]);
@@ -518,6 +555,22 @@ export function RecommendSpotModal({
         coordinates: [lngNum, latNum],
       },
     };
+
+    if (description.trim()) {
+      payload.description = description.trim();
+    }
+    if (accessDescription.trim()) {
+      payload.access = accessDescription.trim();
+    }
+    if (hikeTime.trim()) {
+      payload.hikeTime = hikeTime.trim();
+    }
+    if (difficulty) {
+      payload.difficulty = difficulty;
+    }
+    payload.schedules = isAlwaysOpen
+      ? (isEs ? "Abierto 24/7" : "Always Open (24/7)")
+      : schedules.trim() || (isEs ? "Horario específico" : "Specific hours");
 
     if (tips.trim()) {
       payload.recommendations = { tips: tips.trim() };
@@ -677,8 +730,8 @@ export function RecommendSpotModal({
                 </DialogTitle>
                 <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
                   {isEs
-                    ? "Completa los datos del lugar para que nuestro equipo lo verifique y lo publique en el mapa interactivo oficial."
-                    : "Fill in the spot details so our team can verify and publish it to the official interactive map."}
+                    ? "Comparte atractivos turísticos naturales (playas, ríos, cascadas, senderos, miradores o parques). Las recomendaciones están limitadas a lugares naturales; no se admiten negocios ni restaurantes."
+                    : "Share natural tourist attractions (beaches, rivers, waterfalls, trails, viewpoints, or parks). Recommendations are limited to natural spots; businesses and restaurants are not accepted."}
                 </p>
               </div>
             </DialogHeader>
@@ -761,7 +814,7 @@ export function RecommendSpotModal({
 
                     <div>
                       <Label className="text-xs font-bold text-gray-700 dark:text-slate-300 flex items-center justify-between">
-                        <span>{isEs ? "Categoría *" : "Category *"}</span>
+                        <span>{isEs ? "Categoría (Natural) *" : "Category (Natural) *"}</span>
                       </Label>
                       <Select
                         value={categoryId}
@@ -789,9 +842,15 @@ export function RecommendSpotModal({
                           ))}
                         </SelectContent>
                       </Select>
-                      {errors.categoryId && (
+                      {errors.categoryId ? (
                         <p className="text-[11px] text-rose-500 font-semibold mt-1 flex items-center gap-1">
                           <AlertCircle size={10} /> {errors.categoryId}
+                        </p>
+                      ) : (
+                        <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">
+                          {isEs
+                            ? "Solo atractivos naturales (playas, ríos, miradores, senderos, etc.)."
+                            : "Natural spots only (beaches, rivers, viewpoints, trails, etc.)."}
                         </p>
                       )}
                     </div>
@@ -890,7 +949,7 @@ export function RecommendSpotModal({
                       isEs={isEs}
                     />
 
-                    {/* Coordinates Inputs - Disabled as requested */}
+                    {/* Coordinates Inputs */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-0.5">
                       <div>
                         <Label className="text-[11px] font-bold text-gray-600 dark:text-slate-400 flex items-center justify-between mb-1">
@@ -963,7 +1022,7 @@ export function RecommendSpotModal({
                   {/* Description */}
                   <div>
                     <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
-                      {isEs ? "Descripción" : "Description"}
+                      {isEs ? "Descripción General" : "General Description"}
                     </Label>
                     <Textarea
                       value={description}
@@ -973,9 +1032,95 @@ export function RecommendSpotModal({
                           ? "¿Qué hace especial a este lugar? Cuéntale a los viajeros qué esperar..."
                           : "What makes this place special? Tell travelers what to expect..."
                       }
-                      rows={3}
+                      rows={2}
                       className="mt-1 rounded-xl text-sm bg-gray-50/50 dark:bg-slate-900/60 resize-none"
                     />
+                  </div>
+
+                  {/* Access Description (Detailed explanation from parking to spot) */}
+                  <div>
+                    <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
+                      {isEs
+                        ? "Descripción del Acceso (cómo llegar desde el estacionamiento) *"
+                        : "Access Description (how to reach from parking area) *"}
+                    </Label>
+                    <Textarea
+                      value={accessDescription}
+                      onChange={(e) => setAccessDescription(e.target.value)}
+                      placeholder={
+                        isEs
+                          ? "Explica detalladamente cómo llegar a pie desde donde se estaciona el vehículo hasta el lugar (ej: caminar 150m por el sendero rocoso hacia el río)..."
+                          : "Explain in detail how to reach on foot from where vehicles park to the spot (e.g. walk 150m along the rocky trail towards the river)..."
+                      }
+                      rows={2}
+                      className="mt-1 rounded-xl text-sm bg-gray-50/50 dark:bg-slate-900/60 resize-none"
+                    />
+                  </div>
+
+                  {/* Walking Time & Access Difficulty */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
+                        {isEs ? "Tiempo de Caminata" : "Walking / Hike Time"}
+                      </Label>
+                      <Input
+                        value={hikeTime}
+                        onChange={(e) => setHikeTime(e.target.value)}
+                        placeholder={isEs ? "Ej: 15 minutos" : "e.g. 15 minutes"}
+                        className="mt-1 h-12 rounded-xl text-sm bg-gray-50/50 dark:bg-slate-900/60"
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
+                        {isEs ? "Dificultad de Acceso" : "Access Difficulty"}
+                      </Label>
+                      <Select
+                        value={difficulty}
+                        onValueChange={(val) => setDifficulty(val)}
+                      >
+                        <SelectTrigger className="mt-1 h-12 rounded-xl w-full text-sm bg-gray-50/50 dark:bg-slate-900/60">
+                          <SelectValue placeholder={isEs ? "Seleccionar dificultad" : "Select difficulty"} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Easy">{isEs ? "Fácil" : "Easy"}</SelectItem>
+                          <SelectItem value="Moderate">{isEs ? "Moderado" : "Moderate"}</SelectItem>
+                          <SelectItem value="Hard">{isEs ? "Difícil" : "Hard"}</SelectItem>
+                          <SelectItem value="Extreme">{isEs ? "Extremo" : "Extreme"}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Schedule / Always Open */}
+                  <div className="space-y-2 p-3.5 rounded-2xl bg-gray-50/60 dark:bg-slate-900/40 border border-gray-200 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs font-bold text-gray-700 dark:text-slate-300">
+                        {isEs ? "¿El lugar está siempre abierto? (24/7)" : "Is this location always open (24/7)?"}
+                      </Label>
+                      <button
+                        type="button"
+                        onClick={() => setIsAlwaysOpen(!isAlwaysOpen)}
+                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                          isAlwaysOpen
+                            ? "bg-amber-400 text-black shadow-xs"
+                            : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300"
+                        }`}
+                      >
+                        {isAlwaysOpen ? (isEs ? "Sí, Abierto 24/7" : "Yes, Always Open") : (isEs ? "Horario específico" : "Specific hours")}
+                      </button>
+                    </div>
+
+                    {!isAlwaysOpen && (
+                      <div className="pt-2">
+                        <Input
+                          value={schedules}
+                          onChange={(e) => setSchedules(e.target.value)}
+                          placeholder={isEs ? "Ej: 8:00 AM - 6:00 PM (Miércoles a Domingo)" : "e.g. 8:00 AM - 6:00 PM (Wednesday to Sunday)"}
+                          className="h-11 rounded-xl text-xs bg-white dark:bg-slate-900"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Tips & Advice */}
@@ -1033,6 +1178,12 @@ export function RecommendSpotModal({
                         {images.length}/5
                       </span>
                     </div>
+
+                    <p className="text-[11px] text-gray-500 dark:text-slate-400 leading-tight">
+                      {isEs
+                        ? "Nota: Las fotos deben ser de buena calidad y representar fielmente tanto la ubicación como la experiencia que se recomienda."
+                        : "Note: Photos must be of good quality and accurately represent both the location and the experience being recommended."}
+                    </p>
 
                     <div
                       className={`p-3.5 rounded-2xl border transition-colors ${

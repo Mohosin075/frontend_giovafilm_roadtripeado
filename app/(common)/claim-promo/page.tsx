@@ -36,9 +36,10 @@ import {
 } from "lucide-react";
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { getLocalized } from "@/lib/utils";
 
 function ClaimPromoContent() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -72,7 +73,11 @@ function ClaimPromoContent() {
   const promoPrice = typeof promoData?.price === "number" ? promoData.price : Number(promoData?.price || 0);
   const isFree = promoData ? promoPrice === 0 : false;
   const rawMapName = typeof promoData?.mapId === "object" ? promoData?.mapId?.name : promoData?.mapName;
-  const mapName = rawMapName || promoData?.mapName || "Selected Map";
+  const mapName =
+    getLocalized(rawMapName, language) ||
+    getLocalized(promoData?.mapName, language) ||
+    (typeof rawMapName === "string" ? rawMapName : "") ||
+    "Selected Map";
   const promoType = promoData?.promoType || (isFree ? "influencer" : "upgrade");
 
   // Validate if logged-in user already owns this map safely (null-safe check)
@@ -517,7 +522,9 @@ function ClaimPromoContent() {
                   isVipTheme ? "bg-slate-900/60 border-slate-800" : "bg-gray-50 dark:bg-[#0e1424] border-gray-100 dark:border-slate-800"
                 }`}
               >
-                <span className="text-[9px] text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider">{t("common.target_map")}</span>
+                <span className="text-[9px] text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider">
+                  {t("common.target_map") || (language === "es" ? "MAPA OBJETIVO" : "TARGET MAP")}
+                </span>
                 <h3 className="text-lg font-black flex items-center gap-1.5 leading-tight">
                   {mapName} {isVipTheme && <Sparkles size={14} className="text-yellow-400" />}
                 </h3>
@@ -748,9 +755,18 @@ function ClaimPromoContent() {
                 onClick={() => {
                   setShowMismatchModal(false);
                   dispatch(logout());
-                  const targetEmail = promoData?.recipientEmail ? `&email=${encodeURIComponent(promoData.recipientEmail)}` : "";
-                  router.push(`/login?redirect=${encodeURIComponent(`/claim-promo?code=${code}`)}${targetEmail}`);
-                  toast.info(t("auth.logged_out_invite"));
+                  const targetEmail = promoData?.recipientEmail
+                    ? `&email=${encodeURIComponent(promoData.recipientEmail)}`
+                    : "";
+                  router.push(
+                    `/login?redirect=${encodeURIComponent(`/claim-promo?code=${code}`)}${targetEmail}`
+                  );
+                  toast.info(
+                    t("auth.logged_out_invite") ||
+                      (language === "es"
+                        ? "Sesión cerrada. Inicie sesión con su correo invitado."
+                        : "Logged out. Please log in with your invited email.")
+                  );
                 }}
                 className="w-full h-12 bg-[#FFC107] hover:bg-[#FFB300] text-black font-extrabold rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2 cursor-pointer"
               >

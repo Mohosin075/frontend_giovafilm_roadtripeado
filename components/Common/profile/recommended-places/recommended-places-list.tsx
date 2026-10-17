@@ -6,7 +6,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { SafeImage } from "@/components/shared/safe-image";
 import { NoImage } from "@/lib/others/others";
-import { getLocalized, formatDate } from "@/lib/utils";
+import { getLocalized, formatDate, getImageUrl } from "@/lib/utils";
 import { RecommendSpotModal } from "@/components/shared/recommend-spot-modal";
 import {
   Sparkles,
@@ -129,8 +129,14 @@ export function RecommendedPlacesList() {
               place.name?.en ||
               "Lugar sin nombre";
 
-            const cover =
-              place.media && place.media.length > 0 ? place.media[0] : null;
+            const rawCover =
+              (Array.isArray(place.media) && place.media.length > 0 ? place.media[0] : null) ||
+              (typeof place.media === "string" ? place.media : null) ||
+              (place.media?.photos && place.media.photos.length > 0 ? place.media.photos[0] : null) ||
+              place.coverPhoto ||
+              (Array.isArray(place.images) && place.images.length > 0 ? place.images[0] : null);
+
+            const cover = rawCover ? getImageUrl(rawCover) : null;
 
             return (
               <div

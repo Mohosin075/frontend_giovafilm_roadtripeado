@@ -1030,6 +1030,34 @@ export default function MapDetails() {
                     {getLocalized(placeData?.name, language) || "Untitled location"}
                   </h1>
 
+                  {(placeData?.discoveredByName || placeData?.discoveredBy?.name) && (
+                    <div className="mt-2.5 flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-xs font-semibold text-amber-200 w-fit backdrop-blur-xs">
+                      <Sparkles size={13} className="text-amber-300 fill-amber-300 shrink-0" />
+                      <span>
+                        {language === "es" ? "Descubierto por" : "Discovered by"}{" "}
+                        {(() => {
+                          const discovererName = placeData.discoveredByName || placeData.discoveredBy?.name;
+                          const discovererId =
+                            typeof placeData.discoveredBy === "object"
+                              ? placeData.discoveredBy?._id || placeData.discoveredBy?.id
+                              : placeData.discoveredBy;
+
+                          if (discovererId) {
+                            return (
+                              <Link
+                                href={`/explorer/${discovererId}`}
+                                className="font-bold underline decoration-amber-400/60 hover:text-white transition-colors"
+                              >
+                                {discovererName}
+                              </Link>
+                            );
+                          }
+                          return <span className="font-bold">{discovererName}</span>;
+                        })()}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="mt-2 flex items-start gap-2 text-sm text-white/90">
                     <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EC5B13]/20">
                       <MapPin size={13} className="text-[#FF8A4C]" />
@@ -1072,9 +1100,25 @@ export default function MapDetails() {
                   <Sparkles size={13} className="text-amber-500 fill-amber-500 shrink-0" />
                   <span>
                     {language === "es" ? "Descubierto por" : "Discovered by"}{" "}
-                    <span className="font-bold">
-                      {placeData.discoveredByName || placeData.discoveredBy?.name}
-                    </span>
+                    {(() => {
+                      const discovererName = placeData.discoveredByName || placeData.discoveredBy?.name;
+                      const discovererId =
+                        typeof placeData.discoveredBy === "object"
+                          ? placeData.discoveredBy?._id || placeData.discoveredBy?.id
+                          : placeData.discoveredBy;
+
+                      if (discovererId) {
+                        return (
+                          <Link
+                            href={`/explorer/${discovererId}`}
+                            className="font-bold underline decoration-amber-500/50 hover:text-amber-600 dark:hover:text-amber-300 transition-colors"
+                          >
+                            {discovererName}
+                          </Link>
+                        );
+                      }
+                      return <span className="font-bold">{discovererName}</span>;
+                    })()}
                   </span>
                 </div>
               )}

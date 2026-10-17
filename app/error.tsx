@@ -1,0 +1,58 @@
+"use client";
+
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { RefreshCw, AlertTriangle } from "lucide-react";
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    // If it's a stale deployment chunk error, automatically reload to fetch the new build
+    const msg = error?.message || "";
+    const name = error?.name || "";
+    if (
+      /Loading chunk .* failed/i.test(msg) ||
+      /ChunkLoadError/i.test(name) ||
+      /Failed to fetch dynamically imported module/i.test(msg)
+    ) {
+      window.location.reload();
+    }
+  }, [error]);
+
+  return (
+    <div className="min-h-[70vh] flex items-center justify-center p-6 bg-gray-50 dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100 font-inter">
+      <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-3xl p-8 border border-gray-200 dark:border-slate-800 shadow-xl text-center space-y-5">
+        <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto">
+          <AlertTriangle size={28} />
+        </div>
+        <div className="space-y-1.5">
+          <h2 className="text-xl font-black">Something went wrong</h2>
+          <p className="text-xs text-gray-500 dark:text-slate-400">
+            A temporary client error occurred. Please refresh the page to reload the latest version.
+          </p>
+        </div>
+        <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+          <Button
+            onClick={() => window.location.reload()}
+            className="flex-1 bg-amber-400 hover:bg-amber-500 text-black font-bold rounded-xl h-11 text-xs cursor-pointer inline-flex items-center justify-center gap-1.5"
+          >
+            <RefreshCw size={14} />
+            <span>Reload Page</span>
+          </Button>
+          <Button
+            onClick={() => reset()}
+            variant="outline"
+            className="flex-1 border-gray-200 dark:border-slate-700 font-bold rounded-xl h-11 text-xs cursor-pointer"
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

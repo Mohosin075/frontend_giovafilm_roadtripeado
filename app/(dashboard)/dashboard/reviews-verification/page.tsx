@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -485,6 +486,10 @@ export default function ReviewsVerificationPage() {
                     ? spot.discoveredBy?.name
                     : spot.discoveredBy) ||
                   "Usuario";
+                const contributorId =
+                  typeof spot.discoveredBy === "object"
+                    ? spot.discoveredBy?._id || spot.discoveredBy?.id
+                    : spot.discoveredBy;
                 const userLevel =
                   typeof spot.discoveredBy === "object"
                     ? spot.discoveredBy?.level
@@ -576,7 +581,17 @@ export default function ReviewsVerificationPage() {
                             <Sparkles size={11} className="text-amber-500" />
                             <span>
                               {isEs ? "Descubierto por:" : "Discovered by:"}{" "}
-                              <strong>{contributor}</strong>
+                              {contributorId ? (
+                                <Link
+                                  href={`/explorer/${contributorId}`}
+                                  target="_blank"
+                                  className="underline font-bold hover:text-amber-600 transition-colors"
+                                >
+                                  {contributor}
+                                </Link>
+                              ) : (
+                                <strong>{contributor}</strong>
+                              )}
                             </span>
                             {userLevel !== null && (
                               <span className="px-1.5 py-0.2 rounded bg-amber-400 text-black font-extrabold text-[10px]">
@@ -789,6 +804,10 @@ export default function ReviewsVerificationPage() {
                           ? spot.discoveredBy?.name
                           : spot.discoveredBy) ||
                         "Usuario";
+                      const contributorId =
+                        typeof spot.discoveredBy === "object"
+                          ? spot.discoveredBy?._id || spot.discoveredBy?.id
+                          : spot.discoveredBy;
                       const lat = spot.location?.coordinates?.[1];
                       const lng = spot.location?.coordinates?.[0];
                       const thumbnail = spot.media?.[0];
@@ -838,7 +857,17 @@ export default function ReviewsVerificationPage() {
                             {getSafeString(spot.map?.name, language) || "N/A"}
                           </td>
                           <td className="px-5 py-4 text-xs font-medium text-gray-700 dark:text-slate-300">
-                            <span className="font-bold">{contributor}</span>
+                            {contributorId ? (
+                              <Link
+                                href={`/explorer/${contributorId}`}
+                                target="_blank"
+                                className="font-bold underline hover:text-amber-600 transition-colors"
+                              >
+                                {contributor}
+                              </Link>
+                            ) : (
+                              <span className="font-bold">{contributor}</span>
+                            )}
                           </td>
                           <td className="px-5 py-4 text-xs font-mono text-gray-600 dark:text-slate-400">
                             {lat !== undefined && lng !== undefined ? (

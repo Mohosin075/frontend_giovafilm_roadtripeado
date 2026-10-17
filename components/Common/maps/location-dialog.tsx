@@ -270,9 +270,26 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
               <Sparkles size={13} className="text-amber-500 fill-amber-500 shrink-0" />
               <span>
                 {language === "es" ? "Descubierto por" : "Discovered by"}{" "}
-                <span className="font-bold">
-                  {location.discoveredByName || location.discoveredBy?.name}
-                </span>
+                {(() => {
+                  const discovererName = location.discoveredByName || location.discoveredBy?.name;
+                  const discovererId =
+                    typeof location.discoveredBy === "object"
+                      ? location.discoveredBy?._id || location.discoveredBy?.id
+                      : location.discoveredBy;
+
+                  if (discovererId) {
+                    return (
+                      <Link
+                        href={`/explorer/${discovererId}`}
+                        className="font-bold underline decoration-amber-500/50 hover:text-amber-600 dark:hover:text-amber-300 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {discovererName}
+                      </Link>
+                    );
+                  }
+                  return <span className="font-bold">{discovererName}</span>;
+                })()}
               </span>
             </div>
           )}
