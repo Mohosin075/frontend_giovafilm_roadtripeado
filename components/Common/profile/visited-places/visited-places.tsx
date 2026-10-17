@@ -231,7 +231,7 @@ export default function VisitedPlaces() {
                     </div>
 
                     <Link
-                      href={`/maps/${targetId}?type=${typeParam}`}
+                      href={`/places/${targetId}?type=${typeParam}`}
                       className="font-bold text-amber-600 dark:text-amber-400 hover:underline"
                     >
                       {t("visited.view_details") || "View Details →"}

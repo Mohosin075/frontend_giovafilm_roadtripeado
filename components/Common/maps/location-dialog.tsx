@@ -331,7 +331,7 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
           )}
 
           <div className="flex gap-3 pt-1">
-            <Link href={`/maps/${placeId}?type=${type}`} className="flex-1">
+            <Link href={`/places/${placeId}?type=${type}`} className="flex-1">
               <Button className="w-full bg-[#FFC107] text-black font-bold rounded-xl h-11 sm:h-12 text-xs sm:text-sm">
                 {t("place.view_details")}
               </Button>

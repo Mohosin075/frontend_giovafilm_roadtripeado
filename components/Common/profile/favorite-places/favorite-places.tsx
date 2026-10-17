@@ -245,9 +245,9 @@ export default function FavoritePlaces() {
             (typeof fav.place === "string" ? fav.place : null);
 
           const href = isBiz
-            ? `/maps/${targetPlaceId}?type=business`
+            ? `/places/${targetPlaceId}?type=business`
             : isPlc
-              ? `/maps/${targetPlaceId}`
+              ? `/places/${targetPlaceId}?type=place`
               : fav.map
                 ? `/catalog/${fav.map?._id || fav.map}`
                 : fav.href || "#";
