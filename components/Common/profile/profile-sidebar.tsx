@@ -238,7 +238,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
           </p>
 
           {/* Action Buttons */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <Button
               type="button"
               onClick={() => setOpen(true)}
@@ -247,6 +247,19 @@ export function ProfileSidebar({ data }: ProfileProps) {
               <Edit2 size={18} />
               {t("profile.edit_profile")}
             </Button>
+
+            {data?._id && (
+              <Link href={`/explorer/${data._id}`} className="block w-full">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full rounded flex items-center justify-center gap-2 border-amber-400/50 bg-amber-500/10 dark:bg-amber-500/10 text-amber-900 dark:text-amber-300 hover:bg-amber-500/20 font-semibold"
+                >
+                  <Compass size={18} className="text-amber-600 dark:text-amber-400" />
+                  {t("profile.view_public_profile") || "Ver mi perfil público"}
+                </Button>
+              </Link>
+            )}
 
             <Button
               type="button"

@@ -511,7 +511,22 @@
     "image_max_size": "Image size must not exceed 5MB.",
     "name_required": "Your name cannot be empty.",
     "update_success": "Profile updated successfully!",
-    "edit_desc": "Tap the photo to change it, then save your details."
+    "edit_desc": "Tap the photo to change it, then save your details.",
+    "view_public_profile": "View Public Profile",
+    "view_public": "View Profile",
+    "public_explorer_card": "Public Explorer Profile",
+    "status_public_hint": "Visible to the explorer community",
+    "status_private_hint": "Your profile is private",
+    "city": "City / Location",
+    "city_placeholder": "e.g. San Juan, Puerto Rico",
+    "bio_placeholder": "Tell the community about yourself and your adventures...",
+    "profile_visibility": "Profile Visibility",
+    "visibility_public": "Public (Recommended)",
+    "visibility_public_desc": "Other explorers can see your contributions, level, and routes.",
+    "visibility_private": "Private",
+    "visibility_private_desc": "Only you can see your statistics and routes.",
+    "email_label": "Email Address",
+    "email_verified": "Verified Account"
   },
   "auth": {
     "login_title": "Welcome Back",

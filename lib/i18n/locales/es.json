@@ -511,7 +511,22 @@
     "image_max_size": "El tamaño de la imagen no debe superar los 5MB.",
     "name_required": "Tu nombre no puede estar vacío.",
     "update_success": "¡Perfil actualizado exitosamente!",
-    "edit_desc": "Toca la foto para cambiarla, luego guarda tus datos."
+    "edit_desc": "Toca la foto para cambiarla, luego guarda tus datos.",
+    "view_public_profile": "Ver mi perfil público",
+    "view_public": "Ver perfil",
+    "public_explorer_card": "Perfil público de explorador",
+    "status_public_hint": "Visible para la comunidad de exploradores",
+    "status_private_hint": "Tu perfil está en modo privado",
+    "city": "Ciudad / Ubicación",
+    "city_placeholder": "Ej. San Juan, Puerto Rico",
+    "bio_placeholder": "Cuéntale a la comunidad sobre ti y tus viajes...",
+    "profile_visibility": "Visibilidad del perfil",
+    "visibility_public": "Público (Recomendado)",
+    "visibility_public_desc": "Otros viajeros pueden ver tus aportes, nivel y rutas.",
+    "visibility_private": "Privado",
+    "visibility_private_desc": "Solo tú puedes ver tus estadísticas y rutas.",
+    "email_label": "Correo electrónico",
+    "email_verified": "Cuenta verificada"
   },
   "auth": {
     "login_title": "Bienvenido de Nuevo",
