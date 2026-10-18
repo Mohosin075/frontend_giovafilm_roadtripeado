@@ -121,7 +121,10 @@ export default function FeatureMapDetailPage() {
     }
 
     if (redeemFreeIntent) {
-      if (userProfile?.redeemedFreeMap) {
+      const redeemedCount = Array.isArray(userProfile?.redeemedFreeMaps) && userProfile.redeemedFreeMaps.length > 0
+        ? userProfile.redeemedFreeMaps.length
+        : (userProfile?.redeemedFreeMap ? 1 : 0);
+      if (redeemedCount > 0) {
         toast.error(t("maps.already_redeemed_free"));
       } else {
         toast.error(t("maps.unlock_free_first"));

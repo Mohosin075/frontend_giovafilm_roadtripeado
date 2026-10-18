@@ -227,7 +227,7 @@ export default function RewardsAdminPage() {
         title,
         description,
         target: Number(target) || 0,
-        mapId: type === "Free Map" || mapId ? mapId || null : null,
+        mapId: type === "Free Map" ? null : mapId || null,
         mapCount: type === "Free Map" ? Number(mapCount) || 1 : undefined,
         discountPercentage:
           type === "Exclusive Discount" || type === "Permanent Discount"
@@ -593,9 +593,14 @@ export default function RewardsAdminPage() {
                         {/* Attached elements */}
                         <td className="px-6 py-4 text-xs space-y-1">
                           {reward.type === "Free Map" && (
-                            <div className="font-bold text-blue-700 dark:text-blue-300 flex items-center gap-1.5">
-                              <MapPin size={13} />
-                              <span>{reward.mapCount ? `${reward.mapCount} Free Maps` : "1 Free Map"}</span>
+                            <div className="space-y-0.5">
+                              <div className="font-bold text-blue-700 dark:text-blue-300 flex items-center gap-1.5">
+                                <MapPin size={13} />
+                                <span>{reward.mapCount ? `${reward.mapCount} Free Maps` : "1 Free Map"}</span>
+                              </div>
+                              <div className="text-[10px] text-gray-500 dark:text-slate-400 font-medium">
+                                User&apos;s choice from catalog
+                              </div>
                             </div>
                           )}
                           {reward.mapId && (
@@ -806,43 +811,60 @@ export default function RewardsAdminPage() {
       {/* MODAL 1: ADD / EDIT REWARD */}
       {/* ========================================================================= */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl p-6 bg-white dark:bg-[#131b2e] dark:border-slate-800 text-gray-900 dark:text-slate-100">
-          <DialogHeader className="pb-3 border-b border-gray-100 dark:border-slate-800">
-            <DialogTitle className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
-              <Gift size={20} className="text-blue-600 dark:text-blue-400" />
+        <DialogContent className="max-w-4xl sm:max-w-3xl md:max-w-4xl w-[95vw] max-h-[92vh] overflow-y-auto rounded-3xl p-6 sm:p-8 bg-white dark:bg-[#131b2e] dark:border-slate-800 text-gray-900 dark:text-slate-100 shadow-2xl">
+          <DialogHeader className="pb-4 border-b border-gray-100 dark:border-slate-800">
+            <DialogTitle className="text-xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+              <Gift size={22} className="text-blue-600 dark:text-blue-400" />
               {isCreateMode
                 ? t("rewards_admin.add_new_reward") || "Add New Reward"
                 : t("rewards_admin.edit_reward") || "Edit Reward"}
             </DialogTitle>
           </DialogHeader>
 
-          <form onSubmit={handleSubmitReward} className="space-y-4 pt-2">
-            {/* Category / Type */}
-            <div className="space-y-1">
-              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
-                {t("rewards_admin.reward_category") || "Reward Category / Type"}
-              </Label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-              >
-                <optgroup label="Content & Downloadables" className="dark:bg-slate-900">
-                  <option value="PDF Itinerary">PDF Itinerary</option>
-                  <option value="Gourmet Guide">Gourmet Guide</option>
-                </optgroup>
-                <optgroup label="Map Perks & Unlocks" className="dark:bg-slate-900">
-                  <option value="Free Map">Free Map Unlock</option>
-                  <option value="Exclusive Discount">Exclusive Discount (Level Specific)</option>
-                  <option value="Permanent Discount">Permanent Map Discount</option>
-                </optgroup>
-                <optgroup label="Gamification & Status" className="dark:bg-slate-900">
-                  <option value="Top Reviewer">Top Reviewer Badge</option>
-                  <option value="Trail Master">Trail Master Perk</option>
-                  <option value="History Buff">History Buff Perk</option>
-                  <option value="Legendary Explorer">Legendary Explorer Status</option>
-                </optgroup>
-              </select>
+          <form onSubmit={handleSubmitReward} className="space-y-5 pt-3">
+            {/* Category / Type & Reward Title (2-Column Grid) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Category / Type */}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
+                  {t("rewards_admin.reward_category") || "Reward Category / Type"}
+                </Label>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                >
+                  <optgroup label="Content & Downloadables" className="dark:bg-slate-900">
+                    <option value="PDF Itinerary">PDF Itinerary</option>
+                    <option value="Gourmet Guide">Gourmet Guide</option>
+                  </optgroup>
+                  <optgroup label="Map Perks & Unlocks" className="dark:bg-slate-900">
+                    <option value="Free Map">Free Map Unlock</option>
+                    <option value="Exclusive Discount">Exclusive Discount (Level Specific)</option>
+                    <option value="Permanent Discount">Permanent Map Discount</option>
+                  </optgroup>
+                  <optgroup label="Gamification & Status" className="dark:bg-slate-900">
+                    <option value="Top Reviewer">Top Reviewer Badge</option>
+                    <option value="Trail Master">Trail Master Perk</option>
+                    <option value="History Buff">History Buff Perk</option>
+                    <option value="Legendary Explorer">Legendary Explorer Status</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              {/* Title */}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
+                  {t("rewards_admin.reward_title") || "Reward Title"}
+                </Label>
+                <Input
+                  placeholder="e.g. San Juan Heritage Tour PDF Itinerary"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="rounded-xl h-11 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100"
+                  required
+                />
+              </div>
             </div>
 
             {/* Free Map Options (Specify Map Quantity: 1 or 2 maps) */}
@@ -912,9 +934,14 @@ export default function RewardsAdminPage() {
                   </div>
                 </div>
 
-                <p className="text-[11px] text-blue-700 dark:text-blue-300/80 leading-relaxed">
-                  Specify how many free maps users are rewarded with at this level. Setting this to <strong>2</strong> allows users reaching this tier to claim 2 free maps of their choice from the catalog.
-                </p>
+                <div className="flex items-center gap-2 pt-1.5 border-t border-blue-200/60 dark:border-blue-900/40 text-[11px] font-semibold text-blue-900 dark:text-blue-200">
+                  <span className="px-2 py-0.5 rounded-md bg-blue-200/70 dark:bg-blue-900/80 font-bold text-[10px] uppercase tracking-wide">
+                    User&apos;s Choice
+                  </span>
+                  <span>
+                    Users will select their {mapCount} free {mapCount > 1 ? "maps" : "map"} of their choice from the catalog.
+                  </span>
+                </div>
               </div>
             )}
 
@@ -936,20 +963,6 @@ export default function RewardsAdminPage() {
                 />
               </div>
             )}
-
-            {/* Title */}
-            <div className="space-y-1">
-              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
-                {t("rewards_admin.reward_title") || "Reward Title"}
-              </Label>
-              <Input
-                placeholder="e.g. San Juan Heritage Tour PDF Itinerary"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="rounded-xl h-11 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100"
-                required
-              />
-            </div>
 
             {/* Description */}
             <div className="space-y-1">
@@ -1016,63 +1029,20 @@ export default function RewardsAdminPage() {
                       </select>
                     </div>
 
-                    {!matchedTier ? (
-                      <div className="grid grid-cols-2 gap-3 animate-in fade-in duration-200">
+                    {!matchedTier && (
+                      <div className="space-y-1 animate-in fade-in duration-200">
                         {/* Custom Target XP threshold */}
-                        <div className="space-y-1">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
-                            {t("rewards_admin.points_target") || "Custom XP Points Required"}
-                          </Label>
-                          <Input
-                            type="number"
-                            placeholder="e.g. 500"
-                            value={target}
-                            onChange={(e) => setTarget(e.target.value)}
-                            className="rounded-xl h-11 font-bold text-amber-900 dark:text-amber-200 bg-white dark:bg-slate-900 border-amber-200 dark:border-amber-900/50"
-                            required
-                          />
-                        </div>
-
-                        {/* Map reference */}
-                        <div className="space-y-1">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
-                            {t("rewards_admin.attach_map_optional") || "Attach Map (Optional)"}
-                          </Label>
-                          <select
-                            value={mapId}
-                            onChange={(e) => setMapId(e.target.value)}
-                            className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                          >
-                            <option value="" className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
-                              {isMapType ? "User Chooses Any Map" : "No Specific Map"}
-                            </option>
-                            {maps.map((map: any) => (
-                              <option key={map._id} value={map._id} className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
-                                {map.name || map.title}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-1">
-                        <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
-                          {t("rewards_admin.attach_map_optional") || "Attach Map (Optional)"}
+                        <Label className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                          {t("rewards_admin.points_target") || "Custom XP Points Required"}
                         </Label>
-                        <select
-                          value={mapId}
-                          onChange={(e) => setMapId(e.target.value)}
-                          className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                        >
-                          <option value="" className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
-                            {isMapType ? "User Chooses Any Map" : "No Specific Map"}
-                          </option>
-                          {maps.map((map: any) => (
-                            <option key={map._id} value={map._id} className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
-                              {map.name || map.title}
-                            </option>
-                          ))}
-                        </select>
+                        <Input
+                          type="number"
+                          placeholder="e.g. 500"
+                          value={target}
+                          onChange={(e) => setTarget(e.target.value)}
+                          className="rounded-xl h-11 font-bold text-amber-900 dark:text-amber-200 bg-white dark:bg-slate-900 border-amber-200 dark:border-amber-900/50"
+                          required
+                        />
                       </div>
                     )}
                   </>
@@ -1080,6 +1050,40 @@ export default function RewardsAdminPage() {
               })()}
             </div>
 
+            {/* Optional Attach Map for Non-Free-Map rewards (e.g. PDF Itinerary, Gourmet Guide, etc.) */}
+            {!isMapType && (
+              <div className="space-y-1 animate-in fade-in duration-200">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400 flex items-center justify-between">
+                  <span>{t("rewards_admin.attach_map_optional") || "Attach Destination Map (Optional)"}</span>
+                  {mapId && (
+                    <button
+                      type="button"
+                      onClick={() => setMapId("")}
+                      className="text-[11px] text-red-500 hover:text-red-700 font-semibold cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </Label>
+                <select
+                  value={mapId}
+                  onChange={(e) => setMapId(e.target.value)}
+                  className="w-full h-11 px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                >
+                  <option value="" className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
+                    -- No Specific Map Attached --
+                  </option>
+                  {maps.map((map: any) => (
+                    <option key={map._id} value={map._id} className="text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900">
+                      {map.name || map.title || map.country}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-gray-400 dark:text-slate-500">
+                  Optional: Associate this itinerary or reward with a specific country/destination map.
+                </p>
+              </div>
+            )}
 
             {/* File uploads section */}
             <div className="grid grid-cols-2 gap-4 pt-1">
@@ -1196,7 +1200,7 @@ export default function RewardsAdminPage() {
       {/* MODAL 2: ADD / EDIT TIER / LEVEL */}
       {/* ========================================================================= */}
       <Dialog open={tierModalOpen} onOpenChange={setTierModalOpen}>
-        <DialogContent className="max-w-md rounded-3xl p-6 bg-white dark:bg-[#131b2e] dark:border-slate-800 text-gray-900 dark:text-slate-100">
+        <DialogContent className="max-w-xl sm:max-w-xl w-[95vw] rounded-3xl p-6 sm:p-8 bg-white dark:bg-[#131b2e] dark:border-slate-800 text-gray-900 dark:text-slate-100 shadow-2xl">
           <DialogHeader className="pb-3 border-b border-gray-100 dark:border-slate-800">
             <DialogTitle className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <Award size={20} className="text-emerald-600 dark:text-emerald-400" />

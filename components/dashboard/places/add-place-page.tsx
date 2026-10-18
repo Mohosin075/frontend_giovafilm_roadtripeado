@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useTheme } from "next-themes";
 import { AddCategoryDialog } from "@/components/dashboard/categories/AddCategoryDialog";
 
 import { CategoryIcon } from "@/components/shared/categories/category-icon";
@@ -781,6 +782,11 @@ const SavedMarkersLayer = React.memo(function SavedMarkersLayer({
 
 export default function AddPlacePage() {
   const { t, language } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
+
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null,
   );
@@ -1658,8 +1664,9 @@ export default function AddPlacePage() {
             </div>
           </div>
 
-          <div className="w-full h-full bg-gray-200">
+          <div className="w-full h-full bg-gray-200 dark:bg-slate-900">
             <Map
+              colorScheme={isDark ? "DARK" : "LIGHT"}
               defaultCenter={defaultPosition}
               defaultZoom={13}
               minZoom={3}
