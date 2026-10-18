@@ -178,6 +178,9 @@
     "browse_maps": "Explorar Mapas",
     "login_to_unlock": "Iniciar Sesión para Desbloquear",
     "view_on_map": "Ver en el Mapa",
+    "add_to_route": "Añadir a la Ruta",
+    "added_to_route": "¡Lugar añadido a tu ruta!",
+    "in_your_route": "En tu ruta",
     "call": "Llamar",
     "no_phone": "Sin teléfono",
     "discounts": "Descuentos",
@@ -2214,7 +2217,10 @@
     "navigate_google_maps": "Navegar en Google Maps",
     "empty_route_desc": "No se han agregado paradas a esta ruta.",
     "no_stops_yet": "Esta ruta aún no tiene paradas",
-    "active_badge": "Activo"
+    "active_badge": "Activo",
+    "add_to_route": "Añadir a la Ruta",
+    "added_to_route": "¡Lugar añadido a tu ruta!",
+    "view_route": "Ver Ruta"
   },
   "contact": {
     "badge": "Conéctate con nosotros",

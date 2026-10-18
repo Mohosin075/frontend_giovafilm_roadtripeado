@@ -26,6 +26,7 @@ import {
   Edit3,
   Sparkles,
   Instagram,
+  Compass,
 } from "lucide-react";
 import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 
@@ -63,6 +64,8 @@ import { useGetSingleBusinessQuery } from "@/redux/features/business/businessApi
 import { useGetOffersByPlaceOrBusinessIdQuery } from "@/redux/features/offer/offerApi";
 import { useGetPlaceDetailsQuery } from "@/redux/features/place/placeApi";
 import { normalizePinType, trackUsage } from "@/lib/record-visit";
+import { toast } from "sonner";
+import { addLocationToRouteDraft, isLocationInRouteDraft } from "@/lib/route-planner-utils";
 import {
   useGetReviewsByBusinessQuery,
   useGetReviewsByPlaceQuery,
@@ -71,6 +74,7 @@ import Link from "next/link";
 import InfoCard from "./info-card";
 import { MenuLightbox } from "./MenuLightbox";
 import { ReviewModal } from "./review-modal";
+import AddToRouteModal from "@/components/Common/route-planner/add-to-route-modal";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { useAppSelector } from "@/redux/hook";
 import { selectAccessToken } from "@/redux/features/auth/authSlice";
@@ -580,6 +584,32 @@ export default function MapDetails() {
     router.push(`/maps?${params.toString()}`);
   };
 
+  const [isInRoute, setIsInRoute] = useState(false);
+  const [isAddToRouteModalOpen, setIsAddToRouteModalOpen] = useState(false);
+
+  useEffect(() => {
+    const locId = placeData?._id || id;
+    if (locId) {
+      setIsInRoute(isLocationInRouteDraft(String(locId)));
+    }
+
+    const onDraftChange = () => {
+      if (locId) {
+        setIsInRoute(isLocationInRouteDraft(String(locId)));
+      }
+    };
+
+    window.addEventListener("roadtripeado_route_draft_changed", onDraftChange);
+    return () => {
+      window.removeEventListener("roadtripeado_route_draft_changed", onDraftChange);
+    };
+  }, [placeData, id]);
+
+  const handleAddToRoute = () => {
+    if (!placeData) return;
+    setIsAddToRouteModalOpen(true);
+  };
+
   const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(
     null,
   );
@@ -929,11 +959,26 @@ export default function MapDetails() {
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
-              <FavouriteButton
-                placeId={id}
-                type={isBusinessEntity ? "Business" : "Place"}
-                Style="absolute top-4 left-4 z-20 w-11 h-11 border border-black/5 dark:border-white/10 bg-white/95 dark:bg-[#131b2e]/95 hover:bg-white dark:hover:bg-[#1e293b] hover:scale-105 active:scale-95 shadow-md p-2.5 rounded-xl transition-all duration-200 cursor-pointer backdrop-blur-sm"
-              />
+              <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+                <FavouriteButton
+                  placeId={id}
+                  type={isBusinessEntity ? "Business" : "Place"}
+                  Style="w-11 h-11 border border-black/5 dark:border-white/10 bg-white/95 dark:bg-[#131b2e]/95 hover:bg-white dark:hover:bg-[#1e293b] hover:scale-105 active:scale-95 shadow-md p-2.5 rounded-xl transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddToRoute}
+                  title={isInRoute ? (language === "es" ? "En tu ruta (Ver ruta)" : "In your route (View)") : (language === "es" ? "Añadir a la Ruta" : "Add to Route")}
+                  aria-label={language === "es" ? "Añadir a la Ruta" : "Add to Route"}
+                  className={`w-11 h-11 border rounded-xl flex items-center justify-center transition-all duration-200 cursor-pointer backdrop-blur-sm shadow-md hover:scale-105 active:scale-95 ${
+                    isInRoute
+                      ? "bg-emerald-500/90 text-white border-emerald-400"
+                      : "bg-white/95 dark:bg-[#131b2e]/95 text-amber-600 dark:text-amber-400 border-black/5 dark:border-white/10 hover:bg-white dark:hover:bg-[#1e293b]"
+                  }`}
+                >
+                  {isInRoute ? <CheckCircle2 size={19} /> : <Compass size={19} />}
+                </button>
+              </div>
 
               {mediaList.length > 0 && (
                 <>
@@ -2180,6 +2225,13 @@ export default function MapDetails() {
         images={placeData?.menuImages || []}
         initialIndex={selectedMenuIndex}
         title={t("place.menu_and_prices") || "Menu"}
+      />
+
+      <AddToRouteModal
+        isOpen={isAddToRouteModalOpen}
+        onClose={() => setIsAddToRouteModalOpen(false)}
+        location={placeData}
+        type={isBusinessEntity ? "business" : "place"}
       />
     </section>
   );

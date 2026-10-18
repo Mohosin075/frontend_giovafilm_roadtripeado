@@ -199,6 +199,30 @@ export function RoutePlannerInner() {
     }
   }, [stops, routeName, selectedRouteId]);
 
+  useEffect(() => {
+    const handleSyncFromDraft = () => {
+      try {
+        const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed?.stops)) {
+            setStops(parsed.stops);
+            if (parsed.name) setRouteName(parsed.name);
+            if (parsed.routeId !== undefined) setSelectedRouteId(parsed.routeId);
+            setIsLoadedFromCache(true);
+          }
+        }
+      } catch {}
+    };
+
+    window.addEventListener("roadtripeado_route_draft_changed", handleSyncFromDraft);
+    window.addEventListener("storage", handleSyncFromDraft);
+    return () => {
+      window.removeEventListener("roadtripeado_route_draft_changed", handleSyncFromDraft);
+      window.removeEventListener("storage", handleSyncFromDraft);
+    };
+  }, []);
+
   // Handle adding place
   const handleAddPlace = (place: any) => {
     const placeId = place._id || place.id;
@@ -208,14 +232,26 @@ export function RoutePlannerInner() {
       return;
     }
 
+    let coordinates: [number, number] = [0, 0];
+    if (Array.isArray(place.location?.coordinates) && place.location.coordinates.length === 2) {
+      coordinates = [Number(place.location.coordinates[0]), Number(place.location.coordinates[1])];
+    } else if (Array.isArray(place.location?.mapLocation?.coordinates) && place.location.mapLocation.coordinates.length === 2) {
+      coordinates = [Number(place.location.mapLocation.coordinates[0]), Number(place.location.mapLocation.coordinates[1])];
+    } else if (Array.isArray(place.coordinates) && place.coordinates.length === 2) {
+      coordinates = [Number(place.coordinates[0]), Number(place.coordinates[1])];
+    } else if (place.longitude && place.latitude) {
+      coordinates = [Number(place.longitude), Number(place.latitude)];
+    } else if (place.lng && place.lat) {
+      coordinates = [Number(place.lng), Number(place.lat)];
+    }
+
     const newStop: RouteStopItem = {
-      id: `local-${Date.now()}-${Math.random()}`,
+      id: `local-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       placeId,
       name: place.name,
-      address: place.address || place.location?.address || "",
+      address: place.address || place.location?.address || place.location?.city || "",
       media: place.media?.photos || place.media || [],
-      coordinates: place.location?.coordinates ||
-        place.location?.mapLocation?.coordinates || [0, 0],
+      coordinates,
       order: stops.length + 1,
     };
 

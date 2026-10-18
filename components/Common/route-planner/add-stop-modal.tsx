@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Search,
   X,
@@ -20,6 +20,7 @@ import { SafeImage } from "@/components/shared/safe-image";
 import { NoImage } from "@/lib/others/others";
 import { getUsableMediaUrl, getLocalized } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { CategoryIcon } from "@/components/shared/categories/category-icon";
 import {
   Map,
   AdvancedMarker,
@@ -31,65 +32,6 @@ interface AddStopModalProps {
   onClose: () => void;
   onSelectPlace: (place: any) => void;
   selectedPlaceIds?: string[];
-}
-
-// Helper to provide meaningful visual icons/emojis for Puerto Rico travel categories
-function getCategoryIcon(name: string): string {
-  const lower = (name || "").toLowerCase();
-  if (lower.includes("playa") || lower.includes("beach")) return "🏖️";
-  if (
-    lower.includes("cascada") ||
-    lower.includes("río") ||
-    lower.includes("waterfall") ||
-    lower.includes("river") ||
-    lower.includes("charco")
-  )
-    return "🌊";
-  if (lower.includes("cueva") || lower.includes("cave") || lower.includes("caverna"))
-    return "⛰️";
-  if (
-    lower.includes("mirador") ||
-    lower.includes("lookout") ||
-    lower.includes("view") ||
-    lower.includes("vista")
-  )
-    return "🌄";
-  if (
-    lower.includes("restauran") ||
-    lower.includes("comida") ||
-    lower.includes("food") ||
-    lower.includes("gastronom") ||
-    lower.includes("chinchorreo")
-  )
-    return "🍽️";
-  if (
-    lower.includes("histór") ||
-    lower.includes("fort") ||
-    lower.includes("castillo") ||
-    lower.includes("museo") ||
-    lower.includes("museum") ||
-    lower.includes("monument")
-  )
-    return "🏛️";
-  if (
-    lower.includes("bosque") ||
-    lower.includes("forest") ||
-    lower.includes("naturaleza") ||
-    lower.includes("reserva") ||
-    lower.includes("nature")
-  )
-    return "🌿";
-  if (
-    lower.includes("aventura") ||
-    lower.includes("sender") ||
-    lower.includes("hike") ||
-    lower.includes("trail") ||
-    lower.includes("zipline")
-  )
-    return "🥾";
-  if (lower.includes("isla") || lower.includes("cayo") || lower.includes("island"))
-    return "🏝️";
-  return "📍";
 }
 
 export default function AddStopModal({
@@ -104,36 +46,74 @@ export default function AddStopModal({
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedMapId, setSelectedMapId] = useState<string>("all");
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [onlyUnadded, setOnlyUnadded] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [activePinPlace, setActivePinPlace] = useState<any | null>(null);
 
-  // Queries
+  // Categories & Maps Queries
+  const { data: categoriesRes } = useGetCategoriesQuery(
+    { limit: 100 },
+    { skip: !isOpen }
+  );
+
+  const { data: mapsRes, isLoading: isLoadingMaps } = useGetMapsQuery(
+    { limit: 100 },
+    { skip: !isOpen }
+  );
+
+  const categories = categoriesRes?.data?.data || categoriesRes?.data || [];
+  const mapsList = mapsRes?.data?.data || mapsRes?.data || [];
+
+  const getMapName = (m: any) => {
+    if (!m) return "";
+    return (
+      getLocalized(m.name, language) ||
+      m.country ||
+      getLocalized(m.name, "es") ||
+      getLocalized(m.name, "en") ||
+      ""
+    );
+  };
+
+  // Sync initial country from localStorage (consistent with explore-places page)
+  useEffect(() => {
+    if (isLoadingMaps || !mapsList.length || !isOpen) return;
+    if (selectedCountry) return;
+    try {
+      const saved = localStorage.getItem("selectedCountryFilter");
+      if (
+        saved &&
+        mapsList.some((m: any) => getMapName(m) === saved || m.country === saved)
+      ) {
+        setSelectedCountry(saved);
+      }
+    } catch {
+      // Ignore localStorage read errors
+    }
+  }, [isLoadingMaps, mapsList, selectedCountry, isOpen, language]);
+
+  const selectedMapObj = mapsList.find(
+    (m: any) =>
+      getMapName(m) === selectedCountry ||
+      m.country === selectedCountry ||
+      (m._id || m.id) === selectedCountry ||
+      m.name === selectedCountry
+  );
+  const mapIdFilter = selectedMapObj ? (selectedMapObj._id || selectedMapObj.id) : "";
+
+  // Places Query
   const { data: placesRes, isLoading } = useGetPlacesQuery(
     {
       page: 1,
       limit: 150,
       searchTerm,
       category: selectedCategory !== "all" ? selectedCategory : "",
-      map: selectedMapId !== "all" ? selectedMapId : "",
+      map: mapIdFilter,
       status: "Published",
     },
     { skip: !isOpen }
   );
-
-  const { data: categoriesRes } = useGetCategoriesQuery(
-    { limit: 50 },
-    { skip: !isOpen }
-  );
-
-  const { data: mapsRes } = useGetMapsQuery(
-    { limit: 50 },
-    { skip: !isOpen }
-  );
-
-  const categories = categoriesRes?.data?.data || categoriesRes?.data || [];
-  const mapsList = mapsRes?.data?.data || mapsRes?.data || [];
 
   // Filter places based on unadded toggle if enabled
   const places = useMemo(() => {
@@ -146,14 +126,14 @@ export default function AddStopModal({
 
   const activeFiltersCount =
     (selectedCategory !== "all" ? 1 : 0) +
-    (selectedMapId !== "all" ? 1 : 0) +
+    (selectedCountry ? 1 : 0) +
     (searchTerm ? 1 : 0) +
     (onlyUnadded ? 1 : 0);
 
   const handleClearFilters = () => {
     setSearchTerm("");
     setSelectedCategory("all");
-    setSelectedMapId("all");
+    setSelectedCountry("");
     setOnlyUnadded(false);
   };
 
@@ -162,10 +142,10 @@ export default function AddStopModal({
   const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID || "2b83d15fbb74673e997cfde8";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-md transition-opacity animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-md transition-opacity animate-in fade-in duration-200">
       <div className="relative w-full max-w-4xl bg-white dark:bg-[#131b2e] rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-200 dark:border-slate-800 flex flex-col h-[94vh] sm:h-[88vh] overflow-hidden">
         {/* Header */}
-        <div className="px-4 sm:px-6 py-3 sm:py-3.5 border-b border-gray-100 dark:border-slate-800/80 flex items-center justify-between flex-shrink-0 bg-white/90 dark:bg-[#131b2e]/90 backdrop-blur-md">
+        <div className="px-4 sm:px-6 py-3 sm:py-3.5 border-b border-gray-100 dark:border-slate-800/80 flex items-center justify-between flex-shrink-0 bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-md">
           <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-amber-500/10 dark:bg-amber-400/10 flex items-center justify-center text-amber-500 dark:text-amber-400 flex-shrink-0">
               <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -222,105 +202,102 @@ export default function AddStopModal({
           </div>
         </div>
 
-        {/* Filter & Search Bar Section */}
-        <div className="px-4 sm:px-6 py-2.5 sm:py-3 border-b border-gray-100 dark:border-slate-800/80 bg-slate-50/80 dark:bg-slate-900/60 flex-shrink-0 space-y-2">
-          {/* Row 1: Search & Region Dropdown */}
-          <div className="flex flex-col sm:flex-row gap-2">
-            {/* Search Input */}
-            <div className="relative flex-1 flex items-center">
-              <Search className="absolute left-3.5 w-4 h-4 text-gray-400" />
+        {/* Filter & Search Bar Section — Organized exactly like Places page */}
+        <div className="px-4 sm:px-6 py-3 border-b border-gray-100 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/50 flex-shrink-0 space-y-3">
+          {/* Search Bar (Matching Places page layout) */}
+          <div className="relative w-full">
+            <div className="flex items-center gap-3 bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 rounded-xl px-2 shadow-sm focus-within:border-[#fabf13] focus-within:ring-1 focus-within:ring-[#fabf13] transition-all">
+              <Search className="text-gray-400 ml-2" size={18} />
               <input
                 type="text"
+                placeholder={t("search.search_places") || "Buscar lugares en Puerto Rico..."}
+                className="w-full border-none h-10 sm:h-11 bg-transparent focus:outline-none text-xs sm:text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder={
-                  t("route_planner.search_placeholder") ||
-                  "Buscar playas, cuevas, miradores..."
-                }
-                className="w-full pl-10 pr-9 py-2 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 focus:border-[#FFC107] focus:ring-1 focus:ring-[#FFC107] focus:outline-none text-xs sm:text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 shadow-sm transition-all"
               />
               {searchTerm && (
                 <button
+                  type="button"
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                  className="p-1 mr-1 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
                 >
-                  <X className="w-4 h-4" />
+                  <X size={16} />
                 </button>
               )}
             </div>
-
-            {/* Region / Map Selector */}
-            {mapsList.length > 0 && (
-              <div className="sm:w-56">
-                <select
-                  value={selectedMapId}
-                  onChange={(e) => setSelectedMapId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-xs sm:text-sm font-semibold text-gray-800 dark:text-slate-200 focus:border-[#FFC107] focus:outline-none shadow-sm cursor-pointer"
-                >
-                  <option value="all">
-                    {t("route_planner.all_regions_maps") || "Todas las regiones / mapas"}
-                  </option>
-                  {mapsList.map((m: any) => (
-                    <option key={m._id || m.id} value={m._id || m.id}>
-                      {getLocalized(m.name, language)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
           </div>
 
-          {/* Row 2: Categories Carousel & Quick Filters */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
-            {/* "All" Category Pill */}
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("all")}
-              className={`px-3 py-1.5 rounded-full font-bold whitespace-nowrap flex items-center gap-1.5 transition-all ${
-                selectedCategory === "all"
-                  ? "bg-[#FFC107] text-gray-950 shadow-sm"
-                  : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:border-[#FFC107]"
-              }`}
+          {/* Filters Bar: Country section, Category section & Category pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-2 px-2 sm:mx-0 sm:px-0 no-scrollbar">
+            {/* Country Section Dropdown (Organized like Places page) */}
+            <select
+              value={selectedCountry}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedCountry(val);
+                try {
+                  localStorage.setItem("selectedCountryFilter", val);
+                } catch {}
+              }}
+              className="h-9 sm:h-10 px-3 sm:px-4 max-w-[130px] sm:max-w-[170px] truncate border border-gray-200 dark:border-slate-800 rounded-full focus:outline-none focus:ring-2 focus:ring-[#fabf13] text-xs sm:text-sm bg-white dark:bg-[#131b2e] font-semibold text-gray-700 dark:text-slate-200 cursor-pointer shadow-sm hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors shrink-0"
             >
-              <Layers className="w-3.5 h-3.5" />
-              <span>{t("common.all") || "Todos"}</span>
-            </button>
+              <option value="">{t("filters.all_countries") || "Todos los países"}</option>
+              {mapsList.map((map: any) => {
+                const nameStr = getMapName(map);
+                return (
+                  <option key={map._id || map.id} value={nameStr}>
+                    {nameStr}
+                  </option>
+                );
+              })}
+            </select>
 
-            {/* Category Pills with Icons */}
-            {categories.map((cat: any) => {
-              const catId = cat._id || cat.id;
-              const catName = getLocalized(cat.name, language);
-              const isActive = selectedCategory === catId;
-              const emoji = getCategoryIcon(catName);
-
-              return (
-                <button
-                  key={catId}
-                  type="button"
-                  onClick={() => setSelectedCategory(catId)}
-                  className={`px-3 py-1.5 rounded-full font-bold whitespace-nowrap flex items-center gap-1.5 transition-all ${
-                    isActive
-                      ? "bg-[#FFC107] text-gray-950 shadow-sm"
-                      : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:border-[#FFC107]"
-                  }`}
-                >
-                  <span>{emoji}</span>
-                  <span>{catName}</span>
-                </button>
-              );
-            })}
+            {/* Category Dropdown (Organized like Places page) */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              {(() => {
+                const activeCatObj = categories.find((c: any) => (c._id || c.id) === selectedCategory);
+                if (!activeCatObj?.icon) return null;
+                const isCustom =
+                  activeCatObj.icon.startsWith("http") ||
+                  activeCatObj.icon.startsWith("data:") ||
+                  activeCatObj.icon.includes("/") ||
+                  activeCatObj.icon.includes(".");
+                return (
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 overflow-hidden shadow-xs border border-gray-200 dark:border-slate-700"
+                    style={{
+                      backgroundColor: isCustom ? "transparent" : activeCatObj.color || "#FA7B17",
+                    }}
+                  >
+                    <CategoryIcon icon={activeCatObj.icon} size={15} color="#FFFFFF" />
+                  </div>
+                );
+              })()}
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="h-9 sm:h-10 px-3 sm:px-4 max-w-[140px] sm:max-w-[180px] truncate border border-gray-200 dark:border-slate-800 rounded-full focus:outline-none focus:ring-2 focus:ring-[#fabf13] text-xs sm:text-sm bg-white dark:bg-[#131b2e] font-semibold text-gray-700 dark:text-slate-200 cursor-pointer shadow-sm hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors shrink-0"
+              >
+                <option value="all">{t("filters.all_categories") || "Todas las categorías"}</option>
+                {categories.map((cat: any) => (
+                  <option key={cat._id || cat.id} value={cat._id || cat.id}>
+                    {getLocalized(cat.name, language)}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Toggle: Only show spots not in route */}
             <button
               type="button"
               onClick={() => setOnlyUnadded(!onlyUnadded)}
-              className={`px-3 py-1.5 rounded-full font-bold whitespace-nowrap flex items-center gap-1.5 transition-all ${
+              className={`h-9 sm:h-10 px-3 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-1.5 transition-all shrink-0 ${
                 onlyUnadded
-                  ? "bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-400/40"
-                  : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:border-[#FFC107]"
+                  ? "bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-400/50"
+                  : "bg-white dark:bg-[#131b2e] text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-800 hover:border-[#fabf13]"
               }`}
             >
-              <Sparkles className="w-3 h-3 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>{t("route_planner.filter_available_only") || "Solo no añadidos"}</span>
             </button>
 
@@ -329,9 +306,9 @@ export default function AddStopModal({
               <button
                 type="button"
                 onClick={handleClearFilters}
-                className="px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap text-amber-600 dark:text-amber-400 hover:text-amber-700 flex items-center gap-1 transition-colors"
+                className="h-9 sm:h-10 px-3 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 transition-colors shrink-0"
               >
-                <RotateCcw className="w-3 h-3" />
+                <RotateCcw className="w-3.5 h-3.5" />
                 <span>{t("route_planner.clear_filters_btn") || "Limpiar"}</span>
               </button>
             )}
@@ -342,7 +319,7 @@ export default function AddStopModal({
         <div className="flex-1 overflow-hidden relative">
           {isLoading ? (
             <div className="h-full flex flex-col items-center justify-center gap-3">
-              <div className="w-10 h-10 border-3 border-[#FFC107] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-3 border-[#fabf13] border-t-transparent rounded-full animate-spin" />
               <p className="text-sm font-semibold text-gray-500 dark:text-slate-400">
                 {t("common.loading") || "Cargando lugares..."}
               </p>
@@ -379,6 +356,12 @@ export default function AddStopModal({
                     const cover = getUsableMediaUrl(place.media);
                     const placeName = getLocalized(place.name, language);
                     const catName = getLocalized(place.category?.name, language);
+                    const catIcon = place.category?.icon;
+                    const isCustomCatImg =
+                      catIcon?.startsWith("http") ||
+                      catIcon?.startsWith("data:") ||
+                      catIcon?.includes("/") ||
+                      catIcon?.includes(".");
 
                     return (
                       <div
@@ -386,8 +369,8 @@ export default function AddStopModal({
                         onClick={() => !isSelected && onSelectPlace(place)}
                         className={`group flex items-center gap-3 p-3 rounded-2xl border transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-amber-500/5 dark:bg-amber-500/10 border-[#FFC107]/40 ring-1 ring-[#FFC107]/30"
-                            : "bg-white dark:bg-[#151e33] border-gray-100 dark:border-slate-800 hover:border-[#FFC107] hover:shadow-md"
+                            ? "bg-amber-500/5 dark:bg-amber-500/10 border-[#fabf13]/50 ring-1 ring-[#fabf13]/40"
+                            : "bg-white dark:bg-[#151e33] border-gray-100 dark:border-slate-800 hover:border-[#fabf13] hover:shadow-md"
                         }`}
                       >
                         {/* Thumbnail */}
@@ -407,11 +390,29 @@ export default function AddStopModal({
                         {/* Info */}
                         <div className="flex-1 min-w-0 pr-1">
                           {catName && (
-                            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block truncate">
-                              {catName}
-                            </span>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              {catIcon && (
+                                <div
+                                  className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
+                                  style={{
+                                    backgroundColor: isCustomCatImg
+                                      ? "transparent"
+                                      : place.category?.color || "#FA7B17",
+                                  }}
+                                >
+                                  <CategoryIcon
+                                    icon={catIcon}
+                                    size={11}
+                                    color="#FFFFFF"
+                                  />
+                                </div>
+                              )}
+                              <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider truncate">
+                                {catName}
+                              </span>
+                            </div>
                           )}
-                          <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate group-hover:text-[#FFC107] transition-colors">
+                          <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate group-hover:text-[#fabf13] transition-colors">
                             {placeName}
                           </h4>
                           <p className="text-xs text-gray-500 dark:text-slate-400 truncate flex items-center gap-1 mt-0.5">
@@ -436,8 +437,8 @@ export default function AddStopModal({
                           }
                           className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
                             isSelected
-                              ? "bg-[#FFC107] text-gray-950 font-bold shadow-md"
-                              : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 group-hover:bg-[#FFC107] group-hover:text-gray-950"
+                              ? "bg-[#fabf13] text-gray-950 font-bold shadow-md"
+                              : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 group-hover:bg-[#fabf13] group-hover:text-gray-950"
                           }`}
                         >
                           {isSelected ? (
@@ -453,7 +454,7 @@ export default function AddStopModal({
               )}
             </div>
           ) : (
-            /* INTERACTIVE MAP VIEW INSIDE MODAL */
+            /* MAP VIEW */
             <div className="h-full w-full relative">
               <Map
                 colorScheme={isDark ? "DARK" : "LIGHT"}
@@ -477,7 +478,8 @@ export default function AddStopModal({
                   if (!lat || !lng) return null;
 
                   const isSelected = selectedPlaceIds.includes(placeId);
-                  const isCurrentActive = activePinPlace && (activePinPlace._id || activePinPlace.id) === placeId;
+                  const isCurrentActive =
+                    activePinPlace && (activePinPlace._id || activePinPlace.id) === placeId;
 
                   return (
                     <AdvancedMarker
@@ -493,12 +495,18 @@ export default function AddStopModal({
                         <div
                           className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 transition-all ${
                             isSelected
-                              ? "bg-[#FFC107] text-gray-950 border-white ring-2 ring-[#FFC107]/50"
+                              ? "bg-[#fabf13] text-gray-950 border-white ring-2 ring-[#fabf13]/50"
                               : "bg-white dark:bg-[#131b2e] text-amber-500 border-amber-400"
                           }`}
                         >
                           {isSelected ? (
                             <Check className="w-4 h-4 stroke-[3]" />
+                          ) : place.category?.icon ? (
+                            <CategoryIcon
+                              icon={place.category.icon}
+                              size={15}
+                              color={isDark ? "#fbbf24" : "#d97706"}
+                            />
                           ) : (
                             <MapPin className="w-4 h-4" />
                           )}
@@ -528,9 +536,25 @@ export default function AddStopModal({
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 truncate">
-                          {getLocalized(activePinPlace.category?.name, language) || "Lugar"}
-                        </span>
+                        <div className="flex items-center gap-1.5 truncate">
+                          {activePinPlace.category?.icon && (
+                            <div
+                              className="w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
+                              style={{
+                                backgroundColor: activePinPlace.category.color || "#FA7B17",
+                              }}
+                            >
+                              <CategoryIcon
+                                icon={activePinPlace.category.icon}
+                                size={9}
+                                color="#FFFFFF"
+                              />
+                            </div>
+                          )}
+                          <span className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 truncate">
+                            {getLocalized(activePinPlace.category?.name, language) || "Lugar"}
+                          </span>
+                        </div>
                         <button
                           type="button"
                           onClick={() => setActivePinPlace(null)}
@@ -558,10 +582,11 @@ export default function AddStopModal({
                             type="button"
                             onClick={() => {
                               onSelectPlace(activePinPlace);
+                              setActivePinPlace(null);
                             }}
-                            className="w-full py-1.5 px-3 rounded-lg bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 transition-all"
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-[#fabf13] hover:bg-[#e0ac10] text-gray-950 font-bold text-xs transition-colors shadow-sm"
                           >
-                            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                            <Plus className="w-3 h-3 stroke-[3]" />
                             <span>{t("route_planner.add_place_btn") || "Añadir a la ruta"}</span>
                           </button>
                         )}

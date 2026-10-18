@@ -10,9 +10,13 @@ import { useGetSingleBusinessQuery } from "@/redux/features/business/businessApi
 import { useGetPlaceDetailsQuery } from "@/redux/features/place/placeApi";
 import { normalizePinType, trackUsage } from "@/lib/record-visit";
 import { useEffect, useState } from "react";
-import { Star, X, Lock, Sparkles } from "lucide-react";
+import { Star, X, Lock, Sparkles, Compass, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { toast } from "sonner";
+import { addLocationToRouteDraft, isLocationInRouteDraft } from "@/lib/route-planner-utils";
+import AddToRouteModal from "@/components/Common/route-planner/add-to-route-modal";
 
 const getSafeString = (val: any, lang: string = "es"): string => {
   return getLocalized(val, lang);
@@ -27,6 +31,7 @@ type Props = {
 
 export default function LocationDialog({ id, onClose, mapId, initialData }: Props) {
   const { t, language } = useLanguage();
+  const router = useRouter();
   const placeId = id?.id;
   const initialType = normalizePinType(id?.type);
   const [activeType, setActiveType] = useState<"place" | "business">(
@@ -34,6 +39,8 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
   );
   const [hasFalledBack, setHasFalledBack] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isInRoute, setIsInRoute] = useState(false);
+  const [isAddToRouteModalOpen, setIsAddToRouteModalOpen] = useState(false);
 
   useEffect(() => {
     setActiveType(initialType === "business" ? "business" : "place");
@@ -104,6 +111,28 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
       : location?.media || location?.media?.photos;
   const coverImage = getUsableMediaUrl(coverSource);
   const locationId = location?._id || location?.id || placeId;
+
+  useEffect(() => {
+    if (locationId) {
+      setIsInRoute(isLocationInRouteDraft(String(locationId)));
+    }
+
+    const onDraftChange = () => {
+      if (locationId) {
+        setIsInRoute(isLocationInRouteDraft(String(locationId)));
+      }
+    };
+
+    window.addEventListener("roadtripeado_route_draft_changed", onDraftChange);
+    return () => {
+      window.removeEventListener("roadtripeado_route_draft_changed", onDraftChange);
+    };
+  }, [locationId, location]);
+
+  const handleAddToRoute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAddToRouteModalOpen(true);
+  };
 
   const isLocked = (placeError as any)?.status === 403 || location?.isLocked;
 
@@ -328,12 +357,27 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
             </div>
           )}
 
-          <div className="flex gap-3 pt-1">
+          <div className="flex items-center gap-2 pt-1">
             <Link href={`/places/${placeId}?type=${type}`} className="flex-1">
-              <Button className="w-full bg-[#FFC107] text-black font-bold rounded-xl h-11 sm:h-12 text-xs sm:text-sm">
+              <Button className="w-full bg-[#FFC107] hover:bg-[#e0ac10] text-black font-bold rounded-xl h-11 sm:h-12 text-xs sm:text-sm shadow-sm transition-all">
                 {t("place.view_details")}
               </Button>
             </Link>
+
+            {/* Add to Route Button */}
+            <button
+              type="button"
+              onClick={handleAddToRoute}
+              title={isInRoute ? (language === "es" ? "En tu ruta (Ver ruta)" : "In your route (View)") : (language === "es" ? "Añadir a la Ruta" : "Add to Route")}
+              aria-label={language === "es" ? "Añadir a la Ruta" : "Add to Route"}
+              className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl border flex items-center justify-center transition-all duration-200 cursor-pointer shrink-0 shadow-xs ${
+                isInRoute
+                  ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 hover:bg-emerald-100"
+                  : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30 hover:border-amber-400"
+              }`}
+            >
+              {isInRoute ? <CheckCircle2 size={19} /> : <Compass size={19} />}
+            </button>
 
             {locationId && (
               <>
@@ -353,6 +397,13 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
           </div>
         </div>
       </div>
+
+      <AddToRouteModal
+        isOpen={isAddToRouteModalOpen}
+        onClose={() => setIsAddToRouteModalOpen(false)}
+        location={location || initialData}
+        type={type}
+      />
     </div>
   );
 }

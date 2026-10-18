@@ -178,6 +178,9 @@
     "browse_maps": "Browse Maps",
     "login_to_unlock": "Log In to Unlock",
     "view_on_map": "View on Map",
+    "add_to_route": "Add to Route",
+    "added_to_route": "Place added to your route!",
+    "in_your_route": "In your route",
     "call": "Call",
     "no_phone": "No phone",
     "discounts": "Discounts",
@@ -2214,7 +2217,10 @@
     "navigate_google_maps": "Navigate on Google Maps",
     "empty_route_desc": "No stops have been added to this route.",
     "no_stops_yet": "This route has no stops yet",
-    "active_badge": "Active"
+    "active_badge": "Active",
+    "add_to_route": "Add to Route",
+    "added_to_route": "Place added to your route!",
+    "view_route": "View Route"
   },
   "contact": {
     "badge": "Connect With Us",

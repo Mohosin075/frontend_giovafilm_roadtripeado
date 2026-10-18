@@ -31,6 +31,9 @@ export function CategoryIcon({
         alt="category icon"
         className={`object-cover w-full h-full ${className}`}
         style={{ width: size, height: size }}
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
+        }}
       />
     );
   }
