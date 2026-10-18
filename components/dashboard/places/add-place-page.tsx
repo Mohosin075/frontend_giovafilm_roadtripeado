@@ -1355,20 +1355,22 @@ export default function AddPlacePage() {
                     }
                     setIsAddingMarker((prev) => !prev);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 border rounded-lg text-sm font-medium transition-colors ${isAddingMarker
-                    ? "bg-blue-600 text-white border-blue-600 shadow-md"
-                    : "border-gray-200 dark:border-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-850"
+                  className={`w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer shadow-xs ${isAddingMarker
+                    ? "bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 shadow-md"
+                    : "bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600"
                     }`}
                 >
-                  <Plus size={16} />
-                  {isAddingMarker
-                    ? t("places_admin.cancel_adding_place")
-                    : t("places_admin.add_place_drop_pin")}
+                  <Plus size={16} className={isAddingMarker ? "text-white" : "text-blue-600 dark:text-blue-400"} />
+                  <span>
+                    {isAddingMarker
+                      ? t("places_admin.cancel_adding_place")
+                      : t("places_admin.add_place_drop_pin")}
+                  </span>
                 </button>
 
                 {isAddingMarker && (
-                  <div className="p-3 border border-gray-200 dark:border-slate-800 rounded-lg bg-gray-50 dark:bg-slate-900/60 space-y-3 shadow-inner">
-                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                  <div className="p-3 border border-gray-200 dark:border-slate-700 rounded-xl bg-gray-50 dark:bg-slate-900/80 space-y-3 shadow-inner">
+                    <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold">
                       {t("places_admin.pin_instruction")}
                     </p>
                     <div className="space-y-1.5">
@@ -1381,13 +1383,13 @@ export default function AddPlacePage() {
                           placeholder="https://maps.app.goo.gl/..."
                           value={mapUrl}
                           onChange={(e) => setMapUrl(e.target.value)}
-                          className="flex-1 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 text-xs h-8 px-2 dark:text-slate-100"
+                          className="flex-1 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-xs h-9 px-2 dark:text-slate-100 rounded-lg"
                         />
                         <Button
                           type="button"
                           onClick={handleExtractLocation}
                           disabled={isExtracting}
-                          className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-3 py-1 h-8 text-xs rounded-md shadow-sm"
+                          className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-3 py-1 h-9 text-xs rounded-lg shadow-sm cursor-pointer"
                         >
                           {isExtracting ? "..." : t("places_admin.add_place")}
                         </Button>
@@ -1398,9 +1400,10 @@ export default function AddPlacePage() {
               </div>
               <button
                 onClick={() => setIsDialogOpen(true)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 border border-gray-200 dark:border-slate-800 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-850 transition-colors"
+                className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600 transition-all shadow-xs cursor-pointer"
               >
-                <Plus size={16} /> {t("places_admin.add_category")}
+                <Plus size={16} className="text-amber-600 dark:text-amber-400" />
+                <span>{t("places_admin.add_category")}</span>
               </button>
             </div>
 

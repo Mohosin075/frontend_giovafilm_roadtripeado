@@ -136,6 +136,7 @@ export default function RewardsAdminPage() {
   const [mapId, setMapId] = useState("");
   const [type, setType] = useState("PDF Itinerary");
   const [discountPercentage, setDiscountPercentage] = useState("");
+  const [mapCount, setMapCount] = useState<number>(1);
 
   // File upload states for Reward
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -155,6 +156,7 @@ export default function RewardsAdminPage() {
     setMapId("");
     setType("PDF Itinerary");
     setDiscountPercentage("");
+    setMapCount(1);
     setCoverPreview(null);
     setCoverFile(null);
     setPdfFile(null);
@@ -170,6 +172,7 @@ export default function RewardsAdminPage() {
     setMapId(reward.mapId?._id || reward.mapId || "");
     setType(reward.type || "PDF Itinerary");
     setDiscountPercentage(reward.discountPercentage?.toString() || "");
+    setMapCount(Number(reward.mapCount) || 1);
     setCoverPreview(getImageUrl(reward.coverPhoto));
     setCoverFile(null);
     setPdfFile(null);
@@ -225,6 +228,7 @@ export default function RewardsAdminPage() {
         description,
         target: Number(target) || 0,
         mapId: type === "Free Map" || mapId ? mapId || null : null,
+        mapCount: type === "Free Map" ? Number(mapCount) || 1 : undefined,
         discountPercentage:
           type === "Exclusive Discount" || type === "Permanent Discount"
             ? Number(discountPercentage) || 0
@@ -275,7 +279,7 @@ export default function RewardsAdminPage() {
     setTierLevel(maxLevel + 1);
     setTierName("");
     setTierPoints(maxLevel >= 0 ? (allLevels[allLevels.length - 1].points || allLevels[allLevels.length - 1].xp || 0) + 15000 : 0);
-    setTierReviews(maxLevel >= 0 ? (allLevels[allLevels.length - 1].reviews || 0) + 500 : 0);
+    setTierReviews(0);
     setTierDescription("");
     setIsTierCreateMode(true);
     setTierModalOpen(true);
@@ -286,7 +290,7 @@ export default function RewardsAdminPage() {
     setTierLevel(Number(tier.level) || 0);
     setTierName(getLocalized(tier.name, language) || tier.title || tier.name || "");
     setTierPoints(Number(tier.points ?? tier.xp) || 0);
-    setTierReviews(Number(tier.reviews) || 0);
+    setTierReviews(0);
     setTierDescription(getLocalized(tier.description, language) || "");
     setIsTierCreateMode(false);
     setTierModalOpen(true);
@@ -327,7 +331,7 @@ export default function RewardsAdminPage() {
         level: Number(tierLevel),
         name: tierName,
         points: Number(tierPoints) || 0,
-        reviews: Number(tierReviews) || 0,
+        reviews: 0,
         description: tierDescription,
       };
 
@@ -588,6 +592,12 @@ export default function RewardsAdminPage() {
 
                         {/* Attached elements */}
                         <td className="px-6 py-4 text-xs space-y-1">
+                          {reward.type === "Free Map" && (
+                            <div className="font-bold text-blue-700 dark:text-blue-300 flex items-center gap-1.5">
+                              <MapPin size={13} />
+                              <span>{reward.mapCount ? `${reward.mapCount} Free Maps` : "1 Free Map"}</span>
+                            </div>
+                          )}
                           {reward.mapId && (
                             <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold">
                               <MapPin size={13} />
@@ -607,7 +617,7 @@ export default function RewardsAdminPage() {
                               </a>
                             </div>
                           )}
-                          {!reward.mapId && !reward.fileUrl && (
+                          {reward.type !== "Free Map" && !reward.mapId && !reward.fileUrl && (
                             <span className="text-gray-400 dark:text-slate-500 italic">{t("rewards_admin.none") || "None"}</span>
                           )}
                         </td>
@@ -678,7 +688,6 @@ export default function RewardsAdminPage() {
                     <th className="px-6 py-4 text-left">{t("rewards_admin.level_num") || "Level #"}</th>
                     <th className="px-6 py-4 text-left">{t("rewards_admin.rank_tier_name") || "Rank & Tier Name"}</th>
                     <th className="px-6 py-4 text-left">{t("rewards_admin.min_xp_required") || "Minimum XP Required"}</th>
-                    <th className="px-6 py-4 text-left">{t("rewards_admin.req_approved_reviews") || "Required Approved Reviews"}</th>
                     <th className="px-6 py-4 text-left">{t("rewards_admin.attached_rewards") || "Attached Rewards"}</th>
                     <th className="px-6 py-4 text-right">{t("rewards_admin.actions") || "Actions"}</th>
                   </tr>
@@ -686,7 +695,7 @@ export default function RewardsAdminPage() {
                 <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80">
                   {isLoadingLevels ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-12 text-center text-gray-400 dark:text-slate-500">
+                      <td colSpan={5} className="px-6 py-12 text-center text-gray-400 dark:text-slate-500">
                         <div className="flex items-center justify-center gap-2">
                           <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                           {t("rewards_admin.loading_tiers") || "Loading tiers & levels..."}
@@ -697,7 +706,6 @@ export default function RewardsAdminPage() {
                     allLevels.map((lvl: any) => {
                       const tierDisplayName = getLocalized(lvl.name, language) || lvl.title || lvl.name;
                       const xpRequired = Number(lvl.points ?? lvl.xp) || 0;
-                      const reviewsRequired = Number(lvl.reviews) || 0;
 
                       // Count rewards assigned to this level
                       const attachedRewards = configs.filter((c: any) => {
@@ -735,13 +743,6 @@ export default function RewardsAdminPage() {
                           <td className="px-6 py-4">
                             <span className="font-bold text-xs text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg border border-amber-200/60 dark:border-amber-900/50">
                               {xpRequired.toLocaleString()} XP
-                            </span>
-                          </td>
-
-                          {/* Reviews Required */}
-                          <td className="px-6 py-4">
-                            <span className="font-semibold text-xs text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg border border-gray-200 dark:border-slate-700">
-                              {reviewsRequired} reviews
                             </span>
                           </td>
 
@@ -843,6 +844,79 @@ export default function RewardsAdminPage() {
                 </optgroup>
               </select>
             </div>
+
+            {/* Free Map Options (Specify Map Quantity: 1 or 2 maps) */}
+            {isMapType && (
+              <div className="bg-blue-50/60 dark:bg-blue-950/30 p-4 rounded-2xl border border-blue-200/80 dark:border-blue-900/50 space-y-3 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-blue-900 dark:text-blue-200 flex items-center gap-1.5">
+                    <MapPin size={14} className="text-blue-600 dark:text-blue-400" />
+                    <span>Number of Free Maps Included</span>
+                  </Label>
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                    {mapCount} {mapCount > 1 ? "Maps Awarded" : "Map Awarded"}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={mapCount}
+                    onChange={(e) => {
+                      const val = Math.max(1, Number(e.target.value) || 1);
+                      setMapCount(val);
+                      if (!title || title === "1 Free Map" || title === "2 Free Maps" || title === "Free Map Unlock") {
+                        setTitle(val === 1 ? "1 Free Map" : `${val} Free Maps`);
+                      }
+                    }}
+                    className="rounded-xl h-11 w-32 font-bold text-center text-blue-950 dark:text-blue-100 bg-white dark:bg-slate-900 border-blue-200 dark:border-blue-800"
+                    required
+                  />
+
+                  {/* Quick toggle pills */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMapCount(1);
+                        if (!title || title === "2 Free Maps" || title === "Free Map Unlock") {
+                          setTitle("1 Free Map");
+                        }
+                      }}
+                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                        mapCount === 1
+                          ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                          : "bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800"
+                      }`}
+                    >
+                      1 Map
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMapCount(2);
+                        if (!title || title === "1 Free Map" || title === "Free Map Unlock") {
+                          setTitle("2 Free Maps");
+                        }
+                      }}
+                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                        mapCount === 2
+                          ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                          : "bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800"
+                      }`}
+                    >
+                      2 Maps (e.g. Level 14)
+                    </button>
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-blue-700 dark:text-blue-300/80 leading-relaxed">
+                  Specify how many free maps users are rewarded with at this level. Setting this to <strong>2</strong> allows users reaching this tier to claim 2 free maps of their choice from the catalog.
+                </p>
+              </div>
+            )}
 
             {/* Discount Percentage field (Shown ONLY for Discount Types) */}
             {isDiscountType && (
@@ -1165,38 +1239,20 @@ export default function RewardsAdminPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
               {/* Min XP Required */}
-              <div className="space-y-1">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
-                  Required XP Points
-                </Label>
-                <Input
-                  type="number"
-                  min="0"
-                  placeholder="e.g. 5000"
-                  value={tierPoints}
-                  onChange={(e) => setTierPoints(Number(e.target.value))}
-                  className="rounded-xl h-11 font-bold text-amber-800 dark:text-amber-200 bg-amber-50/30 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50"
-                  required
-                />
-              </div>
-
-              {/* Min Reviews Required */}
-              <div className="space-y-1">
-                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
-                  Required Approved Reviews
-                </Label>
-                <Input
-                  type="number"
-                  min="0"
-                  placeholder="e.g. 100"
-                  value={tierReviews}
-                  onChange={(e) => setTierReviews(Number(e.target.value))}
-                  className="rounded-xl h-11 font-bold text-blue-900 dark:text-blue-200 bg-blue-50/30 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900/50"
-                  required
-                />
-              </div>
+              <Label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">
+                Required XP Points
+              </Label>
+              <Input
+                type="number"
+                min="0"
+                placeholder="e.g. 5000"
+                value={tierPoints}
+                onChange={(e) => setTierPoints(Number(e.target.value))}
+                className="rounded-xl h-11 font-bold text-amber-800 dark:text-amber-200 bg-amber-50/30 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50"
+                required
+              />
             </div>
 
             {/* Description */}

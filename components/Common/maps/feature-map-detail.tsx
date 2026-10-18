@@ -63,13 +63,19 @@ export default function FeatureMapDetailPage() {
   const hasAccess = mapData?.isPaid === false || isPurchased;
 
   const canClaimFreeMap = useMemo(() => {
-    if (!accessToken || isProfileLoading || !userProfile || userProfile?.redeemedFreeMap || !mapData?.isPaid) {
+    if (!accessToken || isProfileLoading || !userProfile || !mapData?.isPaid) {
       return false;
     }
     const awards = awardsRes?.data || [];
-    return awards.some(
-      (a: any) => a.type === "Free Map" && a.isUnlocked,
-    );
+    const totalAllowed = awards
+      .filter((a: any) => a.type === "Free Map" && a.isUnlocked)
+      .reduce((acc: number, a: any) => acc + (Number(a.config?.mapCount) || 1), 0);
+
+    const redeemedCount = Array.isArray(userProfile?.redeemedFreeMaps) && userProfile.redeemedFreeMaps.length > 0
+      ? userProfile.redeemedFreeMaps.length
+      : (userProfile?.redeemedFreeMap ? 1 : 0);
+
+    return totalAllowed > redeemedCount;
   }, [accessToken, isProfileLoading, userProfile, mapData?.isPaid, awardsRes?.data]);
 
   const handleViewMap = () => {

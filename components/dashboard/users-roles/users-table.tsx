@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2, Search, Map, Eye } from "lucide-react";
+import { Trash2, Search, Map, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { UserProfileModal } from "./user-profile-modal";
 import { Card } from "@/components/ui/card";
 import {
@@ -66,7 +66,7 @@ export function UsersTable(): React.ReactElement {
   ];
 
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit, setLimit] = useState<number>(10);
   const [role, setRole] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,7 +122,8 @@ export function UsersTable(): React.ReactElement {
   const [updateUserRole] = useUpdateUserRoleMutation();
 
   const users = response?.data || [];
-  const meta = response?.meta || { page: 1, limit: 10, total: 0, totalPage: 1 };
+  const meta = response?.meta || { page: 1, limit: 10, total: 0, totalPages: 1, totalPage: 1 };
+  const totalPages = Math.max(1, meta.totalPages || meta.totalPage || Math.ceil((meta.total || 0) / limit));
 
   const handleDelete = async (userId: string) => {
     const result = await appAlert.fire({
@@ -444,51 +445,121 @@ export function UsersTable(): React.ReactElement {
           </table>
         </div>
 
-        {/* Pagination */}
-        {meta && meta.totalPage > 1 && (
-          <div className="px-6 py-4 bg-gray-50 dark:bg-slate-900/60 border-t border-gray-200 dark:border-slate-800 flex items-center justify-between">
-            <div className="text-sm text-gray-600 dark:text-slate-400">
+        {/* Pagination & Rows per page */}
+        <div className="px-6 py-4 bg-gray-50/80 dark:bg-slate-900/60 border-t border-gray-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 dark:text-slate-400">
+            <div>
               Showing{" "}
-              <span className="font-medium text-gray-900 dark:text-slate-200">{users.length > 0 ? (page - 1) * limit + 1 : 0}</span>–
-              <span className="font-medium text-gray-900 dark:text-slate-200">
-                {Math.min(page * limit, meta.total)}
+              <span className="font-bold text-gray-900 dark:text-slate-200">
+                {(meta.total || 0) > 0 ? (page - 1) * limit + 1 : 0}
+              </span>
+              –
+              <span className="font-bold text-gray-900 dark:text-slate-200">
+                {Math.min(page * limit, meta.total || 0)}
               </span>{" "}
-              of <span className="font-medium text-gray-900 dark:text-slate-200">{meta.total}</span> results
+              of{" "}
+              <span className="font-bold text-gray-900 dark:text-slate-200">
+                {meta.total || 0}
+              </span>{" "}
+              users
             </div>
-            <div className="flex gap-2">
+
+            {/* Entries per page selector */}
+            <div className="flex items-center gap-1.5 border-l border-gray-200 dark:border-slate-700 pl-4">
+              <span>Show</span>
+              <Select
+                value={String(limit)}
+                onValueChange={(val) => {
+                  setLimit(Number(val));
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="w-[75px] h-8 text-xs font-semibold bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 dark:text-slate-200 cursor-pointer">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-slate-800 dark:border-slate-700">
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
+              <span>per page</span>
+            </div>
+          </div>
+
+          {/* Navigation Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center gap-1">
+              {/* First Page */}
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(1)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                title="First Page"
+              >
+                <ChevronsLeft size={14} />
+              </button>
+
+              {/* Previous Page */}
               <button
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
-                className="px-3 py-1 border border-gray-300 dark:border-slate-700 rounded bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-slate-300 disabled:opacity-50"
+                className="px-2.5 h-8 flex items-center gap-1 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
-                Previous
+                <ChevronLeft size={14} />
+                <span className="hidden sm:inline">Prev</span>
               </button>
-              <div className="flex items-center gap-1">
-                {Array.from({ length: meta.totalPage }, (_, i) => i + 1).map(
-                  (p) => (
-                    <button
-                      key={p}
-                      onClick={() => setPage(p)}
-                      className={`w-8 h-8 flex items-center justify-center rounded-md border transition-all font-medium ${page === p
-                          ? "bg-blue-600 text-white border-blue-600"
-                          : "bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700"
-                        }`}
-                    >
-                      {p}
-                    </button>
-                  ),
-                )}
+
+              {/* Page Number Buttons with Smart Windowing */}
+              <div className="flex items-center gap-1 mx-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                  .map((p, idx, arr) => {
+                    const prev = arr[idx - 1];
+                    const showEllipsis = prev && p - prev > 1;
+                    return (
+                      <div key={p} className="flex items-center gap-1">
+                        {showEllipsis && (
+                          <span className="px-1 text-xs text-gray-400">...</span>
+                        )}
+                        <button
+                          onClick={() => setPage(p)}
+                          className={`w-8 h-8 flex items-center justify-center rounded-lg border text-xs font-bold transition-all cursor-pointer ${
+                            page === p
+                              ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                              : "bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700"
+                          }`}
+                        >
+                          {p}
+                        </button>
+                      </div>
+                    );
+                  })}
               </div>
+
+              {/* Next Page */}
               <button
-                disabled={page === meta.totalPage}
+                disabled={page >= totalPages}
                 onClick={() => setPage(page + 1)}
-                className="px-3 py-1 border border-gray-300 dark:border-slate-700 rounded bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-slate-300 disabled:opacity-50"
+                className="px-2.5 h-8 flex items-center gap-1 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
-                Next
+                <span className="hidden sm:inline">Next</span>
+                <ChevronRight size={14} />
+              </button>
+
+              {/* Last Page */}
+              <button
+                disabled={page >= totalPages}
+                onClick={() => setPage(totalPages)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                title="Last Page"
+              >
+                <ChevronsRight size={14} />
               </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </Card>
 
       {/* Editor Access Control Modal */}

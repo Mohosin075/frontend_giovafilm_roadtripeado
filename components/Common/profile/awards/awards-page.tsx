@@ -123,7 +123,14 @@ export default function AwardsPage() {
   const lockedAwards = sortedAwards.filter((a: any) => !a.isUnlocked);
   const unlockedAwards = sortedAwards.filter((a: any) => a.isUnlocked);
 
-  const hasRedeemed = !!user?.redeemedFreeMap;
+  const totalFreeMapsEarned = awardsData
+    .filter((a: any) => a.type === "Free Map" && a.isUnlocked)
+    .reduce((acc: number, a: any) => acc + (Number(a.config?.mapCount) || 1), 0);
+  const redeemedCount = Array.isArray(user?.redeemedFreeMaps) && user.redeemedFreeMaps.length > 0
+    ? user.redeemedFreeMaps.length
+    : (user?.redeemedFreeMap ? 1 : 0);
+  const hasFreeMapAvailable = totalFreeMapsEarned > redeemedCount;
+  const hasRedeemed = totalFreeMapsEarned > 0 && !hasFreeMapAvailable;
 
   const purchasedMaps = Array.isArray(user?.purchasedMaps) ? user.purchasedMaps : [];
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");

@@ -74,7 +74,11 @@ export function AwardDetailModal({
     Math.max(0, Math.round((current / (total || 1)) * 100))
   );
 
-  const hasRedeemedMap = !!user?.redeemedFreeMap;
+  const mapAwardCount = Number(award.config?.mapCount) || 1;
+  const redeemedCount = Array.isArray(user?.redeemedFreeMaps) && user.redeemedFreeMaps.length > 0
+    ? user.redeemedFreeMaps.length
+    : (user?.redeemedFreeMap ? 1 : 0);
+  const hasRedeemedMap = Boolean(redeemedCount >= mapAwardCount && (user?.redeemedFreeMap || (user?.redeemedFreeMaps && user.redeemedFreeMaps.length > 0)));
 
   const handleCopyDiscount = () => {
     navigator.clipboard.writeText(promoCode);
