@@ -181,7 +181,7 @@ function MapToolbar({
   const { t } = useLanguage();
 
   return (
-    <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-md p-1.5 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800">
+    <div className="absolute top-2.5 sm:top-4 right-2.5 sm:right-4 z-10 flex items-center gap-1 sm:gap-1.5 bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-md p-1 sm:p-1.5 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800">
       <button
         type="button"
         onClick={() => setMapType(mapType === "hybrid" ? "roadmap" : "hybrid")}
@@ -412,7 +412,7 @@ export default function RouteMapView({
 
       {/* Floating Route Legend & Stops Counter */}
       {stops.length > 0 && (
-        <div className="absolute top-4 left-4 z-10 bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 text-xs font-bold text-gray-800 dark:text-slate-100 flex items-center gap-2">
+        <div className="absolute top-2.5 sm:top-4 left-2.5 sm:left-4 z-10 bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-md px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 text-[11px] sm:text-xs font-bold text-gray-800 dark:text-slate-100 flex items-center gap-1.5 sm:gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-[#FFC107] animate-pulse" />
           <span>
             {stops.length}{" "}
@@ -425,7 +425,7 @@ export default function RouteMapView({
 
       {/* Floating Bottom Active Stop Card on Map (Perfect for Mobile & Desktop) */}
       {stops.length > 0 && activeStop && (
-        <div className="absolute bottom-4 left-4 right-4 z-20 max-w-md mx-auto animate-in slide-in-from-bottom-2 duration-200">
+        <div className="absolute bottom-2.5 sm:bottom-4 left-2.5 sm:left-4 right-2.5 sm:right-4 z-20 max-w-md mx-auto animate-in slide-in-from-bottom-2 duration-200">
           <div className="bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-md rounded-2xl p-3 shadow-xl border border-gray-200/80 dark:border-slate-800 flex items-center gap-3">
             {/* Thumbnail + Number */}
             <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-slate-800">

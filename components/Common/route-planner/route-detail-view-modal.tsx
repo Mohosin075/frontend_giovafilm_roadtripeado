@@ -160,17 +160,17 @@ export default function RouteDetailViewModal({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-5 md:p-6 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl lg:max-w-6xl bg-white dark:bg-[#131b2e] rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 flex flex-col max-h-[94vh] overflow-hidden"
+        className="relative w-full max-w-5xl lg:max-w-6xl bg-white dark:bg-[#131b2e] rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 flex flex-col max-h-[96vh] sm:max-h-[94vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="px-5 sm:px-7 py-4 border-b border-gray-100 dark:border-slate-800 flex items-start justify-between bg-white dark:bg-[#131b2e] shrink-0 gap-3">
+        <div className="px-4 sm:px-7 py-3.5 sm:py-4 border-b border-gray-100 dark:border-slate-800 flex items-start justify-between bg-white dark:bg-[#131b2e] shrink-0 gap-3">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-extrabold text-[11px] uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-extrabold text-[10px] sm:text-[11px] uppercase tracking-wider">
                 {t("route_planner.view_mode") || "Modo Lectura"}
               </span>
               <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">
@@ -187,7 +187,7 @@ export default function RouteDetailViewModal({
               )}
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-black text-gray-950 dark:text-white truncate">
+            <h2 className="text-lg sm:text-2xl font-black text-gray-950 dark:text-white truncate">
               {route.name || "Ruta de Roadtrip"}
             </h2>
 
@@ -200,9 +200,9 @@ export default function RouteDetailViewModal({
             {firstStopName && lastStopName && stops.length > 1 && (
               <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 mt-1">
                 <Compass className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">{firstStopName}</span>
+                <span className="truncate max-w-[120px] sm:max-w-none">{firstStopName}</span>
                 <span>→</span>
-                <span className="truncate">{lastStopName}</span>
+                <span className="truncate max-w-[120px] sm:max-w-none">{lastStopName}</span>
               </div>
             )}
           </div>
@@ -224,8 +224,8 @@ export default function RouteDetailViewModal({
         <div className="flex-1 overflow-y-auto">
           {/* Map Preview */}
           <div
-            style={{ width: "100%", height: "540px", minHeight: "440px" }}
-            className="w-full h-[440px] sm:h-[500px] lg:h-[560px] relative bg-slate-100 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800"
+            style={{ width: "100%" }}
+            className="w-full h-[340px] sm:h-[480px] lg:h-[540px] relative bg-slate-100 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800"
           >
             {stops.length > 0 ? (
               <APIProvider apiKey={apiKey}>
@@ -317,7 +317,7 @@ export default function RouteDetailViewModal({
                           )}
                           {isSelected && (
                             <span className="hidden sm:inline-flex text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-[#FFC107] text-gray-950 shrink-0">
-                              Activo
+                              {t("route_planner.active_badge") || "Activo"}
                             </span>
                           )}
                         </div>
@@ -333,11 +333,11 @@ export default function RouteDetailViewModal({
                         <Link
                           href={`/places/${stop.placeId}`}
                           onClick={(e) => e.stopPropagation()}
-                          title="Ver lugar"
+                          title={t("route_planner.view_place") || "Ver lugar"}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#FFC107] hover:text-[#FFC107] text-gray-700 dark:text-slate-300 font-bold text-xs shadow-sm transition-all shrink-0"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Ver lugar</span>
+                          <span className="hidden sm:inline">{t("route_planner.view_place") || "Ver lugar"}</span>
                         </Link>
                       )}
                     </div>
@@ -349,16 +349,16 @@ export default function RouteDetailViewModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="px-5 sm:px-7 py-3.5 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-900/50 flex items-center justify-between gap-3 shrink-0">
-          <div className="flex items-center gap-2">
+        <div className="px-4 sm:px-7 py-3 sm:py-3.5 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-900/50 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             {/* Open Google Maps Button */}
             <button
               type="button"
               onClick={handleOpenGoogleMaps}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:border-amber-400 text-gray-800 dark:text-slate-200 font-bold text-xs sm:text-sm shadow-sm transition-all"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:border-amber-400 text-gray-800 dark:text-slate-200 font-bold text-xs sm:text-sm shadow-sm transition-all"
             >
-              <Navigation className="w-4 h-4 text-amber-500 -rotate-45" />
-              <span>{t("route_planner.navigate_google_maps") || "Navegar en Google Maps"}</span>
+              <Navigation className="w-4 h-4 text-amber-500 -rotate-45 shrink-0" />
+              <span className="truncate">{t("route_planner.navigate_google_maps") || "Navegar en Google Maps"}</span>
             </button>
 
             {/* Delete Route */}
@@ -367,7 +367,7 @@ export default function RouteDetailViewModal({
                 type="button"
                 onClick={() => onDelete(routeId)}
                 title={t("route_planner.delete_tooltip") || "Eliminar ruta"}
-                className="p-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-950/40 text-gray-500 hover:text-red-600 transition-colors"
+                className="p-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-950/40 text-gray-500 hover:text-red-600 transition-colors shrink-0"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -378,9 +378,9 @@ export default function RouteDetailViewModal({
           <button
             type="button"
             onClick={() => onEdit(routeId)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 w-full sm:w-auto"
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="w-4 h-4 shrink-0" />
             <span>{t("route_planner.edit_route") || "Modificar Ruta"}</span>
           </button>
         </div>

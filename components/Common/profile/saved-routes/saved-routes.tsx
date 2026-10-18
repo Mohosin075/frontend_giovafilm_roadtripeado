@@ -113,20 +113,23 @@ export default function SavedRoutes() {
     });
   }, [allRoutes, search]);
 
-  const handleDelete = async (e: React.MouseEvent, routeId: string) => {
-    e.stopPropagation();
-    if (
-      window.confirm(
-        t("route_planner.confirm_delete_route") ||
-          "¿Estás seguro de que deseas eliminar esta ruta?"
-      )
-    ) {
-      try {
-        await deleteRoutePlan(routeId).unwrap();
-        toast.success(t("route_planner.route_deleted") || "Ruta eliminada con éxito");
-      } catch (err: any) {
-        toast.error(err?.data?.message || "Error al eliminar la ruta");
-      }
+  const handleDelete = async (e: React.MouseEvent, routeId: string): Promise<boolean> => {
+    if (e?.stopPropagation) e.stopPropagation();
+    const confirmed = window.confirm(
+      t("route_planner.confirm_delete_route") ||
+        "¿Estás seguro de que deseas eliminar esta ruta?"
+    );
+    if (!confirmed) {
+      return false;
+    }
+
+    try {
+      await deleteRoutePlan(routeId).unwrap();
+      toast.success(t("route_planner.route_deleted") || "Ruta eliminada con éxito");
+      return true;
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Error al eliminar la ruta");
+      return false;
     }
   };
 
@@ -173,9 +176,9 @@ export default function SavedRoutes() {
 
   if (!accessToken) {
     return (
-      <section className="max-w-7xl mx-auto px-6 py-20 font-public-sans text-center">
-        <div className="max-w-md mx-auto bg-white dark:bg-[#131b2e] rounded-3xl p-8 border border-gray-100 dark:border-slate-800 shadow-sm">
-          <Compass className="w-14 h-14 mx-auto mb-4 text-[#FFC107] opacity-80" />
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 font-public-sans text-center min-h-[calc(100vh-280px)] flex items-center justify-center">
+        <div className="max-w-md w-full mx-auto bg-white dark:bg-[#131b2e] rounded-3xl p-6 sm:p-8 border border-gray-100 dark:border-slate-800 shadow-sm">
+          <Compass className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-4 text-[#FFC107] opacity-80" />
           <h2 className="text-xl font-black text-gray-950 dark:text-white mb-2">
             {t("route_planner.my_saved_routes") || "Mis Rutas Guardadas"}
           </h2>
@@ -185,7 +188,7 @@ export default function SavedRoutes() {
           </p>
           <button
             type="button"
-            onClick={() => openLoginRequired("/profile/saved-routes", "Mis Rutas Guardadas")}
+            onClick={() => openLoginRequired("/saved-routes", t("route_planner.my_saved_routes") || "Mis Rutas")}
             className="w-full py-3.5 rounded-2xl bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-bold text-sm shadow-md active:scale-98 transition-all"
           >
             {t("nav.login") || "Iniciar Sesión"}
@@ -196,9 +199,9 @@ export default function SavedRoutes() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 font-public-sans">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 font-public-sans min-h-[calc(100vh-280px)]">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-slate-100 flex items-center gap-3">
             <span>{t("route_planner.saved_routes") || "Mis Rutas"}</span>
@@ -212,9 +215,9 @@ export default function SavedRoutes() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
           {/* Search with Clear Button */}
-          <div className="relative flex items-center border border-gray-200 dark:border-slate-800 rounded-xl px-3 py-2 bg-white dark:bg-[#131b2e] flex-1 sm:flex-none sm:w-64 shadow-sm">
+          <div className="relative flex items-center border border-gray-200 dark:border-slate-800 rounded-xl px-3 py-2 bg-white dark:bg-[#131b2e] w-full sm:w-64 shadow-sm">
             <Search className="text-gray-400 dark:text-slate-500 w-4 h-4 mr-2 shrink-0" />
             <Input
               placeholder={t("route_planner.search_saved_routes") || "Buscar mis rutas..."}
@@ -236,7 +239,7 @@ export default function SavedRoutes() {
 
           <Link
             href="/route-planner?mode=create"
-            className="px-4 py-2.5 rounded-xl bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-bold text-xs sm:text-sm shadow-md flex items-center gap-1.5 flex-shrink-0 transition-all active:scale-95"
+            className="px-4 py-2.5 rounded-xl bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-bold text-xs sm:text-sm shadow-md flex items-center justify-center gap-1.5 flex-shrink-0 transition-all active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>{t("route_planner.create_route_btn") || "Crear Ruta"}</span>
@@ -463,9 +466,11 @@ export default function SavedRoutes() {
           handleCloseRouteModal();
           router.push(`/route-planner?routeId=${id}&mode=edit`);
         }}
-        onDelete={(id) => {
-          handleDelete({ stopPropagation: () => {} } as any, id);
-          handleCloseRouteModal();
+        onDelete={async (id) => {
+          const success = await handleDelete({ stopPropagation: () => {} } as any, id);
+          if (success) {
+            handleCloseRouteModal();
+          }
         }}
       />
     </section>

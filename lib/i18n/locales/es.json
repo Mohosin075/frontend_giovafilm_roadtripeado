@@ -2211,7 +2211,10 @@
     "create_route_btn": "Crear Ruta",
     "view_route_btn": "Ver Ruta",
     "back_to_routes": "Mis Rutas",
-    "navigate_google_maps": "Navegar en Google Maps"
+    "navigate_google_maps": "Navegar en Google Maps",
+    "empty_route_desc": "No se han agregado paradas a esta ruta.",
+    "no_stops_yet": "Esta ruta aún no tiene paradas",
+    "active_badge": "Activo"
   },
   "contact": {
     "badge": "Conéctate con nosotros",
