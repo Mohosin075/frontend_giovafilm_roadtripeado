@@ -80,7 +80,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
     },
     {
       href: "/profile/saved-routes",
-      label: t("nav.saved_routes") || "Mis Rutas Guardadas",
+      label: t("nav.saved_routes") || "Mis Rutas",
       icon: Compass,
       roles: ["all"],
     },
@@ -88,7 +88,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
       href: "/profile/purchased-maps",
       label: t("nav.purchased_maps"),
       icon: Map,
-      roles: ["user"],
+      roles: ["all"],
     },
     {
       href: "/profile/contributions-reviews",
@@ -104,10 +104,8 @@ export function ProfileSidebar({ data }: ProfileProps) {
     },
   ];
 
-  // Admins/Editors: hide "Purchased Maps" (they don't buy maps)
-  const profileLinks = allProfileLinks.filter((link) =>
-    link.roles.includes("all") || (!isAdminOrEditor && link.roles.includes("user"))
-  );
+  // Administrators see the same menu options that are shown to users
+  const profileLinks = allProfileLinks;
 
   const handleShare = async () => {
     setIsSharing(true);

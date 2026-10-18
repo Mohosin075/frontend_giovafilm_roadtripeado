@@ -22,12 +22,7 @@ export default function TopHeader() {
       icon: <LayoutGrid className="w-6 h-6" />,
     },
     {
-      label: t("nav.route_planner") || "Planificador",
-      path: "/route-planner",
-      icon: <Navigation className="w-6 h-6" />,
-    },
-    {
-      label: t("nav.saved_routes") || "Mis Rutas Guardadas",
+      label: t("nav.saved_routes") || "Mis Rutas",
       path: "/profile/saved-routes",
       icon: <Compass className="w-6 h-6" />,
     },

@@ -22,6 +22,7 @@ import {
   CheckCircle2,
   FolderHeart,
   Loader2,
+  ArrowLeft,
 } from "lucide-react";
 import { SafeImage } from "@/components/shared/safe-image";
 import { getUsableMediaUrl, getLocalized } from "@/lib/utils";
@@ -34,6 +35,7 @@ import {
 import AddStopModal from "@/components/Common/route-planner/add-stop-modal";
 import SavedRoutesModal from "@/components/Common/route-planner/saved-routes-modal";
 import RouteMapView from "@/components/Common/route-planner/route-map-view";
+import SavedRoutes from "@/components/Common/profile/saved-routes/saved-routes";
 import { toast } from "sonner";
 import { useLoginRequired } from "@/components/shared/login-required-modal";
 import { useAppSelector } from "@/redux/hook";
@@ -58,6 +60,7 @@ export function RoutePlannerInner() {
   const accessToken = useAppSelector(selectAccessToken);
   const searchParams = useSearchParams();
   const routeIdParam = searchParams.get("routeId");
+  const modeParam = searchParams.get("mode");
 
   const [routeName, setRouteName] = useState("Road Trip por Área Metro");
   const [stops, setStops] = useState<RouteStopItem[]>([]);
@@ -74,14 +77,22 @@ export function RoutePlannerInner() {
   const hasInitializedRef = useRef(false);
 
   const { data: myRoutesRes, isLoading: isLoadingRoutes } = useGetMyRoutePlansQuery(
-    undefined,
+    { limit: 100 },
     { skip: !accessToken }
   );
   const [createRoutePlan, { isLoading: isSaving }] = useCreateRoutePlanMutation();
   const [updateRoutePlan, { isLoading: isUpdating }] = useUpdateRoutePlanMutation();
 
-  // 1. Initial Load: Check routeIdParam, then localStorage, then fallback to user's first saved route
+  // 1. Initial Load: Check modeParam/create, routeIdParam, localStorage
   useEffect(() => {
+    if (modeParam === "create" || modeParam === "new") {
+      setSelectedRouteId(null);
+      setRouteName(language === "es" ? "Nueva Ruta de Roadtrip" : "New Roadtrip Route");
+      setStops([]);
+      hasInitializedRef.current = true;
+      return;
+    }
+
     const savedRoutes = myRoutesRes?.data?.data || myRoutesRes?.data || [];
 
     // If specific routeId is passed in URL query parameter, load that route immediately
@@ -421,6 +432,10 @@ export function RoutePlannerInner() {
     process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY ||
     "AIzaSyC99c2erPRrFhfkTCsfSAGnVzNR7u4BNCU";
 
+  if (!routeIdParam && modeParam !== "create" && modeParam !== "new" && modeParam !== "edit") {
+    return <SavedRoutes />;
+  }
+
   return (
     <APIProvider apiKey={apiKey}>
       <div className="min-h-screen bg-slate-50/70 dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100 pb-28 sm:pb-20 transition-colors">
@@ -428,13 +443,24 @@ export function RoutePlannerInner() {
           {/* Page Title & Actions Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-gray-200/70 dark:border-slate-800/80 mb-6">
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <Link
+                  href="/saved-routes"
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-[#131b2e] hover:border-[#FFC107] text-gray-700 dark:text-slate-300 font-bold text-xs shadow-sm transition-all"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>{t("route_planner.saved_routes") || "Mis Rutas"}</span>
+                </Link>
                 <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-extrabold text-[11px] uppercase tracking-wider">
                   Roadtrip Planner
                 </span>
-                {selectedRouteId && (
+                {selectedRouteId ? (
                   <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold">
                     {t("route_planner.editing_saved") || "Editando ruta"}
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                    {t("route_planner.new_route") || "Nueva ruta"}
                   </span>
                 )}
               </div>
@@ -448,16 +474,9 @@ export function RoutePlannerInner() {
 
             {/* Actions: "Mis Rutas" Modal Trigger + New Route + Mobile Tab Switcher */}
             <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 flex-wrap">
-              {/* "Mis Rutas" Modal Trigger Button */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (!accessToken) {
-                    openLoginRequired("/route-planner", t("route_planner.my_saved_routes") || "Mis Rutas");
-                    return;
-                  }
-                  setIsSavedRoutesModalOpen(true);
-                }}
+              {/* "Mis Rutas" Link to /saved-routes */}
+              <Link
+                href="/saved-routes"
                 className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-[#131b2e] hover:border-[#FFC107] hover:text-[#FFC107] text-gray-800 dark:text-slate-200 font-bold text-xs sm:text-sm shadow-sm transition-all"
               >
                 <FolderHeart className="w-4 h-4 text-amber-500" />
@@ -467,7 +486,7 @@ export function RoutePlannerInner() {
                     {(myRoutesRes?.data?.data || myRoutesRes?.data).length}
                   </span>
                 )}
-              </button>
+              </Link>
 
               {/* Start New Route Button (when actively editing an existing route) */}
               {selectedRouteId && (

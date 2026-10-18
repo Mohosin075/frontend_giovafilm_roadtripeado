@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import SavedRoutes from "@/components/Common/profile/saved-routes/saved-routes";
 
 export default function SavedRoutesPage() {
-  return <SavedRoutes />;
+  return (
+    <Suspense fallback={null}>
+      <SavedRoutes />
+    </Suspense>
+  );
 }

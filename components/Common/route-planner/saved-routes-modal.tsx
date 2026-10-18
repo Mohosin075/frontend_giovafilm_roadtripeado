@@ -26,9 +26,12 @@ export default function SavedRoutesModal({
   onNewRoute,
 }: SavedRoutesModalProps) {
   const { t, language } = useLanguage();
-  const { data: myRoutesRes, isLoading } = useGetMyRoutePlansQuery(undefined, {
-    skip: !isOpen,
-  });
+  const { data: myRoutesRes, isLoading } = useGetMyRoutePlansQuery(
+    { limit: 100 },
+    {
+      skip: !isOpen,
+    }
+  );
   const [deleteRoutePlan] = useDeleteRoutePlanMutation();
 
   if (!isOpen) return null;

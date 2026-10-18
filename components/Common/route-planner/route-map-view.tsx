@@ -114,7 +114,6 @@ function FitBoundsHandler({
 
   useEffect(() => {
     if (!map || stops.length === 0) return;
-    if (typeof window === "undefined" || !window.google?.maps) return;
 
     const validStops = stops.filter(
       (s) =>
@@ -127,28 +126,41 @@ function FitBoundsHandler({
 
     if (validStops.length === 0) return;
 
-    try {
-      if (validStops.length === 1) {
-        map.setCenter({
-          lat: Number(validStops[0].coordinates[1]),
-          lng: Number(validStops[0].coordinates[0]),
-        });
-        map.setZoom(13);
-        return;
+    const applyBounds = () => {
+      try {
+        if (typeof window !== "undefined" && window.google?.maps?.event) {
+          window.google.maps.event.trigger(map, "resize");
+        }
+
+        if (validStops.length === 1) {
+          map.setCenter({
+            lat: Number(validStops[0].coordinates[1]),
+            lng: Number(validStops[0].coordinates[0]),
+          });
+          map.setZoom(14);
+          return;
+        }
+
+        if (typeof window !== "undefined" && window.google?.maps) {
+          const bounds = new window.google.maps.LatLngBounds();
+          validStops.forEach((s) => {
+            bounds.extend({
+              lat: Number(s.coordinates[1]),
+              lng: Number(s.coordinates[0]),
+            });
+          });
+
+          map.fitBounds(bounds, { top: 60, right: 60, bottom: 120, left: 60 });
+        }
+      } catch {
+        // Fallback
       }
+    };
 
-      const bounds = new window.google.maps.LatLngBounds();
-      validStops.forEach((s) => {
-        bounds.extend({
-          lat: Number(s.coordinates[1]),
-          lng: Number(s.coordinates[0]),
-        });
-      });
-
-      map.fitBounds(bounds, { top: 60, right: 60, bottom: 90, left: 60 });
-    } catch {
-      // Fallback
-    }
+    // Apply immediately and then after small delay to handle modal rendering/resizing
+    applyBounds();
+    const timer = setTimeout(applyBounds, 150);
+    return () => clearTimeout(timer);
   }, [map, stops, fitTrigger]);
 
   return null;
@@ -207,6 +219,32 @@ function MapToolbar({
   );
 }
 
+// Smoothly pan map to selected active stop
+function PanToActiveStopHandler({
+  activeStop,
+  panTrigger,
+}: {
+  activeStop?: RouteStopItem;
+  panTrigger: number;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map || !activeStop || panTrigger === 0) return;
+    const lat = Number(activeStop.coordinates?.[1]);
+    const lng = Number(activeStop.coordinates?.[0]);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return;
+
+    try {
+      map.panTo({ lat, lng });
+    } catch {
+      // Fallback
+    }
+  }, [map, activeStop, panTrigger]);
+
+  return null;
+}
+
 export default function RouteMapView({
   stops,
   selectedStopIndex,
@@ -221,11 +259,13 @@ export default function RouteMapView({
   const [mapType, setMapType] = useState<string>("roadmap");
   const [fitTrigger, setFitTrigger] = useState<number>(0);
   const [internalActiveIndex, setInternalActiveIndex] = useState<number>(0);
+  const [panTrigger, setPanTrigger] = useState<number>(0);
 
   // Sync internal active index with selectedStopIndex
   useEffect(() => {
     if (selectedStopIndex !== undefined && selectedStopIndex !== null) {
       setInternalActiveIndex(selectedStopIndex);
+      setPanTrigger((p) => p + 1);
     }
   }, [selectedStopIndex]);
 
@@ -236,13 +276,15 @@ export default function RouteMapView({
   );
   const activeStop = stops[activeIndex];
 
-  // Default center: Puerto Rico or first valid stop
+  // Default center: first valid stop or Puerto Rico fallback
   const defaultCenter = useMemo(() => {
     const valid = stops.find(
       (s) =>
         s.coordinates &&
         Number.isFinite(Number(s.coordinates[1])) &&
-        Number.isFinite(Number(s.coordinates[0]))
+        Number.isFinite(Number(s.coordinates[0])) &&
+        Number(s.coordinates[1]) !== 0 &&
+        Number(s.coordinates[0]) !== 0
     );
     if (valid) {
       return {
@@ -257,6 +299,7 @@ export default function RouteMapView({
 
   const handleMarkerClick = (index: number) => {
     setInternalActiveIndex(index);
+    setPanTrigger((p) => p + 1);
     if (onSelectStop) {
       onSelectStop(index);
     }
@@ -282,9 +325,11 @@ export default function RouteMapView({
 
   return (
     <div
+      style={{ width: "100%", height: "100%", minHeight: "280px" }}
       className={`relative w-full ${height} rounded-3xl overflow-hidden border border-gray-200/80 dark:border-slate-800 shadow-lg ${className}`}
     >
       <Map
+        style={{ width: "100%", height: "100%" }}
         colorScheme={isDark ? "DARK" : "LIGHT"}
         defaultCenter={defaultCenter}
         defaultZoom={stops.length > 0 ? 11 : 9}
@@ -299,6 +344,9 @@ export default function RouteMapView({
       >
         {/* Fit Bounds Handler */}
         <FitBoundsHandler stops={stops} fitTrigger={fitTrigger} />
+
+        {/* Pan to Selected Active Stop Handler */}
+        <PanToActiveStopHandler activeStop={activeStop} panTrigger={panTrigger} />
 
         {/* Polyline Route */}
         <RoutePolyline stops={stops} />
@@ -326,7 +374,20 @@ export default function RouteMapView({
               onClick={() => handleMarkerClick(index)}
             >
               <div
-                className={`relative flex items-center justify-center cursor-pointer transition-all duration-300 transform ${
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleMarkerClick(index);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleMarkerClick(index);
+                  }
+                }}
+                title={`${index + 1}. ${getLocalized(stop.name, language)}`}
+                className={`relative flex items-center justify-center cursor-pointer transition-all duration-300 transform select-none ${
                   isSelected ? "scale-125 z-30" : "hover:scale-110 z-10"
                 }`}
               >

@@ -26,7 +26,7 @@
     "visited_places": "Lugares Visitados",
     "recommended_places": "Lugares Recomendados",
     "route_planner": "Planificador de Rutas",
-    "saved_routes": "Mis Rutas Guardadas",
+    "saved_routes": "Mis Rutas",
     "dashboard": "Panel de Control"
   },
   "search": {
@@ -2203,7 +2203,15 @@
     "map_standard": "Mapa",
     "prev_stop": "Anterior",
     "next_stop": "Siguiente",
-    "stop_details": "Detalles de la parada"
+    "stop_details": "Detalles de la parada",
+    "view_mode": "Modo Lectura",
+    "edit_route": "Editar Ruta",
+    "view_only_notice": "Vista protegida contra cambios accidentales",
+    "stops_sequence": "Secuencia de paradas",
+    "create_route_btn": "Crear Ruta",
+    "view_route_btn": "Ver Ruta",
+    "back_to_routes": "Mis Rutas",
+    "navigate_google_maps": "Navegar en Google Maps"
   },
   "contact": {
     "badge": "Conéctate con nosotros",

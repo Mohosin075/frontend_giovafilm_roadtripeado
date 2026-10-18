@@ -152,8 +152,7 @@ export default function Header() {
   ];
 
   const menuItems = [
-    { label: t("nav.route_planner") || "Roadtrip Planner", href: "/route-planner", icon: Navigation },
-    { label: t("nav.saved_routes") || "Mis Rutas Guardadas", href: "/profile/saved-routes", icon: Compass },
+    { label: t("nav.saved_routes") || "Mis Rutas", href: "/profile/saved-routes", icon: Compass },
     { label: t("nav.notifications") || "Notifications", href: "/notifications", icon: Bell },
     { label: t("nav.visited_places") || "Visited Places", href: "/profile/visited-places", icon: CheckCircle2 },
     { label: t("nav.favorite_places"), href: "/profile/favorite-places", icon: Heart },
@@ -231,11 +230,7 @@ export default function Header() {
   }, [enterSearching, isFetching]);
 
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(user?.role || "");
-  const visibleMenuItems = isAdminOrEditor
-    ? menuItems.filter((item) =>
-      ["/notifications", "/profile/visited-places", "/profile/favorite-places", "/profile/contributions-reviews", "/profile/awards"].includes(item.href)
-    )
-    : menuItems;
+  const visibleMenuItems = menuItems;
   const [logoutApi] = useLogoutMutation();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
