@@ -36,6 +36,17 @@ export function getCategoryColor(cat: any) {
 /** Cap markers drawn at once — purchased maps can have hundreds of pins. */
 const MAX_VISIBLE_MARKERS = 250;
 
+/** Restrict map panning to world boundaries so it cannot be dragged off-screen */
+const WORLD_MAP_BOUNDS = {
+  latLngBounds: {
+    north: 85,
+    south: -85,
+    west: -180,
+    east: 180,
+  },
+  strictBounds: true,
+};
+
 function getPlaceLatLng(place: any): { lat: number; lng: number } | null {
   const coords =
     place?.location?.mapLocation?.coordinates ||
@@ -905,6 +916,7 @@ export default function MapPage() {
             }}
             minZoom={3}
             maxZoom={19}
+            restriction={WORLD_MAP_BOUNDS}
             renderingType={"RASTER"}
             gestureHandling={"greedy"}
             disableDefaultUI={false}
