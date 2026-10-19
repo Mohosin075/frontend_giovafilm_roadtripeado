@@ -138,22 +138,22 @@ export default function MapDetails() {
   } = useGetSingleBusinessQuery(id, {
     skip: !id || !isBusinessEntity,
   });
-  useEffect(() => {
-    if (!id) return;
-    trackUsage(isBusinessEntity ? "business" : "place", id);
-  }, [id, isBusinessEntity]);
-
-  const isLoading = isBusinessEntity
-    ? isBusinessLoading || isBusinessFetching || businessStatus === "pending" || businessStatus === "uninitialized"
-    : isPlaceLoading || isPlaceFetching || placeStatus === "pending" || placeStatus === "uninitialized";
-  const error = isBusinessEntity ? businessError : placeError;
-
   const rawData = isBusinessEntity ? businessRes?.data : placeRes?.data;
 
   const isActuallyBusiness =
     isBusinessEntity ||
     rawData?.type === "Business" ||
     rawData?.placeType === "Business";
+
+  useEffect(() => {
+    if (!id) return;
+    trackUsage(isActuallyBusiness ? "business" : "place", id);
+  }, [id, isActuallyBusiness]);
+
+  const isLoading = isBusinessEntity
+    ? isBusinessLoading || isBusinessFetching || businessStatus === "pending" || businessStatus === "uninitialized"
+    : isPlaceLoading || isPlaceFetching || placeStatus === "pending" || placeStatus === "uninitialized";
+  const error = isBusinessEntity ? businessError : placeError;
 
   // Client-side purchase gate — same logic as explore-places.tsx and map.tsx
   const purchasedMaps = Array.isArray(userProfile?.purchasedMaps) ? userProfile.purchasedMaps : [];

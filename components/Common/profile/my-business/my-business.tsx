@@ -272,10 +272,10 @@ export default function MyBusinessPage() {
               >
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">
-                    {t("business_details.total_views") || "Total Views"}
+                    {t("business_details.total_views") || "Total Visits"}
                   </p>
                   <p className="text-2xl font-black text-slate-900 dark:text-slate-100">
-                    {stats.totalViews ?? 0}
+                    {stats.totalViews ?? stats.totalVisits ?? 0}
                   </p>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center">
@@ -515,7 +515,7 @@ export default function MyBusinessPage() {
                     <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/40 shadow-2xs">
                       <Eye size={11} className="text-blue-600 dark:text-blue-400" />
                       <span>
-                        {business.viewCount ?? 0} {t("business_details.views") || "Views"}
+                        {business.viewCount ?? business.visitsCount ?? 0} {t("business_details.views") || "Visits"}
                       </span>
                     </div>
 

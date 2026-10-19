@@ -360,7 +360,7 @@ export default function BusinessDetails() {
                     {offer.description}
                   </p>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5">
                     <div className="bg-black/5 rounded-2xl p-4 border border-black/5 backdrop-blur-sm">
                       <p className="text-[10px] font-black text-black/60 uppercase tracking-widest mb-1">
                         {t("business_details.benefit")}
@@ -402,6 +402,20 @@ export default function BusinessDetails() {
                       </p>
                       <p className="text-lg font-black text-black">
                         {offer.redemptionDuration} {t("business_details.mins")}
+                      </p>
+                    </div>
+                    <div className="bg-blue-900/10 rounded-2xl p-4 border border-blue-900/20 backdrop-blur-sm flex flex-col justify-between">
+                      <div>
+                        <p className="text-[10px] font-black text-blue-950 uppercase tracking-widest mb-1 flex items-center justify-between">
+                          <span>{t("business_details.total_views") || "Visits"}</span>
+                          <Eye size={12} className="text-blue-700" />
+                        </p>
+                        <p className="text-lg font-black text-blue-950">
+                          {currentViewCount}
+                        </p>
+                      </div>
+                      <p className="text-[10px] font-bold text-blue-900/80 mt-2">
+                        {t("business_details.profile_traffic") || "Page visits"}
                       </p>
                     </div>
                     <div className="bg-purple-900/10 rounded-2xl p-4 border border-purple-900/20 backdrop-blur-sm flex flex-col justify-between">

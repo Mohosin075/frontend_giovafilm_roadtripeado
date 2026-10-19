@@ -47,6 +47,14 @@ const WORLD_MAP_BOUNDS = {
   strictBounds: true,
 };
 
+/** Hide default Google Maps location/POI icons on the user map so only platform-curated pins are visible */
+const HIDE_GOOGLE_POI_STYLES: google.maps.MapTypeStyle[] = [
+  {
+    featureType: "poi",
+    stylers: [{ visibility: "off" }],
+  },
+];
+
 function getPlaceLatLng(place: any): { lat: number; lng: number } | null {
   const coords =
     place?.location?.mapLocation?.coordinates ||
@@ -939,6 +947,7 @@ export default function MapPage() {
             mapTypeControlOptions={{
               position: ControlPosition.TOP_RIGHT,
             }}
+            styles={HIDE_GOOGLE_POI_STYLES}
             clickableIcons={false}
           >
             <GeolocationOnLoad

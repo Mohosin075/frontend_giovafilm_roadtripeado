@@ -90,10 +90,30 @@ export function trackUsage(type: UsageType | string, id?: string) {
   if (!entityId) return;
   if (alreadyTrackedThisTab(entityType, entityId)) return;
   if (!shouldRecordVisit(`${entityType}:${entityId}`)) return;
+
   emitWhenReady("track-usage", {
     type: entityType,
     id: entityId,
     visitorId: getVisitorId(),
     token: getAccessToken() || undefined,
   });
+
+  // For businesses, also ensure the REST view/visit increment is called for guaranteed database persistence
+  if (entityType === "business" && typeof window !== "undefined") {
+    try {
+      const rawBase = (process.env.NEXT_PUBLIC_BASEURL || "").replace(/\/$/, "");
+      if (rawBase) {
+        const apiBase = rawBase.endsWith("/api/v1") ? rawBase : `${rawBase}/api/v1`;
+        fetch(`${apiBase}/business/${entityId}/view`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "omit",
+        }).catch(() => {
+          // Non-blocking background call
+        });
+      }
+    } catch {
+      // Non-blocking
+    }
+  }
 }
