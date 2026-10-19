@@ -10,19 +10,20 @@ export default function StartExploring() {
   const { t } = useLanguage();
 
   return (
-    <section className="w-full flex justify-center px-4 sm:px-6 py-16 sm:py-20 lg:py-24 overflow-hidden font-inter">
-      <motion.div
-        className="relative w-full max-w-360 mx-auto rounded-2xl sm:rounded-3xl overflow-hidden"
-        style={{
-          backgroundImage: `url(${bgImg.src})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-      >
+    <section className="w-full py-14 sm:py-18 lg:py-20 overflow-hidden font-inter">
+      <div className="max-w-360 mx-auto px-3 sm:px-6 w-full">
+        <motion.div
+          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl"
+          style={{
+            backgroundImage: `url(${bgImg.src})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/75" />
 
@@ -73,6 +74,7 @@ export default function StartExploring() {
           </motion.div>
         </div>
       </motion.div>
+      </div>
     </section>
   );
 }

@@ -69,7 +69,7 @@ export default function HeroBanner() {
       <div className="absolute top-1/4 right-10 w-96 h-96 bg-amber-500/8 rounded-full blur-3xl pointer-events-none hidden dark:block" />
       <div className="absolute -bottom-10 left-1/4 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl pointer-events-none hidden dark:block" />
 
-      <div className="relative z-10 max-w-360 mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
+      <div className="relative z-10 max-w-360 mx-auto px-3 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
         {/* Left Content */}
         <motion.div
           className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left"
@@ -162,9 +162,9 @@ export default function HeroBanner() {
         {/* Right Content - Image & Floating Card */}
         <div className="relative mt-4 lg:mt-0">
           <motion.div
-            className="relative rounded-2xl sm:rounded-[40px] overflow-hidden shadow-xl sm:shadow-2xl transform lg:translate-x-12 border border-transparent dark:border-slate-800/80"
-            initial={{ opacity: 0, scale: 0.95, x: 30 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            className="relative rounded-2xl sm:rounded-[40px] overflow-hidden shadow-xl sm:shadow-2xl border border-transparent dark:border-slate-800/80"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <Image
