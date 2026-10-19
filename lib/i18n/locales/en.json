@@ -424,6 +424,7 @@
     "upgrade_to_premium": "Upgrade to Premium",
     "analytics": "Analytics",
     "total_views": "Total Views",
+    "profile_traffic": "Page visits",
     "joined_date": "Joined Date",
     "contact_info": "Contact Info",
     "address": "Address",
@@ -907,7 +908,8 @@
     "deleted_successfully": "Business deleted successfully",
     "needs_changes": "Needs Changes",
     "approved_today": "Approved Today",
-    "view_business": "View business details"
+    "view_business": "View business details",
+    "views": "Views"
   },
   "categories_admin": {
     "add_category": "Add Category",
@@ -2258,5 +2260,11 @@
     "invitation_claimed": "Invitation Claimed!",
     "invitation_claimed_desc": "Your free map access has been activated. Redirecting you to your map now...",
     "open_map": "Open Map"
+  },
+  "reports": {
+    "map_name": "Map Name",
+    "place_name": "Place Name",
+    "offer_title": "Offer Title",
+    "failed_load": "Failed to load reports data."
   }
 }

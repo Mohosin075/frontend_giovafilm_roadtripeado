@@ -85,9 +85,9 @@ export function PlaceCard({ data }: { data: TPlace }) {
 
           {/* Lock Badge on top of image */}
           {data?.isLocked && (
-            <div className="absolute top-3 left-3 bg-black/75 backdrop-blur-md text-white border border-white/20 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-bold shadow-lg">
-              <Lock className="w-3.5 h-3.5 text-[#fabf13]" />
-              <span>{t("map.unlock_full_map")}</span>
+            <div className="absolute top-3 left-3 bg-black/75 backdrop-blur-md text-white border border-white/20 px-2 sm:px-2.5 py-1 rounded-full flex items-center gap-1.5 text-[11px] sm:text-xs font-bold shadow-lg max-w-[calc(100%-65px)]">
+              <Lock className="w-3.5 h-3.5 text-[#fabf13] shrink-0" />
+              <span className="truncate">{t("map.unlock_full_map")}</span>
             </div>
           )}
         </div>

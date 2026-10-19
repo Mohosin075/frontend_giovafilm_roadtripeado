@@ -424,6 +424,7 @@
     "upgrade_to_premium": "Actualizar a Premium",
     "analytics": "Estadísticas",
     "total_views": "Visualizaciones Totales",
+    "profile_traffic": "Visitas a la página",
     "joined_date": "Fecha de Registro",
     "contact_info": "Información de Contacto",
     "address": "Dirección",
@@ -907,7 +908,8 @@
     "deleted_successfully": "Negocio eliminado exitosamente",
     "needs_changes": "Requiere Cambios",
     "approved_today": "Aprobados Hoy",
-    "view_business": "Ver detalles del negocio"
+    "view_business": "Ver detalles del negocio",
+    "views": "Vistas"
   },
   "categories_admin": {
     "add_category": "Agregar Categoría",
@@ -2258,5 +2260,11 @@
     "invitation_claimed": "¡Invitación Canjeada!",
     "invitation_claimed_desc": "Tu acceso gratuito al mapa ha sido activado. Redirigiéndote a tu mapa ahora...",
     "open_map": "Abrir Mapa"
+  },
+  "reports": {
+    "map_name": "Nombre del Mapa",
+    "place_name": "Nombre del Lugar",
+    "offer_title": "Título de la Oferta",
+    "failed_load": "Error al cargar los datos de informes."
   }
 }

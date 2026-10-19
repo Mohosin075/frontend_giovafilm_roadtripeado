@@ -374,7 +374,7 @@ export default function Header() {
 
           {/* Search Bar - Desktop — hidden on Places/Offers (page has its own) */}
           {!hideHeaderSearch && (
-            <div className="hidden md:block flex-1 min-w-[200px] lg:min-w-[240px] xl:min-w-[300px] max-w-2xl mx-2 xl:mx-4">
+            <div className="hidden md:block flex-1 min-w-[150px] lg:min-w-[170px] xl:min-w-[280px] max-w-xl mx-2 xl:mx-4">
               <div className="relative group w-full">
                 <button
                   type="button"
@@ -463,7 +463,7 @@ export default function Header() {
           )}
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-0.5 xl:gap-2 whitespace-nowrap">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href;
 
@@ -471,7 +471,7 @@ export default function Header() {
                 <AuthLink
                   key={index}
                   href={link.href}
-                  className={`font-semibold font-inter transition-all text-xs xl:text-sm rounded-xl py-1.5 px-2.5 xl:px-3.5 shrink-0 ${
+                  className={`font-semibold font-inter transition-all text-xs xl:text-sm rounded-xl py-1.5 px-2 xl:px-3.5 shrink-0 ${
                     isActive
                       ? "bg-primary text-black dark:text-slate-950 font-bold shadow-[0_2px_12px_rgba(250,191,19,0.35)]"
                       : "text-gray-700 dark:text-slate-300 hover:text-black dark:hover:text-primary hover:bg-black/5 dark:hover:bg-white/5"
@@ -642,7 +642,7 @@ export default function Header() {
                 </DropdownMenu>
               ) : (
                 <Link href="/login">
-                  <Button className="bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold font-public-sans rounded-xl px-8 py-6 text-base shadow-none">
+                  <Button className="bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold font-public-sans rounded-xl px-4 xl:px-8 py-2 xl:py-2.5 text-xs xl:text-base shadow-none h-auto">
                     {t("nav.login") || "Log In"}
                   </Button>
                 </Link>

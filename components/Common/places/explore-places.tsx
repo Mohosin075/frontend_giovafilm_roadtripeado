@@ -345,7 +345,7 @@ export default function ExplorePlaces() {
             <option value="">{t("filters.all_categories")}</option>
             {categoriesResponse?.data?.map((cat: any) => (
               <option key={cat._id} value={cat._id}>
-                {cat.name}
+                {getLocalized(cat.name, language)}
               </option>
             ))}
           </select>

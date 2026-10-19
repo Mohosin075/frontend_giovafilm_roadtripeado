@@ -283,15 +283,22 @@ export default function OfferSection() {
               >
                 <div className="group rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800/80 bg-white dark:bg-[#131b2e]/90 hover:shadow-md hover:dark:border-amber-400/40 backdrop-blur-md transition">
                   {/* Image */}
-                  <div className="relative h-36 sm:h-48 md:h-72 w-full">
+                  <div className="relative h-36 sm:h-48 md:h-72 w-full overflow-hidden bg-slate-100 dark:bg-slate-900">
                     <Image
                       src={getImageUrl(offer?.images || offer?.photo || offer?.photos)}
                       alt={offer.title}
                       width={500}
                       height={500}
                       unoptimized
-                      className="object-cover h-36 sm:h-48 md:h-72 w-full hover:scale-105 transition-all"
+                      className={`object-cover h-36 sm:h-48 md:h-72 w-full transition-all duration-500 ${
+                        isOfferLocked
+                          ? "filter blur-[16px] scale-115 select-none pointer-events-none"
+                          : "hover:scale-105"
+                      }`}
                     />
+                    {isOfferLocked && (
+                      <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+                    )}
 
                     {/* Favorite Button */}
                     <div className="absolute right-3 top-3">
