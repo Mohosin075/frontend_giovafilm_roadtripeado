@@ -68,8 +68,12 @@ export default function VisitedPlaces() {
 
   const allVisited: any[] = visitedRes?.data || [];
 
+  const validVisited = useMemo(() => {
+    return allVisited.filter((item) => Boolean(item?.place || item?.business));
+  }, [allVisited]);
+
   const filtered = useMemo(() => {
-    return allVisited.filter((item) => {
+    return validVisited.filter((item) => {
       const entity = item.place || item.business;
       if (!entity) return false;
 
@@ -85,14 +89,13 @@ export default function VisitedPlaces() {
 
       return !q || name.toLowerCase().includes(q) || desc.toLowerCase().includes(q);
     });
-  }, [allVisited, activeType, search, language]);
+  }, [validVisited, activeType, search, language]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const totalCount = visitedRes?.meta?.total ?? allVisited.length;
   const isFiltering = Boolean(search.trim() || activeType !== "all");
-  const displayCount = isFiltering ? filtered.length : totalCount;
+  const displayCount = isFiltering ? filtered.length : validVisited.length;
 
   return (
     <section className="max-w-7xl mx-auto px-3.5 sm:px-6 py-6 sm:py-10 font-public-sans">

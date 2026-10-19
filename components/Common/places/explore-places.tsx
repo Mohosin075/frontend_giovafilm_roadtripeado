@@ -472,7 +472,7 @@ export default function ExplorePlaces() {
               </Button>
             </div>
           ) : (
-            places.map((place: any) => {
+            places.map((place: any, index: number) => {
               const purchasedMaps = Array.isArray(profile?.purchasedMaps) ? profile.purchasedMaps : [];
               const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(profile?.role || "");
               const isBusinessLocation = (p: any) =>
@@ -485,7 +485,11 @@ export default function ExplorePlaces() {
 
               const isLockedForUser = place.isLocked || (!isBusinessLocation(place) && !isPurchased);
               return (
-                <PlaceCard key={place._id} data={{ ...place, isLocked: isLockedForUser }} />
+                <PlaceCard
+                  key={place._id}
+                  data={{ ...place, isLocked: isLockedForUser }}
+                  priority={index < 6}
+                />
               );
             })
           )}

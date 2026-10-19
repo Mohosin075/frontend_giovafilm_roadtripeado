@@ -219,7 +219,7 @@ export default function OfferSection() {
           </div>
         ) : (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-          {filteredOffers.map((offer: any) => {
+          {filteredOffers.map((offer: any, index: number) => {
             const favourited = isOfferFavourited(offer._id);
 
             // Handle case where offer.place is an object
@@ -289,7 +289,8 @@ export default function OfferSection() {
                       alt={offer.title}
                       width={500}
                       height={500}
-                      unoptimized
+                      priority={index < 6}
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
                       className={`object-cover h-36 sm:h-48 md:h-72 w-full transition-all duration-500 ${
                         isOfferLocked
                           ? "filter blur-[16px] scale-115 select-none pointer-events-none"

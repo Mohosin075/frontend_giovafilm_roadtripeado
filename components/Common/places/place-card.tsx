@@ -9,7 +9,7 @@ import Link from "next/link";
 import { appAlert } from "@/lib/app-alert";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-export function PlaceCard({ data }: { data: TPlace }) {
+export function PlaceCard({ data, priority = false }: { data: TPlace; priority?: boolean }) {
   const coverImage = getUsableMediaUrl(data?.media);
   const { t, language } = useLanguage();
 
@@ -65,7 +65,7 @@ export function PlaceCard({ data }: { data: TPlace }) {
                 src={coverImage}
                 alt={data?.isLocked ? t("map.premium_location", "Premium Location") : getLocalized(data?.name, language)}
                 fill
-                priority={false}
+                priority={priority}
               />
             </div>
           ) : (
