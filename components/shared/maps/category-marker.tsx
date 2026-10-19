@@ -135,7 +135,7 @@ export const CategoryMarker = React.memo(function CategoryMarker({
           filter: isSelected
             ? "drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5))"
             : isVisited
-              ? "drop-shadow(0 2px 6px rgba(255, 193, 7, 0.55)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))"
+              ? "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.22))"
               : undefined,
         }}
       >
