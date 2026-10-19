@@ -37,7 +37,7 @@ export default function VisitedPlaces() {
   ];
 
   const { data: visitedRes, isLoading } = useGetMyVisitedPlacesQuery({
-    limit: 100,
+    limit: 5000,
   });
   const [toggleVisited, { isLoading: isToggling }] = useToggleVisitedMutation();
 
@@ -90,6 +90,10 @@ export default function VisitedPlaces() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+  const totalCount = visitedRes?.meta?.total ?? allVisited.length;
+  const isFiltering = Boolean(search.trim() || activeType !== "all");
+  const displayCount = isFiltering ? filtered.length : totalCount;
+
   return (
     <section className="max-w-7xl mx-auto px-3.5 sm:px-6 py-6 sm:py-10 font-public-sans">
       {/* Header */}
@@ -98,7 +102,7 @@ export default function VisitedPlaces() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
             <span>{t("visited.title") || t("nav.visited_places") || "Visited Places"}</span>
             <span className="text-sm sm:text-base font-semibold bg-amber-400/20 text-amber-600 dark:text-amber-400 px-2.5 sm:px-3 py-0.5 rounded-full">
-              {allVisited.length}
+              {displayCount}
             </span>
           </h1>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
