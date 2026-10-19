@@ -12,7 +12,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
-  Bell,
   Check,
   CheckCircle2,
   CircleDollarSign,
@@ -153,7 +152,6 @@ export default function Header() {
 
   const menuItems = [
     { label: t("nav.saved_routes") || "Mis Rutas", href: "/profile/saved-routes", icon: Compass },
-    { label: t("nav.notifications") || "Notifications", href: "/notifications", icon: Bell },
     { label: t("nav.visited_places") || "Visited Places", href: "/profile/visited-places", icon: CheckCircle2 },
     { label: t("nav.favorite_places"), href: "/profile/favorite-places", icon: Heart },
     { label: t("nav.my_business"), href: "/profile/my-business", icon: Grid2x2 },
