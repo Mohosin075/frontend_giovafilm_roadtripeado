@@ -54,9 +54,9 @@ export function PlaceCard({ data }: { data: TPlace }) {
               style={
                 data?.isLocked
                   ? {
-                      filter: "blur(3.5px)",
-                      WebkitFilter: "blur(3.5px)",
-                      transform: "scale(1.06)",
+                      filter: "blur(16px)",
+                      WebkitFilter: "blur(16px)",
+                      transform: "scale(1.15)",
                     }
                   : undefined
               }
