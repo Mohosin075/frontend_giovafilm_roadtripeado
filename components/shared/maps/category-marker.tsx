@@ -129,9 +129,9 @@ export const CategoryMarker = React.memo(function CategoryMarker({
 
       {/* ── Pin Visual Container with CSS-only hover scale ── */}
       <div
-        className="pin-body w-full h-full relative transition-transform duration-150 ease-out"
+        className="pin-body w-full h-full relative transition-all duration-300 ease-out"
         style={{
-          transform: isSelected ? "scale(1.22)" : undefined,
+          transform: isSelected ? "scale(1.2) translateY(-2px)" : undefined,
           filter: isSelected
             ? "drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5))"
             : isVisited

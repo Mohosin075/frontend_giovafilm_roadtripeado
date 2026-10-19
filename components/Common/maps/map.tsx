@@ -296,22 +296,35 @@ function MapPanner({
     lastSelectedIdRef.current = selectedId;
 
     if (map) {
-      // Focus smoothly on the selected pin with clear visibility
-      map.panTo(position);
+      let targetCenter = position;
 
-      // Zoom in slightly (+1 level) from current zoom level (capped at max 13)
-      const currentZoom = map.getZoom();
-      if (currentZoom != null) {
-        map.setZoom(Math.min(currentZoom + 1, 13));
-      }
-
-      // On mobile, offset slightly so the pin is clearly visible above the bottom preview drawer
+      // On mobile, offset smoothly so the pin lands higher up, clearly visible above the bottom preview modal
       if (isMobile) {
-        const timer = setTimeout(() => {
-          map.panBy(0, 75);
-        }, 120);
-        return () => clearTimeout(timer);
+        try {
+          const projection = map.getProjection();
+          if (projection && typeof google !== "undefined" && google.maps) {
+            const zoom = map.getZoom() || 13;
+            const scale = Math.pow(2, zoom);
+            const latLng = new google.maps.LatLng(position.lat, position.lng);
+            const worldPoint = projection.fromLatLngToPoint(latLng);
+            if (worldPoint) {
+              const targetPoint = new google.maps.Point(
+                worldPoint.x,
+                worldPoint.y + (70 / scale)
+              );
+              const targetLatLng = projection.fromPointToLatLng(targetPoint);
+              if (targetLatLng) {
+                targetCenter = { lat: targetLatLng.lat(), lng: targetLatLng.lng() };
+              }
+            }
+          }
+        } catch {
+          // Fallback to direct position if projection is unavailable
+        }
       }
+
+      // Single fluid, uninterrupted pan animation directly to target
+      map.panTo(targetCenter);
     }
   }, [map, selectedId, position, isMobile]);
   return null;
