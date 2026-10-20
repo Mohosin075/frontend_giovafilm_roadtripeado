@@ -1,5 +1,6 @@
-import { HIDE_GOOGLE_POI_STYLES } from "@/components/Common/maps/map";
 "use client";
+
+import { HIDE_GOOGLE_POI_STYLES } from "@/components/Common/maps/map";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
