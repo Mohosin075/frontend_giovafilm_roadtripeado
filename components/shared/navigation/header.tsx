@@ -144,7 +144,6 @@ export default function Header() {
   const navLinks = [
     { name: t("nav.map"), href: "/maps" },
     { name: t("nav.places"), href: "/places" },
-    { name: t("nav.routes") || "Routes", href: "/route-planner" },
     { name: t("nav.offer"), href: "/offer" },
     { name: t("nav.catalog"), href: "/catalog" },
     { name: t("nav.for_business"), href: "/for-business" },

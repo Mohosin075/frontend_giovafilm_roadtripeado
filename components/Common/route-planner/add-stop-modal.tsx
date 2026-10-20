@@ -34,6 +34,34 @@ interface AddStopModalProps {
   selectedPlaceIds?: string[];
 }
 
+function extractCoords(place: any): { lat: number; lng: number } | null {
+  const coords =
+    place?.location?.coordinates ||
+    place?.location?.mapLocation?.coordinates ||
+    place?.coordinates;
+
+  let lat: number | undefined;
+  let lng: number | undefined;
+
+  if (Array.isArray(coords) && coords.length >= 2) {
+    lng = Number(coords[0]);
+    lat = Number(coords[1]);
+  } else if (coords && typeof coords === "object") {
+    lat = Number((coords as any).lat ?? (coords as any).latitude);
+    lng = Number((coords as any).lng ?? (coords as any).longitude);
+  }
+
+  if (lat == null || Number.isNaN(lat) || lat === 0) {
+    lat = Number(place?.latitude ?? place?.lat ?? place?.location?.latitude);
+  }
+  if (lng == null || Number.isNaN(lng) || lng === 0) {
+    lng = Number(place?.longitude ?? place?.lng ?? place?.location?.longitude);
+  }
+
+  if (!lat || !lng || Number.isNaN(lat) || Number.isNaN(lng)) return null;
+  return { lat, lng };
+}
+
 export default function AddStopModal({
   isOpen,
   onClose,
@@ -76,22 +104,7 @@ export default function AddStopModal({
     );
   };
 
-  // Sync initial country from localStorage (consistent with explore-places page)
-  useEffect(() => {
-    if (isLoadingMaps || !mapsList.length || !isOpen) return;
-    if (selectedCountry) return;
-    try {
-      const saved = localStorage.getItem("selectedCountryFilter");
-      if (
-        saved &&
-        mapsList.some((m: any) => getMapName(m) === saved || m.country === saved)
-      ) {
-        setSelectedCountry(saved);
-      }
-    } catch {
-      // Ignore localStorage read errors
-    }
-  }, [isLoadingMaps, mapsList, selectedCountry, isOpen, language]);
+  // Default to empty (all places/regions in Puerto Rico) so all pins appear
 
   const selectedMapObj = mapsList.find(
     (m: any) =>
@@ -106,7 +119,7 @@ export default function AddStopModal({
   const { data: placesRes, isLoading } = useGetPlacesQuery(
     {
       page: 1,
-      limit: 150,
+      limit: 2500,
       searchTerm,
       category: selectedCategory !== "all" ? selectedCategory : "",
       map: mapIdFilter,
@@ -470,12 +483,8 @@ export default function AddStopModal({
               >
                 {places.map((place: any) => {
                   const placeId = place._id || place.id;
-                  const coords =
-                    place?.location?.coordinates ||
-                    place?.location?.mapLocation?.coordinates;
-                  const lat = Number(coords?.[1]);
-                  const lng = Number(coords?.[0]);
-                  if (!lat || !lng) return null;
+                  const pos = extractCoords(place);
+                  if (!pos) return null;
 
                   const isSelected = selectedPlaceIds.includes(placeId);
                   const isCurrentActive =
@@ -484,7 +493,7 @@ export default function AddStopModal({
                   return (
                     <AdvancedMarker
                       key={placeId}
-                      position={{ lat, lng }}
+                      position={pos}
                       onClick={() => setActivePinPlace(place)}
                     >
                       <div
