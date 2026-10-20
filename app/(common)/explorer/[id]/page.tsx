@@ -9,6 +9,9 @@ import { formatDate, getImageUrl, getLocalized } from "@/lib/utils";
 import { NoImage } from "@/lib/others/others";
 import { shareProfile } from "@/lib/share-profile";
 import { useGetPublicProfileQuery } from "@/redux/features/user/userApi";
+import { useGetLevelConfigsQuery } from "@/redux/features/award/awardApi";
+import { getEffectiveLevels, calculateUserLevel } from "@/lib/level-utils";
+import { useMemo } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { CategoryIcon } from "@/components/shared/categories/category-icon";
 import {
@@ -137,15 +140,23 @@ export default function ExplorerProfilePage() {
     );
   }
 
-  const levelKey = USER_LEVEL_KEYS[data.level ?? 0] || "explorador";
+  const { data: levelsRes } = useGetLevelConfigsQuery();
+  const effectiveLevels = useMemo(
+    () => getEffectiveLevels(levelsRes, language),
+    [levelsRes, language]
+  );
+  const levelCalc = useMemo(
+    () => calculateUserLevel(data?.points || 0, data?.totalReviewsApproved || 0, effectiveLevels),
+    [data?.points, data?.totalReviewsApproved, effectiveLevels]
+  );
+
+  const levelNumber = data?.levelInfo?.levelNumber ?? levelCalc.currentLevelNumber;
   const levelName =
-    data.levelInfo?.title ||
-    (typeof data.levelInfo?.name === "string"
+    data?.levelInfo?.title ||
+    (typeof data?.levelInfo?.name === "string"
       ? data.levelInfo.name
-      : getLocalized(data.levelInfo?.name, language)) ||
-    t(`levels.${levelKey}`) ||
-    USER_LEVELS[data.level ?? 0] ||
-    "Explorer";
+      : getLocalized(data?.levelInfo?.name, language)) ||
+    levelCalc.currentLevelName;
 
   const discoveredPlaces: any[] = Array.isArray(data.discoveredPlaces)
     ? data.discoveredPlaces
@@ -217,7 +228,7 @@ export default function ExplorerProfilePage() {
                   )}
                   {/* Floating Level Pill */}
                   <div className="absolute bottom-1.5 right-1.5 px-2 py-0.5 bg-amber-400 text-black font-black text-[11px] rounded-lg shadow-md border border-black/10">
-                    Lv {data.level ?? 0}
+                    Lv {levelNumber}
                   </div>
                 </div>
 

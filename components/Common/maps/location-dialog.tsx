@@ -160,7 +160,13 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl font-black text-gray-900 dark:text-slate-100">{t("map.unlock_full_map")}</h2>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+              <Lock size={12} />
+              {t("map.unlock_full_map")}
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-slate-100 leading-tight">
+              {getLocalized(location?.name, language) || t("map.unlock_full_map")}
+            </h2>
             <p className="text-gray-500 dark:text-slate-400 text-sm leading-relaxed px-4">
               {message}
             </p>

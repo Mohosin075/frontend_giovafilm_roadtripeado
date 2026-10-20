@@ -500,7 +500,10 @@
     "satellite_view": "Satellite",
     "default_view": "Default Map",
     "location_not_supported": "Geolocation is not supported by your browser.",
-    "unable_to_get_location": "Unable to get location. Please allow location permissions in your browser."
+    "unable_to_get_location": "Unable to get location. Please allow location permissions in your browser.",
+    "new_location_added": "A location was added to the map...",
+    "activate_map": "Activate Map",
+    "activate_map_cta": "Activate this map to unlock this and all other exclusive locations!"
   },
   "profile": {
     "my_profile": "My Profile",

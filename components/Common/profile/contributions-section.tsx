@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
+import { useGetLevelConfigsQuery } from "@/redux/features/award/awardApi";
+import { getEffectiveLevels, calculateUserLevel } from "@/lib/level-utils";
+import { useMemo } from "react";
 import { useGetMyRecommendationsQuery } from "@/redux/features/place/placeApi";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -29,38 +32,30 @@ export function ContributionsSection({
   const hasPurchasedMap = isAdminOrEditor || purchasedMaps.length > 0;
 
   const currentPoints = user?.points || 0;
-  const currentLevel = user?.level || 0;
 
   const approvedSpotsCount =
     user?.approvedRecommendedPlacesCount !== undefined
       ? user.approvedRecommendedPlacesCount
       : (recData?.meta?.total ?? 0);
 
-  // Levels thresholds mapping
-  const USER_LEVELS = [
-    { level: 0, name: t("levels.explorador") || "Explorador", points: 0, reviews: 0, reward: "10% OFF 1 Map" },
-    { level: 1, name: t("levels.aventurero") || "Aventurero", points: 100, reviews: 6, reward: "Itinerary in PDF" },
-    { level: 2, name: t("levels.tlacuilo") || "Tlacuilo", points: 200, reviews: 13, reward: "Itinerary in PDF" },
-    { level: 3, name: t("levels.expedicionario") || "Expedicionario", points: 400, reviews: 26, reward: "25% OFF 1 Map" },
-    { level: 4, name: t("levels.viajero") || "Viajero", points: 700, reviews: 46, reward: "Itinerary in PDF" },
-    { level: 5, name: t("levels.chasqui") || "Chasqui", points: 1300, reviews: 86, reward: "1 Free Map" },
-    { level: 6, name: t("levels.cronista") || "Cronista", points: 2200, reviews: 146, reward: "50% OFF 1 Map" },
-    { level: 7, name: t("levels.baquiano") || "Baquiano", points: 3500, reviews: 233, reward: "Itinerary in PDF" },
-    { level: 8, name: t("levels.cartografo") || "Cartógrafo", points: 5500, reviews: 366, reward: "75% OFF 1 Map" },
-    { level: 9, name: t("levels.maestro_ruta") || "Maestro Ruta", points: 8500, reviews: 566, reward: "Itinerary in PDF" },
-    { level: 10, name: t("levels.leyenda") || "Leyenda", points: 13000, reviews: 866, reward: "1 Free Map" },
-    { level: 11, name: t("levels.gran_leyenda") || "Gran Leyenda", points: 20000, reviews: 1333, reward: "1 Free Map" },
-    { level: 12, name: t("levels.mitico") || "Mítico", points: 30000, reviews: 2000, reward: "1 Free Map" },
-    { level: 13, name: t("levels.inmortal") || "Inmortal", points: 45000, reviews: 3000, reward: "1 Free Map" },
-    { level: 14, name: t("levels.supremo") || "Supremo", points: 65000, reviews: 4333, reward: "2 Free Maps" }
-  ];
+  // Dynamic Level thresholds synchronized with Dashboard (Issue 7)
+  const { data: levelsRes } = useGetLevelConfigsQuery();
+  const effectiveLevels = useMemo(
+    () => getEffectiveLevels(levelsRes, language),
+    [levelsRes, language]
+  );
+  const currentReviews = user?.totalReviewsApproved || 0;
+  const levelCalc = useMemo(
+    () => calculateUserLevel(currentPoints, currentReviews, effectiveLevels),
+    [currentPoints, currentReviews, effectiveLevels]
+  );
 
-  const nextLevelIndex = currentLevel < 14 ? currentLevel + 1 : 14;
-  const nextLevel = USER_LEVELS[nextLevelIndex];
-  const nextLevelPoints = nextLevel.points;
-
-  const pointsUntilNextLevel = Math.max(0, nextLevelPoints - currentPoints);
-  const progressToNextLevel = nextLevelPoints > 0 ? Math.min(100, Math.round((currentPoints / nextLevelPoints) * 100)) : 100;
+  const currentLevel = levelCalc.currentLevelNumber;
+  const nextLevel = levelCalc.nextLevelData;
+  const nextLevelIndex = levelCalc.nextLevelNumber;
+  const pointsUntilNextLevel = levelCalc.pointsNeededForNext;
+  const reviewsUntilNextLevel = levelCalc.reviewsNeededForNext;
+  const progressToNextLevel = Math.round(levelCalc.percent);
 
   return (
     <div className="bg-white dark:bg-[#131b2e] rounded-2xl p-4 sm:p-8 border border-gray-200 dark:border-slate-800 space-y-4 sm:space-y-8 transition-colors">
@@ -179,10 +174,10 @@ export function ContributionsSection({
         <div className="space-y-2 pt-3 border-t border-gray-200 dark:border-slate-800">
           <div>
             <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1">
-              {t("contributions.progress_to_level")} {nextLevelIndex}: <span className="text-amber-600 dark:text-amber-400 font-bold">{nextLevel.name}</span>
+              {t("contributions.progress_to_level")} {nextLevelIndex}: <span className="text-amber-600 dark:text-amber-400 font-bold">{levelCalc.nextLevelName}</span>
             </h3>
             <p className="text-[11px] sm:text-xs text-gray-500 dark:text-slate-400 mb-2">
-              {pointsUntilNextLevel} {t("contributions.pts")} {t("contributions.and")} {Math.max(0, nextLevel.reviews - (user?.totalReviewsApproved || 0))} {t("contributions.reviews_until_next")}
+              {pointsUntilNextLevel} {t("contributions.pts")}{nextLevel.reviews ? ` ${t("contributions.and")} ${reviewsUntilNextLevel} ${t("contributions.reviews_until_next")}` : ""}
             </p>
           </div>
 

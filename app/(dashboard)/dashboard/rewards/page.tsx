@@ -290,7 +290,7 @@ export default function RewardsAdminPage() {
     setTierLevel(Number(tier.level) || 0);
     setTierName(getLocalized(tier.name, language) || tier.title || tier.name || "");
     setTierPoints(Number(tier.points ?? tier.xp) || 0);
-    setTierReviews(0);
+    setTierReviews(Number(tier.reviews) || 0);
     setTierDescription(getLocalized(tier.description, language) || "");
     setIsTierCreateMode(false);
     setTierModalOpen(true);
@@ -331,7 +331,7 @@ export default function RewardsAdminPage() {
         level: Number(tierLevel),
         name: tierName,
         points: Number(tierPoints) || 0,
-        reviews: 0,
+        reviews: Number(tierReviews) || 0,
         description: tierDescription,
       };
 

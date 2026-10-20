@@ -24,6 +24,9 @@ import ProfileUpdateModal from "./profile-update-modal";
 import { NoImage } from "@/lib/others/others";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
+import { useGetLevelConfigsQuery } from "@/redux/features/award/awardApi";
+import { getEffectiveLevels, calculateUserLevel } from "@/lib/level-utils";
+import { useMemo } from "react";
 
 interface ProfileSidebar {
   _id?: string;
@@ -33,6 +36,8 @@ interface ProfileSidebar {
   profile: string;
   level?: number;
   points?: number;
+  totalReviewsApproved?: number;
+  levelInfo?: any;
   visitedPlacesCount?: number;
   phone?: string;
   website?: string;
@@ -57,6 +62,18 @@ export function ProfileSidebar({ data }: ProfileProps) {
   const role = data?.role || (profile as any)?.role || "";
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(role);
   const hasPurchasedMap = isAdminOrEditor || purchasedMaps.length > 0;
+
+  const { data: levelsRes } = useGetLevelConfigsQuery();
+  const effectiveLevels = useMemo(
+    () => getEffectiveLevels(levelsRes, language),
+    [levelsRes, language]
+  );
+  const levelCalc = useMemo(
+    () => calculateUserLevel(data?.points || 0, data?.totalReviewsApproved || 0, effectiveLevels),
+    [data?.points, data?.totalReviewsApproved, effectiveLevels]
+  );
+  const currentLevelNumber = levelCalc.currentLevelNumber;
+  const currentLevelName = data?.levelInfo?.title || levelCalc.currentLevelName;
 
   const allProfileLinks = [
     {
@@ -135,7 +152,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
 
             {hasPurchasedMap ? (
               <div className="absolute bottom-0 right-0 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-sm border-2 border-white dark:border-slate-900 shadow-sm">
-                L{data?.level ?? 0}
+                L{currentLevelNumber}
               </div>
             ) : (
               <div
@@ -293,7 +310,7 @@ export function ProfileSidebar({ data }: ProfileProps) {
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm mb-1">{t("levels.level")} {data?.level ?? 0}</p>
+              <p className="text-sm mb-1">{t("levels.level")} {currentLevelNumber} · {currentLevelName}</p>
               <p className="text-yellow-400 font-bold">{data?.points ?? 0} {t("levels.points")}</p>
             </div>
           </div>

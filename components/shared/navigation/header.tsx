@@ -38,6 +38,8 @@ import { logout } from "@/redux/features/auth/authSlice";
 import { broadcastLogout } from "@/components/shared/cross-tab-logout-listener";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { useGetPlacesQuery } from "@/redux/features/place/placeApi";
+import { useGetLevelConfigsQuery } from "@/redux/features/award/awardApi";
+import { getEffectiveLevels, calculateUserLevel } from "@/lib/level-utils";
 import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
 import { getSocket, emitWhenReady } from "@/lib/socket";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
@@ -49,7 +51,7 @@ import whiteLogo from "@/public/white-logo.png";
 import Link from "next/link";
 import { AuthLink } from "@/components/shared/auth-link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { NoImage } from "@/lib/others/others";
 import { Progress } from "@/components/ui/progress";
@@ -173,7 +175,16 @@ export default function Header() {
     { searchTerm: debouncedSearch, limit: 5 },
     { skip: debouncedSearch.trim().length === 0 },
   );
-  const places = placesRes?.data || [];
+  const rawPlaces = placesRes?.data || [];
+  const places = useMemo(() => {
+    const seen = new Set<string>();
+    return rawPlaces.filter((p: any) => {
+      const name = (typeof p.name === "string" ? p.name : p.name?.es || p.name?.en || "").trim().toLowerCase();
+      if (!name || seen.has(name)) return false;
+      seen.add(name);
+      return true;
+    });
+  }, [rawPlaces]);
   const isSearchPending =
     enterSearching ||
     (searchTerm.trim().length > 0 &&
@@ -209,7 +220,22 @@ export default function Header() {
     };
   }, [isAuthenticated, user?._id, refetchUnread]);
 
+  const dismissKeyboard = () => {
+    if (typeof document !== "undefined") {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      try {
+        const inputs = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea");
+        inputs.forEach((input) => input.blur());
+      } catch {
+        // ignore
+      }
+    }
+  };
+
   const submitHeaderSearch = () => {
+    dismissKeyboard();
     const next = searchTerm.trim();
     if (!next) return;
     setEnterSearching(true);
@@ -321,6 +347,7 @@ export default function Header() {
   };
 
   const closeMenus = () => {
+    dismissKeyboard();
     setIsMenuOpen(false);
     setIsSearchOpen(false);
     setIsMobileProfileMenuOpen(false);
@@ -376,7 +403,10 @@ export default function Header() {
               <div className="relative group w-full">
                 <button
                   type="button"
-                  onClick={submitHeaderSearch}
+                  onClick={() => {
+                    dismissKeyboard();
+                    submitHeaderSearch();
+                  }}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors cursor-pointer"
                   aria-label="Search"
                 >
@@ -384,11 +414,14 @@ export default function Header() {
                 </button>
                 <input
                   type="text"
+                  enterKeyHint="search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
+                      (e.target as HTMLElement)?.blur();
+                      dismissKeyboard();
                       submitHeaderSearch();
                     }
                   }}
@@ -887,22 +920,28 @@ export default function Header() {
                 <div className="relative">
                   <button
                     type="button"
-                    onClick={submitHeaderSearch}
+                    onClick={() => {
+                    dismissKeyboard();
+                    submitHeaderSearch();
+                  }}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
                     aria-label="Search"
                   >
                     <Search className="size-5" />
                   </button>
                   <input
-                    type="text"
-                    value={searchTerm}
+                  type="text"
+                  enterKeyHint="search"
+                  value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        submitHeaderSearch();
-                      }
-                    }}
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      (e.target as HTMLElement)?.blur();
+                      dismissKeyboard();
+                      submitHeaderSearch();
+                    }
+                  }}
                     placeholder={t("search.placeholder_full")}
                     className="w-full bg-[#F5F5F5] dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 border border-gray-200/70 dark:border-slate-800 rounded-full py-3 pl-12 pr-10 text-sm focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-primary/50 outline-none transition-all shadow-inner"
                     autoFocus
@@ -922,7 +961,10 @@ export default function Header() {
                     <div className="mt-2 w-full bg-white dark:bg-[#131b2e] rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden max-h-[60vh] overflow-y-auto">
                       <button
                         type="button"
-                        onClick={submitHeaderSearch}
+                        onClick={() => {
+                    dismissKeyboard();
+                    submitHeaderSearch();
+                  }}
                         className="w-full flex items-center gap-3 p-3.5 text-left text-sm font-bold text-amber-700 dark:text-amber-400 bg-amber-50/80 dark:bg-amber-950/40 hover:bg-amber-100/80 dark:hover:bg-amber-950/60 border-b border-amber-100 dark:border-amber-900/50 transition-colors cursor-pointer"
                       >
                         <Search className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />

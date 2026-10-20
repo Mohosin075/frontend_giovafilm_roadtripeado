@@ -256,9 +256,11 @@ export default function ExplorePlaces() {
                 onChange={(e) => setSearchInput(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
+                enterKeyHint="search"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
+                    (e.target as HTMLElement)?.blur();
                     setSearchFocused(false);
                     handleSearch();
                   }

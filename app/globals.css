@@ -213,3 +213,23 @@ Link {
 .animate-pin-ripple {
   animation: pin-ripple 0.7s ease-out both;
 }
+
+/* Mobile touch feedback & active press animation */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+.btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not([aria-disabled="true"]):not([disabled]),
+input[type="button"]:active:not(:disabled),
+input[type="submit"]:active:not(:disabled),
+.btn:active:not(:disabled) {
+  transform: scale(0.96);
+  opacity: 0.9;
+  transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+}

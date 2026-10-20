@@ -306,7 +306,9 @@ export function MapFilters({
                                             <span className="truncate flex items-center gap-1.5">
                                               {isLocked ? (
                                                 <span className="font-medium text-gray-700 dark:text-slate-300">
-                                                  {t("map.premium_location", "Premium Location")}
+                                                  {place.isNewlyAdded
+                                                    ? getSafeString(place.name, language)
+                                                    : t("map.premium_location", "Premium Location")}
                                                 </span>
                                               ) : (
                                                 getSafeString(place.name, language)

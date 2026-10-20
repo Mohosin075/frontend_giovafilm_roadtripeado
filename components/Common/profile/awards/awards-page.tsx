@@ -18,7 +18,9 @@ import { UnlockedAwardCard } from "./unlocked-award-card";
 import { AwardDetailModal } from "./award-detail-modal";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useGetAwardsQuery } from "@/redux/features/award/awardApi";
+import { useGetAwardsQuery, useGetLevelConfigsQuery } from "@/redux/features/award/awardApi";
+import { getEffectiveLevels, calculateUserLevel } from "@/lib/level-utils";
+import { useMemo } from "react";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import Link from "next/link";
 
@@ -53,24 +55,6 @@ const getAwardIcon = (type: string) => {
 const getAwardImage = (type: string) => {
   return unlockImage;
 };
-
-const USER_LEVELS = [
-  { level: 0, name: "Explorador", points: 0, reviews: 0 },
-  { level: 1, name: "Aventurero", points: 100, reviews: 6 },
-  { level: 2, name: "Tlacuilo", points: 200, reviews: 13 },
-  { level: 3, name: "Expedicionario", points: 400, reviews: 26 },
-  { level: 4, name: "Viajero", points: 700, reviews: 46 },
-  { level: 5, name: "Chasqui", points: 1300, reviews: 86 },
-  { level: 6, name: "Cronista", points: 2200, reviews: 146 },
-  { level: 7, name: "Baquiano", points: 3500, reviews: 233 },
-  { level: 8, name: "Cartógrafo", points: 5500, reviews: 366 },
-  { level: 9, name: "Maestro Ruta", points: 8500, reviews: 566 },
-  { level: 10, name: "Leyenda", points: 13000, reviews: 866 },
-  { level: 11, name: "Gran Leyenda", points: 20000, reviews: 1333 },
-  { level: 12, name: "Mítico", points: 30000, reviews: 2000 },
-  { level: 13, name: "Inmortal", points: 45000, reviews: 3000 },
-  { level: 14, name: "Supremo", points: 65000, reviews: 4333 },
-];
 
 export default function AwardsPage() {
   const { t, language } = useLanguage();
@@ -155,32 +139,28 @@ export default function AwardsPage() {
     });
   };
 
-  // Accurate Level progression math based on spec
+    // Dynamic Level progression math synchronized with Dashboard (Issue 7)
+  const { data: levelsRes } = useGetLevelConfigsQuery();
+  const effectiveLevels = useMemo(
+    () => getEffectiveLevels(levelsRes, language),
+    [levelsRes, language]
+  );
+
   const points = user?.points || 0;
-  const currentLevel = user?.level ?? 0;
-  const currentLevelData = USER_LEVELS[currentLevel] || USER_LEVELS[0];
-  const nextLevelIndex = currentLevel < 14 ? currentLevel + 1 : 14;
-  const nextLevelData = USER_LEVELS[nextLevelIndex];
+  const approvedReviews = user?.totalReviewsApproved || 0;
+  const levelCalc = useMemo(
+    () => calculateUserLevel(points, approvedReviews, effectiveLevels),
+    [points, approvedReviews, effectiveLevels]
+  );
 
-  const getUserLevelName = (lvlIdx: number) => {
-    const keys = [
-      "explorador", "aventurero", "tlacuilo", "expedicionario", "viajero",
-      "chasqui", "cronista", "baquiano", "cartografo", "maestro_ruta",
-      "leyenda", "gran_leyenda", "mitico", "inmortal", "supremo"
-    ];
-    const key = keys[lvlIdx] || "explorador";
-    return t(`levels.${key}`) || USER_LEVELS[lvlIdx]?.name || "Explorer";
-  };
-
-  const currentLevelMinPoints = currentLevelData.points;
-  const nextLevelMinPoints = nextLevelData.points;
-  const pointsNeededForNext = Math.max(0, nextLevelMinPoints - points);
-  const pointsSpan = Math.max(1, nextLevelMinPoints - currentLevelMinPoints);
-  const percent =
-    currentLevel >= 14
-      ? 100
-      : Math.min(100, Math.max(0, ((points - currentLevelMinPoints) / pointsSpan) * 100));
-  const strokeDashoffset = 440 - (440 * percent) / 100;
+  const currentLevel = levelCalc.currentLevelNumber;
+  const currentLevelName = levelCalc.currentLevelName;
+  const nextLevelData = levelCalc.nextLevelData;
+  const nextLevelIndex = levelCalc.nextLevelNumber;
+  const pointsNeededForNext = levelCalc.pointsNeededForNext;
+  const percent = levelCalc.percent;
+  const strokeDashoffset = levelCalc.strokeDashoffset;
+  const isMaxLevel = levelCalc.isMaxLevel;
 
   return (
     <div className="py-3 md:py-12 bg-white dark:bg-[#0b0f19] min-h-screen transition-colors">
@@ -270,7 +250,7 @@ export default function AwardsPage() {
               <span className="inline-block bg-amber-500/20 text-amber-800 dark:text-amber-300 px-2 py-0.5 md:px-4 md:py-1 rounded-full text-[8px] md:text-xs font-bold mb-0.5 md:mb-2 uppercase tracking-wider">
                 {isProfileLoading
                   ? (t("common.loading") || "Loading...")
-                  : `🏆 ${t("awards.level") || "Level"} ${currentLevel} · ${getUserLevelName(currentLevel)}`}
+                  : `🏆 ${t("awards.level") || "Level"} ${currentLevel} · ${currentLevelName}`}
               </span>
 
               {/* Name */}
@@ -296,7 +276,7 @@ export default function AwardsPage() {
                 <div className="bg-white/80 dark:bg-[#131b2e]/80 border border-gray-100 dark:border-slate-800 px-2 py-1 md:px-4 md:py-2.5 rounded-lg md:rounded-xl flex-1 md:flex-none md:w-36 shadow-sm">
                   <p className="text-[6px] md:text-[9px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest leading-none">{t("common.next_level")}</p>
                   <p className="font-extrabold text-gray-800 dark:text-slate-200 mt-0.5 text-[9px] md:text-xs leading-none">
-                    {currentLevel >= 14 ? (t("awards.max_level") || "Max Level") : `${t("awards.level") || "Level"} ${nextLevelData.level} · ${getUserLevelName(nextLevelIndex)}`}
+                    {isMaxLevel ? (t("awards.max_level") || "Max Level") : `${t("awards.level") || "Level"} ${nextLevelData.level} · ${levelCalc.nextLevelName}`}
                   </p>
                 </div>
 

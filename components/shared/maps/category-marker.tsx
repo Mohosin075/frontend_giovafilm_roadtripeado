@@ -75,7 +75,7 @@ export const CategoryMarker = React.memo(function CategoryMarker({
       )}
 
       {/* ── Name Tooltip (Pure CSS driven: 0 JS re-renders during mouse wheel zoom) ── */}
-      {Boolean(displayName) && !isLocked && (
+      {Boolean(displayName) && (
         <div
           className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap transition-opacity duration-150 z-[100] flex items-center gap-1.5 ${isSelected
               ? "opacity-100"
@@ -90,7 +90,7 @@ export const CategoryMarker = React.memo(function CategoryMarker({
             fontSize: isSelected ? "12px" : "11px",
             fontWeight: isSelected ? "800" : "700",
             boxShadow: "0 8px 20px rgba(0, 0, 0, 0.45)",
-            border: isSelected ? "1.5px solid #FFC107" : status === "Draft" ? "1.5px solid #F59E0B" : "1px solid rgba(255, 255, 255, 0.2)",
+            border: isSelected ? "1.5px solid #FFC107" : isLocked ? "1.5px solid #F59E0B" : status === "Draft" ? "1.5px solid #F59E0B" : "1px solid rgba(255, 255, 255, 0.2)",
           }}
         >
           {status === "Draft" && (
@@ -109,6 +109,7 @@ export const CategoryMarker = React.memo(function CategoryMarker({
               Draft
             </span>
           )}
+          {isLocked && <Lock size={11} className="text-amber-400 shrink-0" />}
           <span>{displayName}</span>
           {/* Arrow Triangle pointing down to pin */}
           <div

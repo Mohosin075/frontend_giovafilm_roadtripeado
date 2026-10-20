@@ -954,12 +954,56 @@ export default function MapPage() {
 
   const purchasedMaps = Array.isArray(userProfile?.purchasedMaps) ? userProfile.purchasedMaps : [];
   const isAdminOrEditor = ["super_admin", "admin", "map_editor"].includes(userProfile?.role || "");
+  const isFreeMap = selectedMapObj && selectedMapObj.isPaid === false;
 
-  const isCurrentMapPurchased = isAdminOrEditor || (selectedMapObj && purchasedMaps.some((m: any) => {
+  const isCurrentMapPurchased = isAdminOrEditor || isFreeMap || (selectedMapObj && purchasedMaps.some((m: any) => {
     const mid = typeof m === "object" ? (m._id || m.id) : m;
     return String(mid) === String(selectedMapObj._id);
   }));
 
+  const isNewlyAddedLocation = (place: any) => {
+    if (place.isNewlyAdded || place.isNew) return true;
+    if (place.createdAt) {
+      const createdTime = new Date(place.createdAt).getTime();
+      if (!isNaN(createdTime)) {
+        return (Date.now() - createdTime) <= (60 * 24 * 60 * 60 * 1000); // 60 days
+      }
+    }
+    return false;
+  };
+
+  const processPlaceForUser = (place: any) => {
+    const isBusiness = isBusinessLocation(place);
+    const categoryId = getCategoryId(place);
+    const isInherentlyBusiness = categoryId && inherentlyBusinessCatIds.has(categoryId);
+
+    // Requirement 1: Non-business places on unpurchased maps appear as locked pins with padlock icon
+    const isLocked = Boolean(
+      place.isLocked ||
+      (isUserResolved && !isCurrentMapPurchased && !isBusiness && !isInherentlyBusiness)
+    );
+
+    let name = place.name;
+    const isGuest = !isLoggedIn;
+    const isNewLocation = isNewlyAddedLocation(place);
+
+    // Requirement 2: Newly added locations visible to users without an account, but name hidden
+    if (isGuest && isNewLocation && isLocked) {
+      name = {
+        en: "A location was added to the map...",
+        es: "Se agregó una ubicación al mapa...",
+      };
+    }
+
+    return {
+      ...place,
+      name,
+      isLocked,
+      isNewlyAdded: isNewLocation,
+    };
+  };
+
+  // Requirement 1: Pins appear at their respective locations marked with a padlock icon
   const displayPlaces = (selectedCountry && isPlacesSettledForMap)
     ? fetchedPlaces?.filter((place: any) => {
       if (!belongsToSelectedMap(place)) return false;
@@ -972,15 +1016,8 @@ export default function MapPage() {
       const categoryId = getCategoryId(place);
       if (!categoryId) return true;
 
-      // Unpurchased map: only business-type locations OR inherently business categories
-      if (isUserResolved && !isCurrentMapPurchased) {
-        if (!isBusinessLocation(place) && !inherentlyBusinessCatIds.has(categoryId)) {
-          return false;
-        }
-      }
-
       return enabledCategories[categoryId] !== false;
-    })
+    }).map(processPlaceForUser)
     : [];
 
   // Sidebar places: include all locations for selected map (unpurchased spots appear locked with padlock icon)
@@ -993,7 +1030,7 @@ export default function MapPage() {
         }
 
         return true;
-      })
+      }).map(processPlaceForUser)
     : [];
 
   if (!hasMounted) return null;

@@ -500,7 +500,10 @@
     "satellite_view": "Satélite",
     "default_view": "Mapa",
     "location_not_supported": "La geolocalización no es compatible con su navegador.",
-    "unable_to_get_location": "No se puede obtener la ubicación. Permita los permisos de ubicación en su navegador."
+    "unable_to_get_location": "No se puede obtener la ubicación. Permita los permisos de ubicación en su navegador.",
+    "new_location_added": "Se agregó una ubicación al mapa...",
+    "activate_map": "Activar Mapa",
+    "activate_map_cta": "¡Activa este mapa para desbloquear esta y todas las demás ubicaciones exclusivas!"
   },
   "profile": {
     "my_profile": "Mi Perfil",
