@@ -1,3 +1,4 @@
+import { HIDE_GOOGLE_POI_STYLES } from "@/components/Common/maps/map";
 "use client";
 
 import {
@@ -48,6 +49,7 @@ function MapContent() {
           disableDefaultUI={false}
           streetViewControl={false}
           mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID as string}
+          styles={HIDE_GOOGLE_POI_STYLES}
           clickableIcons={false}
         >
           <AdvancedMarker position={position}>

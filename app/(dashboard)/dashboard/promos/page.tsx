@@ -1020,7 +1020,7 @@ export default function PromosPage() {
               <span className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">
                 {meta?.total
                   ? `${(page - 1) * limit + 1}-${Math.min(page * limit, meta.total)} ${t("promos_admin.of") || "of"} ${meta.total} ${t("promos_admin.recipients_total") || "recipients"}`
-                  : `${promos.length} ${t("promos_admin.recipients_total") || "recipients"}`}
+                  : `${promoLinks.length} ${t("promos_admin.recipients_total") || "recipients"}`}
               </span>
 
               {/* Rows Per Page Selector */}

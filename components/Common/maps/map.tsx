@@ -47,13 +47,94 @@ const WORLD_MAP_BOUNDS = {
   strictBounds: true,
 };
 
-/** Hide default Google Maps location/POI icons on the user map so only platform-curated pins are visible */
-const HIDE_GOOGLE_POI_STYLES: google.maps.MapTypeStyle[] = [
+/** Hide default Google Maps location/POI icons (supermarkets, gas stations, malls, businesses, transit) so only platform-curated pins are visible */
+export const HIDE_GOOGLE_POI_STYLES: google.maps.MapTypeStyle[] = [
   {
     featureType: "poi",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.business",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.attraction",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.government",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.medical",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.place_of_worship",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.school",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.sports_complex",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "transit",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "all",
     stylers: [{ visibility: "off" }],
   },
 ];
+
+/** Ensures that Google Maps POIs (supermarkets, gas stations, malls, businesses, transit) remain completely hidden at runtime */
+function MapPoiHider({ isDark }: { isDark: boolean }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+    map.setOptions({
+      styles: HIDE_GOOGLE_POI_STYLES,
+      clickableIcons: false,
+    });
+  }, [map, isDark]);
+
+  return null;
+}
 
 function getPlaceLatLng(place: any): { lat: number; lng: number } | null {
   const coords =
@@ -950,6 +1031,7 @@ export default function MapPage() {
             styles={HIDE_GOOGLE_POI_STYLES}
             clickableIcons={false}
           >
+            <MapPoiHider isDark={isDark} />
             <GeolocationOnLoad
               onLocation={(pos) => {
                 setMarkerPos(pos);
