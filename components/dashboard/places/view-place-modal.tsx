@@ -101,15 +101,15 @@ export function ViewPlaceModal({
             ? `¿Deseas aprobar "${getLocalized(
                 place.name,
                 language
-              )}" y otorgar 50 puntos a ${contributor}?`
+              )}" y otorgar 25 puntos a ${contributor}?`
             : `Do you want to approve "${getLocalized(
                 place.name,
                 language
-              )}" and award 50 points to ${contributor}?`,
+              )}" and award 25 points to ${contributor}?`,
         icon: "question",
         showCancelButton: true,
         confirmButtonText:
-          language === "es" ? "Sí, aprobar (+50 pts)" : "Yes, approve (+50 pts)",
+          language === "es" ? "Sí, aprobar (+25 pts)" : "Yes, approve (+25 pts)",
         cancelButtonText: language === "es" ? "Cancelar" : "Cancel",
         confirmButtonColor: "#10B981",
       })
@@ -511,7 +511,7 @@ export function ViewPlaceModal({
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold gap-1.5 h-8 text-xs shadow-sm cursor-pointer"
                   >
                     <Check size={14} />
-                    {language === "es" ? "Aprobar (+50 pts)" : "Approve (+50 pts)"}
+                    {language === "es" ? "Aprobar (+25 pts)" : "Approve (+25 pts)"}
                   </Button>
                   <Button
                     size="sm"

@@ -474,9 +474,18 @@ export default function RouteMapView({
                 </div>
               </div>
 
-              <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-slate-100 truncate">
-                {getLocalized(activeStop.name, language)}
-              </h4>
+              {activeStop.placeId ? (
+                <Link
+                  href={`/places/${activeStop.placeId}`}
+                  className="text-xs sm:text-sm font-bold text-gray-900 dark:text-slate-100 hover:text-amber-500 hover:underline underline-offset-2 transition-colors truncate block"
+                >
+                  {getLocalized(activeStop.name, language)}
+                </Link>
+              ) : (
+                <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-slate-100 truncate">
+                  {getLocalized(activeStop.name, language)}
+                </h4>
+              )}
               <p className="text-[11px] text-gray-500 dark:text-slate-400 truncate flex items-center gap-1 mt-0.5">
                 <MapPin className="w-3 h-3 flex-shrink-0 text-gray-400" />
                 <span className="truncate">{activeStop.address || "Puerto Rico"}</span>

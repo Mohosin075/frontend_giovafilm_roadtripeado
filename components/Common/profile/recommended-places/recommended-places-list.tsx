@@ -230,8 +230,8 @@ export function RecommendedPlacesList() {
                         <Info size={12} className="shrink-0 text-blue-500" />
                         <span>
                           {isEs
-                            ? "¡Tu lugar fue aceptado y recibiste +50 pts! El administrador lo tiene temporalmente en borrador."
-                            : "Your spot was accepted and you earned +50 pts! The admin currently has it in draft."}
+                            ? `¡Tu lugar fue aceptado y recibiste +${place.pointsAwarded || 25} pts! El administrador lo tiene temporalmente en borrador.`
+                            : `Your spot was accepted and you earned +${place.pointsAwarded || 25} pts! The admin currently has it in draft.`}
                         </span>
                       </div>
                     )}

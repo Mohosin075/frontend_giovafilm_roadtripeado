@@ -121,6 +121,30 @@ export default function RouteDetailViewModal({
     ? getLocalized(stops[stops.length - 1].name, language)
     : "";
 
+  const handleStopDirections = (coordinates: [number, number]) => {
+    if (!coordinates || !coordinates[0] || !coordinates[1]) {
+      toast.info(
+        t("route_planner.no_coordinates") ||
+          "No hay coordenadas disponibles para este lugar"
+      );
+      return;
+    }
+    const [lng, lat] = coordinates;
+    const numLat = Number(lat);
+    const numLng = Number(lng);
+    if (!Number.isFinite(numLat) || !Number.isFinite(numLng) || (numLat === 0 && numLng === 0)) {
+      toast.info(
+        t("route_planner.no_coordinates") ||
+          "No hay coordenadas disponibles para este lugar"
+      );
+      return;
+    }
+    window.open(
+      `https://www.google.com/maps/dir/?api=1&destination=${numLat},${numLng}`,
+      "_blank"
+    );
+  };
+
   const handleOpenGoogleMaps = () => {
     const validCoords = stops
       .map((s: any) => s.coordinates)
@@ -289,27 +313,60 @@ export default function RouteDetailViewModal({
                       </div>
 
                       {/* Thumbnail */}
-                      <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800 shrink-0">
-                        {photo ? (
-                          <SafeImage
-                            src={photo}
-                            alt=""
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-amber-500 bg-amber-500/10">
-                            <MapPin className="w-5 h-5" />
-                          </div>
-                        )}
-                      </div>
+                      {stop.placeId ? (
+                        <Link
+                          href={`/places/${stop.placeId}`}
+                          onClick={(e) => e.stopPropagation()}
+                          title={getLocalized(stop.name, language)}
+                          className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800 shrink-0 block hover:opacity-90 transition-opacity"
+                        >
+                          {photo ? (
+                            <SafeImage
+                              src={photo}
+                              alt=""
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-amber-500 bg-amber-500/10">
+                              <MapPin className="w-5 h-5" />
+                            </div>
+                          )}
+                        </Link>
+                      ) : (
+                        <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800 shrink-0">
+                          {photo ? (
+                            <SafeImage
+                              src={photo}
+                              alt=""
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-amber-500 bg-amber-500/10">
+                              <MapPin className="w-5 h-5" />
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                       {/* Stop Info */}
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate group-hover:text-amber-500 transition-colors">
-                            {getLocalized(stop.name, language)}
-                          </h4>
+                          {stop.placeId ? (
+                            <Link
+                              href={`/places/${stop.placeId}`}
+                              onClick={(e) => e.stopPropagation()}
+                              title={getLocalized(stop.name, language)}
+                              className="text-sm font-bold text-gray-900 dark:text-slate-100 hover:text-amber-500 hover:underline underline-offset-2 transition-colors truncate"
+                            >
+                              {getLocalized(stop.name, language)}
+                            </Link>
+                          ) : (
+                            <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate group-hover:text-amber-500 transition-colors">
+                              {getLocalized(stop.name, language)}
+                            </h4>
+                          )}
                           {stop.category && (
                             <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
                               {getLocalized(stop.category, language)}
@@ -328,18 +385,33 @@ export default function RouteDetailViewModal({
                         )}
                       </div>
 
-                      {/* View Location Link Button */}
-                      {stop.placeId && (
-                        <Link
-                          href={`/places/${stop.placeId}`}
-                          onClick={(e) => e.stopPropagation()}
-                          title={t("route_planner.view_place") || "Ver lugar"}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#FFC107] hover:text-[#FFC107] text-gray-700 dark:text-slate-300 font-bold text-xs shadow-sm transition-all shrink-0"
+                      {/* Action buttons: Get directions & View place */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleStopDirections(stop.coordinates);
+                          }}
+                          title={t("route_planner.directions") || (language === "es" ? "Cómo llegar" : "Get directions")}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-bold text-xs shadow-sm active:scale-95 transition-all cursor-pointer"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">{t("route_planner.view_place") || "Ver lugar"}</span>
-                        </Link>
-                      )}
+                          <Navigation className="w-3.5 h-3.5 fill-gray-950 -rotate-45 shrink-0" />
+                          <span>{t("route_planner.directions") || (language === "es" ? "Cómo llegar" : "Get directions")}</span>
+                        </button>
+
+                        {stop.placeId && (
+                          <Link
+                            href={`/places/${stop.placeId}`}
+                            onClick={(e) => e.stopPropagation()}
+                            title={t("route_planner.view_place") || "Ver lugar"}
+                            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#FFC107] hover:text-[#FFC107] text-gray-700 dark:text-slate-300 font-bold text-xs shadow-sm transition-all"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            <span>{t("route_planner.view_place") || "Ver lugar"}</span>
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   );
                 })}

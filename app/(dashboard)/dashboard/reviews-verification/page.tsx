@@ -162,14 +162,14 @@ export default function ReviewsVerificationPage() {
           ? `¿Deseas aprobar "${getSafeString(
               spot.name,
               language
-            )}" y otorgar 50 puntos a ${contributor}? Se publicará en el mapa oficial de inmediato.`
+            )}" y otorgar 25 puntos a ${contributor}? Se publicará en el mapa oficial de inmediato.`
           : `Approve "${getSafeString(
               spot.name,
               language
-            )}" and award 50 points to ${contributor}? It will go live immediately.`,
+            )}" and award 25 points to ${contributor}? It will go live immediately.`,
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: isEs ? "Sí, aprobar (+50 pts)" : "Yes, approve (+50 pts)",
+        confirmButtonText: isEs ? "Sí, aprobar (+25 pts)" : "Yes, approve (+25 pts)",
         cancelButtonText: isEs ? "Cancelar" : "Cancel",
         confirmButtonColor: "#10B981",
       })
@@ -600,7 +600,7 @@ export default function ReviewsVerificationPage() {
                             )}
                           </div>
                           <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
-                            +50 pts
+                            +25 pts
                           </span>
                         </div>
 
@@ -760,7 +760,7 @@ export default function ReviewsVerificationPage() {
                             className="h-9 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs cursor-pointer"
                           >
                             <Check size={15} className="mr-1" />
-                            {isEs ? "Aprobar (+50)" : "Approve (+50)"}
+                            {isEs ? "Aprobar (+25)" : "Approve (+25)"}
                           </Button>
                         </div>
                       </div>
@@ -921,7 +921,7 @@ export default function ReviewsVerificationPage() {
                                 className="h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer"
                               >
                                 <Check size={14} className="mr-1" />
-                                +50 pts
+                                +25 pts
                               </Button>
                             </div>
                           </td>

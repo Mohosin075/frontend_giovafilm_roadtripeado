@@ -641,8 +641,8 @@ export function RecommendSpotModal({
               </h2>
               <p className="text-sm text-gray-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
                 {isEs
-                  ? "Tu propuesta ha sido enviada al equipo de moderación. En cuanto sea aprobada aparecerá en el mapa con tu crédito oficial 'Descubierto por ti' y recibirás +50 puntos de recompensa en tu perfil."
-                  : "Your recommendation has been submitted to the moderation team. Once approved, it will be published to the map crediting you as the discoverer and you'll receive +50 reward points!"}
+                  ? "Tu propuesta ha sido enviada al equipo de moderación. En cuanto sea aprobada aparecerá en el mapa con tu crédito oficial 'Descubierto por ti' y recibirás +25 puntos de recompensa en tu perfil."
+                  : "Your recommendation has been submitted to the moderation team. Once approved, it will be published to the map crediting you as the discoverer and you'll receive +25 reward points!"}
               </p>
             </div>
             <div className="pt-4 flex justify-center">
@@ -744,7 +744,7 @@ export function RecommendSpotModal({
               <div className="flex items-center justify-between gap-2">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 text-xs font-bold w-fit border border-amber-500/20">
                   <Sparkles size={13} className="text-amber-500 fill-amber-500" />
-                  <span>{isEs ? "Gana +50 puntos de recompensa" : "Earn +50 reward points"}</span>
+                  <span>{isEs ? "Gana +25 puntos de recompensa" : "Earn +25 reward points"}</span>
                 </div>
               </div>
 
@@ -1366,9 +1366,9 @@ export function RecommendSpotModal({
                     {isEs ? "Enviando lugar..." : "Submitting spot..."}
                   </>
                 ) : isEs ? (
-                  "Enviar Lugar (+50 pts)"
+                  "Enviar Lugar (+25 pts)"
                 ) : (
-                  "Submit Spot (+50 pts)"
+                  "Submit Spot (+25 pts)"
                 )}
               </Button>
             </div>

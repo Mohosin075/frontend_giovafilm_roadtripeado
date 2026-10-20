@@ -159,7 +159,7 @@ export function PlacesTable() {
     const contributor =
       place.discoveredByName || place.discoveredBy?.name || "el usuario";
     const titleText = t("places_admin.approve_recommended_title") || "Approve recommended spot?";
-    const bodyTemplate = t("places_admin.approve_recommended_prompt") || 'Do you want to approve "{name}" and award 50 points to {contributor}?';
+    const bodyTemplate = t("places_admin.approve_recommended_prompt") || 'Do you want to approve "{name}" and award 25 points to {contributor}?';
     const bodyText = bodyTemplate
       .replace("{name}", getSafeString(place.name, language))
       .replace("{contributor}", contributor);
@@ -170,7 +170,7 @@ export function PlacesTable() {
         text: bodyText,
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: t("places_admin.approve_btn_pts") || "Yes, approve (+50 pts)",
+        confirmButtonText: t("places_admin.approve_btn_pts") || "Yes, approve (+25 pts)",
         cancelButtonText: t("common.cancel") || "Cancel",
         confirmButtonColor: "#10B981",
       })
