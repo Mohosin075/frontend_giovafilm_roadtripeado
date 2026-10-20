@@ -223,14 +223,9 @@ export default function ReviewsVerificationPage() {
     pointsToAward: number,
     targetName: string
   ) => {
-    const pointsInfo =
-      pointsToAward > 0
-        ? isEs
-          ? `Se otorgarán +${pointsToAward} puntos al usuario.`
-          : `+${pointsToAward} points will be awarded to reviewer.`
-        : isEs
-        ? `0 puntos (el usuario no ha comprado este mapa).`
-        : `0 points (reviewer has not purchased this map).`;
+    const pointsInfo = isEs
+      ? `Se otorgarán +${pointsToAward} puntos al usuario.`
+      : `+${pointsToAward} points will be awarded to reviewer.`;
 
     appAlert
       .fire({
@@ -1011,19 +1006,8 @@ export default function ReviewsVerificationPage() {
                   }
                 }
 
-                // Check if user purchased map
-                const userPurchasedMaps = Array.isArray(review.reviewer?.purchasedMaps)
-                  ? review.reviewer.purchasedMaps
-                  : [];
-                const placeMapId = targetEntity?.map?._id || targetEntity?.map;
-                const isMapPurchased =
-                  !placeMapId ||
-                  userPurchasedMaps.some((m: any) => {
-                    const mid = typeof m === "object" ? (m._id || m.id) : m;
-                    return String(mid) === String(placeMapId);
-                  });
-
-                const pointsToAward = isMapPurchased ? calculatedPoints : 0;
+                // Review awards calculated points: Rating 1pt, Text 4pts, 200+ chars 5pts bonus (total up to 10 pts)
+                const pointsToAward = calculatedPoints;
 
                 return (
                   <Card
@@ -1091,23 +1075,10 @@ export default function ReviewsVerificationPage() {
                             <span>{review.rating || 0}.0</span>
                           </div>
 
-                          {isMapPurchased ? (
-                            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                              <Sparkles size={11} className="text-emerald-500" />
-                              +{pointsToAward} pts
-                            </span>
-                          ) : (
-                            <span
-                              className="text-[10px] font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 px-2.5 py-0.5 rounded-full"
-                              title={
-                                isEs
-                                  ? "El usuario no ha comprado este mapa, por lo que ganará 0 puntos"
-                                  : "Reviewer has not purchased this map, so 0 points will be awarded"
-                              }
-                            >
-                              {isEs ? "0 pts (Mapa no comprado)" : "0 pts (Unpurchased Map)"}
-                            </span>
-                          )}
+                          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                            <Sparkles size={11} className="text-emerald-500" />
+                            +{pointsToAward} pts
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1154,20 +1125,18 @@ export default function ReviewsVerificationPage() {
                           <span>
                             {reviewContent.trim().length} {isEs ? "caracteres" : "chars"}
                           </span>
-                          {isMapPurchased ? (
-                            reviewContent.trim().length >= 200 ? (
-                              <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-                                <Sparkles size={11} />
-                                {isEs ? "Bono completo (1+4+5 = 10 pts)" : "Full bonus (1+4+5 = 10 pts)"}
-                              </span>
-                            ) : (
-                              <span>
-                                {isEs ? "Calificación + Texto (1+4 = 5 pts)" : "Rating + Text (1+4 = 5 pts)"}
-                              </span>
-                            )
+                          {reviewContent.trim().length >= 200 ? (
+                            <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                              <Sparkles size={11} />
+                              {isEs ? "Bono completo (1+4+5 = 10 pts)" : "Full bonus (1+4+5 = 10 pts)"}
+                            </span>
+                          ) : reviewContent.trim().length > 0 ? (
+                            <span className="text-blue-600 dark:text-blue-400 font-medium">
+                              {isEs ? "Calificación + Texto (1+4 = 5 pts)" : "Rating + Text (1+4 = 5 pts)"}
+                            </span>
                           ) : (
-                            <span className="text-amber-700 dark:text-amber-400">
-                              {isEs ? "Sin puntos (mapa no comprado)" : "No points (map unpurchased)"}
+                            <span className="text-gray-600 dark:text-slate-400 font-medium">
+                              {isEs ? "Solo calificación (1 pt)" : "Rating only (1 pt)"}
                             </span>
                           )}
                         </div>

@@ -52,7 +52,7 @@ type PromoType = "upgrade" | "influencer" | "custom";
 export default function PromosPage() {
   const { t, language } = useLanguage();
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit, setLimit] = useState(25);
   const [searchTerm, setSearchTerm] = useState("");
   const [isUsedFilter, setIsUsedFilter] = useState("");
   const [mapFilter, setMapFilter] = useState("");
@@ -1014,34 +1014,96 @@ export default function PromosPage() {
             </table>
           </div>
 
-          {/* Table Pagination */}
-          {meta && meta.totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-slate-800">
-              <span className="text-[10px] md:text-xs text-gray-500 dark:text-slate-400">
-                {t("promos_admin.page") || "Page"} {page} {t("promos_admin.of") || "of"} {meta.totalPages} ({meta.total} {t("promos_admin.total") || "total"})
+          {/* Table Pagination & View More Controls */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-[11px] text-gray-500 dark:text-slate-400 font-medium">
+                {meta?.total
+                  ? `${(page - 1) * limit + 1}-${Math.min(page * limit, meta.total)} ${t("promos_admin.of") || "of"} ${meta.total} ${t("promos_admin.recipients_total") || "recipients"}`
+                  : `${promos.length} ${t("promos_admin.recipients_total") || "recipients"}`}
               </span>
-              <div className="flex items-center gap-2">
+
+              {/* Rows Per Page Selector */}
+              <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-slate-400">
+                <span className="text-[11px]">{t("promos_admin.show") || "Show"}:</span>
+                <select
+                  value={limit}
+                  onChange={(e) => {
+                    setLimit(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  className="h-8 px-2 text-xs font-bold rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                  <option value={200}>200</option>
+                </select>
+              </div>
+
+              {/* Quick View More / View All toggle */}
+              {limit < 100 && (meta?.total || 0) > limit && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLimit(100);
+                    setPage(1);
+                  }}
+                  className="text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline cursor-pointer"
+                >
+                  {t("promos_admin.view_more_btn") || "+ View more (Show 100)"}
+                </button>
+              )}
+            </div>
+
+            {/* Pagination Buttons */}
+            {meta && meta.totalPages > 1 && (
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <Button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
                   variant="outline"
                   size="sm"
-                  className="rounded-xl border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 text-xs px-3"
+                  className="rounded-xl border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 text-xs px-3 h-8"
                 >
                   {t("common.previous") || "Previous"}
                 </Button>
+
+                {/* Page Jump Numbers */}
+                {Array.from({ length: meta.totalPages }, (_, i) => i + 1)
+                  .filter((p) => p === 1 || p === meta.totalPages || Math.abs(p - page) <= 1)
+                  .map((p, idx, arr) => (
+                    <span key={p} className="flex items-center">
+                      {idx > 0 && arr[idx - 1] !== p - 1 && (
+                        <span className="px-1 text-gray-400 text-xs">...</span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setPage(p)}
+                        className={`w-8 h-8 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          page === p
+                            ? "bg-amber-500 text-white shadow-xs"
+                            : "text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    </span>
+                  ))}
+
                 <Button
                   onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
                   disabled={page === meta.totalPages}
                   variant="outline"
                   size="sm"
-                  className="rounded-xl border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 text-xs px-3"
+                  className="rounded-xl border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 text-xs px-3 h-8"
                 >
                   {t("common.next") || "Next"}
                 </Button>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

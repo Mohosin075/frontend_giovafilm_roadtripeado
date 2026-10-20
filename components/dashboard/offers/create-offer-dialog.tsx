@@ -155,21 +155,12 @@ export function CreateOfferDialog({
         maxRedemptions: initialData.maxRedemptions?.toString() || "",
         totalRedemptionLimit:
           initialData.totalRedemptionLimit?.toString() || "",
-        redemptionFrequency:
-          initialData.redemptionFrequency ||
-          (Number(initialData.redemptionDuration) === 1440
-            ? "daily"
-            : Number(initialData.redemptionDuration) === 10080
-              ? "weekly"
-              : Number(initialData.redemptionDuration) === 43200
-                ? "monthly"
-                : Number(initialData.redemptionDuration) >= 525600
-                  ? "once"
-                  : initialData.redemptionDuration
-                    ? "custom"
-                    : "daily"),
+        redemptionFrequency: initialData.redemptionFrequency || "daily",
         redemptionDuration:
-          initialData.redemptionDuration?.toString() || "1440",
+          (initialData.redemptionDuration && Number(initialData.redemptionDuration) < 1440
+            ? initialData.redemptionDuration
+            : 15
+          ).toString(),
         buttonLabel: initialData.buttonLabel || "Redeem Offer",
         status: initialData.status || "Active",
       });
@@ -197,7 +188,7 @@ export function CreateOfferDialog({
         maxRedemptions: "",
         totalRedemptionLimit: "",
         redemptionFrequency: "daily",
-        redemptionDuration: "1440",
+        redemptionDuration: "15",
         buttonLabel: "Redeem Offer",
         status: "Active",
       });
@@ -261,15 +252,7 @@ export function CreateOfferDialog({
         maxRedemptions: Number(data.maxRedemptions) || 0,
         totalRedemptionLimit: Number(data.totalRedemptionLimit) || null,
         redemptionFrequency: data.redemptionFrequency || "daily",
-        redemptionDuration:
-          Number(data.redemptionDuration) ||
-          (data.redemptionFrequency === "weekly"
-            ? 10080
-            : data.redemptionFrequency === "monthly"
-              ? 43200
-              : data.redemptionFrequency === "once"
-                ? 525600
-                : 1440),
+        redemptionDuration: Number(data.redemptionDuration) || 15,
         redemptionRules: rules,
         buttonLabel: data.buttonLabel,
         status: data.status || "Active",
@@ -561,6 +544,7 @@ export function CreateOfferDialog({
               </p>
             </div>
 
+            {/* Redemption Frequency */}
             <div>
               <Label
                 htmlFor="redemptionFrequency"
@@ -572,20 +556,11 @@ export function CreateOfferDialog({
                 id="redemptionFrequency"
                 className="w-full mt-1 px-3 py-2 border border-gray-300 dark:border-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white dark:bg-slate-900/60 text-gray-900 dark:text-slate-100"
                 {...register("redemptionFrequency")}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setValue("redemptionFrequency", val);
-                  if (val === "daily") setValue("redemptionDuration", "1440");
-                  else if (val === "weekly") setValue("redemptionDuration", "10080");
-                  else if (val === "monthly") setValue("redemptionDuration", "43200");
-                  else if (val === "once") setValue("redemptionDuration", "525600");
-                }}
               >
-                <option value="daily">{t("offers_admin.freq_daily")}</option>
-                <option value="weekly">{t("offers_admin.freq_weekly")}</option>
-                <option value="monthly">{t("offers_admin.freq_monthly")}</option>
-                <option value="once">{t("offers_admin.freq_once")}</option>
-                <option value="custom">{t("offers_admin.freq_custom")}</option>
+                <option value="daily">{t("offers_admin.freq_daily") || "Daily (Every 24 hours)"}</option>
+                <option value="weekly">{t("offers_admin.freq_weekly") || "Weekly (Every 7 days)"}</option>
+                <option value="monthly">{t("offers_admin.freq_monthly") || "Monthly (Every 30 days)"}</option>
+                <option value="once">{t("offers_admin.freq_once") || "Once (Single use per customer)"}</option>
               </select>
 
               {(watch("redemptionFrequency") || "daily") === "daily" && (
@@ -608,24 +583,62 @@ export function CreateOfferDialog({
                   Each customer can only redeem this offer once
                 </p>
               )}
+            </div>
+          </div>
 
-              {watch("redemptionFrequency") === "custom" && (
-                <div className="mt-2">
-                  <Label htmlFor="redemptionDuration" className="text-xs text-gray-600 dark:text-slate-300">
-                    Duration in minutes
-                  </Label>
-                  <Input
-                    id="redemptionDuration"
-                    type="number"
-                    min={1}
-                    placeholder={t("offers_admin.duration_placeholder") || "e.g., 1440 for 24 hours"}
-                    className="mt-1 text-xs dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-100"
-                    {...register("redemptionDuration", {
-                      required: "Duration is required",
-                    })}
-                  />
-                </div>
-              )}
+          {/* Countdown Timer Duration for Verification */}
+          <div className="rounded-2xl border border-amber-200/80 dark:border-amber-800/60 bg-amber-50/50 dark:bg-amber-950/20 p-4">
+            <div className="flex items-center justify-between mb-1.5">
+              <Label
+                htmlFor="redemptionDuration"
+                className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-1.5"
+              >
+                <span>⏱️</span>
+                <span>{t("offers_admin.countdown_timer_label") || "Countdown Timer Duration (Minutes)"}</span>
+              </Label>
+              <span className="text-xs font-black text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/60 px-2 py-0.5 rounded-md">
+                {watch("redemptionDuration") || 15} {t("offers_admin.minutes") || "mins"}
+              </span>
+            </div>
+
+            <p className="text-xs text-gray-600 dark:text-slate-400 mb-3">
+              {t("offers_admin.countdown_timer_desc") ||
+                "Duration of the active timer shown to staff when a customer redeems this offer (e.g., 15 minutes for staff verification)."}
+            </p>
+
+            <div className="flex items-center gap-2 flex-wrap mb-2.5">
+              {[5, 10, 15, 30, 45, 60, 120].map((mins) => (
+                <button
+                  key={mins}
+                  type="button"
+                  onClick={() => setValue("redemptionDuration", mins.toString())}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    Number(watch("redemptionDuration")) === mins
+                      ? "bg-amber-500 text-white shadow-xs"
+                      : "bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  {mins} min
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Input
+                id="redemptionDuration"
+                type="number"
+                min={1}
+                max={1440}
+                placeholder="15"
+                className="text-xs bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100 font-bold max-w-[140px]"
+                {...register("redemptionDuration", {
+                  required: "Countdown timer duration is required",
+                  min: { value: 1, message: "Minimum 1 minute" },
+                })}
+              />
+              <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">
+                {t("offers_admin.minutes_custom") || "minutes (custom duration)"}
+              </span>
             </div>
           </div>
 

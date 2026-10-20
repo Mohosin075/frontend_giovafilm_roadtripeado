@@ -5,6 +5,13 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { getImageUrl, getLocalized } from "@/lib/utils";
 import { UserProfileModal } from "@/components/dashboard/users-roles/user-profile-modal";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Search } from "lucide-react";
+import {
   Users,
   TrendingUp,
   Calendar,
@@ -37,6 +44,18 @@ export interface IUserActivityItem {
   timestamp: string | Date;
 }
 
+export interface IActiveUserSummary {
+  _id: string;
+  name: string;
+  email: string;
+  profile?: string;
+  role?: string;
+  level?: number;
+  points?: number;
+  lastActive: string | Date;
+  activityType?: string;
+}
+
 export interface IUserActivityStats {
   activeUsersToday: number;
   activeUsersThisWeek: number;
@@ -46,10 +65,32 @@ export interface IUserActivityStats {
   totalOffersRedeemed: number;
   totalReviews: number;
   recentActivities: IUserActivityItem[];
+  activeUsersList?: IActiveUserSummary[];
 }
 
 export function UserActivityOverview({ data }: { data?: IUserActivityStats }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [isActiveUsersModalOpen, setIsActiveUsersModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [searchUserTerm, setSearchUserTerm] = useState("");
+
+  const activeUsers = data?.activeUsersList || [];
+  const filteredUsers = activeUsers.filter((u) => {
+    if (!searchUserTerm.trim()) return true;
+    const term = searchUserTerm.toLowerCase();
+    return (
+      u.name.toLowerCase().includes(term) ||
+      u.email.toLowerCase().includes(term) ||
+      (u.role && u.role.toLowerCase().includes(term))
+    );
+  });
+
+  const handleOpenUserProfile = (userId?: string) => {
+    if (!userId) return;
+    setSelectedUserId(userId);
+    setIsProfileModalOpen(true);
+  };
 
   const metrics = [
     {
@@ -58,6 +99,7 @@ export function UserActivityOverview({ data }: { data?: IUserActivityStats }) {
       subtext: t("reports_admin.active_today_sub") || "Active users in last 24h",
       icon: <Users size={20} />,
       iconBgColor: "bg-amber-500",
+      clickable: true,
     },
     {
       label: t("reports_admin.active_this_week") || "Active This Week (7d)",
@@ -65,6 +107,7 @@ export function UserActivityOverview({ data }: { data?: IUserActivityStats }) {
       subtext: t("reports_admin.active_week_sub") || "Active users in last 7 days",
       icon: <TrendingUp size={20} />,
       iconBgColor: "bg-amber-600",
+      clickable: true,
     },
     {
       label: t("reports_admin.active_this_month") || "Active This Month (30d)",
@@ -72,6 +115,7 @@ export function UserActivityOverview({ data }: { data?: IUserActivityStats }) {
       subtext: t("reports_admin.active_month_sub") || "Active users in last 30 days",
       icon: <Calendar size={20} />,
       iconBgColor: "bg-amber-700",
+      clickable: true,
     },
     {
       label: t("reports_admin.total_registered") || "Total Registered Users",
@@ -79,21 +123,46 @@ export function UserActivityOverview({ data }: { data?: IUserActivityStats }) {
       subtext: t("reports_admin.total_users_sub") || "Total platform accounts",
       icon: <UserCheck size={20} />,
       iconBgColor: "bg-emerald-600",
+      clickable: true,
     },
   ];
 
   return (
     <div className="space-y-4">
+      {/* Section Header with Quick Active Users Inspection CTA */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Users size={18} className="text-amber-600 dark:text-amber-400" />
+          <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">
+            {t("reports_admin.user_overview") || "User Overview"}
+          </h3>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsActiveUsersModalOpen(true)}
+          className="text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg border border-amber-500/20 transition-all inline-flex items-center gap-1.5 cursor-pointer"
+        >
+          <UserCheck size={13} />
+          <span>{t("reports_admin.view_active_profiles") || "View Active Users & Profiles"}</span>
+        </button>
+      </div>
+
       {/* 4 Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((stat, idx) => (
           <div
             key={idx}
-            className="bg-white dark:bg-[#131b2e] p-5 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all"
+            onClick={() => stat.clickable && setIsActiveUsersModalOpen(true)}
+            className={`bg-white dark:bg-[#131b2e] p-5 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm transition-all ${
+              stat.clickable
+                ? "cursor-pointer hover:border-amber-400/80 hover:shadow-md hover:-translate-y-0.5 group"
+                : ""
+            }`}
+            title={stat.clickable ? (t("reports_admin.click_to_view_users") || "Click to view active users") : undefined}
           >
             <div className="flex items-center justify-between">
               <div className="min-w-0 flex-1">
-                <p className="text-gray-500 dark:text-slate-400 text-xs font-semibold mb-1 truncate">
+                <p className="text-gray-500 dark:text-slate-400 text-xs font-semibold mb-1 truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                   {stat.label}
                 </p>
                 <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">
@@ -105,7 +174,7 @@ export function UserActivityOverview({ data }: { data?: IUserActivityStats }) {
               </div>
 
               <div
-                className={`${stat.iconBgColor} text-white rounded-xl p-3 shrink-0 flex items-center justify-center shadow-xs`}
+                className={`${stat.iconBgColor} text-white rounded-xl p-3 shrink-0 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform`}
               >
                 {stat.icon}
               </div>
@@ -113,6 +182,113 @@ export function UserActivityOverview({ data }: { data?: IUserActivityStats }) {
           </div>
         ))}
       </div>
+
+      {/* Active Users Dialog */}
+      <Dialog open={isActiveUsersModalOpen} onOpenChange={setIsActiveUsersModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0 overflow-hidden rounded-3xl bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-800 shadow-2xl">
+          <DialogHeader className="p-5 pb-3 border-b border-gray-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                  <Users size={20} />
+                </div>
+                <div>
+                  <DialogTitle className="text-lg font-black text-gray-900 dark:text-white">
+                    {t("reports_admin.active_users_list_title") || "Active Users"}
+                  </DialogTitle>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
+                    {filteredUsers.length} {t("reports_admin.active_users_found") || "active user(s) recorded"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Search Input */}
+            <div className="relative mt-3">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchUserTerm}
+                onChange={(e) => setSearchUserTerm(e.target.value)}
+                placeholder={t("reports_admin.search_users_placeholder") || "Search by name, email, or role..."}
+                className="w-full pl-9 pr-3 py-2 text-xs font-medium rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+              />
+            </div>
+          </DialogHeader>
+
+          {/* Active Users List */}
+          <div className="p-4 sm:p-5 overflow-y-auto max-h-[60vh] space-y-2.5">
+            {filteredUsers.length === 0 ? (
+              <div className="text-center py-10 text-xs text-gray-400 dark:text-slate-500">
+                {t("reports_admin.no_active_users_found") || "No active users matching your search."}
+              </div>
+            ) : (
+              filteredUsers.map((user) => (
+                <div
+                  key={user._id}
+                  className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-gray-50/70 dark:bg-slate-900/60 hover:bg-amber-50/60 dark:hover:bg-slate-800/60 border border-gray-100 dark:border-slate-800/80 transition-all"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      onClick={() => handleOpenUserProfile(user._id)}
+                      className="w-10 h-10 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center shrink-0 overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    >
+                      {user.profile ? (
+                        <img
+                          src={getImageUrl(user.profile)}
+                          alt={user.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span>{user.name.slice(0, 2).toUpperCase()}</span>
+                      )}
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenUserProfile(user._id)}
+                          className="font-bold text-sm text-gray-900 dark:text-slate-100 hover:text-amber-600 dark:hover:text-amber-400 hover:underline cursor-pointer truncate text-left"
+                        >
+                          {user.name}
+                        </button>
+                        {user.role && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 uppercase tracking-wider">
+                            {user.role}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-slate-400 truncate mt-0.5">
+                        {user.email || "No email"} · {user.points ?? 0} pts · Level {user.level ?? 0}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleOpenUserProfile(user._id)}
+                    className="px-3 py-1.5 rounded-xl bg-[#FFC107] hover:bg-[#e6ad06] text-gray-950 font-black text-xs shadow-xs transition-all active:scale-95 shrink-0 inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <UserCheck size={12} />
+                    <span>{t("reports_admin.view_profile") || "View Profile"}</span>
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* User Profile Modal */}
+      <UserProfileModal
+        userId={selectedUserId}
+        isOpen={isProfileModalOpen}
+        onClose={() => {
+          setIsProfileModalOpen(false);
+          setSelectedUserId(null);
+        }}
+      />
 
       {/* Engagement Quick Strip */}
       <div className="bg-white dark:bg-[#131b2e] rounded-xl border border-gray-200 dark:border-slate-800 p-4 shadow-sm grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -352,9 +528,22 @@ export function RecentUserActivityLog({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 text-[11px] text-gray-400 dark:text-slate-500 font-medium shrink-0 self-end sm:self-auto">
-                  <Clock size={11} />
-                  <span>{formatActivityTime(act.timestamp)}</span>
+                <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                  <div className="flex items-center gap-1 text-[11px] text-gray-400 dark:text-slate-500 font-medium">
+                    <Clock size={11} />
+                    <span>{formatActivityTime(act.timestamp)}</span>
+                  </div>
+                  {act.userId && (
+                    <button
+                      type="button"
+                      onClick={() => handleOpenUser(act.userId)}
+                      className="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 text-[11px] font-bold border border-amber-500/20 transition-all inline-flex items-center gap-1 cursor-pointer"
+                      title={t("reports_admin.view_profile") || "View Profile"}
+                    >
+                      <UserCheck size={11} />
+                      <span className="hidden sm:inline">{t("reports_admin.profile") || "Profile"}</span>
+                    </button>
+                  )}
                 </div>
               </div>
             );

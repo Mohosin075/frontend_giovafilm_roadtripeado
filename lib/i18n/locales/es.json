@@ -1044,7 +1044,11 @@
     "redeem_offer": "Canjear Oferta",
     "deleted": "¡Eliminado!",
     "deleted_successfully": "La oferta ha sido eliminada.",
-    "fixed_price": "Precio Fijo (total del paquete $)"
+    "fixed_price": "Precio Fijo (total del paquete $)",
+    "countdown_timer_label": "Duración del temporizador de cuenta regresiva (Minutos)",
+    "countdown_timer_desc": "Duración del temporizador activo que se muestra al personal cuando un cliente canjea esta oferta (ej., 15 minutos para verificación del personal).",
+    "minutes": "mins",
+    "minutes_custom": "minutos (duración personalizada)"
   },
   "places_admin": {
     "place": "Lugar",
@@ -1227,7 +1231,16 @@
     "net_revenue": "Ingresos Netos",
     "places_visited": "Lugares Visitados",
     "offers_redeemed": "Ofertas Canjeadas",
-    "reviews": "Reseñas"
+    "reviews": "Reseñas",
+    "user_overview": "Resumen de Usuarios",
+    "view_active_profiles": "Ver usuarios activos y perfiles",
+    "click_to_view_users": "Haz clic para ver usuarios activos",
+    "active_users_list_title": "Usuarios Activos",
+    "active_users_found": "usuario(s) activo(s) registrados",
+    "search_users_placeholder": "Buscar por nombre, correo o rol...",
+    "no_active_users_found": "No se encontraron usuarios activos con esa búsqueda.",
+    "view_profile": "Ver Perfil",
+    "profile": "Perfil"
   },
   "settings_admin": {
     "general_title": "Configuración General",
@@ -1512,7 +1525,10 @@
     "select_invitation_type_hint": "Selecciona el tipo de invitación para preconfigurar las reglas automáticamente.",
     "page": "Página",
     "of": "de",
-    "total": "total"
+    "total": "total",
+    "recipients_total": "destinatarios",
+    "show": "Mostrar",
+    "view_more_btn": "+ Ver más (Mostrar 100)"
   },
   "rewards_admin": {
     "pts_placeholder": "ej. 15",
@@ -2007,6 +2023,9 @@
     "guest_passes_in_system": "Pases de invitado registrados en el sistema"
   },
   "reports": {
+    "map_name": "Nombre del Mapa",
+    "place_name": "Nombre del Lugar",
+    "offer_title": "Título de la Oferta",
     "failed_load": "Error al cargar los datos de informes."
   },
   "maps": {
@@ -2260,11 +2279,5 @@
     "invitation_claimed": "¡Invitación Canjeada!",
     "invitation_claimed_desc": "Tu acceso gratuito al mapa ha sido activado. Redirigiéndote a tu mapa ahora...",
     "open_map": "Abrir Mapa"
-  },
-  "reports": {
-    "map_name": "Nombre del Mapa",
-    "place_name": "Nombre del Lugar",
-    "offer_title": "Título de la Oferta",
-    "failed_load": "Error al cargar los datos de informes."
   }
 }

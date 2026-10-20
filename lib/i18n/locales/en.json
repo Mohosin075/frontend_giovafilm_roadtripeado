@@ -1044,7 +1044,11 @@
     "redeem_offer": "Redeem Offer",
     "deleted": "Deleted!",
     "deleted_successfully": "The offer has been deleted.",
-    "fixed_price": "Fixed Price (bundle total $)"
+    "fixed_price": "Fixed Price (bundle total $)",
+    "countdown_timer_label": "Countdown Timer Duration (Minutes)",
+    "countdown_timer_desc": "Duration of the active timer shown to staff when a customer redeems this offer (e.g., 15 minutes for staff verification).",
+    "minutes": "mins",
+    "minutes_custom": "minutes (custom duration)"
   },
   "places_admin": {
     "place": "Place",
@@ -1227,7 +1231,16 @@
     "net_revenue": "Net Revenue",
     "places_visited": "Places Visited",
     "offers_redeemed": "Offers Redeemed",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "user_overview": "User Overview",
+    "view_active_profiles": "View Active Users & Profiles",
+    "click_to_view_users": "Click to view active users",
+    "active_users_list_title": "Active Users",
+    "active_users_found": "active user(s) recorded",
+    "search_users_placeholder": "Search by name, email, or role...",
+    "no_active_users_found": "No active users matching your search.",
+    "view_profile": "View Profile",
+    "profile": "Profile"
   },
   "settings_admin": {
     "general_title": "General Settings",
@@ -1512,7 +1525,10 @@
     "select_invitation_type_hint": "Select invitation type to automatically pre-configure rules.",
     "page": "Page",
     "of": "of",
-    "total": "total"
+    "total": "total",
+    "recipients_total": "recipients",
+    "show": "Show",
+    "view_more_btn": "+ View more (Show 100)"
   },
   "rewards_admin": {
     "pts_placeholder": "e.g. 15",
@@ -2007,6 +2023,9 @@
     "guest_passes_in_system": "Guest passes registered in the system"
   },
   "reports": {
+    "map_name": "Map Name",
+    "place_name": "Place Name",
+    "offer_title": "Offer Title",
     "failed_load": "Failed to load reports data."
   },
   "maps": {
@@ -2260,11 +2279,5 @@
     "invitation_claimed": "Invitation Claimed!",
     "invitation_claimed_desc": "Your free map access has been activated. Redirecting you to your map now...",
     "open_map": "Open Map"
-  },
-  "reports": {
-    "map_name": "Map Name",
-    "place_name": "Place Name",
-    "offer_title": "Offer Title",
-    "failed_load": "Failed to load reports data."
   }
 }
