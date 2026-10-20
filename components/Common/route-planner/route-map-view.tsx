@@ -247,6 +247,64 @@ function PanToActiveStopHandler({
   return null;
 }
 
+// Safe marker rendering component that ensures Google Maps marker library is ready before mounting
+function RouteStopMarkers({
+  stops,
+  activeIndex,
+  onMarkerClick,
+  language,
+}: {
+  stops: RouteStopItem[];
+  activeIndex: number;
+  onMarkerClick: (index: number) => void;
+  language: string;
+}) {
+  const markerLib = useMapsLibrary("marker");
+  if (!markerLib) return null;
+
+  return (
+    <>
+      {stops.map((stop, index) => {
+        const lat = Number(stop.coordinates?.[1]);
+        const lng = Number(stop.coordinates?.[0]);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return null;
+
+        const isSelected = activeIndex === index;
+
+        return (
+          <AdvancedMarker
+            key={stop.id || stop.placeId || `marker-${index}`}
+            position={{ lat, lng }}
+            zIndex={isSelected ? 50 : 10}
+            onClick={() => onMarkerClick(index)}
+          >
+            <div
+              title={`${index + 1}. ${getLocalized(stop.name, language)}`}
+              className={`relative flex items-center justify-center cursor-pointer transition-all duration-300 transform select-none ${
+                isSelected ? "scale-125 z-30" : "hover:scale-110 z-10"
+              }`}
+            >
+              {/* Numbered Pin Badge */}
+              <div
+                className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-sm shadow-xl border-2 transition-all ${
+                  isSelected
+                    ? "bg-[#FFC107] text-gray-950 border-white ring-4 ring-[#FFC107]/40 shadow-amber-500/30"
+                    : "bg-white dark:bg-[#131b2e] text-gray-950 dark:text-amber-400 border-[#FFC107]"
+                }`}
+              >
+                {index + 1}
+              </div>
+
+              {/* Marker Pin Tail */}
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#FFC107] rotate-45 rounded-[1px]" />
+            </div>
+          </AdvancedMarker>
+        );
+      })}
+    </>
+  );
+}
+
 export default function RouteMapView({
   stops,
   selectedStopIndex,
@@ -362,54 +420,12 @@ export default function RouteMapView({
         />
 
         {/* Markers for each stop */}
-        {stops.map((stop, index) => {
-          const lat = Number(stop.coordinates?.[1]);
-          const lng = Number(stop.coordinates?.[0]);
-          if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return null;
-
-          const isSelected = activeIndex === index;
-
-          return (
-            <AdvancedMarker
-              key={stop.id || `marker-${index}`}
-              position={{ lat, lng }}
-              onClick={() => handleMarkerClick(index)}
-            >
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleMarkerClick(index);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleMarkerClick(index);
-                  }
-                }}
-                title={`${index + 1}. ${getLocalized(stop.name, language)}`}
-                className={`relative flex items-center justify-center cursor-pointer transition-all duration-300 transform select-none ${
-                  isSelected ? "scale-125 z-30" : "hover:scale-110 z-10"
-                }`}
-              >
-                {/* Numbered Pin Badge */}
-                <div
-                  className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-sm shadow-xl border-2 transition-all ${
-                    isSelected
-                      ? "bg-[#FFC107] text-gray-950 border-white ring-4 ring-[#FFC107]/40 shadow-amber-500/30"
-                      : "bg-white dark:bg-[#131b2e] text-gray-950 dark:text-amber-400 border-[#FFC107]"
-                  }`}
-                >
-                  {index + 1}
-                </div>
-
-                {/* Marker Pin Tail */}
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#FFC107] rotate-45 rounded-[1px]" />
-              </div>
-            </AdvancedMarker>
-          );
-        })}
+        <RouteStopMarkers
+          stops={stops}
+          activeIndex={activeIndex}
+          onMarkerClick={handleMarkerClick}
+          language={language}
+        />
       </Map>
 
       {/* Floating Route Legend & Stops Counter */}

@@ -24,6 +24,15 @@ export default function GlobalError({
       /Failed to fetch dynamically imported module/i.test(msg)
     ) {
       window.location.reload();
+    } else if (/getRootNode/i.test(msg)) {
+      // Auto-recover from transient Google Maps DOM unmount race condition
+      const hasRetried = sessionStorage.getItem("maps_unmount_recovered");
+      if (!hasRetried) {
+        sessionStorage.setItem("maps_unmount_recovered", "1");
+        setTimeout(() => reset(), 50);
+      } else {
+        sessionStorage.removeItem("maps_unmount_recovered");
+      }
     }
   }, [error]);
 
