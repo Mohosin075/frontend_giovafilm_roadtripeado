@@ -15,6 +15,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 /**
  * Enforces dashboard access by role:
@@ -37,6 +38,7 @@ export function DashboardRoleGuard({
     { skip: !accessToken },
   );
 
+  const { t } = useLanguage();
   const role = profile?.role || authUser?.role;
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export function DashboardRoleGuard({
     return (
       <div className="flex items-center justify-center min-h-[40vh] gap-2 text-gray-500">
         <Loader2 className="h-5 w-5 animate-spin" />
-        Checking access...
+        {t("dashboard.checking_access") || "Checking access..."}
       </div>
     );
   }
@@ -91,7 +93,7 @@ export function DashboardRoleGuard({
     return (
       <div className="flex items-center justify-center min-h-[40vh] gap-2 text-gray-500">
         <Loader2 className="h-5 w-5 animate-spin" />
-        Redirecting...
+        {t("dashboard.redirecting") || "Redirecting..."}
       </div>
     );
   }

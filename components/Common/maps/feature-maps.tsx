@@ -32,7 +32,7 @@ function FeaturedMapsInner() {
   return (
     <div className="bg-gray-50 dark:bg-[#0b0f19] py-10 font-inter min-h-screen">
       <div className="mx-auto px-4 md:px-6" style={{ maxWidth: "1300px" }}>
-        <div className="px- 4 md:px-6">
+        <div className="px-4 md:px-6">
           <div className="flex justify-between items-center mb-5 mt-2">
             <div className="">
               <h2 className="text-3xl font-bold leading-normal text-gray-900 dark:text-slate-100">
