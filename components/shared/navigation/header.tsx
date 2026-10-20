@@ -154,7 +154,6 @@ export default function Header() {
     { label: t("nav.visited_places") || "Visited Places", href: "/profile/visited-places", icon: CheckCircle2 },
     { label: t("nav.favorite_places"), href: "/profile/favorite-places", icon: Heart },
     { label: t("nav.my_business"), href: "/profile/my-business", icon: Grid2x2 },
-    { label: t("nav.purchased_maps"), href: "/profile/purchased-maps", icon: Map },
     { label: t("nav.contributions"), href: "/profile/contributions-reviews", icon: Star },
     { label: t("nav.subscription"), href: "/profile/subscription", icon: CircleDollarSign },
     { label: t("nav.awards"), href: "/profile/awards", icon: Trophy },

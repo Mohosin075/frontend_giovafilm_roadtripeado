@@ -111,8 +111,18 @@ export default function MapDetails() {
   const router = useRouter();
   const rawId = params?.id;
   const id = Array.isArray(rawId) ? rawId[0] : (rawId as string);
-  const entityType = normalizePinType(searchParams.get("type") || "place");
-  const isBusinessEntity = entityType === "business";
+  const initialType = normalizePinType(searchParams.get("type") || "place");
+  const [activeType, setActiveType] = useState<"place" | "business">(
+    initialType === "business" ? "business" : "place"
+  );
+  const [hasFallenBack, setHasFallenBack] = useState(false);
+
+  useEffect(() => {
+    setActiveType(initialType === "business" ? "business" : "place");
+    setHasFallenBack(false);
+  }, [initialType, id]);
+
+  const isBusinessEntity = activeType === "business";
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [selectedReviewForEdit, setSelectedReviewForEdit] = useState<any>(null);
 
@@ -126,6 +136,7 @@ export default function MapDetails() {
     isFetching: isPlaceFetching,
     status: placeStatus,
     error: placeError,
+    isError: isPlaceError,
   } = useGetPlaceDetailsQuery(id, {
     skip: !id || isBusinessEntity,
   });
@@ -135,13 +146,29 @@ export default function MapDetails() {
     isFetching: isBusinessFetching,
     status: businessStatus,
     error: businessError,
+    isError: isBusinessError,
   } = useGetSingleBusinessQuery(id, {
     skip: !id || !isBusinessEntity,
   });
+
+  // Seamless auto-fallback: if place lookup fails with 404/error, automatically switch to business query
+  // so business detail pages load and track visits even when accessed directly without ?type=business
+  useEffect(() => {
+    if (hasFallenBack) return;
+    if (!isBusinessEntity && isPlaceError && !placeRes?.data && (placeError as any)?.status !== 403) {
+      setHasFallenBack(true);
+      setActiveType("business");
+    } else if (isBusinessEntity && isBusinessError && !businessRes?.data) {
+      setHasFallenBack(true);
+      setActiveType("place");
+    }
+  }, [hasFallenBack, isBusinessEntity, isPlaceError, isBusinessError, placeRes, businessRes, placeError]);
+
   const rawData = isBusinessEntity ? businessRes?.data : placeRes?.data;
 
   const isActuallyBusiness =
     isBusinessEntity ||
+    businessRes?.data != null ||
     rawData?.type === "Business" ||
     rawData?.placeType === "Business";
 

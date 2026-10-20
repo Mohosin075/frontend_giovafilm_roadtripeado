@@ -10,7 +10,6 @@ import {
   Edit2,
   Heart,
   Loader2,
-  Map,
   Share2,
   Star,
   Trophy,
@@ -82,12 +81,6 @@ export function ProfileSidebar({ data }: ProfileProps) {
       href: "/profile/saved-routes",
       label: t("nav.saved_routes") || "Mis Rutas",
       icon: Compass,
-      roles: ["all"],
-    },
-    {
-      href: "/profile/purchased-maps",
-      label: t("nav.purchased_maps"),
-      icon: Map,
       roles: ["all"],
     },
     {

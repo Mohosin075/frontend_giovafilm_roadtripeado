@@ -74,7 +74,9 @@ function alreadyTrackedThisTab(type: UsageType, id: string) {
   try {
     const raw = window.sessionStorage.getItem(SESSION_TRACK_KEY);
     const seen = raw ? (JSON.parse(raw) as Record<string, number>) : {};
-    const key = `${type}:${id}`;
+    const token = getAccessToken();
+    const userScope = token ? token.slice(-12) : getVisitorId();
+    const key = `${userScope}:${type}:${id}`;
     if (seen[key]) return true;
     seen[key] = Date.now();
     window.sessionStorage.setItem(SESSION_TRACK_KEY, JSON.stringify(seen));
@@ -104,9 +106,13 @@ export function trackUsage(type: UsageType | string, id?: string) {
       const rawBase = (process.env.NEXT_PUBLIC_BASEURL || "").replace(/\/$/, "");
       if (rawBase) {
         const apiBase = rawBase.endsWith("/api/v1") ? rawBase : `${rawBase}/api/v1`;
+        const token = getAccessToken();
         fetch(`${apiBase}/business/${entityId}/view`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
           credentials: "omit",
         }).catch(() => {
           // Non-blocking background call
