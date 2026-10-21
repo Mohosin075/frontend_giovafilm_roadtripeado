@@ -16,8 +16,6 @@ import {
   ArrowUp,
   ArrowDown,
   ExternalLink,
-  Map as MapIcon,
-  List,
   Compass,
   CheckCircle2,
   Loader2,
@@ -32,7 +30,6 @@ import {
 } from "@/redux/features/route-plan/routePlanApi";
 import AddStopModal from "@/components/Common/route-planner/add-stop-modal";
 import SavedRoutesModal from "@/components/Common/route-planner/saved-routes-modal";
-import RouteMapView from "@/components/Common/route-planner/route-map-view";
 import SavedRoutes from "@/components/Common/profile/saved-routes/saved-routes";
 import { toast } from "sonner";
 import { useLoginRequired } from "@/components/shared/login-required-modal";
@@ -88,7 +85,6 @@ export function RoutePlannerInner() {
   const [isSavedRoutesModalOpen, setIsSavedRoutesModalOpen] = useState(false);
   const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [mobileTab, setMobileTab] = useState<"list" | "map">("list");
   const [highlightedStopIndex, setHighlightedStopIndex] = useState<number | null>(null);
   const [, setIsLoadedFromCache] = useState(false);
 
@@ -507,45 +503,10 @@ export function RoutePlannerInner() {
               </p>
             </div>
 
-            {/* Mobile Tab Switcher (List vs Map) - Only visible on small screens */}
-            <div className="flex lg:hidden items-center justify-end">
-              <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
-                <button
-                  type="button"
-                  onClick={() => setMobileTab("list")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    mobileTab === "list"
-                      ? "bg-white dark:bg-[#131b2e] text-gray-950 dark:text-white shadow-sm"
-                      : "text-gray-500 dark:text-slate-400"
-                  }`}
-                >
-                  <List className="w-3.5 h-3.5" />
-                  <span>{t("route_planner.tab_list") || "Lista"} ({stops.length})</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMobileTab("map")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    mobileTab === "map"
-                      ? "bg-white dark:bg-[#131b2e] text-gray-950 dark:text-white shadow-sm"
-                      : "text-gray-500 dark:text-slate-400"
-                  }`}
-                >
-                  <MapIcon className="w-3.5 h-3.5" />
-                  <span>{t("route_planner.tab_map") || "Mapa"}</span>
-                </button>
-              </div>
-            </div>
           </div>
 
-          {/* Desktop Split Grid / Mobile Stacked View */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-            {/* LEFT COLUMN: Route Planner Cards & Controls (Visible always on desktop, toggleable on mobile) */}
-            <div
-              className={`lg:col-span-5 xl:col-span-5 space-y-4 sm:space-y-5 ${
-                mobileTab === "map" ? "hidden lg:block" : "block"
-              }`}
-            >
+          {/* Dedicated Route Planner Container */}
+          <div className="max-w-3xl mx-auto space-y-4 sm:space-y-5">
               {/* Route Name Input Card */}
               <div className="bg-white dark:bg-[#131b2e] rounded-3xl p-4 sm:p-5 shadow-sm border border-gray-100 dark:border-slate-800/80 transition-all">
                 <div className="flex items-center justify-between mb-2">
@@ -852,62 +813,7 @@ export function RoutePlannerInner() {
                   </span>
                 </button>
               </div>
-            </div>
-
-            {/* RIGHT COLUMN: Interactive Route Map (Desktop sticky view, or Mobile tab view) */}
-            <div
-              className={`lg:col-span-7 xl:col-span-7 lg:sticky lg:top-24 h-[75vh] sm:h-[540px] lg:h-[720px] ${
-                mobileTab === "list" ? "hidden lg:block" : "block"
-              }`}
-            >
-              <RouteMapView
-                stops={stops}
-                selectedStopIndex={highlightedStopIndex}
-                onSelectStop={(idx) => setHighlightedStopIndex(idx)}
-                height="h-full"
-              />
-            </div>
           </div>
-        </div>
-
-        {/* Floating Mobile Sticky Switcher Bar */}
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 lg:hidden flex items-center gap-1.5 bg-white/95 dark:bg-[#131b2e]/95 backdrop-blur-md px-3 py-2 rounded-full shadow-2xl border border-gray-200/90 dark:border-slate-800">
-          <button
-            type="button"
-            onClick={() => setMobileTab("list")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black transition-all ${
-              mobileTab === "list"
-                ? "bg-[#FFC107] text-gray-950 shadow-md"
-                : "text-gray-600 dark:text-slate-300 hover:text-gray-950"
-            }`}
-          >
-            <List className="w-3.5 h-3.5" />
-            <span>{t("route_planner.tab_list") || "Lista"} ({stops.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setMobileTab("map")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black transition-all ${
-              mobileTab === "map"
-                ? "bg-[#FFC107] text-gray-950 shadow-md"
-                : "text-gray-600 dark:text-slate-300 hover:text-gray-950"
-            }`}
-          >
-            <MapIcon className="w-3.5 h-3.5" />
-            <span>{t("route_planner.tab_map") || "Mapa"}</span>
-          </button>
-
-          <div className="w-[1px] h-4 bg-gray-200 dark:bg-slate-700 mx-0.5" />
-
-          <button
-            type="button"
-            onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 font-bold text-xs hover:bg-[#FFC107] hover:text-gray-950 transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>{t("route_planner.add_place_btn") || "Añadir"}</span>
-          </button>
         </div>
 
         {/* Place Selector Modal */}

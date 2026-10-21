@@ -17,8 +17,6 @@ import { SafeImage } from "@/components/shared/safe-image";
 import { getLocalized, getUsableMediaUrl } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { toast } from "sonner";
-import { APIProvider } from "@vis.gl/react-google-maps";
-import RouteMapView from "./route-map-view";
 
 interface RouteDetailViewModalProps {
   route: any | null;
@@ -38,10 +36,6 @@ export default function RouteDetailViewModal({
   const { t, language } = useLanguage();
   const router = useRouter();
   const [selectedStopIndex, setSelectedStopIndex] = useState<number>(0);
-
-  const apiKey =
-    process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY ||
-    "AIzaSyC99c2erPRrFhfkTCsfSAGnVzNR7u4BNCU";
 
   // Reset selected stop on route open
   useEffect(() => {
@@ -188,7 +182,7 @@ export default function RouteDetailViewModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl lg:max-w-6xl bg-white dark:bg-[#131b2e] rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 flex flex-col max-h-[96vh] sm:max-h-[94vh] overflow-hidden"
+        className="relative w-full max-w-3xl bg-white dark:bg-[#131b2e] rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 flex flex-col max-h-[92vh] sm:max-h-[90vh] overflow-hidden"
       >
         {/* Header */}
         <div className="px-4 sm:px-7 py-3.5 sm:py-4 border-b border-gray-100 dark:border-slate-800 flex items-start justify-between bg-white dark:bg-[#131b2e] shrink-0 gap-3">
@@ -244,31 +238,8 @@ export default function RouteDetailViewModal({
           </div>
         </div>
 
-        {/* Content: Map Preview + Stops List */}
+        {/* Content: Stops List */}
         <div className="flex-1 overflow-y-auto">
-          {/* Map Preview */}
-          <div
-            style={{ width: "100%" }}
-            className="w-full h-[340px] sm:h-[480px] lg:h-[540px] relative bg-slate-100 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800"
-          >
-            {stops.length > 0 ? (
-              <APIProvider apiKey={apiKey}>
-                <RouteMapView
-                  stops={stops}
-                  selectedStopIndex={selectedStopIndex}
-                  onSelectStop={(idx) => setSelectedStopIndex(idx)}
-                  height="h-full"
-                  className="rounded-none border-none shadow-none"
-                />
-              </APIProvider>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                <Compass className="w-8 h-8 mr-2 opacity-50" />
-                <span>{t("route_planner.no_stops_yet") || "Esta ruta aún no tiene paradas"}</span>
-              </div>
-            )}
-          </div>
-
           {/* Stops List */}
           <div className="p-5 sm:p-7">
             <div className="flex items-center justify-between mb-4">

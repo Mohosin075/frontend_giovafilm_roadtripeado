@@ -408,7 +408,7 @@ export default function AddStopModal({
                             <div className="flex items-center gap-1.5 mb-0.5">
                               {catIcon && (
                                 <div
-                                  className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
+                                  className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
                                   style={{
                                     backgroundColor: isCustomCatImg
                                       ? "transparent"
@@ -417,7 +417,7 @@ export default function AddStopModal({
                                 >
                                   <CategoryIcon
                                     icon={catIcon}
-                                    size={11}
+                                    size={13}
                                     color="#FFFFFF"
                                   />
                                 </div>
@@ -499,29 +499,39 @@ export default function AddStopModal({
                       onClick={() => setActivePinPlace(place)}
                     >
                       <div
-                        className={`relative flex items-center justify-center cursor-pointer transition-transform transform ${
-                          isCurrentActive ? "scale-125 z-30" : "hover:scale-110 z-10"
+                        title={getLocalized(place.name, language)}
+                        className={`relative flex items-center justify-center cursor-pointer transition-all duration-200 transform select-none ${
+                          isCurrentActive ? "scale-125 z-40" : "hover:scale-115 z-10"
                         }`}
                       >
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 transition-all ${
+                          className={`w-11 h-11 rounded-full flex items-center justify-center shadow-xl border-2 transition-all ${
                             isSelected
-                              ? "bg-[#fabf13] text-gray-950 border-white ring-2 ring-[#fabf13]/50"
-                              : "bg-white dark:bg-[#131b2e] text-amber-500 border-amber-400"
+                              ? "bg-[#fabf13] text-gray-950 border-white ring-4 ring-[#fabf13]/40 shadow-amber-500/30"
+                              : "bg-white dark:bg-[#131b2e] text-amber-500 border-amber-400 dark:border-amber-400/80 hover:border-amber-500"
                           }`}
                         >
                           {isSelected ? (
-                            <Check className="w-4 h-4 stroke-[3]" />
+                            <Check className="w-6 h-6 stroke-[3]" />
                           ) : place.category?.icon ? (
                             <CategoryIcon
                               icon={place.category.icon}
-                              size={15}
+                              size={24}
                               color={isDark ? "#fbbf24" : "#d97706"}
                             />
                           ) : (
-                            <MapPin className="w-4 h-4" />
+                            <MapPin className="w-5 h-5" />
                           )}
                         </div>
+
+                        {/* Marker Pin Tail */}
+                        <div
+                          className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rotate-45 rounded-[1px] transition-colors ${
+                            isSelected
+                              ? "bg-[#fabf13]"
+                              : "bg-white dark:bg-[#131b2e] border-r-2 border-b-2 border-amber-400 dark:border-amber-400/80"
+                          }`}
+                        />
                       </div>
                     </AdvancedMarker>
                   );
@@ -550,14 +560,14 @@ export default function AddStopModal({
                         <div className="flex items-center gap-1.5 truncate">
                           {activePinPlace.category?.icon && (
                             <div
-                              className="w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
+                              className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
                               style={{
                                 backgroundColor: activePinPlace.category.color || "#FA7B17",
                               }}
                             >
                               <CategoryIcon
                                 icon={activePinPlace.category.icon}
-                                size={9}
+                                size={13}
                                 color="#FFFFFF"
                               />
                             </div>
