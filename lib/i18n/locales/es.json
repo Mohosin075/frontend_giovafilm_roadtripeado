@@ -502,6 +502,8 @@
     "location_not_supported": "La geolocalización no es compatible con su navegador.",
     "unable_to_get_location": "No se puede obtener la ubicación. Permita los permisos de ubicación en su navegador.",
     "new_location_added": "Se agregó una ubicación al mapa...",
+    "location_blocked": "Ubicación bloqueada. Mostrando área aproximada: permita la ubicación en el navegador para GPS exacto.",
+    "location_approximate": "No se pudo obtener el GPS. Mostrando área aproximada según su conexión a internet.",
     "activate_map": "Activar Mapa",
     "activate_map_cta": "¡Activa este mapa para desbloquear esta y todas las demás ubicaciones exclusivas!"
   },
@@ -2282,5 +2284,28 @@
     "invitation_claimed": "¡Invitación Canjeada!",
     "invitation_claimed_desc": "Tu acceso gratuito al mapa ha sido activado. Redirigiéndote a tu mapa ahora...",
     "open_map": "Abrir Mapa"
+  },
+  "maps": {
+    "select_map": "Seleccionar mapa",
+    "loading_locations": "Cargando ubicaciones...",
+    "loading_categories": "Cargando categorías...",
+    "syncing_locations": "Sincronizando ubicaciones...",
+    "more_on_map": "más en el mapa — haz zoom o muévete para explorar",
+    "no_places_in_category": "Aún no hay lugares en esta categoría.",
+    "no_locations_available": "No hay ubicaciones disponibles",
+    "no_published_locations": "Aún no hay ubicaciones publicadas para este mapa. Prueba otro mapa o vuelve más tarde.",
+    "no_business_locations": "No hay negocios disponibles para este mapa en este momento. Inicia sesión para explorar más mapas, o prueba otro mapa.",
+    "no_maps_available": "No hay mapas disponibles.",
+    "similar_maps": "MAPAS SIMILARES",
+    "view_all_collections": "Ver Todas las Colecciones →",
+    "missing_location_id": "Falta el ID de la ubicación",
+    "select_rating": "Por favor selecciona una calificación",
+    "write_review": "Por favor escribe una reseña",
+    "searching": "Buscando:",
+    "clear_search": "Limpiar búsqueda",
+    "discovered_by": "Descubierto por",
+    "add_to_route": "Añadir a la Ruta",
+    "in_your_route": "En tu ruta (Ver)",
+    "unlock_map_message": "Esta información y estos beneficios se pueden desbloquear comprando tu mapa favorito."
   }
 }

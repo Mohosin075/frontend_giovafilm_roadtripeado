@@ -361,8 +361,8 @@ export default function Header() {
         ref={headerRef}
         className={`isolate border-b ${
           scrolled
-            ? "fixed top-0 inset-x-0 z-40 border-gray-200/60 dark:border-slate-800/80 shadow-md animate-in slide-in-from-top duration-300"
-            : "relative z-30 border-gray-100 dark:border-slate-800/60"
+            ? "fixed top-0 inset-x-0 z-[100] border-gray-200/60 dark:border-slate-800/80 shadow-md animate-in slide-in-from-top duration-300"
+            : "relative z-[100] border-gray-100 dark:border-slate-800/60"
         }`}
       >
         {/* Background layer (separate so backdrop-filter doesn't trap fixed children) */}

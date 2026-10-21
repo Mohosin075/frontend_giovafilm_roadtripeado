@@ -112,9 +112,9 @@ export default function LanguageSwitcher({
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-1.5 w-44 p-1.5 rounded-2xl bg-white dark:bg-[#131b2e]/95 backdrop-blur-xl border border-gray-100 dark:border-slate-800 shadow-2xl z-[120] animate-in fade-in-50 zoom-in-95 origin-top-right pointer-events-auto"
+          className="absolute right-0 top-full mt-1.5 w-44 p-1.5 rounded-2xl bg-white dark:bg-[#131b2e] border border-gray-200 dark:border-slate-700/80 shadow-2xl z-[120] animate-in fade-in-50 zoom-in-95 origin-top-right pointer-events-auto"
         >
-          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 select-none">
+          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-400 select-none">
             Language / Idioma
           </div>
           {languages.map((item) => {
@@ -133,8 +133,8 @@ export default function LanguageSwitcher({
                 className={cn(
                   "w-full flex items-center justify-between px-2.5 py-2 rounded-xl cursor-pointer text-xs sm:text-sm font-medium transition-colors my-0.5 text-left",
                   isActive
-                    ? "bg-[#FFF9E6] dark:bg-amber-950/40 text-black dark:text-amber-300 font-bold border border-[#FFE082] dark:border-amber-600/50"
-                    : "text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800/80 active:bg-gray-200 dark:active:bg-slate-700"
+                    ? "bg-[#FFF9E6] dark:bg-amber-500/15 text-amber-950 dark:text-amber-300 font-bold border border-[#FFE082] dark:border-amber-500/30"
+                    : "text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800/80 active:bg-gray-200 dark:active:bg-slate-700"
                 )}
               >
                 <div className="flex items-center gap-2.5">
@@ -142,7 +142,7 @@ export default function LanguageSwitcher({
                   <span>{item.title}</span>
                 </div>
                 {isActive && (
-                  <Check className="w-4 h-4 text-[#D97706] stroke-[2.5]" />
+                  <Check className="w-4 h-4 text-amber-600 dark:text-amber-400 stroke-[2.5]" />
                 )}
               </button>
             );

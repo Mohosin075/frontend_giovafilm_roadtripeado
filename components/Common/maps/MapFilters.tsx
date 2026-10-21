@@ -40,6 +40,7 @@ interface MapFiltersProps {
   setSelectedCountry: (val: string) => void;
   setIsManualSelection: (val: boolean) => void;
   availableCountries: string[];
+  availableMaps?: any[];
   isLoggedIn?: boolean;
   isMapPurchased?: boolean;
   isLoading?: boolean;
@@ -58,6 +59,7 @@ export function MapFilters({
   setSelectedCountry,
   setIsManualSelection,
   availableCountries,
+  availableMaps,
   isLoggedIn = true,
   isMapPurchased = true,
   isLoading = false,
@@ -102,7 +104,7 @@ export function MapFilters({
               value={selectedCountry}
             >
               <SelectTrigger className="w-full h-full border-0 py-2 px-2.5 focus:ring-0 font-bold text-gray-800 dark:text-zinc-200 bg-white dark:bg-zinc-900 shadow-none text-xs text-left truncate">
-                <SelectValue placeholder={t("filters.country")} />
+                <SelectValue placeholder={t("maps.select_map", t("filters.country"))} />
               </SelectTrigger>
               <SelectContent
                 position="popper"
@@ -112,7 +114,7 @@ export function MapFilters({
               >
                 {availableCountries.length === 0 ? (
                   <div className="px-3 py-6 text-center text-sm text-gray-500 dark:text-zinc-400">
-                    No maps available.
+                    {t("maps.no_maps_available", "No maps available.")}
                   </div>
                 ) : (
                   availableCountries.map((country: any) => {
@@ -173,7 +175,7 @@ export function MapFilters({
                   {isLoading && (
                     <div className="flex items-center justify-center gap-2 py-1.5 px-3 bg-amber-50/90 border-b border-amber-100 text-xs font-medium text-amber-800 transition-all duration-300">
                       <div className="h-3 w-3 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-                      <span>Syncing locations for {mapLabel}...</span>
+                      <span>{t("maps.syncing_locations", "Syncing locations...")} ({mapLabel})</span>
                     </div>
                   )}
                   <Accordion type="single" collapsible className="w-full">
@@ -321,18 +323,18 @@ export function MapFilters({
                                   {placesInCat.length > SIDEBAR_PLACES_CAP && (
                                     <p className="px-6 py-2 text-xs text-gray-400">
                                       +{placesInCat.length - SIDEBAR_PLACES_CAP}{" "}
-                                      more on map — zoom or pan to explore
+                                      {t("maps.more_on_map", "more on map — zoom or pan to explore")}
                                     </p>
                                   )}
                                 </>
                               ) : isLoading ? (
                                 <div className="px-10 py-3 text-gray-400 flex items-center gap-2 text-xs">
                                   <div className="h-3 w-3 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
-                                  <span>{t("maps.loading_locations")}</span>
+                                  <span>{t("maps.loading_locations", "Loading locations...")}</span>
                                 </div>
                               ) : (
                                 <div className="px-10 py-3 text-gray-400 italic">
-                                  No places in this category yet.
+                                  {t("maps.no_places_in_category", "No places in this category yet.")}
                                 </div>
                               )}
                             </div>
@@ -346,7 +348,7 @@ export function MapFilters({
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-2 mb-3 text-xs font-medium text-amber-700">
                     <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-                    <span>{t("maps.loading_categories")}</span>
+                    <span>{t("maps.loading_categories", "Loading categories...")}</span>
                   </div>
                   {[1, 2, 3, 4, 5].map((i) => (
                     <div key={i} className="flex items-center gap-3 py-1.5 animate-pulse">
@@ -357,13 +359,13 @@ export function MapFilters({
                 </div>
               ) : showEmpty ? (
                 <div className="px-5 py-8 text-center min-h-[140px] flex flex-col items-center justify-center">
-                  <p className="text-sm font-semibold text-gray-800">
-                    No locations available
+                  <p className="text-sm font-semibold text-gray-800 dark:text-zinc-200">
+                    {t("maps.no_locations_available", "No locations available")}
                   </p>
-                  <p className="mt-1.5 text-xs leading-relaxed text-gray-500">
+                  <p className="mt-1.5 text-xs leading-relaxed text-gray-500 dark:text-zinc-400">
                     {isLoggedIn
-                      ? `There are no published locations for ${mapLabel} yet. Try another map or check back later.`
-                      : `No business locations are available for ${mapLabel} right now. Sign in to explore more maps, or try another map.`}
+                      ? t("maps.no_published_locations", `There are no published locations for ${mapLabel} yet. Try another map or check back later.`)
+                      : t("maps.no_business_locations", `No business locations are available for ${mapLabel} right now. Sign in to explore more maps, or try another map.`)}
                   </p>
                 </div>
               ) : null}
@@ -391,12 +393,14 @@ export function SelectedMapFilter({
   setSelectedCountry,
   setIsManualSelection,
   availableCountries,
+  availableMaps,
   isMobile,
 }: {
   selectedCountry: string;
   setSelectedCountry: (val: string) => void;
   setIsManualSelection: (val: boolean) => void;
   availableCountries: string[];
+  availableMaps?: any[];
   isMobile?: boolean;
 }) {
   const { t } = useLanguage();
@@ -415,7 +419,7 @@ export function SelectedMapFilter({
         value={selectedCountry}
       >
         <SelectTrigger className="w-full !h-auto !min-h-0 rounded-none border-0 shadow-none py-2.5 px-3 focus:ring-0 font-semibold text-gray-800 dark:text-slate-200 bg-white dark:bg-[#131b2e] whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal *:data-[slot=select-value]:text-left">
-          <SelectValue placeholder={t("maps.select_map")} />
+          <SelectValue placeholder={t("maps.select_map", "Select map")} />
         </SelectTrigger>
         <SelectContent
           position="popper"
@@ -427,7 +431,7 @@ export function SelectedMapFilter({
         >
           {availableCountries.length === 0 ? (
             <div className="px-3 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
-              No maps available.
+              {t("maps.no_maps_available", "No maps available.")}
             </div>
           ) : (
             availableCountries.map((country: string) => (

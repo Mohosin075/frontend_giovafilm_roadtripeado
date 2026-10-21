@@ -137,7 +137,7 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
   const isLocked = (placeError as any)?.status === 403 || location?.isLocked;
 
   if (isLocked) {
-    const message = (placeError as any)?.data?.message || "This information and these benefits can be unlocked by purchasing your favorite map.";
+    const message = (placeError as any)?.data?.message || t("maps.unlock_map_message", "This information and these benefits can be unlocked by purchasing your favorite map.");
     return (
       <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
         {/* Click outside backdrop */}
@@ -304,7 +304,7 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/25 dark:border-amber-400/20 text-xs font-semibold text-amber-900 dark:text-amber-200 w-fit mb-3">
               <Sparkles size={13} className="text-amber-500 fill-amber-500 shrink-0" />
               <span>
-                {language === "es" ? "Descubierto por" : "Discovered by"}{" "}
+                {t("maps.discovered_by", language === "es" ? "Descubierto por" : "Discovered by")}{" "}
                 {(() => {
                   const discovererName = location.discoveredByName || location.discoveredBy?.name;
                   const discovererId =
@@ -374,8 +374,8 @@ export default function LocationDialog({ id, onClose, mapId, initialData }: Prop
             <button
               type="button"
               onClick={handleAddToRoute}
-              title={isInRoute ? (language === "es" ? "En tu ruta (Ver ruta)" : "In your route (View)") : (language === "es" ? "Añadir a la Ruta" : "Add to Route")}
-              aria-label={language === "es" ? "Añadir a la Ruta" : "Add to Route"}
+              title={isInRoute ? t("maps.in_your_route", "In your route (View)") : t("maps.add_to_route", "Add to Route")}
+              aria-label={isInRoute ? t("maps.in_your_route", "In your route (View)") : t("maps.add_to_route", "Add to Route")}
               className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl border flex items-center justify-center transition-all duration-200 cursor-pointer shrink-0 shadow-xs ${
                 isInRoute
                   ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 hover:bg-emerald-100"

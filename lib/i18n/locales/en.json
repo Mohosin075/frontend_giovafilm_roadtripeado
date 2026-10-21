@@ -502,6 +502,8 @@
     "location_not_supported": "Geolocation is not supported by your browser.",
     "unable_to_get_location": "Unable to get location. Please allow location permissions in your browser.",
     "new_location_added": "A location was added to the map...",
+    "location_blocked": "Location blocked. Showing approximate area — allow location in browser for exact GPS.",
+    "location_approximate": "Could not get GPS. Showing approximate area based on your internet connection.",
     "activate_map": "Activate Map",
     "activate_map_cta": "Activate this map to unlock this and all other exclusive locations!"
   },
@@ -2282,5 +2284,28 @@
     "invitation_claimed": "Invitation Claimed!",
     "invitation_claimed_desc": "Your free map access has been activated. Redirecting you to your map now...",
     "open_map": "Open Map"
+  },
+  "maps": {
+    "select_map": "Select Map",
+    "loading_locations": "Loading locations...",
+    "loading_categories": "Loading categories...",
+    "syncing_locations": "Syncing locations...",
+    "more_on_map": "more on map — zoom or pan to explore",
+    "no_places_in_category": "No places in this category yet.",
+    "no_locations_available": "No locations available",
+    "no_published_locations": "There are no published locations for this map yet. Try another map or check back later.",
+    "no_business_locations": "No business locations are available for this map right now. Sign in to explore more maps, or try another map.",
+    "no_maps_available": "No maps available.",
+    "similar_maps": "SIMILAR MAPS",
+    "view_all_collections": "View All Collections →",
+    "missing_location_id": "Location ID is missing",
+    "select_rating": "Please select a rating",
+    "write_review": "Please write a review",
+    "searching": "Searching:",
+    "clear_search": "Clear search",
+    "discovered_by": "Discovered by",
+    "add_to_route": "Add to Route",
+    "in_your_route": "In your route (View)",
+    "unlock_map_message": "This information and these benefits can be unlocked by purchasing your favorite map."
   }
 }

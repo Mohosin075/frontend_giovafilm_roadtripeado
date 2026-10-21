@@ -89,8 +89,8 @@ export const CustomLocationButton = ({
                   panAndLocate(data.latitude, data.longitude, 13);
                   toast.warning(
                     isBlocked
-                      ? "Location blocked. Showing approximate area — allow location in browser for exact GPS."
-                      : "Could not get GPS. Showing approximate area based on your internet connection.",
+                      ? t("map.location_blocked", "Location blocked. Showing approximate area — allow location in browser for exact GPS.")
+                      : t("map.location_approximate", "Could not get GPS. Showing approximate area based on your internet connection."),
                     { duration: 5000 }
                   );
                 } else {
@@ -105,8 +105,8 @@ export const CustomLocationButton = ({
                       panAndLocate(data.latitude, data.longitude, 13);
                       toast.warning(
                         isBlocked
-                          ? "Location blocked. Showing approximate area — allow location in browser for exact GPS."
-                          : "Could not get GPS. Showing approximate area based on your internet connection.",
+                          ? t("map.location_blocked", "Location blocked. Showing approximate area — allow location in browser for exact GPS.")
+                          : t("map.location_approximate", "Could not get GPS. Showing approximate area based on your internet connection."),
                         { duration: 5000 }
                       );
                     } else {

@@ -106,7 +106,7 @@ export const CategoryMarker = React.memo(function CategoryMarker({
                 letterSpacing: "0.5px",
               }}
             >
-              Draft
+              {language === "es" ? "Borrador" : "Draft"}
             </span>
           )}
           {isLocked && <Lock size={11} className="text-amber-400 shrink-0" />}
@@ -213,7 +213,7 @@ export const CategoryMarker = React.memo(function CategoryMarker({
               lineHeight: "11px",
             }}
           >
-            DRAFT
+            {language === "es" ? "BORRADOR" : "DRAFT"}
           </div>
         )}
 

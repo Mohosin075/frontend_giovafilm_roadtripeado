@@ -24,6 +24,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { MapFilters, SelectedMapFilter } from "./MapFilters";
 import LocationDialog from "./location-dialog";
 import { getUsableMediaUrl } from "@/lib/utils";
@@ -310,6 +311,22 @@ const COUNTRY_COORDINATES: Record<string, { lat: number; lng: number; zoom: numb
   "united states": { lat: 37.0902, lng: -95.7129, zoom: 5 },
 };
 
+function isSameCountry(a: string, b: string): boolean {
+  if (!a || !b) return false;
+  const normA = normalizeAccents(a).trim().toLowerCase();
+  const normB = normalizeAccents(b).trim().toLowerCase();
+  if (normA === normB) return true;
+  const aliases: Record<string, string> = {
+    "dominican republic": "dr",
+    "republica dominicana": "dr",
+    "united states": "usa",
+    "estados unidos": "usa",
+    "usa": "usa",
+    "puerto rico": "pr",
+  };
+  return Boolean(aliases[normA] && aliases[normA] === aliases[normB]);
+}
+
 function CountryPanner({
   selectedCountry,
   isManualSelection,
@@ -512,6 +529,13 @@ export default function MapPage() {
     return {};
   });
 
+  const { t, language } = useLanguage();
+  const [selectedMapId, setSelectedMapId] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("selectedMapId") || "";
+    }
+    return "";
+  });
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [detectedCountry, setDetectedCountry] = useState<string>("");
   const [isManualSelection, setIsManualSelection] = useState(false);
@@ -567,7 +591,24 @@ export default function MapPage() {
     setPendingFocus(null);
     setFocusReady(true);
     setSelectedLocation(null);
-    setSelectedCountry(val);
+
+    const rawList = Array.isArray(mapsResponse?.data) ? mapsResponse.data : [];
+    const matched = rawList.find(
+      (m: any) =>
+        String(m._id) === val ||
+        normalizeAccents(m.name).toLowerCase() === normalizeAccents(val).toLowerCase() ||
+        isSameCountry(m.name, val)
+    );
+    if (matched) {
+      const mid = String(matched._id);
+      setSelectedMapId(mid);
+      localStorage.setItem("selectedMapId", mid);
+      setSelectedCountry(matched.name);
+      localStorage.setItem("selectedCountryFilter", matched.name);
+    } else {
+      setSelectedCountry(val);
+      localStorage.setItem("selectedCountryFilter", val);
+    }
     setIsManualSelection(true);
   };
 
@@ -648,10 +689,43 @@ export default function MapPage() {
   } = useGetMapsQuery({
     limit: 100,
   });
-  const availableCountries = mapsResponse?.data?.map((m: any) => m.name) || [];
+  const rawMapsList = Array.isArray(mapsResponse?.data) ? mapsResponse.data : [];
+  const availableCountries = rawMapsList.map((m: any) => m.name) || [];
 
-  const selectedMapObj = mapsResponse?.data?.find((m: any) => m.name === selectedCountry);
-  const mapIdFilter = selectedMapObj ? String(selectedMapObj._id) : "";
+  const selectedMapObj = useMemo(() => {
+    if (!rawMapsList.length) return null;
+    if (selectedMapId) {
+      const byId = rawMapsList.find((m: any) => String(m._id) === String(selectedMapId));
+      if (byId) return byId;
+    }
+    if (selectedCountry) {
+      const byName = rawMapsList.find(
+        (m: any) =>
+          normalizeAccents(m.name).toLowerCase() === normalizeAccents(selectedCountry).toLowerCase() ||
+          isSameCountry(m.name, selectedCountry) ||
+          isSameCountry(m.country, selectedCountry)
+      );
+      if (byName) return byName;
+    }
+    return null;
+  }, [rawMapsList, selectedMapId, selectedCountry]);
+
+  // Keep selectedCountry and selectedMapId in sync whenever selectedMapObj resolves or changes language
+  useEffect(() => {
+    if (selectedMapObj) {
+      const currentMapId = String(selectedMapObj._id);
+      if (selectedMapId !== currentMapId) {
+        setSelectedMapId(currentMapId);
+        localStorage.setItem("selectedMapId", currentMapId);
+      }
+      if (selectedCountry !== selectedMapObj.name) {
+        setSelectedCountry(selectedMapObj.name);
+        localStorage.setItem("selectedCountryFilter", selectedMapObj.name);
+      }
+    }
+  }, [selectedMapObj, selectedMapId, selectedCountry]);
+
+  const mapIdFilter = selectedMapObj ? String(selectedMapObj._id) : (selectedMapId || "");
   const canFetchPlaces = Boolean(mapIdFilter);
   useEffect(() => {
     if (!mapIdFilter) return;
@@ -742,11 +816,21 @@ export default function MapPage() {
         isLoadingPlaces ||
         (isFetchingPlaces && settledMapId !== mapIdFilter)));
 
-  // Identify categories that are inherently "business"
+  // Identify categories that are inherently "business" (supporting EN/ES words)
   const inherentlyBusinessCatIds = new Set(
     rawCategories
-      // Backend Category has no `type` field — detect by name only
-      .filter((cat: any) => cat.name?.toLowerCase().includes("business"))
+      .filter((cat: any) => {
+        const nameStr = (
+          typeof cat.name === "object"
+            ? `${cat.name?.en || ""} ${cat.name?.es || ""}`
+            : String(cat.name || "")
+        ).toLowerCase();
+        return (
+          nameStr.includes("business") ||
+          nameStr.includes("negocio") ||
+          nameStr.includes("comercio")
+        );
+      })
       .map((cat: any) => String(cat._id)),
   );
 
@@ -767,22 +851,19 @@ export default function MapPage() {
 
   // Places are scoped by map id; Business docs have no `map` — match by country/map name.
   const belongsToSelectedMap = (place: any) => {
-    if (!selectedCountry) return true;
-
-    if (place?.type === "business" || place?.map == null) {
-      const placeCountry = place?.location?.country || place?.country || "";
-      const target = selectedMapObj?.country || selectedMapObj?.name || selectedCountry;
-      return placeCountry.toLowerCase() === String(target).toLowerCase();
-    }
+    if (!selectedCountry && !selectedMapId) return true;
 
     if (selectedMapObj) {
       const placeMapId =
-        typeof place.map === "object" ? place.map._id : place.map;
-      return String(placeMapId) === String(selectedMapObj._id);
+        typeof place.map === "object" ? place.map?._id || place.map?.id : place.map;
+      if (placeMapId && String(placeMapId) === String(selectedMapObj._id)) {
+        return true;
+      }
     }
 
     const placeCountry = place?.location?.country || place?.country || "";
-    return placeCountry.toLowerCase() === selectedCountry.toLowerCase();
+    const mapCountry = selectedMapObj?.country || selectedMapObj?.name || selectedCountry;
+    return isSameCountry(placeCountry, mapCountry);
   };
 
   let fetchedCategories: any[] = [];
@@ -866,44 +947,66 @@ export default function MapPage() {
   // Apply deep-link map once only (never fight later manual map switches)
   useEffect(() => {
     if (focusMapAppliedRef.current) return;
-    if (!pendingFocus?.map || availableCountries.length === 0) return;
-    if (availableCountries.includes(pendingFocus.map)) {
-      setSelectedCountry(pendingFocus.map);
+    if (!pendingFocus?.map || rawMapsList.length === 0) return;
+    const matched = rawMapsList.find(
+      (m: any) =>
+        String(m._id) === pendingFocus.map ||
+        normalizeAccents(m.name).toLowerCase() === normalizeAccents(pendingFocus.map).toLowerCase() ||
+        isSameCountry(m.name, pendingFocus.map)
+    );
+    if (matched) {
+      setSelectedMapId(String(matched._id));
+      setSelectedCountry(matched.name);
+      localStorage.setItem("selectedMapId", String(matched._id));
+      localStorage.setItem("selectedCountryFilter", matched.name);
       setIsManualSelection(true);
       focusMapAppliedRef.current = true;
     }
-  }, [pendingFocus, availableCountries]);
+  }, [pendingFocus, rawMapsList]);
 
-  // Set initial selectedCountry based on detection, profile, or default
+  // Set initial selectedCountry based on saved id, detection, profile, or default
   useEffect(() => {
-    // Only set automatically if it's currently empty and not manually changed
-    if (selectedCountry || isManualSelection || availableCountries.length === 0) return;
+    if (selectedMapId || selectedCountry || isManualSelection || rawMapsList.length === 0) return;
 
+    const savedId = localStorage.getItem("selectedMapId");
     const savedCountry = localStorage.getItem("selectedCountryFilter");
 
-    if (savedCountry && availableCountries.includes(savedCountry)) {
-      setSelectedCountry(savedCountry);
-      // If we have a preserved camera state, do NOT trigger the CountryPanner zoom-out.
-      if (!sessionStorage.getItem("mapCameraState")) {
-        setIsManualSelection(true);
-      }
-    } else if (detectedCountry && availableCountries.includes(detectedCountry)) {
-      setSelectedCountry(detectedCountry);
-      if (!sessionStorage.getItem("mapCameraState")) {
-        setIsManualSelection(true);
-      }
-    } else if (userProfile?.country && availableCountries.includes(userProfile.country)) {
-      setSelectedCountry(userProfile.country);
-      if (!sessionStorage.getItem("mapCameraState")) {
-        setIsManualSelection(true);
-      }
-    } else {
-      setSelectedCountry(availableCountries[0]);
+    const matchedById = savedId ? rawMapsList.find((m: any) => String(m._id) === savedId) : null;
+    const matchedByCountry = savedCountry
+      ? rawMapsList.find(
+          (m: any) =>
+            normalizeAccents(m.name).toLowerCase() === normalizeAccents(savedCountry).toLowerCase() ||
+            isSameCountry(m.name, savedCountry)
+        )
+      : null;
+    const matchedByDetected = detectedCountry
+      ? rawMapsList.find(
+          (m: any) =>
+            normalizeAccents(m.name).toLowerCase() === normalizeAccents(detectedCountry).toLowerCase() ||
+            isSameCountry(m.name, detectedCountry) ||
+            isSameCountry(m.country, detectedCountry)
+        )
+      : null;
+    const matchedByProfile = userProfile?.country
+      ? rawMapsList.find(
+          (m: any) =>
+            normalizeAccents(m.name).toLowerCase() === normalizeAccents(userProfile.country).toLowerCase() ||
+            isSameCountry(m.name, userProfile.country) ||
+            isSameCountry(m.country, userProfile.country)
+        )
+      : null;
+
+    const chosen = matchedById || matchedByCountry || matchedByDetected || matchedByProfile || rawMapsList[0];
+    if (chosen) {
+      setSelectedMapId(String(chosen._id));
+      setSelectedCountry(chosen.name);
+      localStorage.setItem("selectedMapId", String(chosen._id));
+      localStorage.setItem("selectedCountryFilter", chosen.name);
       if (!sessionStorage.getItem("mapCameraState")) {
         setIsManualSelection(true);
       }
     }
-  }, [detectedCountry, userProfile, isManualSelection, selectedCountry, availableCountries]);
+  }, [detectedCountry, userProfile, isManualSelection, selectedMapId, selectedCountry, rawMapsList]);
 
   useEffect(() => {
     if (selectedCountry) {
@@ -1150,6 +1253,7 @@ export default function MapPage() {
                   setSelectedCountry={handleSelectCountry}
                   setIsManualSelection={setIsManualSelection}
                   availableCountries={availableCountries}
+                  availableMaps={rawMapsList}
                   isLoggedIn={isLoggedIn}
                   isMapPurchased={isCurrentMapPurchased}
                   isLoading={isSidebarLoading}
@@ -1166,6 +1270,7 @@ export default function MapPage() {
                     setSelectedCountry={handleSelectCountry}
                     setIsManualSelection={setIsManualSelection}
                     availableCountries={availableCountries}
+                    availableMaps={rawMapsList}
                     isMobile={isMobile}
                   />
                 </div>
@@ -1178,13 +1283,13 @@ export default function MapPage() {
         {searchQuery && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-white/95 dark:bg-[#111928]/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-gray-200/80 dark:border-slate-700/80 text-xs sm:text-sm font-medium text-gray-800 dark:text-slate-200 animate-in fade-in slide-in-from-top-2">
             <span>
-              Searching: <strong className="text-black dark:text-white">&ldquo;{searchQuery}&rdquo;</strong> ({displayPlaces.length})
+              {t("maps.searching", "Searching:")} <strong className="text-black dark:text-white">&ldquo;{searchQuery}&rdquo;</strong> ({displayPlaces.length})
             </span>
             <button
               type="button"
               onClick={() => router.push("/maps", { scroll: false })}
               className="p-1 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors"
-              aria-label="Clear search"
+              aria-label={t("maps.clear_search", "Clear search")}
             >
               <X size={14} />
             </button>
