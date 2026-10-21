@@ -100,12 +100,40 @@ function ClaimPromoContent() {
     Boolean(userEmailStr) &&
     userEmailStr !== recipientEmailStr;
 
-  // Auto claim or verify after logging in
+  // Auto claim free invitation immediately after user signs in / registers
+  const hasAutoClaimedRef = React.useRef(false);
+
   useEffect(() => {
     if (accessToken && code && !success) {
       refetchVerification();
     }
   }, [accessToken, code, success, refetchVerification]);
+
+  useEffect(() => {
+    // Only auto-claim if user is authenticated, has a valid code, promo is loaded and free
+    if (!accessToken || !code || success || isClaimedSuccess || alreadyOwnsMap) return;
+    if (isLoadingVerify || !promoData) return;
+    if (promoData.recipientEmail && !userProfile) return;
+    if (!isFree) return;
+    if (emailMismatch) return;
+
+    if (!hasAutoClaimedRef.current && !isProcessing) {
+      hasAutoClaimedRef.current = true;
+      handleFreeClaim();
+    }
+  }, [
+    accessToken,
+    code,
+    success,
+    isClaimedSuccess,
+    alreadyOwnsMap,
+    isLoadingVerify,
+    promoData,
+    userProfile,
+    isFree,
+    emailMismatch,
+    isProcessing,
+  ]);
 
   // Handle Free Claiming
   const handleFreeClaim = async () => {
@@ -207,29 +235,44 @@ function ClaimPromoContent() {
   };
 
   const handleGoToMap = () => {
-    if (mapName && mapName !== "Selected Map") {
-      if (typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
+      const targetMapId =
+        promoMapId ||
+        (purchasedMaps[0]
+          ? typeof purchasedMaps[0] === "object"
+            ? purchasedMaps[0]._id || purchasedMaps[0].id
+            : purchasedMaps[0]
+          : null);
+
+      if (targetMapId) {
+        localStorage.setItem("selectedMapId", String(targetMapId));
+      }
+      if (mapName && mapName !== "Selected Map") {
         localStorage.setItem("selectedCountryFilter", mapName);
       }
-      router.push("/maps");
-    } else {
-      router.push("/profile/purchased-maps");
     }
+    router.push("/maps");
   };
 
   const isVipTheme = promoType === "influencer";
 
   // Render Loader
-  if (isLoadingVerify && !success) {
+  if ((isLoadingVerify || isProcessing) && !success && !isClaimedSuccess) {
     return (
       <div className={`flex items-center justify-center min-h-[75vh] py-16 px-4 relative overflow-hidden font-inter ${
         isVipTheme ? "bg-[#0B0F19] text-white" : "bg-[#F9FAFB] text-gray-900"
       }`}>
         <div className="flex flex-col items-center space-y-4 max-w-sm text-center relative z-10">
           <Loader2 className="w-12 h-12 animate-spin text-[#FFC107]" />
-          <h3 className="text-xl font-bold tracking-tight">{t("promo_claim.verifying") || "Verifying invitation..."}</h3>
+          <h3 className="text-xl font-bold tracking-tight">
+            {isProcessing
+              ? t("promo_claim.activating_access") || "Activating your free map access..."
+              : t("promo_claim.verifying") || "Verifying invitation..."}
+          </h3>
           <p className="text-sm text-gray-500 leading-relaxed">
-            {t("promo_claim.verifying_desc") || "Please wait while we confirm your invitation details and map access settings."}
+            {isProcessing
+              ? t("promo_claim.activating_desc") || "Unlocking your map and attaching lifetime access to your account..."
+              : t("promo_claim.verifying_desc") || "Please wait while we confirm your invitation details and map access settings."}
           </p>
         </div>
       </div>
@@ -283,14 +326,14 @@ function ClaimPromoContent() {
               onClick={handlePaidCheckout}
               className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg shadow-lg shadow-yellow-500/20 text-base"
             >
-              Retry Checkout
+              {language === "es" ? "Reintentar Pago" : "Retry Checkout"}
             </Button>
             <Button
               onClick={handleGoToCatalog}
               variant="outline"
               className="w-full h-14 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-bold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 text-base"
             >
-              Return to Catalog
+              {t("promo_claim.explore_public_maps") || (language === "es" ? "Volver al Catálogo" : "Return to Catalog")}
             </Button>
           </div>
         </div>
@@ -333,11 +376,90 @@ function ClaimPromoContent() {
       "Invalid promo link or invitation code.";
     const isAlreadyUsed = typeof errorMsg === "string" && /already been used/i.test(errorMsg);
     const isExpiredMsg = typeof errorMsg === "string" && /expired/i.test(errorMsg);
+
+    // If already used and current logged-in user already has purchased maps
+    if (isAlreadyUsed && accessToken && purchasedMaps.length > 0) {
+      return (
+        <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
+          <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl p-8 text-center space-y-6 relative z-10">
+            <div className="mx-auto w-16 h-16 bg-emerald-50 dark:bg-emerald-950/40 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-10 h-10 text-emerald-500" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">
+                {t("promo_claim.map_already_unlocked") || "Map Already Unlocked!"}
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
+                {t("promo_claim.map_already_unlocked_desc") ||
+                  "This invitation has already been redeemed and linked to your account. Your map access is active and ready to explore!"}
+              </p>
+            </div>
+            <div className="bg-emerald-50/70 dark:bg-emerald-950/40 p-3.5 rounded-xl border border-emerald-100 dark:border-emerald-800/40 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+              {t("promo_claim.lifetime_active") || "Status: Lifetime Map Access Active ✅"}
+            </div>
+            <div className="space-y-3">
+              <Button
+                onClick={handleGoToMap}
+                className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-extrabold rounded-lg transition-all shadow-lg shadow-yellow-500/20 text-base cursor-pointer"
+              >
+                {t("promo_claim.open_my_map") || "Open My Map"} <ArrowRight size={18} className="ml-1 inline" />
+              </Button>
+              <Button
+                onClick={handleGoToPurchasedMaps}
+                variant="outline"
+                className="w-full h-12 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 text-sm cursor-pointer"
+              >
+                {t("promo_claim.view_all_purchased_maps") || "View All My Purchased Maps"}
+              </Button>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // If already used but user is not logged in
+    if (isAlreadyUsed && !accessToken) {
+      return (
+        <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
+          <div className="max-w-md w-full bg-white dark:bg-[#131b2e] rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl p-8 text-center space-y-6 relative z-10">
+            <div className="mx-auto w-16 h-16 bg-amber-50 dark:bg-amber-950/40 rounded-full flex items-center justify-center">
+              <Lock className="w-10 h-10 text-amber-500" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">
+                {t("promo_claim.invitation_already_claimed") || "Invitation Already Claimed"}
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">
+                {t("promo_claim.invitation_already_claimed_desc") ||
+                  "This invitation code has already been redeemed. If you previously created an account or redeemed this link, please sign in to access your unlocked map."}
+              </p>
+            </div>
+            <div className="space-y-3 pt-2">
+              <Button
+                onClick={() => router.push(`/login?redirect=${encodeURIComponent("/maps")}`)}
+                className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg shadow-lg shadow-yellow-500/20 text-base cursor-pointer"
+              >
+                <LogIn size={18} className="mr-2 inline" />
+                {t("promo_claim.sign_in_to_view") || "Sign In to View Map"}
+              </Button>
+              <Button
+                onClick={handleGoToCatalog}
+                variant="outline"
+                className="w-full h-12 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 font-bold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 text-sm cursor-pointer"
+              >
+                {t("promo_claim.explore_public_maps") || "Explore Public Maps"}
+              </Button>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
     const errorHeading = isAlreadyUsed
-      ? "Invitation Already Used"
+      ? (language === "es" ? "Invitación Ya Utilizada" : "Invitation Already Used")
       : isExpiredMsg
-        ? "Invitation Expired"
-        : "Invalid Invitation";
+        ? (language === "es" ? "Invitación Expirada" : "Invitation Expired")
+        : (language === "es" ? "Invitación Inválida" : "Invalid Invitation");
 
     return (
       <section className="relative min-h-[75vh] py-16 flex items-center justify-center overflow-hidden font-inter bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100">
@@ -349,13 +471,23 @@ function ClaimPromoContent() {
             <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-slate-100">{errorHeading}</h2>
             <p className="text-sm text-red-500 font-bold leading-relaxed">{errorMsg}</p>
           </div>
-          <Button
-            onClick={handleGoToCatalog}
-            variant="outline"
-            className="w-full h-14 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-200 font-bold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 text-base cursor-pointer"
-          >
-            View Public Maps
-          </Button>
+          <div className="space-y-3 pt-2">
+            {accessToken && (
+              <Button
+                onClick={handleGoToMap}
+                className="w-full h-14 bg-[#FFC107] hover:bg-[#FFB300] text-black font-bold rounded-lg shadow-lg shadow-yellow-500/20 text-base cursor-pointer"
+              >
+                {t("promo_claim.go_to_my_maps") || "Go to My Maps"}
+              </Button>
+            )}
+            <Button
+              onClick={handleGoToCatalog}
+              variant="outline"
+              className="w-full h-12 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-200 font-bold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 text-base cursor-pointer"
+            >
+              {t("promo_claim.explore_public_maps") || (language === "es" ? "Ver Mapas Públicos" : "View Public Maps")}
+            </Button>
+          </div>
         </div>
       </section>
     );
@@ -365,29 +497,41 @@ function ClaimPromoContent() {
   const features = [
     {
       icon: MapPin,
-      title: "Curated Places & Spots",
-      desc: "Handpicked points of interest including photo locations, sights, and dining."
+      title: language === "es" ? "Lugares y Puntos Curados" : "Curated Places & Spots",
+      desc:
+        language === "es"
+          ? "Puntos de interés seleccionados a mano, incluyendo fotos, paisajes y gastronomía."
+          : "Handpicked points of interest including photo locations, sights, and dining.",
     },
     {
       icon: WifiOff,
-      title: "Offline Access Navigation",
-      desc: "Save all custom pins directly to Google Maps to access offline without signal."
+      title: language === "es" ? "Navegación Sin Conexión" : "Offline Access Navigation",
+      desc:
+        language === "es"
+          ? "Guarda todos los pines directamente en Google Maps para navegar sin señal."
+          : "Save all custom pins directly to Google Maps to access offline without signal.",
     },
     {
       icon: Navigation,
-      title: "Curated Road Routes",
-      desc: "Optimized road routes mapping the best path for your road trip experience."
+      title: language === "es" ? "Rutas Guiadas en Carretera" : "Curated Road Routes",
+      desc:
+        language === "es"
+          ? "Rutas optimizadas con el mejor recorrido para tu experiencia de viaje."
+          : "Optimized road routes mapping the best path for your road trip experience.",
     },
     {
       icon: RefreshCw,
-      title: "Regular Auto Updates",
-      desc: "Updates and new recommendations automatically sync to your dashboard instantly."
-    }
+      title: language === "es" ? "Actualizaciones Automáticas" : "Regular Auto Updates",
+      desc:
+        language === "es"
+          ? "Nuevas recomendaciones se sincronizan con tu panel al instante."
+          : "Updates and new recommendations automatically sync to your dashboard instantly.",
+    },
   ];
 
   // Case D: Render User Claim Split Screen Panel
   return (
-    <section className={`relative min-h-[80vh] py-16 flex items-center overflow-hidden font-inter transition-colors duration-500 ${
+    <section className={`relative min-h-[80vh] py-12 sm:py-16 flex items-center overflow-hidden font-inter transition-colors duration-500 ${
       isVipTheme ? "bg-[#0B0F19] text-white" : "bg-[#F9FAFB] dark:bg-[#0b0f19] text-gray-900 dark:text-slate-100"
     }`}>
       {/* Background Split Pattern (Aligns with HeroBanner layout style) */}
@@ -408,16 +552,16 @@ function ClaimPromoContent() {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
         
-        {/* Left Column: Platform features details */}
+        {/* Left Column (On mobile: shown after the card; on desktop: on the left) */}
         <motion.div
-          className="lg:col-span-7 space-y-8"
+          className="order-2 lg:order-1 lg:col-span-7 space-y-6 sm:space-y-8"
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <span
               className={`inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-md ${
                 isVipTheme
@@ -425,27 +569,31 @@ function ClaimPromoContent() {
                   : "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/40"
               }`}
             >
-              {isVipTheme ? "✨ Premium VIP Access" : "🗺️ Platform Upgrade"}
+              {isVipTheme
+                ? t("promo_claim.vip_access_badge") || "✨ Premium VIP Access"
+                : t("promo_claim.upgrade_badge") || "🗺️ Platform Upgrade"}
             </span>
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-              Unlock the Ultimate <br />
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+              {t("promo_claim.hero_title_1") || "Unlock the Ultimate"}{" "}
+              <br className="hidden sm:inline" />
               <span className={isVipTheme ? "text-yellow-400" : "text-[#FFC107]"}>
-                Interactive Road Trip Map
+                {t("promo_claim.hero_title_2") || "Interactive Road Trip Map"}
               </span>
             </h1>
-            <p className={`text-base leading-relaxed max-w-lg ${isVipTheme ? "text-slate-400" : "text-gray-600 dark:text-slate-400"}`}>
-              Welcome to Roadtripeado! Get ready to explore curated routes, offline navigation pins, and expert local guidelines.
+            <p className={`text-sm sm:text-base leading-relaxed max-w-lg ${isVipTheme ? "text-slate-400" : "text-gray-600 dark:text-slate-400"}`}>
+              {t("promo_claim.hero_subtitle") ||
+                "Welcome to Roadtripeado! Get ready to explore curated routes, offline navigation pins, and expert local guidelines."}
             </p>
           </div>
 
           {/* Features cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {features.map((feat, index) => {
               const Icon = feat.icon;
               return (
                 <motion.div
                   key={index}
-                  className={`flex gap-4 p-5 rounded-xl border transition-all duration-300 group ${
+                  className={`flex gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl border transition-all duration-300 group ${
                     isVipTheme
                       ? "bg-slate-900/40 border-slate-800/80 hover:bg-slate-900/60 hover:border-yellow-400/20"
                       : "bg-white dark:bg-[#131b2e] border-gray-100 dark:border-slate-800 hover:shadow-lg shadow-black/5 hover:-translate-y-0.5"
@@ -472,9 +620,9 @@ function ClaimPromoContent() {
           </div>
         </motion.div>
 
-        {/* Right Column: Pre-existing Invitation card with double checks validations */}
+        {/* Right Column: Pre-existing Invitation card (On mobile: shown FIRST for zero-friction access) */}
         <motion.div
-          className="lg:col-span-5 flex justify-center w-full"
+          className="order-1 lg:order-2 lg:col-span-5 flex justify-center w-full"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
@@ -488,34 +636,38 @@ function ClaimPromoContent() {
           >
             {/* Card Header Banner */}
             <div
-              className={`py-5 px-6 flex items-center gap-4 border-b ${
+              className={`py-4 sm:py-5 px-5 sm:px-6 flex items-center gap-4 border-b ${
                 isVipTheme
                   ? "bg-gradient-to-r from-amber-500 to-yellow-400 text-black border-slate-800"
                   : "bg-amber-50/40 dark:bg-[#0e1424] text-gray-900 dark:text-slate-100 border-gray-100 dark:border-slate-800"
               }`}
             >
               <div
-                className={`w-11 h-11 rounded-lg flex items-center justify-center ${
+                className={`w-11 h-11 rounded-lg flex items-center justify-center shrink-0 ${
                   isVipTheme ? "bg-black text-yellow-400" : "bg-[#FFC107] text-black"
                 }`}
               >
                 {isVipTheme ? <Star className="fill-yellow-400" size={22} /> : <Ticket size={22} />}
               </div>
-              <div>
+              <div className="min-w-0">
                 <span
-                  className={`text-[9px] uppercase tracking-widest font-bold ${
+                  className={`text-[9px] uppercase tracking-widest font-bold block truncate ${
                     isVipTheme ? "text-black/60" : "text-amber-800/70 dark:text-amber-300"
                   }`}
                 >
-                  {isVipTheme ? "VIP GUEST INVITATION" : "EXCLUSIVE MAP OFFER"}
+                  {isVipTheme
+                    ? t("promo_claim.vip_guest_invitation") || "VIP GUEST INVITATION"
+                    : t("promo_claim.exclusive_map_offer") || "EXCLUSIVE MAP OFFER"}
                 </span>
-                <h2 className="text-base font-extrabold leading-tight">
-                  {isVipTheme ? "Exclusive Guest Pass" : "Upgrade Map Pass"}
+                <h2 className="text-base font-extrabold leading-tight truncate">
+                  {isVipTheme
+                    ? t("promo_claim.exclusive_guest_pass") || "Exclusive Guest Pass"
+                    : t("promo_claim.upgrade_map_pass") || "Upgrade Map Pass"}
                 </h2>
               </div>
             </div>
 
-            <div className="p-6 space-y-6 font-inter">
+            <div className="p-5 sm:p-6 space-y-5 sm:space-y-6 font-inter">
               {/* Map Target Details */}
               <div
                 className={`p-4 rounded-xl border space-y-1 ${
@@ -525,11 +677,11 @@ function ClaimPromoContent() {
                 <span className="text-[9px] text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                   {t("common.target_map") || (language === "es" ? "MAPA OBJETIVO" : "TARGET MAP")}
                 </span>
-                <h3 className="text-lg font-black flex items-center gap-1.5 leading-tight">
-                  {mapName} {isVipTheme && <Sparkles size={14} className="text-yellow-400" />}
+                <h3 className="text-lg font-black flex items-center gap-1.5 leading-tight break-words">
+                  {mapName} {isVipTheme && <Sparkles size={14} className="text-yellow-400 shrink-0" />}
                 </h3>
                 <p className={`text-xs leading-relaxed ${isVipTheme ? "text-slate-400" : "text-gray-500 dark:text-slate-400"}`}>
-                  Unlocks full geographic locations, guides, pins, and reviews.
+                  {t("promo_claim.map_benefit_desc") || "Unlocks full geographic locations, guides, pins, and reviews."}
                 </p>
               </div>
 
@@ -539,10 +691,12 @@ function ClaimPromoContent() {
                   isVipTheme ? "border-slate-800" : "border-gray-200 dark:border-slate-800"
                 }`}
               >
-                <span className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Upgrade Cost</span>
+                <span className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
+                  {t("promo_claim.upgrade_cost") || "Upgrade Cost"}
+                </span>
                 {isFree ? (
                   <span className={`text-base font-extrabold uppercase ${isVipTheme ? "text-yellow-400" : "text-green-600 dark:text-green-400"}`}>
-                    Free VIP Pass
+                    {t("promo_claim.free_vip_pass") || "Free VIP Pass"}
                   </span>
                 ) : (
                   <span className="text-xl font-black">${promoPrice.toFixed(2)} USD</span>
@@ -559,12 +713,14 @@ function ClaimPromoContent() {
                   }`}
                 >
                   <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                  <div className="space-y-0.5">
+                  <div className="space-y-0.5 min-w-0">
                     <h4 className={`text-xs font-bold ${isVipTheme ? "text-emerald-400" : "text-emerald-900 dark:text-emerald-300"}`}>
-                      Already Unlocked
+                      {t("promo_claim.already_unlocked_title") || "Already Unlocked"}
                     </h4>
                     <p className={`text-[10px] leading-relaxed ${isVipTheme ? "text-slate-400" : "text-emerald-700 dark:text-emerald-300/80"}`}>
-                      You already have active access to <strong>{mapName}</strong> in your account. You can open and view it in your dashboard now.
+                      {language === "es"
+                        ? `Ya tienes acceso activo a ${mapName} en tu cuenta. Puedes abrirlo y verlo en tu mapa ahora.`
+                        : `You already have active access to ${mapName} in your account. You can open and view it in your dashboard now.`}
                     </p>
                   </div>
                 </div>
@@ -579,12 +735,14 @@ function ClaimPromoContent() {
                 >
                   <div className="flex gap-3 items-start">
                     <MailCheck className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                    <div className="space-y-0.5">
+                    <div className="space-y-0.5 min-w-0">
                       <h4 className={`text-xs font-bold ${isVipTheme ? "text-amber-400" : "text-amber-900 dark:text-amber-300"}`}>
-                        Account Email Note
+                        {language === "es" ? "Nota de Correo de Cuenta" : "Account Email Note"}
                       </h4>
                       <p className={`text-[10px] leading-relaxed ${isVipTheme ? "text-slate-400" : "text-amber-700 dark:text-amber-300/80"}`}>
-                        This invitation is specifically reserved for <strong>{promoData?.recipientEmail}</strong>. You are logged in as <strong>{userProfile?.email}</strong>.
+                        {language === "es"
+                          ? `Esta invitación está específicamente reservada para ${promoData?.recipientEmail}. Has iniciado sesión como ${userProfile?.email}.`
+                          : `This invitation is specifically reserved for ${promoData?.recipientEmail}. You are logged in as ${userProfile?.email}.`}
                       </p>
                     </div>
                   </div>
@@ -602,7 +760,7 @@ function ClaimPromoContent() {
                     }`}
                   >
                     <MailCheck size={13} />
-                    View Mismatch Details
+                    {language === "es" ? "Ver Detalles del Error" : "View Mismatch Details"}
                   </button>
                 </div>
               )}
@@ -615,14 +773,24 @@ function ClaimPromoContent() {
                   }`}
                 >
                   <Lock className={`w-5 h-5 shrink-0 mt-0.5 ${isVipTheme ? "text-yellow-400" : "text-yellow-600 dark:text-yellow-400"}`} />
-                  <div className="space-y-0.5">
+                  <div className="space-y-0.5 min-w-0">
                     <h4 className={`text-xs font-bold ${isVipTheme ? "text-white" : "text-yellow-900 dark:text-yellow-200"}`}>
-                      Sign In or Sign Up Required
+                      {t("promo_claim.auth_required_title") || "Sign In or Sign Up Required"}
                     </h4>
                     <p className={`text-[11px] leading-relaxed ${isVipTheme ? "text-slate-300" : "text-yellow-900 dark:text-yellow-300/90"}`}>
                       {promoData?.recipientEmail ? (
+                        language === "es" ? (
+                          <>
+                            Esta invitación fue enviada a <strong className="font-bold underline">{promoData.recipientEmail}</strong>. Por favor inicia sesión o crea una cuenta con <strong className="font-bold underline">{promoData.recipientEmail}</strong> para canjear este mapa.
+                          </>
+                        ) : (
+                          <>
+                            This invitation was sent to <strong className="font-bold underline">{promoData.recipientEmail}</strong>. Please sign in or create an account with <strong className="font-bold underline">{promoData.recipientEmail}</strong> to claim this map pass.
+                          </>
+                        )
+                      ) : language === "es" ? (
                         <>
-                          This invitation was sent to <strong className="font-bold underline">{promoData.recipientEmail}</strong>. Please sign in or create an account with <strong className="font-bold underline">{promoData.recipientEmail}</strong> to claim this map pass.
+                          Crea una cuenta gratis o inicia sesión para canjear esta invitación exclusiva. El mapa desbloqueado quedará vinculado de por vida a tu perfil.
                         </>
                       ) : (
                         <>
@@ -642,7 +810,7 @@ function ClaimPromoContent() {
                       onClick={handleGoToMap}
                       className="w-full h-14 bg-gray-900 hover:bg-black text-white font-bold rounded-lg transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                     >
-                      Open {mapName} <ArrowRight size={16} className="ml-1.5 inline" />
+                      {(language === "es" ? `Abrir ${mapName}` : `Open ${mapName}`)} <ArrowRight size={16} className="ml-1.5 inline" />
                     </Button>
                     <Button
                       onClick={handleGoToPurchasedMaps}
@@ -653,7 +821,7 @@ function ClaimPromoContent() {
                           : "border-gray-200 text-gray-700 hover:bg-gray-50"
                       }`}
                     >
-                      View All My Purchased Maps
+                      {t("promo_claim.view_all_purchased_maps") || "View All My Purchased Maps"}
                     </Button>
                   </div>
                 ) : !accessToken ? (
@@ -667,7 +835,9 @@ function ClaimPromoContent() {
                       }`}
                     >
                       <UserPlus size={18} className="mr-2 inline" />
-                      {isFree ? "Create Free Account & Claim" : "Create Account to Upgrade"}
+                      {isFree
+                        ? t("promo_claim.create_account_claim") || "Create Free Account & Claim"
+                        : t("promo_claim.create_account_upgrade") || "Create Account to Upgrade"}
                     </Button>
                     <Button
                       onClick={handleGoToLogin}
@@ -679,7 +849,7 @@ function ClaimPromoContent() {
                       }`}
                     >
                       <LogIn size={16} className="mr-2 inline" />
-                      Already have an account? Log In
+                      {t("promo_claim.already_have_account") || "Already have an account? Log In"}
                     </Button>
                   </div>
                 ) : isFree ? (
@@ -696,7 +866,7 @@ function ClaimPromoContent() {
                       <Loader2 className="w-5 h-5 animate-spin mx-auto" />
                     ) : (
                       <>
-                        Redeem Guest Pass <Unlock size={16} className="ml-1.5 inline" />
+                        {t("promo_claim.redeem_guest_pass") || "Redeem Guest Pass"} <Unlock size={16} className="ml-1.5 inline" />
                       </>
                     )}
                   </Button>
@@ -710,7 +880,7 @@ function ClaimPromoContent() {
                       <Loader2 className="w-5 h-5 animate-spin mx-auto" />
                     ) : (
                       <>
-                        Confirm Upgrade <ShieldCheck size={16} className="ml-1.5 inline" />
+                        {t("promo_claim.confirm_upgrade") || "Confirm Upgrade"} <ShieldCheck size={16} className="ml-1.5 inline" />
                       </>
                     )}
                   </Button>

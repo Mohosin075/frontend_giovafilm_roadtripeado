@@ -62,8 +62,8 @@ export const RegisterForm = () => {
   const onSubmit = async (data: FormValues) => {
     try {
       const res = await registerUser({
-        name: data.fullName,
-        email: data.email,
+        name: data.fullName.trim(),
+        email: data.email.trim().toLowerCase(),
         password: data.password,
       }).unwrap();
 
